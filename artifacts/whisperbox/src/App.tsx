@@ -13,8 +13,6 @@ import UpgradePage from "@/pages/upgrade";
 import WrappedPage from "@/pages/wrapped";
 import ReferralPage from "@/pages/referral";
 import AdminPage from "@/pages/admin";
-import WelcomePage from "@/pages/welcome";
-import GetStartedPage from "@/pages/get-started";
 import PublicProfilePage from "@/pages/public-profile";
 import NotFound from "@/pages/not-found";
 
@@ -366,12 +364,6 @@ function ClerkProviderWithRoutes() {
               </Route>
               <Route path="/referral">
                 {() => <ProtectedRoute component={ReferralPage} />}
-              </Route>
-              <Route path="/welcome">
-                {() => <ProtectedRoute component={WelcomePage} />}
-              </Route>
-              <Route path="/get-started">
-                {() => <ProtectedRoute component={GetStartedPage} />}
               </Route>
               <Route path="/admin" component={AdminPage} />
 

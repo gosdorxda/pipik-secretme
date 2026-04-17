@@ -293,9 +293,6 @@ export default function SettingsPage() {
             title: "Profil diperbarui",
             description: "Pengaturanmu berhasil disimpan.",
           });
-          if (!profile?.hasSetUsername && updated.hasSetUsername) {
-            setLocation("/get-started");
-          }
         },
         onError: (err: any) => {
           if (err?.response?.data?.error === "upgrade_required") {

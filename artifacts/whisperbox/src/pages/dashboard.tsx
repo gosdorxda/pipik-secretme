@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
-import { useLocation, Link } from "wouter";
+import { Link } from "wouter";
 import { AppLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { ShareMessageCard } from "@/components/share-message-card";
 import { QRProfileCard } from "@/components/qr-profile-card";
 import {
@@ -69,7 +71,6 @@ function StatCard({
 }
 
 export default function DashboardPage() {
-  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
@@ -80,6 +81,8 @@ export default function DashboardPage() {
   const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "unreplied" | "public">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [showCampaignForm, setShowCampaignForm] = useState(false);
+  const [onboardingUsername, setOnboardingUsername] = useState("");
+  const [onboardingDisplayName, setOnboardingDisplayName] = useState("");
 
   useEffect(() => {
     setVisibleCount(5);
@@ -215,10 +218,27 @@ export default function DashboardPage() {
     );
   }
 
-  if (!profile?.hasSetUsername) {
-    setLocation("/welcome");
-    return null;
-  }
+  if (!profile) return null;
+
+  const handleOnboardingSave = () => {
+    const trimmedUsername = onboardingUsername.trim();
+    if (!trimmedUsername) return;
+    updateProfile.mutate(
+      { data: { username: trimmedUsername, ...(onboardingDisplayName.trim() && { displayName: onboardingDisplayName.trim() }) } },
+      {
+        onSuccess: (updated) => {
+          queryClient.setQueryData(getGetMyProfileQueryKey(), updated);
+          toast({ title: "Profil disimpan!", description: "Selamat, profilemu sudah siap." });
+        },
+        onError: (err: any) => {
+          const msg = err?.response?.data?.error === "username_taken"
+            ? "Username sudah dipakai, coba yang lain."
+            : "Gagal menyimpan, coba lagi.";
+          toast({ title: "Gagal", description: msg, variant: "destructive" });
+        },
+      }
+    );
+  };
 
   const messages = messagesData?.messages || [];
   const displayName = profile.displayName || profile.username;
@@ -245,6 +265,61 @@ export default function DashboardPage() {
 
   return (
     <AppLayout>
+      {/* Onboarding modal for new users */}
+      <Dialog open={!profile.hasSetUsername}>
+        <DialogContent
+          className="sm:max-w-md"
+          onInteractOutside={(e) => e.preventDefault()}
+          hideCloseButton
+        >
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Selamat datang! 👋</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Buat username dan nama tampil agar profilmu terlihat menarik dan mudah dikenali.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label htmlFor="ob-username" className="text-sm font-medium">
+                Username <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="ob-username"
+                placeholder="misalnya: john123"
+                value={onboardingUsername}
+                onChange={(e) => setOnboardingUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""))}
+                onKeyDown={(e) => e.key === "Enter" && handleOnboardingSave()}
+                maxLength={32}
+                autoFocus
+              />
+              <p className="text-xs text-muted-foreground">
+                Link anonimmu: <span className="font-mono text-foreground">/u/{onboardingUsername || "username"}</span>
+              </p>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="ob-displayname" className="text-sm font-medium">
+                Nama tampil <span className="text-muted-foreground font-normal">(opsional)</span>
+              </Label>
+              <Input
+                id="ob-displayname"
+                placeholder="misalnya: John Doe"
+                value={onboardingDisplayName}
+                onChange={(e) => setOnboardingDisplayName(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleOnboardingSave()}
+                maxLength={64}
+              />
+            </div>
+            <Button
+              className="w-full"
+              onClick={handleOnboardingSave}
+              disabled={!onboardingUsername.trim() || updateProfile.isPending}
+            >
+              {updateProfile.isPending ? "Menyimpan..." : "Simpan & Mulai"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <div className="space-y-6">
 
         {/* Profile + Link Combined Card */}
