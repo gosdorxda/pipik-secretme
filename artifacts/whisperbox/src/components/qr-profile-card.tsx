@@ -88,7 +88,7 @@ export function QRProfileCard({
           ref={cardRef}
           style={{
             width: "100%",
-            fontFamily: "'DM Sans', system-ui, sans-serif",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
             background: "linear-gradient(145deg, #f0fdf9 0%, #ddf9f2 40%, #c6f2e7 100%)",
             overflow: "hidden",
             position: "relative",

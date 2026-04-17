@@ -139,7 +139,7 @@ export function ShareMessageCard({
             position: "relative",
             overflow: "hidden",
             width: "100%",
-            fontFamily: "'DM Sans', system-ui, sans-serif",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
           }}
         >
           {/* Big decorative quote mark */}

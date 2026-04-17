@@ -260,8 +260,8 @@ export default function PublicProfilePage() {
                 <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
                   <Megaphone className="w-3 h-3 text-primary" />
                 </div>
-                <span className="text-[13px] font-bold text-primary uppercase tracking-wider">{activeCampaign.title}</span>
-                <span className="inline-flex items-center gap-1 text-[13px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md ml-auto">
+                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{activeCampaign.title}</span>
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md ml-auto">
                   <Radio className="w-2.5 h-2.5" /> Live
                 </span>
               </div>
@@ -285,7 +285,7 @@ export default function PublicProfilePage() {
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">They won't know it's you</p>
               </div>
-              <span className="inline-flex items-center gap-1 text-[13px] font-semibold text-accent-foreground bg-accent border border-green-100 px-2.5 py-1 rounded-md shrink-0">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-foreground bg-accent border border-green-100 px-2.5 py-1 rounded-md shrink-0">
                 <Lock className="w-3 h-3" /> Anonymous
               </span>
             </div>
@@ -333,7 +333,7 @@ export default function PublicProfilePage() {
               <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Public Messages
               </h3>
-              <span className="bg-primary text-primary-foreground text-[13px] font-bold px-2 py-0.5 rounded-md">
+              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
                 {publicMessages.length}
               </span>
             </div>
@@ -360,7 +360,7 @@ export default function PublicProfilePage() {
                     <User className="w-3 h-3 text-muted-foreground" />
                   </div>
                   <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
-                  <span className="text-[13px] text-muted-foreground ml-auto">
+                  <span className="text-[10px] text-muted-foreground ml-auto">
                     {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
                   </span>
                 </div>
@@ -381,7 +381,7 @@ export default function PublicProfilePage() {
                       <span className="text-xs font-semibold text-accent-foreground">{displayName}</span>
                       <CornerDownRight className="w-3 h-3 text-muted-foreground" />
                       {msg.ownerRepliedAt && (
-                        <span className="text-[13px] text-muted-foreground ml-auto">
+                        <span className="text-[10px] text-muted-foreground ml-auto">
                           {formatDistanceToNow(new Date(msg.ownerRepliedAt), { addSuffix: true })}
                         </span>
                       )}

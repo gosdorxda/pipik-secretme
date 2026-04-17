@@ -73,7 +73,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
             {profile !== undefined && (
               profile?.isPremium ? (
-                <span className="hidden md:inline-flex items-center gap-1 bg-amber-100 text-amber-700 border border-amber-200 text-[13px] font-bold uppercase tracking-wider px-2 py-1 rounded-md">
+                <span className="hidden md:inline-flex items-center gap-1 bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md">
                   <Crown className="w-3 h-3" /> Premium
                 </span>
               ) : (
