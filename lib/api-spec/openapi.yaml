@@ -807,6 +807,9 @@ components:
           type: string
           format: date-time
           nullable: true
+        campaignTitle:
+          type: string
+          nullable: true
       required:
         - id
         - content

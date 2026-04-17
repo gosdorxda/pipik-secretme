@@ -108,6 +108,7 @@ export interface Message {
   isPublic: boolean;
   ownerReply?: string | null;
   ownerRepliedAt?: string | null;
+  campaignTitle?: string | null;
 }
 
 export interface MessagesResponse {
