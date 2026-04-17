@@ -16,7 +16,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
       <header className="border-b border-border bg-white sticky top-0 z-50">
         <AppBanner />
-        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-sm text-foreground">
             <div className="w-7 h-7 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
@@ -103,7 +103,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-4xl mx-auto px-6 py-8 w-full">
+      <main className="flex-1 max-w-6xl mx-auto px-6 py-8 w-full">
         {children}
       </main>
       <Footer />

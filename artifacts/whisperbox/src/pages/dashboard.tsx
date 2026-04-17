@@ -59,14 +59,14 @@ function StatCard({
 }) {
   const s = ACCENT_ICON[accent];
   return (
-    <div className="bg-white border border-border rounded-xs p-4 flex flex-col gap-3">
-      <div className={`w-9 h-9 rounded-xs flex items-center justify-center shrink-0 ${s.iconWrap}`}>
+    <div className="bg-white border border-border rounded-xl p-5 flex flex-col gap-3">
+      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${s.iconWrap}`}>
         <span className={s.iconColor}>{icon}</span>
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
-        <p className="text-2xl font-bold leading-none text-foreground">
-          {loading ? <span className="text-muted-foreground/40 text-lg">—</span> : value}
+        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
+        <p className="text-3xl font-bold leading-none text-foreground">
+          {loading ? <span className="text-muted-foreground/40 text-xl">—</span> : value}
         </p>
       </div>
     </div>
@@ -397,9 +397,9 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-lg font-bold text-foreground leading-none">{displayName}</h2>
+                <h2 className="text-2xl font-bold text-foreground leading-none">{displayName}</h2>
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">@{profile.username}</p>
+              <p className="text-base text-muted-foreground mt-1">@{profile.username}</p>
               {profile.bio && (
                 <p className="text-sm text-foreground/70 mt-2 line-clamp-2">{profile.bio}</p>
               )}
@@ -643,7 +643,7 @@ export default function DashboardPage() {
           {/* Inbox header row */}
           <div className="flex items-center gap-2 mb-3">
             <Inbox className="w-4 h-4 text-foreground" />
-            <h2 className="text-sm font-semibold">Inbox</h2>
+            <h2 className="text-xl font-bold">Inbox</h2>
             {messages.length > 0 && (
               <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-xs">
                 {messages.length}
@@ -743,8 +743,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 bg-secondary rounded-xs flex items-center justify-center mb-3">
                 <Inbox className="w-6 h-6 text-muted-foreground" />
               </div>
-              <h3 className="text-sm font-semibold mb-1">Belum ada pesan</h3>
-              <p className="text-xs text-muted-foreground max-w-sm">
+              <h3 className="text-base font-semibold mb-1">Belum ada pesan</h3>
+              <p className="text-sm text-muted-foreground max-w-sm">
                 Bagikan linkmu untuk mulai menerima pesan anonim.
               </p>
             </div>
