@@ -19,6 +19,7 @@ import type {
 import type {
   CallbackResponse,
   Campaign,
+  CheckUsernameParams,
   ClaimReferralBody,
   ClaimReferralResponse,
   CreateCampaignBody,
@@ -39,6 +40,7 @@ import type {
   UploadUrlResponse,
   UserProfile,
   UserStats,
+  UsernameAvailability,
   VisibilityBody,
   WrappedStats,
 } from "./api.schemas";
@@ -369,6 +371,89 @@ export function useGetPublicProfile<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPublicProfileQueryOptions(username, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Check if a username is available
+ */
+export const getCheckUsernameUrl = (params: CheckUsernameParams) => {
+  return `/api/users/check-username?username=${encodeURIComponent(params.username)}`;
+};
+
+export const checkUsername = async (
+  params: CheckUsernameParams,
+  options?: RequestInit,
+): Promise<UsernameAvailability> => {
+  return customFetch<UsernameAvailability>(getCheckUsernameUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getCheckUsernameQueryKey = (params: CheckUsernameParams) => {
+  return [`/api/users/check-username`, params] as const;
+};
+
+export const getCheckUsernameQueryOptions = <
+  TData = Awaited<ReturnType<typeof checkUsername>>,
+  TError = ErrorType<unknown>,
+>(
+  params: CheckUsernameParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof checkUsername>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCheckUsernameQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof checkUsername>>> = ({
+    signal,
+  }) => checkUsername(params, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!params.username && params.username.length >= 3,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof checkUsername>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type CheckUsernameQueryResult = NonNullable<
+  Awaited<ReturnType<typeof checkUsername>>
+>;
+export type CheckUsernameQueryError = ErrorType<unknown>;
+
+export function useCheckUsername<
+  TData = Awaited<ReturnType<typeof checkUsername>>,
+  TError = ErrorType<unknown>,
+>(
+  params: CheckUsernameParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof checkUsername>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getCheckUsernameQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;

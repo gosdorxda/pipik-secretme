@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import confetti from "canvas-confetti";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ import {
   useGetMyCampaign,
   useCreateCampaign,
   useEndCampaign,
+  useCheckUsername,
   getGetMyMessagesQueryKey,
   getGetMyStatsQueryKey,
   getGetMyProfileQueryKey,
@@ -83,6 +85,40 @@ export default function DashboardPage() {
   const [showCampaignForm, setShowCampaignForm] = useState(false);
   const [onboardingUsername, setOnboardingUsername] = useState("");
   const [onboardingDisplayName, setOnboardingDisplayName] = useState("");
+  const [debouncedUsername, setDebouncedUsername] = useState("");
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedUsername(onboardingUsername.trim());
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [onboardingUsername]);
+
+  useEffect(() => {
+    if (!showConfetti) return;
+    const duration = 3000;
+    const end = Date.now() + duration;
+    const frame = () => {
+      confetti({
+        particleCount: 6,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"],
+      });
+      confetti({
+        particleCount: 6,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"],
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+      else setShowConfetti(false);
+    };
+    requestAnimationFrame(frame);
+  }, [showConfetti]);
 
   useEffect(() => {
     setVisibleCount(5);
@@ -102,6 +138,10 @@ export default function DashboardPage() {
   const updateProfile = useUpdateMyProfile();
   const createCampaign = useCreateCampaign();
   const endCampaign = useEndCampaign();
+  const { data: usernameCheck, isFetching: checkingUsername } = useCheckUsername(
+    { username: debouncedUsername },
+    { query: { enabled: debouncedUsername.length >= 3 } },
+  );
 
   const publicUrl = profile?.username
     ? `${window.location.origin}/u/${profile.username}`
@@ -223,12 +263,14 @@ export default function DashboardPage() {
   const handleOnboardingSave = () => {
     const trimmedUsername = onboardingUsername.trim();
     if (!trimmedUsername) return;
+    if (!usernameCheck?.available) return;
     updateProfile.mutate(
       { data: { username: trimmedUsername, ...(onboardingDisplayName.trim() && { displayName: onboardingDisplayName.trim() }) } },
       {
         onSuccess: (updated) => {
           queryClient.setQueryData(getGetMyProfileQueryKey(), updated);
-          toast({ title: "Profil disimpan!", description: "Selamat, profilemu sudah siap." });
+          setShowConfetti(true);
+          toast({ title: "Profil disimpan!", description: "Selamat, selamat datang di WhisperBox!" });
         },
         onError: (err: any) => {
           const msg = err?.response?.data?.error === "username_taken"
@@ -292,6 +334,20 @@ export default function DashboardPage() {
                 maxLength={32}
                 autoFocus
               />
+              <div className="min-h-[18px]">
+                {onboardingUsername.trim().length > 0 && onboardingUsername.trim().length < 3 && (
+                  <p className="text-xs text-muted-foreground">Minimal 3 karakter</p>
+                )}
+                {onboardingUsername.trim().length >= 3 && checkingUsername && (
+                  <p className="text-xs text-muted-foreground animate-pulse">Memeriksa ketersediaan...</p>
+                )}
+                {onboardingUsername.trim().length >= 3 && !checkingUsername && usernameCheck?.available === true && debouncedUsername === onboardingUsername.trim() && (
+                  <p className="text-xs text-emerald-600 font-medium">✓ Username tersedia</p>
+                )}
+                {onboardingUsername.trim().length >= 3 && !checkingUsername && usernameCheck?.available === false && debouncedUsername === onboardingUsername.trim() && (
+                  <p className="text-xs text-destructive font-medium">✗ Username sudah dipakai</p>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">
                 Link anonimmu: <span className="font-mono text-foreground">/u/{onboardingUsername || "username"}</span>
               </p>
@@ -312,7 +368,14 @@ export default function DashboardPage() {
             <Button
               className="w-full"
               onClick={handleOnboardingSave}
-              disabled={!onboardingUsername.trim() || updateProfile.isPending}
+              disabled={
+                !onboardingUsername.trim() ||
+                onboardingUsername.trim().length < 3 ||
+                checkingUsername ||
+                usernameCheck?.available !== true ||
+                debouncedUsername !== onboardingUsername.trim() ||
+                updateProfile.isPending
+              }
             >
               {updateProfile.isPending ? "Menyimpan..." : "Simpan & Mulai"}
             </Button>

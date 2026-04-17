@@ -99,6 +99,23 @@ router.put("/me", requireAuth, async (req, res) => {
   }
 });
 
+router.get("/check-username", async (req, res) => {
+  const username = typeof req.query.username === "string" ? req.query.username : "";
+  if (!username || username.length < 3 || username.length > 32 || !/^[a-z0-9_]+$/i.test(username)) {
+    res.status(400).json({ error: "Invalid username" });
+    return;
+  }
+  try {
+    const existing = await db.query.usersTable.findFirst({
+      where: eq(usersTable.username, username.toLowerCase()),
+    });
+    res.json({ available: !existing });
+  } catch (err) {
+    req.log.error({ err }, "Error checking username");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/:username", async (req, res) => {
   const parsed = GetPublicProfileParams.safeParse(req.params);
   if (!parsed.success) {

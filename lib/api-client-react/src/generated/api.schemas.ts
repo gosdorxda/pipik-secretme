@@ -35,6 +35,14 @@ export interface HealthStatus {
   status: string;
 }
 
+export interface UsernameAvailability {
+  available: boolean;
+}
+
+export interface CheckUsernameParams {
+  username: string;
+}
+
 export interface UserProfile {
   id: string;
   clerkId: string;
