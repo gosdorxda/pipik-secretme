@@ -28,6 +28,16 @@ if (!basePath) {
 
 export default defineConfig({
   base: basePath,
+  define: {
+    // Forward CLERK_PUBLISHABLE_KEY (no VITE_ prefix) into the browser bundle.
+    // We do this explicitly so the backend and frontend share the same secret name.
+    "import.meta.env.VITE_CLERK_PUBLISHABLE_KEY": JSON.stringify(
+      process.env.CLERK_PUBLISHABLE_KEY ?? process.env.VITE_CLERK_PUBLISHABLE_KEY ?? "",
+    ),
+    "import.meta.env.VITE_CLERK_PROXY_URL": JSON.stringify(
+      process.env.CLERK_PROXY_URL ?? process.env.VITE_CLERK_PROXY_URL ?? "",
+    ),
+  },
   plugins: [
     react(),
     tailwindcss(),
