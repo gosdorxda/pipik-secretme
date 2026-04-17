@@ -780,21 +780,11 @@ export default function DashboardPage() {
           ) : (
             <div className="space-y-3">
               {filteredMessages.slice(0, visibleCount).map((message, idx) => {
-                const palette = [
-                  { bg: "rgba(134,234,212,0.12)", border: "rgba(134,234,212,0.40)", stripe: "linear-gradient(to right, #86ead4, #60c4ae)" },
-                  { bg: "rgba(165,180,252,0.12)", border: "rgba(165,180,252,0.40)", stripe: "linear-gradient(to right, #86ead4, #818cf8)" },
-                  { bg: "rgba(147,197,253,0.12)", border: "rgba(147,197,253,0.40)", stripe: "linear-gradient(to right, #93c5fd, #6ee7b7)" },
-                  { bg: "rgba(252,211,77,0.12)", border: "rgba(252,211,77,0.40)", stripe: "linear-gradient(to right, #fcd34d, #86ead4)" },
-                ];
-                const { bg, border, stripe } = palette[idx % palette.length];
                 return (
                 <div
                   key={message.id}
-                  className="rounded-2xl shadow-sm overflow-hidden"
-                  style={{ background: bg, border: `1px solid ${border}` }}
+                  className="rounded-2xl overflow-hidden bg-[#f4f4f5] border border-[#e4e4e7]"
                 >
-                  {/* Stripe */}
-                  <div style={{ height: 3, background: stripe }} />
 
                   {/* Message Header */}
                   <div className="px-4 pt-3 pb-2 flex items-center gap-2">
@@ -830,7 +820,7 @@ export default function DashboardPage() {
 
                   {/* Owner Reply (if exists) */}
                   {message.ownerReply && (
-                    <div className="mx-4 mb-3 border border-primary/20 bg-white/60 rounded-xl p-3">
+                    <div className="mx-4 mb-3 border border-primary/20 bg-white rounded-xl p-3">
                       <div className="flex items-center gap-2 mb-1.5">
                         <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                           <span className="text-[9px] font-bold text-primary-foreground">{initials}</span>
@@ -855,7 +845,7 @@ export default function DashboardPage() {
                         value={replyText}
                         onChange={e => setReplyText(e.target.value)}
                         placeholder="Tulis balasanmu..."
-                        className="text-sm resize-none min-h-[80px] bg-white/80 rounded-xl"
+                        className="text-sm resize-none min-h-[80px] bg-white rounded-xl"
                         autoFocus
                       />
                       <div className="flex gap-2 justify-end">
@@ -902,7 +892,7 @@ export default function DashboardPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="rounded-full h-8 px-4 text-xs font-medium gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/60"
+                      className="rounded-full h-8 px-4 text-xs font-medium gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white"
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
                       <Share2 className="w-3 h-3" />
@@ -912,7 +902,7 @@ export default function DashboardPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="rounded-full h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-white/60"
+                      className="rounded-full h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-white"
                       onClick={() => handleDelete(message.id)}
                       disabled={deleteMessage.isPending}
                     >
