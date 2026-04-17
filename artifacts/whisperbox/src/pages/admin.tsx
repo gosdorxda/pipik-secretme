@@ -7,10 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Users, MessageSquare, CreditCard, TrendingUp, Search, Crown,
   ShieldCheck, Settings, RefreshCw, ChevronLeft, ChevronRight,
-  BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star, Paintbrush, Check,
+  BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star,
 } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { ACCENT_PALETTES, FONT_OPTIONS, RADIUS_OPTIONS, applyTheme, storeTheme } from "@/lib/theme";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 const SESSION_KEY = "wb_admin_secret";
@@ -53,7 +51,7 @@ function formatDate(val: string) {
   return new Date(val).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-type Tab = "overview" | "users" | "transactions" | "settings" | "redeem" | "appearance";
+type Tab = "overview" | "users" | "transactions" | "settings" | "redeem";
 
 function AdminLoginScreen({ onLogin }: { onLogin: (secret: string) => void }) {
   const [code, setCode] = useState("");
@@ -130,7 +128,6 @@ export default function AdminPage() {
     { id: "users", label: "Pengguna", icon: Users },
     { id: "transactions", label: "Transaksi", icon: CreditCard },
     { id: "redeem", label: "Redeem", icon: Gift },
-    { id: "appearance", label: "Tampilan", icon: Paintbrush },
     { id: "settings", label: "Pengaturan", icon: Settings },
   ];
 
@@ -170,7 +167,6 @@ export default function AdminPage() {
         {tab === "users" && <UsersTab secret={secret} toast={toast} />}
         {tab === "transactions" && <TransactionsTab secret={secret} />}
         {tab === "redeem" && <RedeemTab secret={secret} toast={toast} />}
-        {tab === "appearance" && <AppearanceTab secret={secret} toast={toast} />}
         {tab === "settings" && <SettingsTab secret={secret} toast={toast} />}
       </div>
     </AppLayout>
@@ -604,228 +600,6 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
             })}
           </div>
         )}
-      </div>
-    </div>
-  );
-}
-
-function AppearanceTab({ secret, toast }: { secret: string; toast: any }) {
-  const { data: appConfig } = useAppConfig();
-  const queryClient = useQueryClient();
-
-  const [accent, setAccent] = useState("teal");
-  const [font, setFont] = useState("space-grotesk");
-  const [radius, setRadius] = useState("small");
-  const [saving, setSaving] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if (appConfig?.theme && !loaded) {
-      setAccent(appConfig.theme.accent ?? "teal");
-      setFont(appConfig.theme.font ?? "space-grotesk");
-      setRadius(appConfig.theme.radius ?? "small");
-      setLoaded(true);
-    }
-  }, [appConfig, loaded]);
-
-  const handlePreview = (a: string, f: string, r: string) => {
-    applyTheme(a, f, r);
-  };
-
-  const handleAccent = (val: string) => {
-    setAccent(val);
-    handlePreview(val, font, radius);
-  };
-
-  const handleFont = (val: string) => {
-    setFont(val);
-    handlePreview(accent, val, radius);
-  };
-
-  const handleRadius = (val: string) => {
-    setRadius(val);
-    handlePreview(accent, font, val);
-  };
-
-  const save = async () => {
-    setSaving(true);
-    try {
-      await apiFetch("/admin/settings", secret, {
-        method: "PUT",
-        body: JSON.stringify({ theme_accent: accent, theme_font: font, theme_radius: radius }),
-      });
-      storeTheme(accent, font, radius);
-      applyTheme(accent, font, radius);
-      await queryClient.invalidateQueries({ queryKey: ["app-config"] });
-      toast({ description: "Tema berhasil disimpan dan diterapkan ke seluruh halaman." });
-    } catch (e: any) {
-      toast({ description: e.message, variant: "destructive" });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const previewRadius = RADIUS_OPTIONS.find(r => r.id === radius)?.value ?? "0.125rem";
-  const previewColor = ACCENT_PALETTES[accent]?.swatch ?? "#86ead4";
-  const previewFontFamily = FONT_OPTIONS.find(f => f.id === font)?.family ?? "'Space Grotesk', sans-serif";
-
-  return (
-    <div className="space-y-8 max-w-2xl">
-      <div>
-        <h2 className="text-base font-bold mb-0.5">Tampilan Aplikasi</h2>
-        <p className="text-sm text-muted-foreground">Kustomisasi warna, font, dan radius untuk seluruh tampilan aplikasi.</p>
-      </div>
-
-      <div
-        className="border border-border rounded-sm p-5 flex flex-col gap-4"
-        style={{ borderRadius: `calc(${previewRadius} * 4)` }}
-      >
-        <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Preview</p>
-        <div className="flex items-center gap-3 flex-wrap">
-          <button
-            className="px-4 py-2 text-sm font-semibold text-white transition-colors"
-            style={{
-              background: previewColor,
-              color: ACCENT_PALETTES[accent]?.vars["--primary-foreground"] ?? "#fff",
-              borderRadius: `calc(${previewRadius} * 3)`,
-              fontFamily: previewFontFamily,
-            }}
-          >
-            Tombol Utama
-          </button>
-          <button
-            className="px-4 py-2 text-sm font-semibold border border-border transition-colors bg-background"
-            style={{
-              borderRadius: `calc(${previewRadius} * 3)`,
-              fontFamily: previewFontFamily,
-            }}
-          >
-            Tombol Outline
-          </button>
-          <span
-            className="text-xs font-semibold px-2 py-1"
-            style={{
-              background: ACCENT_PALETTES[accent]?.vars["--accent"] ?? "#ddf9f2",
-              color: ACCENT_PALETTES[accent]?.vars["--accent-foreground"] ?? "#3a9e88",
-              borderRadius: `calc(${previewRadius} * 2)`,
-              fontFamily: previewFontFamily,
-            }}
-          >
-            Badge
-          </span>
-        </div>
-        <p className="text-sm text-muted-foreground" style={{ fontFamily: previewFontFamily }}>
-          Ini adalah contoh teks paragraf dengan font yang dipilih.
-        </p>
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm font-semibold mb-0.5">Accent Color</p>
-          <p className="text-xs text-muted-foreground mb-3">Warna utama yang muncul di tombol, link, dan elemen aktif.</p>
-        </div>
-        <div className="flex flex-wrap gap-3">
-          {Object.entries(ACCENT_PALETTES).map(([id, pal]) => (
-            <button
-              key={id}
-              title={pal.label}
-              onClick={() => handleAccent(id)}
-              className="relative w-9 h-9 rounded-full border-2 transition-all hover:scale-110 focus:outline-none"
-              style={{
-                background: pal.swatch,
-                borderColor: accent === id ? "#09090b" : "transparent",
-                boxShadow: accent === id ? `0 0 0 2px ${pal.swatch}40` : undefined,
-              }}
-            >
-              {accent === id && (
-                <Check
-                  className="w-4 h-4 absolute inset-0 m-auto"
-                  style={{ color: pal.vars["--primary-foreground"] }}
-                />
-              )}
-            </button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2 mt-2">
-          {Object.entries(ACCENT_PALETTES).map(([id, pal]) => (
-            <button
-              key={id}
-              onClick={() => handleAccent(id)}
-              className="text-xs px-3 py-1.5 rounded-xs border font-medium transition-colors"
-              style={{
-                background: accent === id ? pal.swatch : undefined,
-                color: accent === id ? pal.vars["--primary-foreground"] : undefined,
-                borderColor: accent === id ? pal.swatch : undefined,
-              }}
-            >
-              {pal.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm font-semibold mb-0.5">Font</p>
-          <p className="text-xs text-muted-foreground mb-3">Jenis font yang digunakan di seluruh halaman.</p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {FONT_OPTIONS.map(f => (
-            <button
-              key={f.id}
-              onClick={() => handleFont(f.id)}
-              className={`border rounded-xs p-3 text-left transition-all ${
-                font === f.id
-                  ? "border-primary bg-accent/30"
-                  : "border-border hover:border-primary/40 bg-background"
-              }`}
-            >
-              <p className="text-xs text-muted-foreground mb-1">Aa</p>
-              <p className="text-sm font-semibold" style={{ fontFamily: f.family }}>{f.label}</p>
-              <p className="text-xs text-muted-foreground mt-0.5" style={{ fontFamily: f.family }}>
-                Halo, dunia!
-              </p>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm font-semibold mb-0.5">Border Radius</p>
-          <p className="text-xs text-muted-foreground mb-3">Tingkat kelengkungan sudut elemen UI.</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {RADIUS_OPTIONS.map(r => (
-            <button
-              key={r.id}
-              onClick={() => handleRadius(r.id)}
-              className={`border px-4 py-2.5 text-sm font-medium transition-all flex flex-col items-center gap-1.5 min-w-[70px] ${
-                radius === r.id
-                  ? "border-primary bg-accent/30 text-foreground"
-                  : "border-border hover:border-primary/40 text-muted-foreground"
-              }`}
-              style={{ borderRadius: `calc(${r.value} * 3)` }}
-            >
-              <div
-                className="w-6 h-6 border-2"
-                style={{
-                  borderRadius: `calc(${r.value} * 3)`,
-                  borderColor: radius === r.id ? previewColor : "currentColor",
-                }}
-              />
-              <span className="text-xs">{r.label}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="pt-2">
-        <Button onClick={save} disabled={saving} className="gap-2">
-          {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-          {saving ? "Menyimpan..." : "Simpan Tema"}
-        </Button>
-        <p className="text-xs text-muted-foreground mt-2">Perubahan akan diterapkan secara real-time ke semua pengguna.</p>
       </div>
     </div>
   );

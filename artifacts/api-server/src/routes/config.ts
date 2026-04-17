@@ -24,10 +24,6 @@ router.get("/config", async (req, res) => {
     const referralUpgradePointsRaw = await getSetting("referral_upgrade_points", "100");
     const referralUpgradePoints = parseInt(referralUpgradePointsRaw, 10) || 100;
 
-    const themeAccent = await getSetting("theme_accent", "teal");
-    const themeFont = await getSetting("theme_font", "space-grotesk");
-    const themeRadius = await getSetting("theme_radius", "small");
-
     res.json({
       premiumPrice,
       redeemRate,
@@ -37,10 +33,9 @@ router.get("/config", async (req, res) => {
       notification: notificationActive === "true" && notificationMessage
         ? { message: notificationMessage, type: notificationType }
         : null,
-      theme: { accent: themeAccent, font: themeFont, radius: themeRadius },
     });
   } catch {
-    res.json({ premiumPrice: 49900, redeemRate: 10000, referralSignupPoints: 10, linkOpensPointsPer1000: 1, notification: null, theme: { accent: "teal", font: "space-grotesk", radius: "small" } });
+    res.json({ premiumPrice: 49900, redeemRate: 10000, referralSignupPoints: 10, linkOpensPointsPer1000: 1, notification: null });
   }
 });
 

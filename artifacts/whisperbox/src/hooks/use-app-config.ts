@@ -2,12 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
-export interface AppTheme {
-  accent: string;
-  font: string;
-  radius: string;
-}
-
 export interface AppConfig {
   premiumPrice: number;
   redeemRate: number;
@@ -15,7 +9,6 @@ export interface AppConfig {
   referralUpgradePoints: number;
   linkOpensPointsPer1000: number;
   notification: { message: string; type: string } | null;
-  theme: AppTheme;
 }
 
 const CONFIG_DEFAULTS: AppConfig = {
@@ -25,7 +18,6 @@ const CONFIG_DEFAULTS: AppConfig = {
   referralUpgradePoints: 100,
   linkOpensPointsPer1000: 1,
   notification: null,
-  theme: { accent: "teal", font: "space-grotesk", radius: "small" },
 };
 
 export function useAppConfig() {

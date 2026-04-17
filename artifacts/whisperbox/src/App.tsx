@@ -4,8 +4,6 @@ import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } fr
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useAppConfig } from "@/hooks/use-app-config";
-import { applyTheme, storeTheme } from "@/lib/theme";
 
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
@@ -302,7 +300,6 @@ function ClerkProviderWithRoutes() {
     >
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
-          <ThemeApplier />
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />
@@ -339,19 +336,6 @@ function ClerkProviderWithRoutes() {
       </QueryClientProvider>
     </ClerkProvider>
   );
-}
-
-function ThemeApplier() {
-  const { data: config, isPlaceholderData } = useAppConfig();
-  useEffect(() => {
-    if (config?.theme) {
-      applyTheme(config.theme.accent, config.theme.font, config.theme.radius);
-      if (!isPlaceholderData) {
-        storeTheme(config.theme.accent, config.theme.font, config.theme.radius);
-      }
-    }
-  }, [config?.theme?.accent, config?.theme?.font, config?.theme?.radius, isPlaceholderData]);
-  return null;
 }
 
 function App() {
