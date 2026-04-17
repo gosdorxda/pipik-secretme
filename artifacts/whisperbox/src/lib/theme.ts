@@ -129,6 +129,26 @@ export const RADIUS_OPTIONS: { id: string; label: string; value: string }[] = [
   { id: "full", label: "Full", value: "1rem" },
 ];
 
+const THEME_STORAGE_KEY = "wb_theme";
+
+export function getStoredTheme(): { accent: string; font: string; radius: string } | null {
+  try {
+    const raw = localStorage.getItem(THEME_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed.accent && parsed.font && parsed.radius) return parsed;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export function storeTheme(accent: string, font: string, radius: string) {
+  try {
+    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify({ accent, font, radius }));
+  } catch {}
+}
+
 const loadedFonts = new Set<string>();
 
 export function applyTheme(accent: string, font: string, radius: string) {

@@ -10,7 +10,7 @@ import {
   BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star, Paintbrush, Check,
 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { ACCENT_PALETTES, FONT_OPTIONS, RADIUS_OPTIONS, applyTheme } from "@/lib/theme";
+import { ACCENT_PALETTES, FONT_OPTIONS, RADIUS_OPTIONS, applyTheme, storeTheme } from "@/lib/theme";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 const SESSION_KEY = "wb_admin_secret";
@@ -654,8 +654,10 @@ function AppearanceTab({ secret, toast }: { secret: string; toast: any }) {
         method: "PUT",
         body: JSON.stringify({ theme_accent: accent, theme_font: font, theme_radius: radius }),
       });
+      storeTheme(accent, font, radius);
+      applyTheme(accent, font, radius);
       await queryClient.invalidateQueries({ queryKey: ["app-config"] });
-      toast({ description: "Tema berhasil disimpan." });
+      toast({ description: "Tema berhasil disimpan dan diterapkan ke seluruh halaman." });
     } catch (e: any) {
       toast({ description: e.message, variant: "destructive" });
     } finally {

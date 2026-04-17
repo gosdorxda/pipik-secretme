@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/reac
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useAppConfig } from "@/hooks/use-app-config";
-import { applyTheme } from "@/lib/theme";
+import { applyTheme, storeTheme } from "@/lib/theme";
 
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
@@ -342,12 +342,15 @@ function ClerkProviderWithRoutes() {
 }
 
 function ThemeApplier() {
-  const { data: config } = useAppConfig();
+  const { data: config, isPlaceholderData } = useAppConfig();
   useEffect(() => {
     if (config?.theme) {
       applyTheme(config.theme.accent, config.theme.font, config.theme.radius);
+      if (!isPlaceholderData) {
+        storeTheme(config.theme.accent, config.theme.font, config.theme.radius);
+      }
     }
-  }, [config?.theme?.accent, config?.theme?.font, config?.theme?.radius]);
+  }, [config?.theme?.accent, config?.theme?.font, config?.theme?.radius, isPlaceholderData]);
   return null;
 }
 
