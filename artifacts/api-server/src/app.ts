@@ -39,7 +39,10 @@ app.use(express.json({
 }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(clerkMiddleware());
+app.use(clerkMiddleware({
+  publishableKey: process.env.CLERK_PUBLISHABLE_KEY ?? process.env.VITE_CLERK_PUBLISHABLE_KEY,
+  secretKey: process.env.CLERK_SECRET_KEY,
+}));
 app.use(ipBanMiddleware);
 
 app.use("/api", router);
