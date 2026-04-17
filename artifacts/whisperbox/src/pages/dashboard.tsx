@@ -59,14 +59,14 @@ function StatCard({
 }) {
   const s = ACCENT_ICON[accent];
   return (
-    <div className="bg-white border border-border rounded-xl p-5 flex flex-col gap-3">
-      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${s.iconWrap}`}>
+    <div className="bg-white border border-border rounded-xs p-4 flex flex-col gap-3">
+      <div className={`w-9 h-9 rounded-xs flex items-center justify-center shrink-0 ${s.iconWrap}`}>
         <span className={s.iconColor}>{icon}</span>
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
-        <p className="text-3xl font-bold leading-none text-foreground">
-          {loading ? <span className="text-muted-foreground/40 text-xl">—</span> : value}
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
+        <p className="text-2xl font-bold leading-none text-foreground">
+          {loading ? <span className="text-muted-foreground/40 text-lg">—</span> : value}
         </p>
       </div>
     </div>
@@ -397,9 +397,9 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-2xl font-bold text-foreground leading-none">{displayName}</h2>
+                <h2 className="text-lg font-bold text-foreground leading-none">{displayName}</h2>
               </div>
-              <p className="text-base text-muted-foreground mt-1">@{profile.username}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">@{profile.username}</p>
               {profile.bio && (
                 <p className="text-sm text-foreground/70 mt-2 line-clamp-2">{profile.bio}</p>
               )}
@@ -643,7 +643,7 @@ export default function DashboardPage() {
           {/* Inbox header row */}
           <div className="flex items-center gap-2 mb-3">
             <Inbox className="w-4 h-4 text-foreground" />
-            <h2 className="text-xl font-bold">Inbox</h2>
+            <h2 className="text-sm font-semibold">Inbox</h2>
             {messages.length > 0 && (
               <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-xs">
                 {messages.length}
@@ -743,8 +743,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 bg-secondary rounded-xs flex items-center justify-center mb-3">
                 <Inbox className="w-6 h-6 text-muted-foreground" />
               </div>
-              <h3 className="text-base font-semibold mb-1">Belum ada pesan</h3>
-              <p className="text-sm text-muted-foreground max-w-sm">
+              <h3 className="text-sm font-semibold mb-1">Belum ada pesan</h3>
+              <p className="text-xs text-muted-foreground max-w-sm">
                 Bagikan linkmu untuk mulai menerima pesan anonim.
               </p>
             </div>
@@ -780,18 +780,28 @@ export default function DashboardPage() {
           ) : (
             <div className="space-y-3">
               {filteredMessages.slice(0, visibleCount).map((message, idx) => {
+                const palette = [
+                  { bg: "rgba(134,234,212,0.12)", border: "rgba(134,234,212,0.40)", stripe: "linear-gradient(to right, #86ead4, #60c4ae)" },
+                  { bg: "rgba(165,180,252,0.12)", border: "rgba(165,180,252,0.40)", stripe: "linear-gradient(to right, #86ead4, #818cf8)" },
+                  { bg: "rgba(147,197,253,0.12)", border: "rgba(147,197,253,0.40)", stripe: "linear-gradient(to right, #93c5fd, #6ee7b7)" },
+                  { bg: "rgba(252,211,77,0.12)", border: "rgba(252,211,77,0.40)", stripe: "linear-gradient(to right, #fcd34d, #86ead4)" },
+                ];
+                const { bg, border, stripe } = palette[idx % palette.length];
                 return (
                 <div
                   key={message.id}
-                  className="rounded-2xl overflow-hidden bg-[#f4f4f5] border border-[#e4e4e7]"
+                  className="rounded-xs shadow-sm overflow-hidden"
+                  style={{ background: bg, border: `1px solid ${border}` }}
                 >
+                  {/* Stripe */}
+                  <div style={{ height: 3, background: stripe }} />
 
-                  {/* Message Header */}
-                  <div className="px-4 pt-3 pb-2 flex items-center gap-2">
+                  {/* Message Header: icon + Anonymous + unread dot + timestamp */}
+                  <div className="px-5 pt-3 pb-2 flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-white/70 border border-white flex items-center justify-center shrink-0 shadow-sm">
-                      <Lock className="w-3 h-3 text-muted-foreground" />
+                      <User className="w-3 h-3 text-muted-foreground" />
                     </div>
-                    <span className="text-xs font-semibold text-foreground/70">Anonim</span>
+                    <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
                     {!message.isRead && (
                       <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
                     )}
@@ -801,7 +811,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Message Content */}
-                  <div className="px-4 pb-3">
+                  <div className="px-5 pb-3">
                     <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
                       {message.content}
                     </p>
@@ -809,8 +819,8 @@ export default function DashboardPage() {
 
                   {/* Campaign Badge */}
                   {message.campaignTitle && (
-                    <div className="px-4 pb-3">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full"
+                    <div className="px-5 pb-3">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-xs"
                             style={{ background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)", color: "#6366f1" }}>
                         <Megaphone className="w-3 h-3 shrink-0" />
                         Kampanye: {message.campaignTitle}
@@ -820,12 +830,12 @@ export default function DashboardPage() {
 
                   {/* Owner Reply (if exists) */}
                   {message.ownerReply && (
-                    <div className="mx-4 mb-3 border border-primary/20 bg-white rounded-xl p-3">
+                    <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-xs p-3">
                       <div className="flex items-center gap-2 mb-1.5">
                         <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                           <span className="text-[9px] font-bold text-primary-foreground">{initials}</span>
                         </div>
-                        <span className="text-xs font-semibold text-accent-foreground">Balasanmu</span>
+                        <span className="text-xs font-semibold text-accent-foreground">You (Owner)</span>
                         {message.ownerRepliedAt && (
                           <span className="text-[10px] text-muted-foreground ml-auto">
                             {formatDistanceToNow(new Date(message.ownerRepliedAt), { addSuffix: true })}
@@ -840,42 +850,42 @@ export default function DashboardPage() {
 
                   {/* Reply Input (if open) */}
                   {replyingTo === message.id && (
-                    <div className="mx-4 mb-3 space-y-2">
+                    <div className="mx-5 mb-3 space-y-2">
                       <Textarea
                         value={replyText}
                         onChange={e => setReplyText(e.target.value)}
-                        placeholder="Tulis balasanmu..."
-                        className="text-sm resize-none min-h-[80px] bg-white rounded-xl"
+                        placeholder="Write your reply..."
+                        className="text-sm resize-none min-h-[80px] bg-white/80"
                         autoFocus
                       />
                       <div className="flex gap-2 justify-end">
                         <Button
                           variant="outline"
                           size="sm"
-                          className="text-xs rounded-full bg-white/60"
+                          className="text-xs bg-white/60"
                           onClick={() => { setReplyingTo(null); setReplyText(""); }}
                         >
-                          Batal
+                          Cancel
                         </Button>
                         <Button
                           size="sm"
-                          className="text-xs gap-1.5 rounded-full"
+                          className="text-xs gap-1.5"
                           onClick={() => handleReply(message.id)}
                           disabled={!replyText.trim() || replyToMessage.isPending}
                         >
                           <Send className="w-3 h-3" />
-                          {replyToMessage.isPending ? "Mengirim..." : "Kirim Balasan"}
+                          {replyToMessage.isPending ? "Sending..." : "Send Reply"}
                         </Button>
                       </div>
                     </div>
                   )}
 
-                  {/* Action Buttons */}
-                  <div className="px-4 pb-4 flex items-center gap-2">
+                  {/* Action Bar */}
+                  <div className="border-t px-5 py-2 flex items-center gap-1 bg-white/30" style={{ borderColor: border }}>
                     <Button
+                      variant="ghost"
                       size="sm"
-                      className="rounded-full h-8 px-4 text-xs font-medium gap-1.5 border-0"
-                      style={{ backgroundColor: "#86ead4", color: "#1a443c" }}
+                      className="text-xs gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/50 h-7 px-2"
                       onClick={() => {
                         if (replyingTo === message.id) {
                           setReplyingTo(null);
@@ -886,23 +896,23 @@ export default function DashboardPage() {
                         }
                       }}
                     >
-                      <CornerDownRight className="w-3 h-3" />
-                      {message.ownerReply ? "Edit Balasan" : "Balas"}
+                      <CornerDownRight className="w-3.5 h-3.5" />
+                      {message.ownerReply ? "Edit Reply" : "Reply"}
                     </Button>
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="rounded-full h-8 px-4 text-xs font-medium gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white"
+                      className="text-xs gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/50 h-7 px-2"
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
-                      <Share2 className="w-3 h-3" />
-                      Bagikan
+                      <Share2 className="w-3.5 h-3.5" />
+                      Share
                     </Button>
                     <div className="flex-1" />
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="rounded-full h-8 w-8 p-0 text-muted-foreground hover:text-destructive hover:bg-white"
+                      className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-white/50"
                       onClick={() => handleDelete(message.id)}
                       disabled={deleteMessage.isPending}
                     >

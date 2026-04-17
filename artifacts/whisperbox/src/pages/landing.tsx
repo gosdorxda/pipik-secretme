@@ -1,379 +1,410 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Zap, ArrowRight, Crown, Lock } from "lucide-react";
+import { MessageSquare, Shield, Zap, ArrowRight, Crown, Lock, Bell } from "lucide-react";
 import { Footer } from "@/components/footer";
 
-const BRAND = {
-  mint:     "#86ead4",
-  mintDark: "#1a443c",
-  mintLight:"#ddf9f2",
-  gold:     "#f59e0b",
-  success:  "#22c55e",
-  info:     "#3b82f6",
-};
+const ACTIVITIES = [
+  { avatar: "A", name: "Agus",  color: "#3b82f6", text: "baru saja menerima 3 pesan baru",                        tag: "🔔", time: "2 mnt lalu" },
+  { avatar: "R", name: "Rina",  color: "#f43f5e", text: 'mendapat pesan: "Kamu itu orangnya asik banget!"',       tag: "💬", time: "5 mnt lalu" },
+  { avatar: "B", name: "Budi",  color: "#8b5cf6", text: "baru bergabung dan langsung menerima 2 pesan",           tag: "⚡", time: "11 mnt lalu" },
+  { avatar: "S", name: "Siti",  color: "#f59e0b", text: "upgrade ke Premium — social links aktif",                tag: "✨", time: "18 mnt lalu" },
+  { avatar: "D", name: "Dedi",  color: "#10b981", text: "berbagi link ke 200+ followers-nya",                     tag: "🔗", time: "24 mnt lalu" },
+  { avatar: "N", name: "Nina",  color: "#ec4899", text: "mendapat pertanyaan jujur dari temannya",                tag: "💭", time: "31 mnt lalu" },
+  { avatar: "F", name: "Fajar", color: "#f97316", text: "membalas 5 pesan anonim hari ini",                       tag: "↩️", time: "42 mnt lalu" },
+  { avatar: "M", name: "Maya",  color: "#14b8a6", text: "aktivasi notifikasi email untuk pesan baru",             tag: "📧", time: "1 jam lalu"  },
+  { avatar: "H", name: "Hadi",  color: "#6366f1", text: "profil dikunjungi 48 kali minggu ini",                   tag: "👁️", time: "1 jam lalu"  },
+  { avatar: "Y", name: "Yuna",  color: "#be185d", text: 'mendapat pesan: "Tetap semangat ya!"',                   tag: "💬", time: "2 jam lalu"  },
+];
 
-const tickerItems = [
-  { avatar: "A", name: "Agus",  color: BRAND.info,    text: "baru saja menerima 3 pesan baru" },
-  { avatar: "R", name: "Rina",  color: BRAND.gold,    text: 'mendapat pesan: "Kamu itu orangnya asik banget!"' },
-  { avatar: "B", name: "Budi",  color: BRAND.mint,    text: "baru bergabung dan langsung menerima 2 pesan" },
-  { avatar: "S", name: "Siti",  color: BRAND.gold,    text: "upgrade ke Premium — social links aktif" },
-  { avatar: "D", name: "Dedi",  color: BRAND.success, text: "berbagi link ke 200+ followers-nya" },
-  { avatar: "N", name: "Nina",  color: BRAND.info,    text: "mendapat pertanyaan jujur dari temannya" },
-  { avatar: "F", name: "Fajar", color: BRAND.success, text: "membalas 5 pesan anonim hari ini" },
-  { avatar: "M", name: "Maya",  color: BRAND.mint,    text: "aktivasi notifikasi email untuk pesan baru" },
-  { avatar: "H", name: "Hadi",  color: BRAND.info,    text: "profil dikunjungi 48 kali minggu ini" },
-  { avatar: "Y", name: "Yuna",  color: BRAND.gold,    text: 'mendapat pesan: "Tetap semangat ya!"' },
+const TICKER_ITEMS = [...ACTIVITIES, ...ACTIVITIES];
+const ITEM_HEIGHT = 80;
+const ITEM_GAP = 10;
+const ITEM_STEP = ITEM_HEIGHT + ITEM_GAP;
+const TICKER_VISIBLE = 4;
+const CONTAINER_HEIGHT = TICKER_VISIBLE * ITEM_STEP - ITEM_GAP;
+
+function ActivityTicker() {
+  return (
+    <div className="rounded-xs border border-border bg-secondary/30 p-3 overflow-hidden relative"
+         style={{
+           height: CONTAINER_HEIGHT,
+           maskImage: "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)",
+           WebkitMaskImage: "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)",
+         }}>
+      <div className="activity-ticker" style={{ display: "flex", flexDirection: "column", gap: ITEM_GAP }}>
+        {TICKER_ITEMS.map((item, i) => (
+          <div
+            key={i}
+            style={{ height: ITEM_HEIGHT, minHeight: ITEM_HEIGHT }}
+            className="flex items-center gap-3 px-3 bg-white border border-border rounded-xs shadow-sm shrink-0"
+          >
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
+              style={{ backgroundColor: item.color }}
+            >
+              {item.avatar}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-foreground truncate">
+                <span className="font-semibold">{item.name}</span>{" "}
+                <span className="text-muted-foreground">{item.text}</span>
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">{item.time}</p>
+            </div>
+            <span className="text-base shrink-0 leading-none">{item.tag}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HeroMockup() {
+  const msgStripe = "linear-gradient(to right, #86ead4, #60c4ae)";
+  const msgBg = "rgba(134,234,212,0.10)";
+  const msgBorder = "rgba(134,234,212,0.38)";
+
+  return (
+    <div className="relative flex justify-center items-center">
+      {/* Subtle glow */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full opacity-25"
+             style={{ background: "radial-gradient(circle, #86ead4, transparent 70%)" }} />
+      </div>
+
+      {/* Main dashboard-like card */}
+      <div
+        className="hero-card-float relative w-full max-w-[360px] bg-white border border-border overflow-hidden"
+        style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.09), 0 4px 16px rgba(134,234,212,0.12)" }}
+      >
+        {/* Profile header */}
+        <div className="px-5 pt-4 pb-3 border-b border-border flex items-center gap-3 bg-primary/5">
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0">
+            B
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-foreground leading-none">Budi Santoso</p>
+            <p className="text-xs text-muted-foreground mt-0.5">@budi_s · 47 pesan diterima</p>
+          </div>
+          <div className="flex items-center gap-1 text-[10px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-xs border border-primary/20">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            Live
+          </div>
+        </div>
+
+        {/* Inbox label */}
+        <div className="px-5 pt-3 pb-2 flex items-center gap-2">
+          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Inbox</span>
+          <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-xs leading-none">3</span>
+        </div>
+
+        {/* THE message card — styled exactly like dashboard inbox */}
+        <div className="mx-4 mb-4 msg-bubble-1 overflow-hidden" style={{ border: `1px solid ${msgBorder}`, background: msgBg }}>
+          {/* Stripe */}
+          <div style={{ height: 3, background: msgStripe }} />
+
+          {/* Message header */}
+          <div className="px-4 pt-3 pb-2 flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full bg-white/80 border border-white flex items-center justify-center shrink-0 shadow-sm">
+              <svg className="w-3 h-3 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+              </svg>
+            </div>
+            <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
+            <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
+            <span className="text-[10px] text-muted-foreground ml-auto">2 jam lalu</span>
+          </div>
+
+          {/* Message content */}
+          <div className="px-4 pb-3">
+            <p className="text-sm leading-relaxed text-foreground">
+              Kamu itu orangnya sangat menyenangkan, selalu bisa bikin orang senyum 😊
+            </p>
+          </div>
+
+          {/* Action buttons */}
+          <div className="px-4 pb-3 pt-1 border-t flex items-center gap-2" style={{ borderColor: msgBorder }}>
+            <button className="flex items-center gap-1.5 text-[11px] font-semibold text-accent-foreground bg-white/70 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
+              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
+              </svg>
+              Balas
+            </button>
+            <button className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground bg-white/50 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
+              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+              Bagikan
+            </button>
+          </div>
+        </div>
+
+        {/* More messages hint */}
+        <div className="msg-bubble-2 mx-4 mb-4 px-4 py-2.5 border border-dashed border-border bg-secondary/30 flex items-center gap-3">
+          <div className="flex -space-x-1.5">
+            {["#8b5cf6","#3b82f6","#f43f5e"].map((c, i) => (
+              <div key={i} className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center"
+                   style={{ background: c, zIndex: 3 - i }}>
+                <span className="text-white text-[8px] font-bold">?</span>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground flex-1">+2 pesan baru lainnya menunggumu</p>
+          <span className="text-[10px] font-semibold text-accent-foreground">Lihat →</span>
+        </div>
+      </div>
+
+      {/* Floating notification badge */}
+      <div className="absolute -top-3 -right-3 md:-right-8 bg-white border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1"
+           style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}>
+        <div className="w-5 h-5 bg-primary flex items-center justify-center shrink-0 text-[10px]">💬</div>
+        <div>
+          <p className="text-[10px] font-semibold text-foreground leading-none">Pesan baru!</p>
+          <p className="text-[9px] text-muted-foreground mt-0.5">dari seseorang anonim</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const STATS = [
+  { value: "12.400+", label: "Pengguna aktif" },
+  { value: "94.000+", label: "Pesan terkirim" },
+  { value: "100%",    label: "Anonim & aman" },
+  { value: "Gratis",  label: "Untuk memulai" },
+];
+
+const HOW_STEPS = [
+  {
+    step: "01",
+    title: "Buat akun gratis",
+    desc: "Daftar dalam 30 detik. Langsung dapat link personalmu sendiri.",
+  },
+  {
+    step: "02",
+    title: "Bagikan link-mu",
+    desc: "Share ke bio Instagram, Twitter, atau ke teman-temanmu langsung.",
+  },
+  {
+    step: "03",
+    title: "Terima pesan anonim",
+    desc: "Semua pesan masuk ke dashboard-mu. Identitas pengirim selalu tersembunyi.",
+  },
 ];
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-[#09090b] selection:bg-[#86ead4] selection:text-[#1a443c]">
-      <style>{`
-        @keyframes ticker {
-          0%   { transform: translateY(0); }
-          100% { transform: translateY(-50%); }
-        }
-        .landing-ticker {
-          animation: ticker 26s linear infinite;
-        }
-        .landing-ticker:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
+    <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
 
-      {/* ── Nav ── */}
-      <nav className="sticky top-0 z-50 w-full border-b border-[#e4e4e7] bg-white/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-6xl">
-          <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
-            <div className="w-8 h-8 rounded-lg bg-[#09090b] text-white flex items-center justify-center text-sm font-bold">
+      {/* Nav */}
+      <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-semibold text-foreground">
+            <div className="w-7 h-7 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
           </div>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 text-sm font-medium text-[#71717a]">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                      style={{ backgroundColor: BRAND.success }} />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5"
-                      style={{ backgroundColor: BRAND.success }} />
-              </span>
-              Layanan Aktif
-            </div>
-            <div className="h-4 w-px bg-[#e4e4e7] hidden md:block" />
+          <div className="flex gap-2">
             <Link href="/sign-in">
-              <span className="text-sm font-medium hover:text-[#71717a] transition-colors cursor-pointer">Masuk</span>
+              <Button variant="ghost" size="sm">Masuk</Button>
             </Link>
             <Link href="/sign-up">
-              <Button className="rounded-full font-semibold border-0 hover:opacity-90 transition-opacity"
-                      style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark }}>
-                Mulai Gratis
-              </Button>
+              <Button size="sm">Mulai Gratis</Button>
             </Link>
           </div>
         </div>
-      </nav>
+      </header>
 
-      <main>
-        {/* ── Hero ── */}
-        <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 overflow-hidden">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+      <main className="flex-1">
+        <div className="max-w-5xl mx-auto px-6">
 
-              {/* Left */}
-              <div className="flex flex-col gap-6 max-w-xl relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium w-fit border border-[#e4e4e7] bg-white shadow-sm">
-                  <span className="flex h-2 w-2 rounded-full" style={{ backgroundColor: BRAND.success }} />
-                  Lebih dari 12.400+ pengguna aktif
+          {/* Hero — split layout */}
+          <section className="grid md:grid-cols-2 gap-12 md:gap-8 items-center pt-20 pb-24 relative">
+            <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+              <div
+                className="absolute inset-0"
+                style={{
+                  backgroundImage: "radial-gradient(circle, #86ead420 1.5px, transparent 1.5px)",
+                  backgroundSize: "28px 28px",
+                  maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
+                  WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
+                }}
+              />
+            </div>
+
+            {/* Left: text */}
+            <div className="flex flex-col items-start text-left">
+              <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-[1.05] text-foreground">
+                Terima pesan<br />
+                <span className="text-accent-foreground">tanpa batas.</span>
+              </h1>
+
+              <p className="text-base text-muted-foreground mb-8 max-w-md leading-relaxed">
+                Bagikan link personalmu. Siapa saja bisa kirim pesan anonim — tanpa akun, tanpa identitas. Semua masuk ke dashboard-mu secara real-time.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link href="/sign-up">
+                  <Button size="lg" className="px-8 text-base font-semibold">
+                    Buat Link-mu <ArrowRight className="ml-1 w-5 h-5" />
+                  </Button>
+                </Link>
+                <Link href="/sign-in">
+                  <Button size="lg" variant="outline" className="px-8 text-base">
+                    Sudah punya akun
+                  </Button>
+                </Link>
+              </div>
+
+              <p className="mt-5 text-xs text-muted-foreground">
+                Tidak perlu kartu kredit &nbsp;·&nbsp; Gratis selamanya &nbsp;·&nbsp; Setup 30 detik
+              </p>
+            </div>
+
+            {/* Right: animated mockup */}
+            <div className="relative pt-6 pb-6 flex justify-center">
+              <HeroMockup />
+            </div>
+          </section>
+
+          {/* Feature cards */}
+          <section className="grid md:grid-cols-3 gap-4 pb-20">
+            <div className="p-6 border border-border bg-white rounded-xs shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
+              <div className="w-10 h-10 bg-accent rounded-xs flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                <Lock className="w-5 h-5 text-accent-foreground" />
+              </div>
+              <h3 className="text-sm font-semibold mb-2 text-foreground">100% Anonim</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">Pengirim tidak pernah teridentifikasi. Tanpa tracking, tanpa IP logging — selamanya.</p>
+            </div>
+            <div className="p-6 border border-primary bg-primary rounded-xs shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
+              <div className="w-10 h-10 bg-white/20 rounded-xs flex items-center justify-center mb-4 relative">
+                <Zap className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <h3 className="text-sm font-semibold mb-2 text-primary-foreground">Terima Instan</h3>
+              <p className="text-primary-foreground/80 text-sm leading-relaxed">Pesan muncul di inbox-mu begitu dikirim. Real-time, tanpa delay.</p>
+            </div>
+            <div className="p-6 border border-border bg-white rounded-xs shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
+              <div className="w-10 h-10 bg-accent rounded-xs flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+                <MessageSquare className="w-5 h-5 text-accent-foreground" />
+              </div>
+              <h3 className="text-sm font-semibold mb-2 text-foreground">Link Personalmu</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">Dapatkan link profil yang bisa dibagikan ke mana saja untuk terima pesan.</p>
+            </div>
+          </section>
+
+          {/* How it works */}
+          <section className="pb-20">
+            <div className="text-center mb-10">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">Cara Kerja</p>
+              <h2 className="text-2xl md:text-3xl font-bold">Mulai dalam 3 langkah mudah</h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 relative">
+              <div className="hidden md:block absolute top-7 left-[calc(33.33%+1rem)] right-[calc(33.33%+1rem)] h-px border-t border-dashed border-border" />
+              {HOW_STEPS.map(({ step, title, desc }) => (
+                <div key={step} className="flex flex-col items-center text-center gap-3">
+                  <div className="w-14 h-14 rounded-full border-2 border-primary bg-accent flex items-center justify-center text-lg font-bold text-primary-foreground z-10 bg-white">
+                    {step}
+                  </div>
+                  <h3 className="font-semibold text-sm">{title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
                 </div>
+              ))}
+            </div>
+          </section>
 
-                <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-[1.1]">
-                  Terima pesan <br />
-                  <span className="relative inline-block mt-2">
-                    <span className="relative z-10 px-2">tanpa batas.</span>
-                    <span className="absolute bottom-1 left-0 w-full h-4 -z-10 -rotate-1"
-                          style={{ backgroundColor: BRAND.mint }} />
-                  </span>
-                </h1>
+          {/* Stats strip */}
+          <section className="border-y border-border py-10 mb-20">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              {STATS.map(({ value, label }) => (
+                <div key={label}>
+                  <p className="text-3xl md:text-4xl font-bold text-foreground">{value}</p>
+                  <p className="text-xs text-muted-foreground mt-1.5">{label}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
-                <p className="text-lg md:text-xl text-[#71717a] leading-relaxed">
-                  Platform pesan anonim teraman untuk jujur-jujuran bareng teman, followers, atau siapapun. Tanpa basa-basi.
+          {/* Activity section */}
+          <section className="pb-24">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-primary/20">
+                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                  Aktivitas Live
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                  Ribuan orang sudah<br />
+                  <span className="text-accent-foreground">aktif hari ini</span>
+                </h2>
+                <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+                  Bergabunglah dengan komunitas yang terus berkembang. Terima masukan jujur, ungkapan rasa, dan pertanyaan yang tidak pernah berani diucapkan langsung.
                 </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 mt-2">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <Link href="/sign-up">
-                    <Button size="lg"
-                      className="rounded-full text-base font-semibold h-14 px-8 border-0 hover:opacity-90 transition-opacity flex items-center gap-2"
-                      style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark,
-                               boxShadow: `0 10px 30px ${BRAND.mint}40` }}>
-                      Buat Link-mu <ArrowRight className="w-5 h-5" />
+                    <Button className="gap-2">
+                      Mulai Gratis <ArrowRight className="w-4 h-4" />
                     </Button>
                   </Link>
                   <Link href="/sign-in">
-                    <Button size="lg" variant="outline"
-                      className="rounded-full text-base font-medium h-14 px-8 border-[#e4e4e7] bg-white hover:bg-[#f4f4f5] text-[#09090b]">
-                      Sudah punya akun
+                    <Button variant="outline" className="gap-2">
+                      Masuk ke akun
                     </Button>
                   </Link>
                 </div>
-
-                <p className="text-sm text-[#71717a] font-medium mt-4">
-                  Tidak perlu kartu kredit · Gratis selamanya · Setup 30 detik
-                </p>
               </div>
-
-              {/* Right – Inbox Card */}
-              <div className="relative mx-auto w-full max-w-md">
-                <div className="absolute inset-0 rounded-3xl blur-3xl opacity-30 bg-gradient-to-tr from-[#86ead4] to-[#3b82f6]" />
-                <div className="relative bg-white border border-[#e4e4e7] rounded-3xl p-6 shadow-2xl flex flex-col gap-4">
-
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#ddf9f2] flex items-center justify-center font-bold"
-                           style={{ color: BRAND.mintDark }}>W</div>
-                      <div>
-                        <div className="font-semibold text-sm">Inbox Kamu</div>
-                        <div className="text-xs text-[#71717a]">@username</div>
-                      </div>
-                    </div>
-                    <div className="px-2 py-1 rounded-full text-xs font-bold border"
-                         style={{ borderColor: BRAND.gold, color: BRAND.gold, backgroundColor: `${BRAND.gold}10` }}>
-                      1 Baru
-                    </div>
-                  </div>
-
-                  <div className="bg-[#f4f4f5] rounded-2xl p-4 border border-[#e4e4e7] cursor-pointer hover:border-[#86ead4] transition-colors">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[#71717a]">
-                        <Lock className="w-3 h-3" /> Anonim
-                      </div>
-                      <div className="text-xs text-[#71717a]">Baru saja</div>
-                    </div>
-                    <p className="font-medium text-lg mb-4">
-                      "Menurutku karya lu yang kemaren keren banget sih, bikin lagi dong! 🙌"
-                    </p>
-                    <div className="flex gap-2">
-                      <Button size="sm" className="rounded-full h-8 px-4 text-xs font-medium"
-                              style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark }}>
-                        Balas
-                      </Button>
-                      <Button size="sm" variant="ghost"
-                              className="rounded-full h-8 px-4 text-xs font-medium text-[#71717a] hover:text-[#09090b]">
-                        Bagikan
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="bg-[#f4f4f5] rounded-2xl p-4 border border-[#e4e4e7] opacity-50 grayscale">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-[#71717a]">
-                        <Lock className="w-3 h-3" /> Anonim
-                      </div>
-                      <div className="text-xs text-[#71717a]">2 jam lalu</div>
-                    </div>
-                    <p className="font-medium blur-sm select-none">Pesan rahasia ini disembunyikan untuk privasi.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Feature Cards ── */}
-        <section className="py-20 bg-[#f4f4f5] border-y border-[#e4e4e7]">
-          <div className="container mx-auto max-w-6xl px-4">
-            <div className="text-center max-w-2xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Simpel, Aman, Cepat.</h2>
-              <p className="text-[#71717a] text-lg">Semua yang kamu butuhkan untuk mulai menerima pesan anonim hari ini.</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-white rounded-3xl p-8 border border-[#e4e4e7] shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-2xl bg-[#f4f4f5] flex items-center justify-center mb-6">
-                  <Lock className="w-6 h-6 text-[#09090b]" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">100% Anonim</h3>
-                <p className="text-[#71717a] leading-relaxed">
-                  Privasi pengirim dijamin aman. Kami tidak melacak IP atau data pribadi pengirim pesan tanpa izin.
-                </p>
-              </div>
-
-              <div className="rounded-3xl p-8 border shadow-lg relative overflow-hidden transform md:-translate-y-4"
-                   style={{ backgroundColor: BRAND.mint, borderColor: `${BRAND.mintDark}20` }}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-bl-full blur-2xl" />
-                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-6 shadow-inner"
-                     style={{ backgroundColor: BRAND.mintDark }}>
-                  <Zap className="w-6 h-6" style={{ color: BRAND.mint }} />
-                </div>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND.mintDark }}>Terima Instan</h3>
-                <p className="leading-relaxed font-medium" style={{ color: `${BRAND.mintDark}cc` }}>
-                  Pesan langsung masuk ke inbox-mu detik itu juga. Aktifkan notifikasi biar nggak ketinggalan.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-3xl p-8 border border-[#e4e4e7] shadow-sm hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-2xl bg-[#f4f4f5] flex items-center justify-center mb-6">
-                  <MessageSquare className="w-6 h-6 text-[#09090b]" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">Link Personalmu</h3>
-                <p className="text-[#71717a] leading-relaxed">
-                  Klaim username unikmu dan pasang di bio Instagram, TikTok, atau Twitter dengan mudah.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── How it Works ── */}
-        <section className="py-24 px-4 bg-white">
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 tracking-tight">Cara Kerjanya</h2>
-
-            <div className="grid md:grid-cols-3 gap-8 relative">
-              <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 border-t-2 border-dashed border-[#e4e4e7] -z-10" />
-
-              {[
-                { n: "1", title: "Buat akun gratis",   desc: "Daftar dalam 30 detik dan klaim username unik yang kamu banget." },
-                { n: "2", title: "Bagikan link-mu",     desc: "Taruh link-mu di bio IG, Twitter, TikTok, atau status WA kamu." },
-                { n: "3", title: "Terima pesan anonim", desc: "Baca pesan yang masuk dan balas langsung ke social media-mu." },
-              ].map(({ n, title, desc }) => (
-                <div key={n} className="flex flex-col items-center text-center relative">
-                  <div className="w-24 h-24 rounded-full border-[6px] border-white flex items-center justify-center text-3xl font-black mb-6 shadow-sm z-10"
-                       style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark }}>
-                    {n}
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{title}</h3>
-                  <p className="text-[#71717a]">{desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Stats ── */}
-        <section className="py-12 border-y border-[#e4e4e7] bg-[#fafafa]">
-          <div className="container mx-auto max-w-6xl px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              {[
-                { val: "12.400+", label: "pengguna aktif" },
-                { val: "94.000+", label: "pesan terkirim" },
-                { val: "100%",    label: "anonim & aman"  },
-                { val: "Gratis",  label: "untuk memulai"  },
-              ].map(({ val, label }) => (
-                <div key={label} className="px-4">
-                  <div className="text-3xl font-black mb-1">{val}</div>
-                  <div className="text-sm font-medium text-[#71717a]">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Activity ── */}
-        <section className="py-24 px-4 bg-white overflow-hidden">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-2 gap-16 items-center">
 
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold w-fit mb-6"
-                     style={{ backgroundColor: `${BRAND.success}15`, color: BRAND.success }}>
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
-                          style={{ backgroundColor: BRAND.success }} />
-                    <span className="relative inline-flex rounded-full h-2 w-2"
-                          style={{ backgroundColor: BRAND.success }} />
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Aktivitas Terbaru</p>
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                    Live · hover untuk pause
                   </span>
-                  Live Activity
                 </div>
-
-                <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 leading-tight">
-                  Ribuan orang sudah aktif hari ini.
-                </h2>
-                <p className="text-lg text-[#71717a] mb-8 leading-relaxed">
-                  Bergabunglah dengan komunitas yang berkembang pesat. Lihat apa yang sedang terjadi secara real-time di WhisperBox.
+                <ActivityTicker />
+                <p className="text-xs text-muted-foreground text-center mt-3 opacity-70">
+                  Data ilustrasi — bukan data pengguna nyata
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/sign-up">
-                    <Button size="lg" className="rounded-full text-base font-semibold h-12 px-6 border-0"
-                            style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark }}>
-                      Ikut Bergabung
-                    </Button>
-                  </Link>
-                  <Link href="/sign-in">
-                    <Button size="lg" variant="outline"
-                            className="rounded-full text-base font-medium h-12 px-6 border-[#e4e4e7]">
-                      Sudah punya akun
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="relative h-[400px] w-full max-w-md mx-auto rounded-3xl border border-[#e4e4e7] bg-[#fafafa] shadow-inner overflow-hidden">
-                <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-[#fafafa] to-transparent z-10" />
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#fafafa] to-transparent z-10" />
-
-                <div className="landing-ticker pt-4">
-                  {[...tickerItems, ...tickerItems].map((item, i) => (
-                    <div key={i}
-                         className="flex items-start gap-4 p-4 mx-4 mb-3 bg-white border border-[#e4e4e7] rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                      <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-bold text-white shadow-inner"
-                           style={{ backgroundColor: item.color }}>
-                        {item.avatar}
-                      </div>
-                      <div>
-                        <div className="font-bold text-sm mb-0.5">{item.name}</div>
-                        <div className="text-sm text-[#71717a] leading-tight">{item.text}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* ── CTA Banner ── */}
-        <section className="py-24 px-4 bg-white">
-          <div className="container mx-auto max-w-6xl">
-            <div className="rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden"
-                 style={{ backgroundColor: BRAND.mint }}>
-              <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 rounded-full mix-blend-overlay opacity-50 blur-3xl"
-                   style={{ backgroundColor: BRAND.mintLight }} />
-              <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-64 h-64 rounded-full mix-blend-overlay opacity-50 blur-3xl"
-                   style={{ backgroundColor: BRAND.mintDark }} />
-
-              <div className="relative z-10 flex flex-col items-center">
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-white shadow-sm mb-8"
-                     style={{ color: BRAND.gold }}>
-                  <Crown className="w-4 h-4 fill-current" />
-                  Tersedia juga versi Premium
+          {/* CTA Banner */}
+          <section className="mb-20">
+            <div className="bg-primary rounded-xs p-10 md:p-14 text-center relative overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
+                <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-white/10 rounded-full" />
+              </div>
+              <div className="relative">
+                <div className="inline-flex items-center gap-2 bg-white/20 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-5">
+                  <Crown className="w-3.5 h-3.5" /> Tersedia juga versi Premium
                 </div>
-
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-8"
-                    style={{ color: BRAND.mintDark }}>
+                <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
                   Siap menerima kejujuran?
                 </h2>
-
-                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                <p className="text-primary-foreground/80 text-sm mb-7 max-w-md mx-auto leading-relaxed">
+                  Buat link personalmu sekarang, gratis selamanya. Upgrade kapan saja untuk notifikasi email, social links, dan lebih banyak lagi.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <Link href="/sign-up">
-                    <Button size="lg"
-                      className="rounded-full text-base font-bold h-14 px-8 border-0 bg-[#09090b] text-white hover:bg-[#27272a] shadow-xl">
-                      Buat Akun Sekarang
+                    <Button variant="secondary" size="lg" className="px-8 font-semibold">
+                      Buat Akun Gratis
                     </Button>
                   </Link>
                   <Link href="/upgrade">
-                    <Button size="lg" variant="outline"
-                      className="rounded-full text-base font-bold h-14 px-8 border-2 hover:bg-[#1a443c]/5"
-                      style={{ borderColor: `${BRAND.mintDark}30`, color: BRAND.mintDark }}>
-                      Pelajari Lebih Lanjut
+                    <Button variant="ghost" size="lg" className="px-8 text-primary-foreground hover:bg-white/15 hover:text-primary-foreground border border-white/30">
+                      Lihat Premium
                     </Button>
                   </Link>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+
+        </div>
       </main>
 
       <Footer />
