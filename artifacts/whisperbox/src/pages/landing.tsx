@@ -25,7 +25,7 @@ const CONTAINER_HEIGHT = TICKER_VISIBLE * ITEM_STEP - ITEM_GAP;
 
 function ActivityTicker() {
   return (
-    <div className="rounded-xs border border-border bg-secondary/30 p-3 overflow-hidden relative"
+    <div className="rounded-md border border-border bg-secondary/30 p-3 overflow-hidden relative"
          style={{
            height: CONTAINER_HEIGHT,
            maskImage: "linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent)",
@@ -36,7 +36,7 @@ function ActivityTicker() {
           <div
             key={i}
             style={{ height: ITEM_HEIGHT, minHeight: ITEM_HEIGHT }}
-            className="flex items-center gap-3 px-3 bg-white border border-border rounded-xs shadow-sm shrink-0"
+            className="flex items-center gap-3 px-3 bg-white border border-border rounded-md shadow-sm shrink-0"
           >
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
@@ -86,7 +86,7 @@ function HeroMockup() {
             <p className="text-sm font-bold text-foreground leading-none">Budi Santoso</p>
             <p className="text-xs text-muted-foreground mt-0.5">@budi_s · 47 pesan diterima</p>
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-xs border border-primary/20">
+          <div className="flex items-center gap-1 text-[10px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-md border border-primary/20">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             Live
           </div>
@@ -95,7 +95,7 @@ function HeroMockup() {
         {/* Inbox label */}
         <div className="px-5 pt-3 pb-2 flex items-center gap-2">
           <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Inbox</span>
-          <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-xs leading-none">3</span>
+          <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none">3</span>
         </div>
 
         {/* THE message card — styled exactly like dashboard inbox */}
@@ -200,7 +200,7 @@ export default function LandingPage() {
       <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2 font-semibold text-foreground">
-            <div className="w-7 h-7 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
@@ -270,23 +270,23 @@ export default function LandingPage() {
 
           {/* Feature cards */}
           <section className="grid md:grid-cols-3 gap-4 pb-20">
-            <div className="p-6 border border-border bg-white rounded-xs shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
-              <div className="w-10 h-10 bg-accent rounded-xs flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+            <div className="p-6 border border-border bg-white rounded-md shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
+              <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
                 <Lock className="w-5 h-5 text-accent-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-2 text-foreground">100% Anonim</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">Pengirim tidak pernah teridentifikasi. Tanpa tracking, tanpa IP logging — selamanya.</p>
             </div>
-            <div className="p-6 border border-primary bg-primary rounded-xs shadow-sm relative overflow-hidden">
+            <div className="p-6 border border-primary bg-primary rounded-md shadow-sm relative overflow-hidden">
               <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8 pointer-events-none" />
-              <div className="w-10 h-10 bg-white/20 rounded-xs flex items-center justify-center mb-4 relative">
+              <div className="w-10 h-10 bg-white/20 rounded-md flex items-center justify-center mb-4 relative">
                 <Zap className="w-5 h-5 text-primary-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-2 text-primary-foreground">Terima Instan</h3>
               <p className="text-primary-foreground/80 text-sm leading-relaxed">Pesan muncul di inbox-mu begitu dikirim. Real-time, tanpa delay.</p>
             </div>
-            <div className="p-6 border border-border bg-white rounded-xs shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
-              <div className="w-10 h-10 bg-accent rounded-xs flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
+            <div className="p-6 border border-border bg-white rounded-md shadow-sm group hover:border-primary/50 hover:shadow-md transition-all duration-200">
+              <div className="w-10 h-10 bg-accent rounded-md flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200">
                 <MessageSquare className="w-5 h-5 text-accent-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-2 text-foreground">Link Personalmu</h3>
@@ -373,7 +373,7 @@ export default function LandingPage() {
 
           {/* CTA Banner */}
           <section className="mb-20">
-            <div className="bg-primary rounded-xs p-10 md:p-14 text-center relative overflow-hidden">
+            <div className="bg-primary rounded-md p-10 md:p-14 text-center relative overflow-hidden">
               <div className="absolute inset-0 pointer-events-none">
                 <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
                 <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-white/10 rounded-full" />

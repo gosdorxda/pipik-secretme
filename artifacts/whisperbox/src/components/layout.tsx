@@ -18,7 +18,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <AppBanner />
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold text-sm text-foreground">
-            <div className="w-7 h-7 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
@@ -73,7 +73,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
             {profile !== undefined && (
               profile?.isPremium ? (
-                <span className="hidden md:inline-flex items-center gap-1 bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-xs">
+                <span className="hidden md:inline-flex items-center gap-1 bg-amber-100 text-amber-700 border border-amber-200 text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-md">
                   <Crown className="w-3 h-3" /> Premium
                 </span>
               ) : (

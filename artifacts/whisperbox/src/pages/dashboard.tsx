@@ -59,8 +59,8 @@ function StatCard({
 }) {
   const s = ACCENT_ICON[accent];
   return (
-    <div className="bg-white border border-border rounded-xs p-4 flex flex-col gap-3">
-      <div className={`w-9 h-9 rounded-xs flex items-center justify-center shrink-0 ${s.iconWrap}`}>
+    <div className="bg-white border border-border rounded-md p-4 flex flex-col gap-3">
+      <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 ${s.iconWrap}`}>
         <span className={s.iconColor}>{icon}</span>
       </div>
       <div className="min-w-0">
@@ -380,7 +380,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
 
         {/* Profile + Link Combined Card */}
-        <div className="border border-border bg-white rounded-xs overflow-hidden shadow-sm">
+        <div className="border border-border bg-white rounded-md overflow-hidden shadow-sm">
           <div className="bg-primary/10 border-b border-primary/20 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="shrink-0">
               {resolveAvatarUrl(profile.avatarUrl) ? (
@@ -471,7 +471,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Wrapped + Kampanye QnA — merged collapsible card */}
-        <div className="rounded-xs overflow-hidden" style={{ border: "1px solid #86ead430" }}>
+        <div className="rounded-md overflow-hidden" style={{ border: "1px solid #86ead430" }}>
 
           {/* ── Wrapped section (always visible) ── */}
           <Link href="/wrapped" className="block">
@@ -482,7 +482,7 @@ export default function DashboardPage() {
                      style={{ background: "radial-gradient(circle, #86ead4, transparent)" }} />
               </div>
               <div className="flex items-center gap-3 relative">
-                <div className="w-8 h-8 rounded-xs flex items-center justify-center shrink-0"
+                <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
                      style={{ background: "#86ead420", border: "1px solid #86ead440" }}>
                   <Sparkles className="w-4 h-4" style={{ color: "#86ead4" }} />
                 </div>
@@ -508,15 +508,15 @@ export default function DashboardPage() {
               style={{ borderTop: "1px solid rgba(134,234,212,0.18)" }}
             >
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-xs bg-primary/15 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-primary/15 flex items-center justify-center">
                   <Megaphone className="w-3 h-3 text-primary" />
                 </div>
                 <span className="text-xs font-semibold text-foreground">Kampanye QnA</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-xs">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-md">
                   <Crown className="w-2.5 h-2.5" /> PREMIUM
                 </span>
                 {campaign != null && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-xs">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md">
                     <Radio className="w-2.5 h-2.5" /> LIVE
                   </span>
                 )}
@@ -529,7 +529,7 @@ export default function DashboardPage() {
               <div className="border-t border-border">
                 {!profile?.isPremium ? (
                   <div className="px-5 py-5 flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-xs bg-amber-100 flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
                       <Crown className="w-4.5 h-4.5 text-amber-600" />
                     </div>
                     <div className="min-w-0">
@@ -621,7 +621,7 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <div className="px-5 py-5 flex items-center gap-4">
-                    <div className="w-9 h-9 rounded-xs bg-secondary flex items-center justify-center shrink-0">
+                    <div className="w-9 h-9 rounded-md bg-secondary flex items-center justify-center shrink-0">
                       <Megaphone className="w-4 h-4 text-muted-foreground" />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -645,7 +645,7 @@ export default function DashboardPage() {
             <Inbox className="w-4 h-4 text-foreground" />
             <h2 className="text-sm font-semibold">Inbox</h2>
             {messages.length > 0 && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-xs">
+              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
                 {messages.length}
               </span>
             )}
@@ -678,7 +678,7 @@ export default function DashboardPage() {
 
           {/* Filter tabs + search */}
           {messages.length > 0 && (
-            <div className="bg-white border border-border rounded-xs overflow-hidden mb-3">
+            <div className="bg-white border border-border rounded-md overflow-hidden mb-3">
               {/* Tabs */}
               <div className="flex items-center overflow-x-auto" style={{ borderBottom: "1px solid var(--border)" }}>
                 {(
@@ -700,7 +700,7 @@ export default function DashboardPage() {
                     }`}
                   >
                     {tab.label}
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-xs ${
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
                       activeFilter === tab.key
                         ? "bg-primary/15 text-primary"
                         : "bg-secondary text-muted-foreground"
@@ -739,8 +739,8 @@ export default function DashboardPage() {
               {[1, 2, 3].map(i => <Skeleton key={i} className="h-28 w-full" />)}
             </div>
           ) : messages.length === 0 ? (
-            <div className="border border-dashed border-border bg-secondary/20 py-16 text-center flex flex-col items-center rounded-xs">
-              <div className="w-12 h-12 bg-secondary rounded-xs flex items-center justify-center mb-3">
+            <div className="border border-dashed border-border bg-secondary/20 py-16 text-center flex flex-col items-center rounded-md">
+              <div className="w-12 h-12 bg-secondary rounded-md flex items-center justify-center mb-3">
                 <Inbox className="w-6 h-6 text-muted-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-1">Belum ada pesan</h3>
@@ -749,8 +749,8 @@ export default function DashboardPage() {
               </p>
             </div>
           ) : filteredMessages.length === 0 ? (
-            <div className="border border-dashed border-border bg-secondary/20 py-12 text-center flex flex-col items-center rounded-xs">
-              <div className="w-11 h-11 bg-secondary rounded-xs flex items-center justify-center mb-3">
+            <div className="border border-dashed border-border bg-secondary/20 py-12 text-center flex flex-col items-center rounded-md">
+              <div className="w-11 h-11 bg-secondary rounded-md flex items-center justify-center mb-3">
                 <Search className="w-5 h-5 text-muted-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-1">
@@ -790,7 +790,7 @@ export default function DashboardPage() {
                 return (
                 <div
                   key={message.id}
-                  className="rounded-xs shadow-sm overflow-hidden"
+                  className="rounded-md shadow-sm overflow-hidden"
                   style={{ background: bg, border: `1px solid ${border}` }}
                 >
                   {/* Stripe */}
@@ -820,7 +820,7 @@ export default function DashboardPage() {
                   {/* Campaign Badge */}
                   {message.campaignTitle && (
                     <div className="px-5 pb-3">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-xs"
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md"
                             style={{ background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)", color: "#6366f1" }}>
                         <Megaphone className="w-3 h-3 shrink-0" />
                         Kampanye: {message.campaignTitle}
@@ -830,7 +830,7 @@ export default function DashboardPage() {
 
                   {/* Owner Reply (if exists) */}
                   {message.ownerReply && (
-                    <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-xs p-3">
+                    <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-md p-3">
                       <div className="flex items-center gap-2 mb-1.5">
                         <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                           <span className="text-[9px] font-bold text-primary-foreground">{initials}</span>

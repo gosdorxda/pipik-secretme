@@ -225,7 +225,7 @@ export default function UpgradePage() {
       <AppLayout>
         <div className="max-w-md mx-auto py-8 space-y-5">
           <div className="text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary-foreground text-sm font-semibold px-4 py-1.5 rounded-xs mb-3">
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary-foreground text-sm font-semibold px-4 py-1.5 rounded-md mb-3">
               <QrCode className="w-4 h-4" /> Bayar dengan QRIS
             </div>
             <h1 className="text-xl font-bold">Scan QR Code di bawah ini</h1>
@@ -235,7 +235,7 @@ export default function UpgradePage() {
           </div>
 
           {timeLeft === "expired" && (
-            <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xs px-4 py-3">
+            <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-md px-4 py-3">
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-red-700">QR Code sudah kadaluarsa</p>
@@ -253,7 +253,7 @@ export default function UpgradePage() {
             </div>
           )}
 
-          <div className="border border-border bg-white rounded-xs p-6 flex flex-col items-center gap-4 shadow-sm">
+          <div className="border border-border bg-white rounded-md p-6 flex flex-col items-center gap-4 shadow-sm">
             {/* QRIS info bar */}
             <div className="w-full flex items-center justify-between px-2 pb-3 border-b border-border">
               <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function UpgradePage() {
               <span className="text-[10px] text-muted-foreground">by Tripay</span>
             </div>
 
-            <div className="w-56 h-56 flex items-center justify-center rounded-xs border border-border overflow-hidden bg-secondary/20 relative">
+            <div className="w-56 h-56 flex items-center justify-center rounded-md border border-border overflow-hidden bg-secondary/20 relative">
               {qrImageUrl ? (
                 <>
                   <img
@@ -304,7 +304,7 @@ export default function UpgradePage() {
             {qrString && timeLeft !== "expired" && (
               <div className="w-full">
                 <p className="text-[10px] text-muted-foreground mb-1.5 text-center">Data QR (untuk dompet digital yang mendukung paste)</p>
-                <div className="flex items-center gap-2 bg-secondary/50 border border-border rounded-xs px-3 py-2">
+                <div className="flex items-center gap-2 bg-secondary/50 border border-border rounded-md px-3 py-2">
                   <p className="text-[11px] font-mono text-muted-foreground truncate flex-1 select-all">
                     {qrString}
                   </p>
@@ -325,7 +325,7 @@ export default function UpgradePage() {
           </div>
 
           {/* Supported apps */}
-          <div className="border border-border rounded-xs p-4">
+          <div className="border border-border rounded-md p-4">
             <p className="text-xs font-semibold text-foreground mb-3">Diterima oleh semua aplikasi QRIS:</p>
             <div className="flex flex-wrap gap-2">
               {PAYMENT_METHODS.map((m) => (
@@ -344,7 +344,7 @@ export default function UpgradePage() {
             </div>
           </div>
 
-          <div className="bg-secondary/40 border border-border rounded-xs p-4 space-y-2">
+          <div className="bg-secondary/40 border border-border rounded-md p-4 space-y-2">
             <p className="text-xs font-semibold text-foreground">Cara pembayaran:</p>
             <ol className="text-xs text-muted-foreground space-y-1.5 list-decimal list-inside">
               <li>Buka aplikasi m-banking atau dompet digital kamu</li>
@@ -407,7 +407,7 @@ export default function UpgradePage() {
         {/* Pricing grid */}
         <div className="grid sm:grid-cols-2 gap-4">
           {/* Free */}
-          <div className="border border-border rounded-xs p-5 bg-white">
+          <div className="border border-border rounded-md p-5 bg-white">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Free</p>
             <p className="text-3xl font-bold mb-1">Gratis</p>
             <p className="text-xs text-muted-foreground mb-5">Selamanya tanpa biaya</p>
@@ -422,9 +422,9 @@ export default function UpgradePage() {
           </div>
 
           {/* Premium */}
-          <div className="border-2 border-primary rounded-xs p-5 bg-primary/5 relative overflow-hidden">
+          <div className="border-2 border-primary rounded-md p-5 bg-primary/5 relative overflow-hidden">
             <div className="absolute top-3 right-3">
-              <span className="bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-xs">
+              <span className="bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md">
                 Terbaik
               </span>
             </div>
@@ -445,7 +445,7 @@ export default function UpgradePage() {
         </div>
 
         {/* Payment methods */}
-        <div className="border border-border rounded-xs p-5 bg-white">
+        <div className="border border-border rounded-md p-5 bg-white">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 bg-[#e30613] flex items-center justify-center">
               <span className="text-white text-[8px] font-black">QRIS</span>
@@ -476,7 +476,7 @@ export default function UpgradePage() {
         {/* Trust points */}
         <div className="grid sm:grid-cols-3 gap-3">
           {TRUST_POINTS.map((t) => (
-            <div key={t.title} className="flex gap-3 p-4 border border-border rounded-xs bg-white">
+            <div key={t.title} className="flex gap-3 p-4 border border-border rounded-md bg-white">
               <span className="text-xl shrink-0 leading-none mt-0.5">{t.icon}</span>
               <div>
                 <p className="text-sm font-semibold text-foreground">{t.title}</p>

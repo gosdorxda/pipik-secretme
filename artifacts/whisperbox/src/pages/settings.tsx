@@ -454,7 +454,7 @@ export default function SettingsPage() {
                   </div>
                   {!profile?.isPremium && (
                     <Link href="/upgrade" className="shrink-0">
-                      <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-xs hover:bg-amber-100 transition-colors">
+                      <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
                         <Lock className="w-3 h-3" /> Premium
                       </span>
                     </Link>
@@ -462,7 +462,7 @@ export default function SettingsPage() {
                 </div>
 
                 {!profile?.isPremium && (
-                  <div className="mx-6 mb-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xs px-4 py-3">
+                  <div className="mx-6 mb-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                     <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-amber-800">Fitur Premium</p>
@@ -527,8 +527,8 @@ export default function SettingsPage() {
         {profile?.username && (
           <div className="relative">
             {!profile?.isPremium && (
-              <div className="absolute inset-0 z-10 rounded-xs bg-white/85 backdrop-blur-sm flex flex-col items-center justify-center gap-3 border border-border">
-                <div className="w-10 h-10 rounded-xs bg-amber-100 flex items-center justify-center mb-1">
+              <div className="absolute inset-0 z-10 rounded-md bg-white/85 backdrop-blur-sm flex flex-col items-center justify-center gap-3 border border-border">
+                <div className="w-10 h-10 rounded-md bg-amber-100 flex items-center justify-center mb-1">
                   <Crown className="w-5 h-5 text-amber-600" />
                 </div>
                 <div className="text-center">
@@ -560,7 +560,7 @@ export default function SettingsPage() {
                       Terima email setiap ada pesan anonim baru.
                     </p>
                     {clerkUser?.primaryEmailAddress?.emailAddress && (
-                      <p className="mt-1.5 font-mono text-xs text-foreground/60 bg-secondary rounded-xs px-2 py-1 inline-block">
+                      <p className="mt-1.5 font-mono text-xs text-foreground/60 bg-secondary rounded-md px-2 py-1 inline-block">
                         {clerkUser.primaryEmailAddress.emailAddress}
                       </p>
                     )}

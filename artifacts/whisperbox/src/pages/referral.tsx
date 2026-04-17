@@ -93,7 +93,7 @@ export default function ReferralPage() {
       <div className="space-y-5">
 
         {/* ── Hero Points Card ── */}
-        <div className="relative overflow-hidden rounded-xs px-7 py-8 text-center"
+        <div className="relative overflow-hidden rounded-md px-7 py-8 text-center"
              style={{ background: "linear-gradient(135deg, #0f172a 0%, #0c2318 100%)", border: "1px solid #86ead430" }}>
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full opacity-20"
@@ -164,7 +164,7 @@ export default function ReferralPage() {
           ];
           const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
           return (
-            <div className="relative overflow-hidden rounded-xs"
+            <div className="relative overflow-hidden rounded-md"
                  style={{ background: "rgba(15,23,42,0.7)", border: "1px solid rgba(134,234,212,0.12)", backdropFilter: "blur(4px)" }}>
               <style>{`
                 @keyframes wb-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -191,9 +191,9 @@ export default function ReferralPage() {
         })()}
 
         {/* ── Referral Link Card ── */}
-        <div className="bg-white border border-border rounded-xs overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xs bg-primary/15 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-primary/15 flex items-center justify-center">
               <Link2 className="w-4 h-4 text-primary" />
             </div>
             <div>
@@ -206,7 +206,7 @@ export default function ReferralPage() {
               <Skeleton className="h-10 w-full" />
             ) : (
               <div className="flex items-center gap-2">
-                <div className="flex-1 bg-secondary border border-border rounded-xs px-3 py-2.5 text-xs font-mono text-foreground/80 truncate">
+                <div className="flex-1 bg-secondary border border-border rounded-md px-3 py-2.5 text-xs font-mono text-foreground/80 truncate">
                   {referralLink || "Memuat..."}
                 </div>
                 <Button onClick={copyLink} size="sm" className="shrink-0 gap-2">
@@ -224,13 +224,13 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Cara Mendapatkan Poin ── */}
-        <div className="bg-white border border-border rounded-xs overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border bg-secondary/30">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Cara Mendapatkan Poin</p>
           </div>
           <div className="divide-y divide-border">
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xs bg-emerald-100 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-md bg-emerald-100 flex items-center justify-center shrink-0">
                 <UserPlus className="w-5 h-5 text-emerald-600" />
               </div>
               <div className="flex-1 min-w-0">
@@ -245,7 +245,7 @@ export default function ReferralPage() {
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xs bg-amber-100 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
                 <Crown className="w-5 h-5 text-amber-600" />
               </div>
               <div className="flex-1 min-w-0">
@@ -260,7 +260,7 @@ export default function ReferralPage() {
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xs bg-sky-100 flex items-center justify-center shrink-0">
+              <div className="w-11 h-11 rounded-md bg-sky-100 flex items-center justify-center shrink-0">
                 <Link2 className="w-5 h-5 text-sky-600" />
               </div>
               <div className="flex-1 min-w-0">
@@ -300,16 +300,16 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Riwayat Referral ── */}
-        <div className="bg-white border border-border rounded-xs overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xs bg-primary/10 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                 <Users className="w-3.5 h-3.5 text-primary" />
               </div>
               <p className="text-sm font-semibold">Teman yang Diundang</p>
             </div>
             {!isLoading && (
-              <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-xs">
+              <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">
                 {referral?.referralCount ?? 0} orang
               </span>
             )}
@@ -324,7 +324,7 @@ export default function ReferralPage() {
                     <Skeleton className="h-3.5 w-32" />
                     <Skeleton className="h-3 w-24" />
                   </div>
-                  <Skeleton className="h-6 w-12 rounded-xs" />
+                  <Skeleton className="h-6 w-12 rounded-md" />
                 </div>
               ))}
             </div>
@@ -351,11 +351,11 @@ export default function ReferralPage() {
                     </p>
                   </div>
                   <div className="shrink-0 flex flex-col items-end gap-1">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-xs">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md">
                       <Star className="w-2.5 h-2.5" /> +{r.points}
                     </span>
                     {r.upgradeBonusAwarded && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-xs">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
                         <Crown className="w-2.5 h-2.5" /> +100
                       </span>
                     )}
@@ -384,9 +384,9 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Penukaran Poin ── */}
-        <div className="bg-white border border-border rounded-xs overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-4 border-b border-border bg-amber-50 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xs bg-amber-100 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center">
               <Trophy className="w-4 h-4 text-amber-600" />
             </div>
             <div className="flex-1">
@@ -419,7 +419,7 @@ export default function ReferralPage() {
                     value={redeemPoints}
                     onChange={e => setRedeemPoints(e.target.value)}
                     placeholder="min. 1.000 poin"
-                    className="w-full px-3 py-2 text-sm border border-border rounded-xs bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-1 focus:ring-ring"
                   />
                   <div className="flex items-center justify-between mt-1.5">
                     <p className="text-xs text-muted-foreground">Tersedia: <span className="font-semibold text-foreground">{availablePoints} poin</span></p>
@@ -435,7 +435,7 @@ export default function ReferralPage() {
                     value={paymentInfo}
                     onChange={e => setPaymentInfo(e.target.value)}
                     placeholder="Contoh: DANA 08123456789 a.n. Budi Santoso"
-                    className="w-full px-3 py-2 text-sm border border-border rounded-xs bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none"
+                    className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none"
                   />
                   <p className="text-[11px] text-muted-foreground mt-1">Tulis metode pembayaran, nomor rekening/dompet, dan nama pemilik.</p>
                 </div>
@@ -458,9 +458,9 @@ export default function ReferralPage() {
 
         {/* ── Riwayat Penukaran ── */}
         {(loadingRequests || redeemRequests.length > 0) && (
-          <div className="bg-white border border-border rounded-xs overflow-hidden">
+          <div className="bg-white border border-border rounded-md overflow-hidden">
             <div className="px-5 py-3.5 border-b border-border flex items-center gap-2">
-              <div className="w-7 h-7 rounded-xs bg-amber-100 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-md bg-amber-100 flex items-center justify-center">
                 <Trophy className="w-3.5 h-3.5 text-amber-600" />
               </div>
               <p className="text-sm font-semibold">Riwayat Penukaran</p>
@@ -484,7 +484,7 @@ export default function ReferralPage() {
                         <p className="text-[11px] text-muted-foreground truncate">{r.paymentInfo}</p>
                         <p className="text-[10px] text-muted-foreground mt-0.5">{formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}</p>
                       </div>
-                      <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-xs border ${s.cls}`}>
+                      <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md border ${s.cls}`}>
                         {s.icon} {s.label}
                       </span>
                     </div>

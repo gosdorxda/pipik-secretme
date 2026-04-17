@@ -59,7 +59,7 @@ function SlideShell({ children, style }: { children: React.ReactNode; style?: Re
 function PremiumLock({ isPremium }: { isPremium: boolean }) {
   if (isPremium) return null;
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xs z-10"
+    <div className="absolute inset-0 flex flex-col items-center justify-center rounded-md z-10"
          style={{ backdropFilter: "blur(12px)", background: "rgba(15,23,42,0.80)" }}>
       <div className="text-center px-6">
         <Crown className="w-10 h-10 mx-auto mb-3" style={{ color: W_MINT }} />
@@ -152,7 +152,7 @@ function Slide2BusiestDay({ data, active }: { data: WrappedData; active: boolean
           const isPeak = day === peakDay.day;
           return (
             <div key={day} className="flex-1 flex flex-col items-center gap-1">
-              <div className="w-full rounded-xs transition-all duration-500"
+              <div className="w-full rounded-md transition-all duration-500"
                    style={{
                      height: active ? `${Math.max(pct, 4)}%` : "4%",
                      background: isPeak ? W_MINT : `${W_MINT}40`,
@@ -194,7 +194,7 @@ function Slide3PeakHour({ data, active }: { data: WrappedData; active: boolean }
           const pct = (count / maxCount) * 100;
           const isPeak = hour === peakHour.hour;
           return (
-            <div key={hour} className="flex-1 rounded-xs transition-all duration-300"
+            <div key={hour} className="flex-1 rounded-md transition-all duration-300"
                  style={{
                    height: active ? `${Math.max(pct, 4)}%` : "4%",
                    background: isPeak ? W_MINT : `${W_MINT}30`,
@@ -222,7 +222,7 @@ function Slide4LongestMessage({ data, isPremium }: { data: WrappedData; isPremiu
       </p>
       {msg ? (
         <>
-          <div className="relative max-w-md w-full rounded-xs p-6 mb-4"
+          <div className="relative max-w-md w-full rounded-md p-6 mb-4"
                style={{ background: W_CARD, borderLeft: `3px solid ${W_MINT}` }}>
             <p className="text-base leading-relaxed italic" style={{ color: W_TEXT }}>
               "{msg.length > 200 ? msg.slice(0, 200) + "…" : msg}"
@@ -378,7 +378,7 @@ function Slide7FinalCard({
 
       {/* Visible card preview */}
       <div
-        className="max-w-sm w-full rounded-xs overflow-hidden shadow-2xl"
+        className="max-w-sm w-full rounded-md overflow-hidden shadow-2xl"
         style={{ background: "linear-gradient(135deg, #1e293b 0%, #0f2a1e 100%)", border: `1px solid ${W_MINT}30` }}
       >
         <div className="px-6 py-5 text-center border-b" style={{ borderColor: `${W_MINT}20` }}>
@@ -628,7 +628,7 @@ export default function WrappedPage() {
             </p>
           </div>
 
-          <div className="rounded-xs p-6 space-y-4" style={{ background: W_CARD }}>
+          <div className="rounded-md p-6 space-y-4" style={{ background: W_CARD }}>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider mb-2 block" style={{ color: W_MUTED }}>
                 Tahun
@@ -638,7 +638,7 @@ export default function WrappedPage() {
                   <button
                     key={y}
                     onClick={() => setYear(y)}
-                    className="py-2.5 rounded-xs text-sm font-semibold transition-all"
+                    className="py-2.5 rounded-md text-sm font-semibold transition-all"
                     style={{
                       background: year === y ? W_MINT : `${W_MINT}15`,
                       color: year === y ? "#1a443c" : W_TEXT,
@@ -658,7 +658,7 @@ export default function WrappedPage() {
               <div className="grid grid-cols-4 gap-1.5">
                 <button
                   onClick={() => setMonth(null)}
-                  className="py-2 rounded-xs text-xs font-semibold transition-all"
+                  className="py-2 rounded-md text-xs font-semibold transition-all"
                   style={{
                     background: month === null ? W_MINT : `${W_MINT}15`,
                     color: month === null ? "#1a443c" : W_TEXT,
@@ -671,7 +671,7 @@ export default function WrappedPage() {
                   <button
                     key={i}
                     onClick={() => setMonth(i + 1)}
-                    className="py-2 rounded-xs text-xs font-semibold transition-all"
+                    className="py-2 rounded-md text-xs font-semibold transition-all"
                     style={{
                       background: month === i + 1 ? W_MINT : `${W_MINT}15`,
                       color: month === i + 1 ? "#1a443c" : W_TEXT,
@@ -686,7 +686,7 @@ export default function WrappedPage() {
 
             <button
               onClick={() => { setSlide(0); setPhase("slides"); }}
-              className="w-full py-3 rounded-xs font-bold text-base transition-all hover:opacity-90"
+              className="w-full py-3 rounded-md font-bold text-base transition-all hover:opacity-90"
               style={{ background: W_MINT, color: "#1a443c" }}
             >
               Buka Wrapped →
@@ -718,13 +718,13 @@ export default function WrappedPage() {
         <div className="flex gap-3">
           <button
             onClick={() => setPhase("select")}
-            className="flex items-center gap-2 px-4 py-2 rounded-xs text-sm font-medium"
+            className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium"
             style={{ background: W_CARD, color: W_TEXT }}
           >
             <RotateCcw className="w-4 h-4" /> Ganti Periode
           </button>
           <Link href="/dashboard">
-            <button className="px-4 py-2 rounded-xs text-sm font-medium"
+            <button className="px-4 py-2 rounded-md text-sm font-medium"
                     style={{ background: W_MINT, color: "#1a443c" }}>
               Ke Dashboard
             </button>

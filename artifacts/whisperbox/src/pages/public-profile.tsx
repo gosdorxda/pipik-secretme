@@ -72,7 +72,7 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
             target="_blank"
             rel="noopener noreferrer"
             title={item.label}
-            className="w-8 h-8 rounded-xs bg-accent/60 hover:bg-accent border border-primary/20 hover:border-primary/40 flex items-center justify-center text-accent-foreground hover:text-accent-foreground transition-all duration-150"
+            className="w-8 h-8 rounded-md bg-accent/60 hover:bg-accent border border-primary/20 hover:border-primary/40 flex items-center justify-center text-accent-foreground hover:text-accent-foreground transition-all duration-150"
           >
             {item.icon}
           </a>
@@ -136,7 +136,7 @@ export default function PublicProfilePage() {
         <div className="border-b border-border bg-white py-3">
           <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
             <div className="flex items-center gap-2 font-semibold text-sm">
-              <div className="w-5 h-5 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
+              <div className="w-5 h-5 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
               WhisperBox
             </div>
           </div>
@@ -164,13 +164,13 @@ export default function PublicProfilePage() {
         <div className="border-b border-border bg-white py-3">
           <div className="max-w-4xl mx-auto px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold text-sm text-foreground">
-              <div className="w-5 h-5 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
+              <div className="w-5 h-5 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
               WhisperBox
             </Link>
           </div>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center p-4">
-          <div className="border border-border bg-white p-12 shadow-sm text-center max-w-sm w-full rounded-xs">
+          <div className="border border-border bg-white p-12 shadow-sm text-center max-w-sm w-full rounded-md">
             <User className="w-14 h-14 text-muted-foreground mx-auto mb-4" />
             <h1 className="text-xl font-bold mb-2">User Not Found</h1>
             <p className="text-muted-foreground text-sm mb-8">The user '{username}' does not exist.</p>
@@ -192,7 +192,7 @@ export default function PublicProfilePage() {
       <div className="border-b border-border bg-white sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 font-semibold text-sm text-foreground">
-            <div className="w-7 h-7 bg-primary rounded-xs flex items-center justify-center text-primary-foreground text-xs font-bold">
+            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
@@ -230,7 +230,7 @@ export default function PublicProfilePage() {
               <div className="flex items-center justify-center gap-2">
                 <h1 className="text-2xl font-bold leading-tight text-foreground">{displayName}</h1>
                 {profile.isPremium && (
-                  <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-xs shrink-0">
+                  <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-md shrink-0">
                     <Crown className="w-3 h-3" /> Premium
                   </span>
                 )}
@@ -252,16 +252,16 @@ export default function PublicProfilePage() {
 
         {/* Active Campaign Banner */}
         {activeCampaign != null && (
-          <div className="rounded-xs overflow-hidden shadow-sm"
+          <div className="rounded-md overflow-hidden shadow-sm"
                style={{ background: "linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%)", border: "1px solid rgba(134,234,212,0.5)" }}>
             <div className="h-1 bg-gradient-to-r from-primary via-primary/80 to-primary/60" />
             <div className="px-5 py-4">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-xs bg-primary/20 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
                   <Megaphone className="w-3 h-3 text-primary" />
                 </div>
                 <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{activeCampaign.title}</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-xs ml-auto">
+                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md ml-auto">
                   <Radio className="w-2.5 h-2.5" /> Live
                 </span>
               </div>
@@ -274,7 +274,7 @@ export default function PublicProfilePage() {
         )}
 
         {/* Send Message Card */}
-        <div className="bg-white border border-border rounded-xs shadow-sm overflow-hidden">
+        <div className="bg-white border border-border rounded-md shadow-sm overflow-hidden">
           {/* Mint accent top stripe */}
           <div className="h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
           <div className="px-6 py-5">
@@ -285,7 +285,7 @@ export default function PublicProfilePage() {
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">They won't know it's you</p>
               </div>
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-foreground bg-accent border border-green-100 px-2.5 py-1 rounded-xs shrink-0">
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-foreground bg-accent border border-green-100 px-2.5 py-1 rounded-md shrink-0">
                 <Lock className="w-3 h-3" /> Anonymous
               </span>
             </div>
@@ -333,7 +333,7 @@ export default function PublicProfilePage() {
               <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                 Public Messages
               </h3>
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-xs">
+              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
                 {publicMessages.length}
               </span>
             </div>
@@ -348,7 +348,7 @@ export default function PublicProfilePage() {
               return (
               <div
                 key={msg.id}
-                className="rounded-xs shadow-sm overflow-hidden"
+                className="rounded-md shadow-sm overflow-hidden"
                 style={{ background: bg, border: `1px solid ${border}` }}
               >
                 {/* Stripe */}
@@ -373,7 +373,7 @@ export default function PublicProfilePage() {
                 </div>
 
                 {msg.ownerReply && (
-                  <div className="mx-4 mb-4 border border-primary/20 bg-white/60 rounded-xs p-3">
+                  <div className="mx-4 mb-4 border border-primary/20 bg-white/60 rounded-md p-3">
                     <div className="flex items-center gap-2 mb-1.5">
                       <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                         <span className="text-[9px] font-bold text-primary-foreground">{initials}</span>

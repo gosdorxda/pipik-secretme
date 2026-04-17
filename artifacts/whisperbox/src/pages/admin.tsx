@@ -32,7 +32,7 @@ async function apiFetch(path: string, secret: string, options?: RequestInit) {
 function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) {
   return (
     <div className="bg-card border border-border rounded-sm p-5 flex items-center gap-4">
-      <div className={`w-11 h-11 rounded-xs flex items-center justify-center shrink-0 ${color}`}>
+      <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 ${color}`}>
         <Icon className="w-5 h-5" />
       </div>
       <div>
@@ -153,7 +153,7 @@ export default function AdminPage() {
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xs text-sm font-medium transition-colors whitespace-nowrap ${
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
                 tab === t.id ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"
               }`}
             >
@@ -409,7 +409,7 @@ function TransactionsTab({ secret }: { secret: string }) {
                   <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{t.merchantRef}</td>
                   <td className="px-4 py-3 text-right font-semibold">{formatIDR(t.amount)}</td>
                   <td className="px-4 py-3 text-center">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-xs border ${statusColor(t.status)}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${statusColor(t.status)}`}>
                       {t.status}
                     </span>
                   </td>
@@ -518,18 +518,18 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
             <button
               key={f.value}
               onClick={() => { setStatusFilter(f.value); load(f.value); }}
-              className={`text-xs px-3 py-1.5 rounded-xs border font-medium transition-colors ${statusFilter === f.value ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:text-foreground"}`}
+              className={`text-xs px-3 py-1.5 rounded-md border font-medium transition-colors ${statusFilter === f.value ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:text-foreground"}`}
             >
               {f.label}
             </button>
           ))}
-          <button onClick={() => load(statusFilter)} className="text-xs px-3 py-1.5 rounded-xs border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5">
+          <button onClick={() => load(statusFilter)} className="text-xs px-3 py-1.5 rounded-md border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5">
             <RefreshCw className="w-3 h-3" /> Refresh
           </button>
         </div>
       </div>
 
-      <div className="border border-border rounded-xs overflow-hidden">
+      <div className="border border-border rounded-md overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
             {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
@@ -556,7 +556,7 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-sm font-semibold">{r.displayName ?? `@${r.username}`}</span>
                         <span className="text-xs text-muted-foreground">@{r.username}</span>
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-xs border ${s.cls}`}>
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.cls}`}>
                           {s.icon} {s.label}
                         </span>
                       </div>
@@ -568,7 +568,7 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                         <span className="text-muted-foreground">→</span>
                         <span className="font-semibold text-amber-700">{formatRupiah(estimatedValue)}</span>
                       </div>
-                      <p className="text-xs text-muted-foreground bg-secondary/30 rounded-xs px-2 py-1 inline-block">{r.paymentInfo}</p>
+                      <p className="text-xs text-muted-foreground bg-secondary/30 rounded-md px-2 py-1 inline-block">{r.paymentInfo}</p>
                       <p className="text-[10px] text-muted-foreground mt-1">{formatDate(r.createdAt)}</p>
                     </div>
                     {r.status === "pending" && (
