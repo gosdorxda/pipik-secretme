@@ -3,13 +3,25 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: WhisperBox API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User profile operations
+  - name: messages
+    description: Anonymous message operations
+  - name: campaigns
+    description: QnA campaign operations (Premium)
+  - name: payments
+    description: Premium upgrade and payment operations
+  - name: Storage
+    description: Object storage upload and serving endpoints.
+  - name: referrals
+    description: Referral and points system
 paths:
   /healthz:
     get:
@@ -24,8 +36,584 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users/me:
+    get:
+      operationId: getMyProfile
+      tags: [users]
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+
+    put:
+      operationId: updateMyProfile
+      tags: [users]
+      summary: Update current user profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileBody"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "401":
+          description: Unauthorized
+        "409":
+          description: Username already taken
+
+  /users/{username}:
+    get:
+      operationId: getPublicProfile
+      tags: [users]
+      summary: Get public profile by username
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Public profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PublicProfile"
+        "404":
+          description: User not found
+
+  /messages:
+    get:
+      operationId: getMyMessages
+      tags: [messages]
+      summary: Get messages received by current user
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagesResponse"
+        "401":
+          description: Unauthorized
+
+  /messages/{username}:
+    post:
+      operationId: sendMessage
+      tags: [messages]
+      summary: Send anonymous message to a user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendMessageBody"
+      responses:
+        "201":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "404":
+          description: User not found
+        "429":
+          description: Rate limit exceeded
+
+  /messages/{id}:
+    delete:
+      operationId: deleteMessage
+      tags: [messages]
+      summary: Delete a message
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteResponse"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not found
+
+  /messages/stats/me:
+    get:
+      operationId: getMyStats
+      tags: [messages]
+      summary: Get stats for current user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserStats"
+        "401":
+          description: Unauthorized
+
+  /messages/wrapped/me:
+    get:
+      operationId: getMyWrapped
+      tags: [messages]
+      summary: Get Wrapped recap stats for a given period
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Wrapped stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WrappedStats"
+        "401":
+          description: Unauthorized
+
+  /messages/{id}/reply:
+    post:
+      operationId: replyToMessage
+      tags: [messages]
+      summary: Reply to a message as the owner
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyMessageBody"
+      responses:
+        "200":
+          description: Reply saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Message not found
+
+  /payments/create:
+    post:
+      operationId: createPayment
+      tags: [payments]
+      summary: Create a QRIS payment transaction for premium upgrade
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Payment transaction created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatePaymentResponse"
+        "400":
+          description: Already premium or invalid request
+        "401":
+          description: Unauthorized
+        "503":
+          description: Payment service unavailable
+
+  /payments/status/{ref}:
+    get:
+      operationId: getPaymentStatus
+      tags: [payments]
+      summary: Get payment transaction status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: ref
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Payment status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaymentStatusResponse"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Transaction not found
+
+  /payments/callback:
+    post:
+      operationId: tripayCallback
+      tags: [payments]
+      summary: Tripay payment callback webhook
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallbackResponse"
+
+  /storage/uploads/request-url:
+    post:
+      tags: [Storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadUrlRequest'
+      responses:
+        '200':
+          description: Presigned upload URL generated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadUrlResponse'
+        '400':
+          description: Missing or invalid required fields.
+        '500':
+          description: Failed to generate upload URL.
+
+  /storage/public-objects/{filePath}:
+    get:
+      tags: [Storage]
+      operationId: getPublicObject
+      summary: Serve a public asset
+      parameters:
+        - name: filePath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object content streamed.
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: File not found.
+
+  /storage/objects/{objectPath}:
+    get:
+      tags: [Storage]
+      operationId: getStorageObject
+      summary: Serve an object entity
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Object content streamed.
+          content:
+            '*/*':
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Object not found.
+
+  /campaigns/me:
+    get:
+      operationId: getMyCampaign
+      tags: [campaigns]
+      summary: Get my active QnA campaign
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Active campaign or null
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "204":
+          description: No active campaign
+        "401":
+          description: Unauthorized
+
+    post:
+      operationId: createCampaign
+      tags: [campaigns]
+      summary: Create a new QnA campaign (Premium only)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCampaignBody"
+      responses:
+        "201":
+          description: Campaign created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Premium required
+
+  /campaigns/{id}/end:
+    patch:
+      operationId: endCampaign
+      tags: [campaigns]
+      summary: End (deactivate) a campaign
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Campaign ended
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Campaign not found
+
+  /campaigns/public/{username}:
+    get:
+      operationId: getPublicCampaign
+      tags: [campaigns]
+      summary: Get active campaign for a public profile
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Active campaign
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Campaign"
+        "204":
+          description: No active campaign
+
+  /messages/{id}/visibility:
+    patch:
+      operationId: toggleMessageVisibility
+      tags: [messages]
+      summary: Toggle message public/private visibility
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VisibilityBody"
+      responses:
+        "200":
+          description: Visibility updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Message"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Message not found
+
+  /referrals/me:
+    get:
+      operationId: getMyReferralStats
+      tags: [referrals]
+      summary: Get referral stats and points
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Referral stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReferralStats"
+        "401":
+          description: Unauthorized
+
+  /referrals/claim:
+    post:
+      operationId: claimReferral
+      tags: [referrals]
+      summary: Claim a referral code after sign-up
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClaimReferralBody"
+      responses:
+        "200":
+          description: Referral claimed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClaimReferralResponse"
+        "400":
+          description: Bad request (missing code or self-referral)
+        "404":
+          description: Referral code not found
+        "409":
+          description: Already claimed
+
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
   schemas:
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        title:
+          type: string
+        question:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        endedAt:
+          type: string
+          format: date-time
+          nullable: true
+        responseCount:
+          type: integer
+      required:
+        - id
+        - userId
+        - title
+        - question
+        - isActive
+        - createdAt
+        - responseCount
+
+    CreateCampaignBody:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        question:
+          type: string
+          maxLength: 500
+      required:
+        - title
+        - question
+
+    EndCampaignParams:
+      type: object
+      properties:
+        id:
+          type: string
+      required:
+        - id
+
+    GetPublicCampaignParams:
+      type: object
+      properties:
+        username:
+          type: string
+      required:
+        - username
+
     HealthStatus:
       type: object
       properties:
@@ -34,3 +622,483 @@ components:
       required:
         - status
 
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        clerkId:
+          type: string
+        username:
+          type: string
+        displayName:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        isPremium:
+          type: boolean
+        defaultPublicMessages:
+          type: boolean
+        emailNotifications:
+          type: boolean
+        linkOpens:
+          type: integer
+        socialInstagram:
+          type: string
+          nullable: true
+        socialTiktok:
+          type: string
+          nullable: true
+        socialX:
+          type: string
+          nullable: true
+        socialFacebook:
+          type: string
+          nullable: true
+        socialGithub:
+          type: string
+          nullable: true
+        socialLinkedin:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - clerkId
+        - username
+        - isPremium
+        - defaultPublicMessages
+        - emailNotifications
+        - linkOpens
+        - createdAt
+
+    PublicProfile:
+      type: object
+      properties:
+        username:
+          type: string
+        displayName:
+          type: string
+          nullable: true
+        bio:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        socialInstagram:
+          type: string
+          nullable: true
+        socialTiktok:
+          type: string
+          nullable: true
+        socialX:
+          type: string
+          nullable: true
+        socialFacebook:
+          type: string
+          nullable: true
+        socialGithub:
+          type: string
+          nullable: true
+        socialLinkedin:
+          type: string
+          nullable: true
+        isPremium:
+          type: boolean
+        publicMessages:
+          type: array
+          items:
+            $ref: "#/components/schemas/PublicMessage"
+      required:
+        - username
+        - isPremium
+        - publicMessages
+
+    PublicMessage:
+      type: object
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        ownerReply:
+          type: string
+          nullable: true
+        ownerRepliedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - content
+        - createdAt
+
+    UpdateProfileBody:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+          pattern: "^[a-zA-Z0-9_]+$"
+        displayName:
+          type: string
+          maxLength: 64
+          nullable: true
+        bio:
+          type: string
+          maxLength: 500
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        defaultPublicMessages:
+          type: boolean
+        emailNotifications:
+          type: boolean
+        socialInstagram:
+          type: string
+          nullable: true
+        socialTiktok:
+          type: string
+          nullable: true
+        socialX:
+          type: string
+          nullable: true
+        socialFacebook:
+          type: string
+          nullable: true
+        socialGithub:
+          type: string
+          nullable: true
+        socialLinkedin:
+          type: string
+          nullable: true
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        isRead:
+          type: boolean
+        isPublic:
+          type: boolean
+        ownerReply:
+          type: string
+          nullable: true
+        ownerRepliedAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - content
+        - createdAt
+        - isRead
+        - isPublic
+
+    MessagesResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Message"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+      required:
+        - messages
+        - total
+        - page
+        - limit
+
+    SendMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      required:
+        - content
+
+    ReplyMessageBody:
+      type: object
+      properties:
+        reply:
+          type: string
+          minLength: 1
+          maxLength: 1000
+      required:
+        - reply
+
+    VisibilityBody:
+      type: object
+      properties:
+        isPublic:
+          type: boolean
+      required:
+        - isPublic
+
+    DeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        size:
+          type: integer
+          minimum: 1
+        contentType:
+          type: string
+          minLength: 1
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+        objectPath:
+          type: string
+
+    CreatePaymentResponse:
+      type: object
+      properties:
+        merchantRef:
+          type: string
+        tripayRef:
+          type: string
+        amount:
+          type: integer
+        qrString:
+          type: string
+        qrImageUrl:
+          type: string
+        expiresAt:
+          type: integer
+      required:
+        - merchantRef
+        - amount
+        - qrString
+        - qrImageUrl
+
+    PaymentStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [UNPAID, PAID, EXPIRED, FAILED]
+        isPremium:
+          type: boolean
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - status
+        - isPremium
+
+    CallbackResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+      required:
+        - success
+
+    UserStats:
+      type: object
+      properties:
+        totalMessages:
+          type: integer
+        unreadMessages:
+          type: integer
+        unrepliedMessages:
+          type: integer
+        linkOpens:
+          type: integer
+        isPremium:
+          type: boolean
+      required:
+        - totalMessages
+        - unreadMessages
+        - unrepliedMessages
+        - linkOpens
+        - isPremium
+
+    WrappedDayCount:
+      type: object
+      properties:
+        day:
+          type: integer
+        count:
+          type: integer
+      required:
+        - day
+        - count
+
+    WrappedHourCount:
+      type: object
+      properties:
+        hour:
+          type: integer
+        count:
+          type: integer
+      required:
+        - hour
+        - count
+
+    WrappedWordCount:
+      type: object
+      properties:
+        word:
+          type: string
+        count:
+          type: integer
+      required:
+        - word
+        - count
+
+    WrappedStats:
+      type: object
+      properties:
+        year:
+          type: integer
+        month:
+          type: integer
+          nullable: true
+        totalMessages:
+          type: integer
+        repliedMessages:
+          type: integer
+        linkOpens:
+          type: integer
+        memberSince:
+          type: string
+          format: date-time
+        dayDistribution:
+          type: array
+          items:
+            $ref: "#/components/schemas/WrappedDayCount"
+        hourDistribution:
+          type: array
+          items:
+            $ref: "#/components/schemas/WrappedHourCount"
+        longestMessage:
+          type: string
+          nullable: true
+        topWords:
+          type: array
+          items:
+            $ref: "#/components/schemas/WrappedWordCount"
+      required:
+        - year
+        - totalMessages
+        - repliedMessages
+        - linkOpens
+        - memberSince
+        - dayDistribution
+        - hourDistribution
+        - topWords
+
+    ReferralUser:
+      type: object
+      properties:
+        username:
+          type: string
+        displayName:
+          type: string
+          nullable: true
+        joinedAt:
+          type: string
+          format: date-time
+        points:
+          type: integer
+        upgradeBonusAwarded:
+          type: boolean
+        isPremium:
+          type: boolean
+      required:
+        - username
+        - joinedAt
+        - points
+        - upgradeBonusAwarded
+        - isPremium
+
+    ReferralStats:
+      type: object
+      properties:
+        referralCode:
+          type: string
+        points:
+          type: integer
+        pointsFromLinkOpens:
+          type: integer
+        totalPoints:
+          type: integer
+        linkOpens:
+          type: integer
+        referralCount:
+          type: integer
+        referrals:
+          type: array
+          items:
+            $ref: "#/components/schemas/ReferralUser"
+      required:
+        - referralCode
+        - points
+        - pointsFromLinkOpens
+        - totalPoints
+        - linkOpens
+        - referralCount
+        - referrals
+
+    ClaimReferralBody:
+      type: object
+      properties:
+        referralCode:
+          type: string
+      required:
+        - referralCode
+
+    ClaimReferralResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        pointsAwarded:
+          type: integer
+      required:
+        - success
+        - pointsAwarded

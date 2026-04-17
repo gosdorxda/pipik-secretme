@@ -1,0 +1,353 @@
+import { Router } from "express";
+import { db, usersTable, messagesTable, transactionsTable, systemSettingsTable, SETTING_KEYS, redeemRequestsTable } from "@workspace/db";
+import { eq, desc, ilike, or, count, sum, sql, and } from "drizzle-orm";
+import { requireAdmin } from "../middlewares/requireAdmin";
+import { getBannedIps, invalidateCache } from "../lib/settingsCache";
+import { IS_SANDBOX } from "../lib/tripay";
+
+const router = Router();
+
+router.use(requireAdmin);
+
+router.get("/stats", async (req, res) => {
+  try {
+    const [
+      totalUsersResult,
+      premiumUsersResult,
+      totalMessagesResult,
+      totalTransactionsResult,
+      revenueResult,
+    ] = await Promise.all([
+      db.select({ count: count() }).from(usersTable),
+      db.select({ count: count() }).from(usersTable).where(eq(usersTable.isPremium, true)),
+      db.select({ count: count() }).from(messagesTable),
+      db.select({ count: count() }).from(transactionsTable).where(eq(transactionsTable.status, "PAID")),
+      db.select({ total: sum(transactionsTable.amount) }).from(transactionsTable).where(eq(transactionsTable.status, "PAID")),
+    ]);
+
+    res.json({
+      totalUsers: totalUsersResult[0]?.count ?? 0,
+      premiumUsers: premiumUsersResult[0]?.count ?? 0,
+      totalMessages: totalMessagesResult[0]?.count ?? 0,
+      totalTransactions: totalTransactionsResult[0]?.count ?? 0,
+      totalRevenue: Number(revenueResult[0]?.total ?? 0),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error getting admin stats");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/users", async (req, res) => {
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  const search = (req.query.search as string | undefined)?.trim();
+  const offset = (page - 1) * limit;
+
+  try {
+    const whereClause = search
+      ? or(
+          ilike(usersTable.username, `%${search}%`),
+          ilike(usersTable.displayName, `%${search}%`),
+        )
+      : undefined;
+
+    const [users, totalResult] = await Promise.all([
+      db.select({
+        id: usersTable.id,
+        clerkId: usersTable.clerkId,
+        username: usersTable.username,
+        displayName: usersTable.displayName,
+        avatarUrl: usersTable.avatarUrl,
+        isPremium: usersTable.isPremium,
+        isAdmin: usersTable.isAdmin,
+        points: usersTable.points,
+        linkOpens: usersTable.linkOpens,
+        emailNotifications: usersTable.emailNotifications,
+        createdAt: usersTable.createdAt,
+      })
+        .from(usersTable)
+        .where(whereClause)
+        .orderBy(desc(usersTable.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db.select({ count: count() }).from(usersTable).where(whereClause),
+    ]);
+
+    res.json({
+      users,
+      total: totalResult[0]?.count ?? 0,
+      page,
+      limit,
+      totalPages: Math.ceil((totalResult[0]?.count ?? 0) / limit),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error listing users");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  const { isPremium, isAdmin, points } = req.body;
+
+  const updates: Record<string, any> = { updatedAt: new Date() };
+  if (typeof isPremium === "boolean") updates.isPremium = isPremium;
+  if (typeof isAdmin === "boolean") updates.isAdmin = isAdmin;
+  if (typeof points === "number" && points >= 0) updates.points = points;
+
+  if (Object.keys(updates).length === 1) {
+    res.status(400).json({ error: "No valid fields to update" });
+    return;
+  }
+
+  try {
+    const [updated] = await db.update(usersTable)
+      .set(updates)
+      .where(eq(usersTable.id, id))
+      .returning();
+
+    if (!updated) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.json(updated);
+  } catch (err) {
+    req.log.error({ err }, "Error updating user");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/users/:id/premium", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.update(usersTable)
+      .set({ isPremium: false, updatedAt: new Date() })
+      .where(eq(usersTable.id, id));
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/transactions", async (req, res) => {
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, Number(req.query.limit) || 20));
+  const offset = (page - 1) * limit;
+
+  try {
+    const [transactions, totalResult] = await Promise.all([
+      db
+        .select({
+          id: transactionsTable.id,
+          userId: transactionsTable.userId,
+          merchantRef: transactionsTable.merchantRef,
+          tripayRef: transactionsTable.tripayRef,
+          amount: transactionsTable.amount,
+          status: transactionsTable.status,
+          paidAt: transactionsTable.paidAt,
+          createdAt: transactionsTable.createdAt,
+          username: usersTable.username,
+          displayName: usersTable.displayName,
+        })
+        .from(transactionsTable)
+        .leftJoin(usersTable, eq(transactionsTable.userId, usersTable.id))
+        .orderBy(desc(transactionsTable.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db.select({ count: count() }).from(transactionsTable),
+    ]);
+
+    res.json({
+      transactions,
+      total: totalResult[0]?.count ?? 0,
+      page,
+      limit,
+      totalPages: Math.ceil((totalResult[0]?.count ?? 0) / limit),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error listing transactions");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/settings", async (req, res) => {
+  try {
+    const rows = await db.select().from(systemSettingsTable);
+    const settings: Record<string, string | null> = {};
+    for (const row of rows) {
+      settings[row.key] = row.value;
+    }
+
+    const defaults: Record<string, string> = {
+      [SETTING_KEYS.PREMIUM_PRICE]: process.env.PREMIUM_PRICE || "49900",
+      [SETTING_KEYS.REFERRAL_SIGNUP_POINTS]: "10",
+      [SETTING_KEYS.REFERRAL_UPGRADE_POINTS]: "100",
+      [SETTING_KEYS.MAINTENANCE_MODE]: "false",
+      [SETTING_KEYS.APP_NAME]: "WhisperBox",
+      [SETTING_KEYS.APP_DESCRIPTION]: "Terima pesan anonim dari siapa saja",
+      [SETTING_KEYS.RESEND_FROM_EMAIL]: process.env.RESEND_FROM_EMAIL || "",
+      [SETTING_KEYS.TRIPAY_MERCHANT_CODE]: process.env.TRIPAY_MERCHANT_CODE || "",
+      link_opens_points_per_1000: "1",
+      point_redeem_rate: "10000",
+      banned_ips: "[]",
+      message_rate_limit_count: "5",
+      message_rate_limit_window_minutes: "10",
+      notification_active: "false",
+      notification_message: "",
+      notification_type: "info",
+    };
+
+    for (const [key, val] of Object.entries(defaults)) {
+      if (!(key in settings)) settings[key] = val;
+    }
+
+    // Inject runtime-only values
+    settings._tripay_sandbox = IS_SANDBOX ? "true" : "false";
+
+    res.json(settings);
+  } catch (err) {
+    req.log.error({ err }, "Error getting settings");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.put("/settings", async (req, res) => {
+  const updates: Record<string, string> = req.body;
+  if (!updates || typeof updates !== "object") {
+    res.status(400).json({ error: "Invalid body" });
+    return;
+  }
+
+  try {
+    const now = new Date();
+    const rows = Object.entries(updates).map(([key, value]) => ({
+      key,
+      value: String(value),
+      updatedAt: now,
+    }));
+
+    for (const row of rows) {
+      await db
+        .insert(systemSettingsTable)
+        .values(row)
+        .onConflictDoUpdate({
+          target: systemSettingsTable.key,
+          set: { value: row.value, updatedAt: now },
+        });
+    }
+
+    invalidateCache();
+    res.json({ success: true });
+  } catch (err) {
+    req.log.error({ err }, "Error updating settings");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// IP Ban routes
+router.get("/ip-bans", async (req, res) => {
+  try {
+    const ips = await getBannedIps();
+    res.json({ ips });
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/ip-bans", async (req, res) => {
+  const { ip } = req.body;
+  if (!ip || typeof ip !== "string" || !/^[\d.:a-fA-F]+$/.test(ip.trim())) {
+    res.status(400).json({ error: "Invalid IP address" });
+    return;
+  }
+  try {
+    const ips = await getBannedIps();
+    const trimmed = ip.trim();
+    if (!ips.includes(trimmed)) {
+      ips.push(trimmed);
+      const now = new Date();
+      await db.insert(systemSettingsTable)
+        .values({ key: "banned_ips", value: JSON.stringify(ips), updatedAt: now })
+        .onConflictDoUpdate({ target: systemSettingsTable.key, set: { value: JSON.stringify(ips), updatedAt: now } });
+      invalidateCache();
+    }
+    res.json({ ips });
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/ip-bans/:ip", async (req, res) => {
+  const ip = decodeURIComponent(req.params.ip);
+  try {
+    const ips = await getBannedIps();
+    const filtered = ips.filter(i => i !== ip);
+    const now = new Date();
+    await db.insert(systemSettingsTable)
+      .values({ key: "banned_ips", value: JSON.stringify(filtered), updatedAt: now })
+      .onConflictDoUpdate({ target: systemSettingsTable.key, set: { value: JSON.stringify(filtered), updatedAt: now } });
+    invalidateCache();
+    res.json({ ips: filtered });
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/redeem-requests", async (req, res) => {
+  try {
+    const status = req.query.status as string | undefined;
+    const rows = await db
+      .select({
+        id: redeemRequestsTable.id,
+        userId: redeemRequestsTable.userId,
+        points: redeemRequestsTable.points,
+        paymentInfo: redeemRequestsTable.paymentInfo,
+        status: redeemRequestsTable.status,
+        createdAt: redeemRequestsTable.createdAt,
+        updatedAt: redeemRequestsTable.updatedAt,
+        username: usersTable.username,
+        displayName: usersTable.displayName,
+      })
+      .from(redeemRequestsTable)
+      .leftJoin(usersTable, eq(redeemRequestsTable.userId, usersTable.id))
+      .where(status ? eq(redeemRequestsTable.status, status) : undefined)
+      .orderBy(desc(redeemRequestsTable.createdAt));
+
+    res.json({ requests: rows });
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.patch("/redeem-requests/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body ?? {};
+  if (!["pending", "success", "rejected"].includes(status)) {
+    res.status(400).json({ error: "Status tidak valid." });
+    return;
+  }
+  try {
+    const existing = await db.query.redeemRequestsTable.findFirst({
+      where: eq(redeemRequestsTable.id, id),
+    });
+    if (!existing) { res.status(404).json({ error: "Request tidak ditemukan." }); return; }
+
+    const [updated] = await db.update(redeemRequestsTable)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(redeemRequestsTable.id, id))
+      .returning();
+
+    if (status === "rejected" && existing.status !== "rejected") {
+      await db.update(usersTable)
+        .set({ redeemedPoints: sql`GREATEST(0, ${usersTable.redeemedPoints} - ${existing.points})` })
+        .where(eq(usersTable.id, existing.userId));
+    }
+
+    res.json({ request: updated });
+  } catch {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+export default router;

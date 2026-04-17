@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  --background: #ffffff;
+  --foreground: #09090b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+  --primary: #86ead4;
+  --primary-hover: #7de0cb;
+  --primary-foreground: #1a443c;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #ddf9f2;
+  --accent-foreground: #3a9e88;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #86ead4;
+  --radius: 0.125rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-xs: var(--radius);
+  --radius-sm: calc(var(--radius) * 2);
+  --radius-md: calc(var(--radius) * 3);
+  --radius-lg: calc(var(--radius) * 4);
+  --radius-xl: calc(var(--radius) * 6);
+}
+
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes scroll-ticker {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+
+.activity-ticker {
+  animation: scroll-ticker 26s linear infinite;
+}
+
+.activity-ticker:hover {
+  animation-play-state: paused;
+}
+
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes card-float {
+  0%, 100% { transform: translateY(0px) rotate(-1deg); }
+  50%       { transform: translateY(-8px) rotate(-1deg); }
+}
+
+.hero-card-float {
+  animation: card-float 5s ease-in-out infinite;
+}
+
+.msg-bubble-1 { animation: msg-in 0.45s ease-out 0.3s both; }
+.msg-bubble-2 { animation: msg-in 0.45s ease-out 1.4s both; }
+.msg-bubble-3 { animation: msg-in 0.45s ease-out 2.5s both; }
+.msg-typing   { animation: msg-in 0.3s ease-out 2.1s both; }
