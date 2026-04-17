@@ -252,7 +252,8 @@ export default function DashboardPage() {
 
   const handleOnboardingSave = () => {
     const trimmedUsername = onboardingUsername.trim();
-    if (!trimmedUsername) return;
+    if (!trimmedUsername || trimmedUsername.length < 3) return;
+    if (checkingUsername || debouncedUsername !== trimmedUsername) return;
     if (!usernameCheck?.available) return;
     updateProfile.mutate(
       { data: { username: trimmedUsername, ...(onboardingDisplayName.trim() && { displayName: onboardingDisplayName.trim() }) } },
