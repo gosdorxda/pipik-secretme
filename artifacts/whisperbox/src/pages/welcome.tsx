@@ -1,6 +1,8 @@
-import { Link } from "wouter";
+import { useEffect } from "react";
+import { Link, useLocation } from "wouter";
 import { useUser } from "@clerk/react";
 import { MessageSquare, Crown, Gift, BarChart2, ArrowRight, Sparkles } from "lucide-react";
+import { useGetMyProfile } from "@workspace/api-client-react";
 
 const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
 
@@ -29,7 +31,18 @@ const FEATURES = [
 
 export default function WelcomePage() {
   const { user } = useUser();
+  const [, setLocation] = useLocation();
+  const { data: profile, isLoading } = useGetMyProfile();
+
+  useEffect(() => {
+    if (!isLoading && profile?.username) {
+      setLocation("/dashboard");
+    }
+  }, [isLoading, profile, setLocation]);
+
   const firstName = user?.firstName || user?.username || "Kamu";
+
+  if (isLoading) return null;
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "#f9fafb" }}>
