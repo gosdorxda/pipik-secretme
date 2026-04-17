@@ -194,6 +194,7 @@ function RefCapture() {
     const ref = params.get("ref");
     if (ref && ref.trim().length >= 4) {
       localStorage.setItem("wb_ref", ref.trim());
+      localStorage.removeItem("wb_ref_expires");
     }
   }, []);
   return null;
@@ -208,6 +209,13 @@ function ReferralClaimHandler() {
     if (!isSignedIn || hasFiredRef.current) return;
     const pendingRef = localStorage.getItem("wb_ref");
     if (!pendingRef) return;
+
+    const expires = localStorage.getItem("wb_ref_expires");
+    if (expires && Date.now() > parseInt(expires, 10)) {
+      localStorage.removeItem("wb_ref");
+      localStorage.removeItem("wb_ref_expires");
+      return;
+    }
 
     hasFiredRef.current = true;
 
@@ -224,19 +232,35 @@ function ReferralClaimHandler() {
         if (res.ok) {
           const data = await res.json();
           localStorage.removeItem("wb_ref");
+          localStorage.removeItem("wb_ref_expires");
           toast({
             title: "🎉 Referral berhasil!",
             description: `Kamu mendaftar lewat referral! +${data.pointsAwarded} poin dikreditkan ke akunmu.`,
           });
         } else if (res.status === 409) {
           localStorage.removeItem("wb_ref");
-        } else if (res.status === 404 && retriesLeft > 0) {
-          const delay = (4 - retriesLeft) * 1500;
-          setTimeout(() => attemptClaim(retriesLeft - 1), delay);
+          localStorage.removeItem("wb_ref_expires");
+        } else if (res.status === 404) {
+          if (retriesLeft > 0) {
+            const delay = (4 - retriesLeft) * 1500;
+            setTimeout(() => attemptClaim(retriesLeft - 1), delay);
+          } else {
+            localStorage.removeItem("wb_ref");
+            localStorage.removeItem("wb_ref_expires");
+          }
+        } else {
+          if (retriesLeft > 0) {
+            const delay = (4 - retriesLeft) * 1500;
+            setTimeout(() => attemptClaim(retriesLeft - 1), delay);
+          } else {
+            localStorage.setItem("wb_ref_expires", String(Date.now() + 24 * 60 * 60 * 1000));
+          }
         }
       } catch {
         if (retriesLeft > 0) {
           setTimeout(() => attemptClaim(retriesLeft - 1), 1500);
+        } else {
+          localStorage.setItem("wb_ref_expires", String(Date.now() + 24 * 60 * 60 * 1000));
         }
       }
     };
