@@ -685,6 +685,17 @@ export default function DashboardPage() {
                     </p>
                   </div>
 
+                  {/* Campaign Badge */}
+                  {message.campaignTitle && (
+                    <div className="px-5 pb-3">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-xs"
+                            style={{ background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)", color: "#6366f1" }}>
+                        <Megaphone className="w-3 h-3 shrink-0" />
+                        Kampanye: {message.campaignTitle}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Owner Reply (if exists) */}
                   {message.ownerReply && (
                     <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-xs p-3">

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { createHash } from "crypto";
 import { db, usersTable, messagesTable, campaignsTable } from "@workspace/db";
-import { eq, desc, count, and, isNull, gte, lt } from "drizzle-orm";
+import { eq, desc, count, and, isNull, gte, lt, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { createClerkClient } from "@clerk/express";
 import { sendNewMessageNotification } from "../lib/email";
@@ -186,8 +186,29 @@ router.get("/", requireAuth, async (req, res) => {
       .update(messagesTable)
       .set({ isRead: true })
       .where(and(eq(messagesTable.recipientId, user.id), eq(messagesTable.isRead, false)));
+
+    // Batch-fetch campaign titles for messages that have a campaignId
+    const campaignIds = [...new Set(
+      messages.map(m => m.campaignId).filter((id): id is string => id !== null)
+    )];
+    const campaignTitleMap = new Map<string, string>();
+    if (campaignIds.length > 0) {
+      const campaigns = await db
+        .select({ id: campaignsTable.id, title: campaignsTable.title })
+        .from(campaignsTable)
+        .where(inArray(campaignsTable.id, campaignIds));
+      for (const c of campaigns) {
+        campaignTitleMap.set(c.id, c.title);
+      }
+    }
+
+    const messagesWithCampaign = messages.map(m => ({
+      ...m,
+      campaignTitle: m.campaignId ? (campaignTitleMap.get(m.campaignId) ?? null) : null,
+    }));
+
     res.json({
-      messages,
+      messages: messagesWithCampaign,
       total: totalResult?.value ?? 0,
       page,
       limit,
