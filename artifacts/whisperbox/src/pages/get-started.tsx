@@ -12,8 +12,11 @@ export default function GetStartedPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !profile?.hasSetUsername) {
+    if (isLoading) return;
+    if (!profile?.hasSetUsername) {
       setLocation("/settings");
+    } else if (profile.hasSetUsername) {
+      setLocation("/dashboard");
     }
   }, [isLoading, profile, setLocation]);
 
