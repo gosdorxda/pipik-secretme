@@ -4,6 +4,7 @@ import { Switch, Route, useLocation, Router as WouterRouter, Redirect, Link } fr
 import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
 
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
@@ -12,6 +13,7 @@ import UpgradePage from "@/pages/upgrade";
 import WrappedPage from "@/pages/wrapped";
 import ReferralPage from "@/pages/referral";
 import AdminPage from "@/pages/admin";
+import WelcomePage from "@/pages/welcome";
 import PublicProfilePage from "@/pages/public-profile";
 import NotFound from "@/pages/not-found";
 
@@ -198,6 +200,7 @@ function RefCapture() {
 
 function ReferralClaimHandler() {
   const { isSignedIn, getToken } = useAuth();
+  const { toast } = useToast();
   const hasFiredRef = useRef(false);
 
   useEffect(() => {
@@ -206,7 +209,8 @@ function ReferralClaimHandler() {
     if (!pendingRef) return;
 
     hasFiredRef.current = true;
-    (async () => {
+
+    const attemptClaim = async (retriesLeft: number): Promise<void> => {
       try {
         const token = await getToken();
         if (!token) return;
@@ -217,13 +221,27 @@ function ReferralClaimHandler() {
           body: JSON.stringify({ referralCode: pendingRef }),
         });
         if (res.ok) {
+          const data = await res.json();
           localStorage.removeItem("wb_ref");
+          toast({
+            title: "🎉 Referral berhasil!",
+            description: `Kamu mendaftar lewat referral! +${data.pointsAwarded} poin dikreditkan ke akunmu.`,
+          });
+        } else if (res.status === 409) {
+          localStorage.removeItem("wb_ref");
+        } else if (res.status === 404 && retriesLeft > 0) {
+          const delay = (4 - retriesLeft) * 1500;
+          setTimeout(() => attemptClaim(retriesLeft - 1), delay);
         }
       } catch {
-        // silent
+        if (retriesLeft > 0) {
+          setTimeout(() => attemptClaim(retriesLeft - 1), 1500);
+        }
       }
-    })();
-  }, [isSignedIn, getToken]);
+    };
+
+    attemptClaim(3);
+  }, [isSignedIn, getToken, toast]);
 
   return null;
 }
@@ -323,6 +341,9 @@ function ClerkProviderWithRoutes() {
               </Route>
               <Route path="/referral">
                 {() => <ProtectedRoute component={ReferralPage} />}
+              </Route>
+              <Route path="/welcome">
+                {() => <ProtectedRoute component={WelcomePage} />}
               </Route>
               <Route path="/admin" component={AdminPage} />
 
