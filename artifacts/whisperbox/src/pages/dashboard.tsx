@@ -232,14 +232,14 @@ export default function DashboardPage() {
     public: messages.filter(m => m.isPublic).length,
   };
 
+  const searchQ = searchQuery.trim().toLowerCase();
   const filteredMessages = messages.filter(m => {
     const matchesFilter =
       activeFilter === "all" ||
       (activeFilter === "unread" && !m.isRead) ||
       (activeFilter === "unreplied" && !m.ownerReply) ||
       (activeFilter === "public" && m.isPublic);
-    const q = searchQuery.trim().toLowerCase();
-    const matchesSearch = !q || m.content.toLowerCase().includes(q);
+    const matchesSearch = !searchQ || m.content.toLowerCase().includes(searchQ);
     return matchesFilter && matchesSearch;
   });
 
@@ -568,15 +568,13 @@ export default function DashboardPage() {
                     }`}
                   >
                     {tab.label}
-                    {tab.count > 0 && (
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-xs ${
-                        activeFilter === tab.key
-                          ? "bg-primary/15 text-primary"
-                          : "bg-secondary text-muted-foreground"
-                      }`}>
-                        {tab.count}
-                      </span>
-                    )}
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-xs ${
+                      activeFilter === tab.key
+                        ? "bg-primary/15 text-primary"
+                        : "bg-secondary text-muted-foreground"
+                    }`}>
+                      {tab.count}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -624,10 +622,10 @@ export default function DashboardPage() {
                 <Search className="w-5 h-5 text-muted-foreground" />
               </div>
               <h3 className="text-sm font-semibold mb-1">
-                {searchQuery
+                {searchQ
                   ? `Tidak ada pesan yang cocok dengan "${searchQuery}"`
                   : activeFilter === "unread"
-                    ? "Semua pesan sudah dibaca"
+                    ? "Tidak ada pesan yang belum dibaca"
                     : activeFilter === "unreplied"
                       ? "Semua pesan sudah dibalas"
                       : activeFilter === "public"
@@ -635,9 +633,9 @@ export default function DashboardPage() {
                         : "Tidak ada pesan"}
               </h3>
               <p className="text-xs text-muted-foreground max-w-xs">
-                {searchQuery ? "Coba kata kunci yang berbeda." : "Coba tab filter lain."}
+                {searchQ ? "Coba kata kunci yang berbeda." : "Coba tab filter lain."}
               </p>
-              {(activeFilter !== "all" || searchQuery) && (
+              {(activeFilter !== "all" || searchQ) && (
                 <button
                   type="button"
                   onClick={() => { setActiveFilter("all"); setSearchQuery(""); }}
