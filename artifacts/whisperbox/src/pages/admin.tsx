@@ -409,7 +409,7 @@ function TransactionsTab({ secret }: { secret: string }) {
                   <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{t.merchantRef}</td>
                   <td className="px-4 py-3 text-right font-semibold">{formatIDR(t.amount)}</td>
                   <td className="px-4 py-3 text-center">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${statusColor(t.status)}`}>
+                    <span className={`text-[13px] font-bold px-2 py-0.5 rounded-md border ${statusColor(t.status)}`}>
                       {t.status}
                     </span>
                   </td>
@@ -556,7 +556,7 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         <span className="text-sm font-semibold">{r.displayName ?? `@${r.username}`}</span>
                         <span className="text-xs text-muted-foreground">@{r.username}</span>
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.cls}`}>
+                        <span className={`inline-flex items-center gap-1 text-[13px] font-bold px-2 py-0.5 rounded-md border ${s.cls}`}>
                           {s.icon} {s.label}
                         </span>
                       </div>
@@ -569,7 +569,7 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                         <span className="font-semibold text-amber-700">{formatRupiah(estimatedValue)}</span>
                       </div>
                       <p className="text-xs text-muted-foreground bg-secondary/30 rounded-md px-2 py-1 inline-block">{r.paymentInfo}</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">{formatDate(r.createdAt)}</p>
+                      <p className="text-[13px] text-muted-foreground mt-1">{formatDate(r.createdAt)}</p>
                     </div>
                     {r.status === "pending" && (
                       <div className="flex gap-2 shrink-0">

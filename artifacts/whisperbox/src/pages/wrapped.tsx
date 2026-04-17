@@ -158,7 +158,7 @@ function Slide2BusiestDay({ data, active }: { data: WrappedData; active: boolean
                      background: isPeak ? W_MINT : `${W_MINT}40`,
                      transitionDelay: `${day * 80}ms`,
                    }} />
-              <p className="text-[10px]" style={{ color: isPeak ? W_MINT : W_MUTED }}>
+              <p className="text-[13px]" style={{ color: isPeak ? W_MINT : W_MUTED }}>
                 {DAYS_ID[day].slice(0, 3)}
               </p>
             </div>
@@ -204,9 +204,9 @@ function Slide3PeakHour({ data, active }: { data: WrappedData; active: boolean }
         })}
       </div>
       <div className="w-full max-w-sm flex justify-between mt-1">
-        <p className="text-[10px]" style={{ color: W_MUTED }}>00:00</p>
-        <p className="text-[10px]" style={{ color: W_MUTED }}>12:00</p>
-        <p className="text-[10px]" style={{ color: W_MUTED }}>23:00</p>
+        <p className="text-[13px]" style={{ color: W_MUTED }}>00:00</p>
+        <p className="text-[13px]" style={{ color: W_MUTED }}>12:00</p>
+        <p className="text-[13px]" style={{ color: W_MUTED }}>23:00</p>
       </div>
     </SlideShell>
   );
@@ -392,7 +392,7 @@ function Slide7FinalCard({
           {stats.map(({ label, value }) => (
             <div key={label} className="p-4 text-center" style={{ background: W_CARD }}>
               <p className="text-xl font-bold" style={{ color: W_MINT }}>{value}</p>
-              <p className="text-[10px] mt-0.5" style={{ color: W_MUTED }}>{label}</p>
+              <p className="text-[13px] mt-0.5" style={{ color: W_MUTED }}>{label}</p>
             </div>
           ))}
         </div>
@@ -464,7 +464,7 @@ function Slide7FinalCard({
           </Button>
         </div>
 
-        <p className="text-[10px] text-center" style={{ color: W_MUTED }}>
+        <p className="text-[13px] text-center" style={{ color: W_MUTED }}>
           Gambar Stories 1080×1920 siap dibagikan ke Instagram &amp; WhatsApp
         </p>
       </div>

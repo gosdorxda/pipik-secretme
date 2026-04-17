@@ -86,7 +86,7 @@ function HeroMockup() {
             <p className="text-sm font-bold text-foreground leading-none">Budi Santoso</p>
             <p className="text-xs text-muted-foreground mt-0.5">@budi_s · 47 pesan diterima</p>
           </div>
-          <div className="flex items-center gap-1 text-[10px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-md border border-primary/20">
+          <div className="flex items-center gap-1 text-[13px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-md border border-primary/20">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             Live
           </div>
@@ -94,8 +94,8 @@ function HeroMockup() {
 
         {/* Inbox label */}
         <div className="px-5 pt-3 pb-2 flex items-center gap-2">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Inbox</span>
-          <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none">3</span>
+          <span className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wider">Inbox</span>
+          <span className="bg-primary text-primary-foreground text-[13px] font-bold px-1.5 py-0.5 rounded-md leading-none">3</span>
         </div>
 
         {/* THE message card — styled exactly like dashboard inbox */}
@@ -112,7 +112,7 @@ function HeroMockup() {
             </div>
             <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
             <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
-            <span className="text-[10px] text-muted-foreground ml-auto">2 jam lalu</span>
+            <span className="text-[13px] text-muted-foreground ml-auto">2 jam lalu</span>
           </div>
 
           {/* Message content */}
@@ -124,13 +124,13 @@ function HeroMockup() {
 
           {/* Action buttons */}
           <div className="px-4 pb-3 pt-1 border-t flex items-center gap-2" style={{ borderColor: msgBorder }}>
-            <button className="flex items-center gap-1.5 text-[11px] font-semibold text-accent-foreground bg-white/70 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
+            <button className="flex items-center gap-1.5 text-[13px] font-semibold text-accent-foreground bg-white/70 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/>
               </svg>
               Balas
             </button>
-            <button className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground bg-white/50 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
+            <button className="flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground bg-white/50 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
               </svg>
@@ -150,16 +150,16 @@ function HeroMockup() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground flex-1">+2 pesan baru lainnya menunggumu</p>
-          <span className="text-[10px] font-semibold text-accent-foreground">Lihat →</span>
+          <span className="text-[13px] font-semibold text-accent-foreground">Lihat →</span>
         </div>
       </div>
 
       {/* Floating notification badge */}
       <div className="absolute -top-3 -right-3 md:-right-8 bg-white border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1"
            style={{ boxShadow: "0 4px 16px rgba(0,0,0,0.08)" }}>
-        <div className="w-5 h-5 bg-primary flex items-center justify-center shrink-0 text-[10px]">💬</div>
+        <div className="w-5 h-5 bg-primary flex items-center justify-center shrink-0 text-[13px]">💬</div>
         <div>
-          <p className="text-[10px] font-semibold text-foreground leading-none">Pesan baru!</p>
+          <p className="text-[13px] font-semibold text-foreground leading-none">Pesan baru!</p>
           <p className="text-[9px] text-muted-foreground mt-0.5">dari seseorang anonim</p>
         </div>
       </div>

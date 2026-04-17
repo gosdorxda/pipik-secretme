@@ -64,7 +64,7 @@ function StatCard({
         <span className={s.iconColor}>{icon}</span>
       </div>
       <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
+        <p className="text-[13px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
         <p className="text-2xl font-bold leading-none text-foreground">
           {loading ? <span className="text-muted-foreground/40 text-lg">—</span> : value}
         </p>
@@ -512,11 +512,11 @@ export default function DashboardPage() {
                   <Megaphone className="w-3 h-3 text-primary" />
                 </div>
                 <span className="text-xs font-semibold text-foreground">Kampanye QnA</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-md">
+                <span className="inline-flex items-center gap-1 text-[13px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-md">
                   <Crown className="w-2.5 h-2.5" /> PREMIUM
                 </span>
                 {campaign != null && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md">
+                  <span className="inline-flex items-center gap-1 text-[13px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md">
                     <Radio className="w-2.5 h-2.5" /> LIVE
                   </span>
                 )}
@@ -553,14 +553,14 @@ export default function DashboardPage() {
                   <div className="px-5 py-4 space-y-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
-                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
+                        <p className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
                           {campaign.title} · {formatDistanceToNow(new Date(campaign.createdAt), { addSuffix: true })}
                         </p>
                         <p className="text-sm font-medium text-foreground leading-snug">{campaign.question}</p>
                       </div>
                       <div className="shrink-0 text-right">
                         <p className="text-xl font-bold text-primary leading-none">{campaign.responseCount}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">respons</p>
+                        <p className="text-[13px] text-muted-foreground mt-0.5">respons</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 pt-1 border-t border-border">
@@ -597,7 +597,7 @@ export default function DashboardPage() {
                         maxLength={500}
                         className="resize-none min-h-[80px] text-sm"
                       />
-                      <p className="text-[10px] text-muted-foreground mt-1">{campaignQuestion.length}/500</p>
+                      <p className="text-[13px] text-muted-foreground mt-1">{campaignQuestion.length}/500</p>
                     </div>
                     <div className="flex items-center gap-2 pt-1">
                       <Button
@@ -645,7 +645,7 @@ export default function DashboardPage() {
             <Inbox className="w-4 h-4 text-foreground" />
             <h2 className="text-sm font-semibold">Inbox</h2>
             {messages.length > 0 && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
+              <span className="bg-primary text-primary-foreground text-[13px] font-bold px-2 py-0.5 rounded-md">
                 {messages.length}
               </span>
             )}
@@ -700,7 +700,7 @@ export default function DashboardPage() {
                     }`}
                   >
                     {tab.label}
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                    <span className={`text-[13px] font-bold px-1.5 py-0.5 rounded-md ${
                       activeFilter === tab.key
                         ? "bg-primary/15 text-primary"
                         : "bg-secondary text-muted-foreground"
@@ -805,7 +805,7 @@ export default function DashboardPage() {
                     {!message.isRead && (
                       <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
                     )}
-                    <span className="text-[10px] text-muted-foreground ml-auto">
+                    <span className="text-[13px] text-muted-foreground ml-auto">
                       {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
                     </span>
                   </div>
@@ -820,7 +820,7 @@ export default function DashboardPage() {
                   {/* Campaign Badge */}
                   {message.campaignTitle && (
                     <div className="px-5 pb-3">
-                      <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-md"
+                      <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-2.5 py-1 rounded-md"
                             style={{ background: "rgba(99,102,241,0.10)", border: "1px solid rgba(99,102,241,0.25)", color: "#6366f1" }}>
                         <Megaphone className="w-3 h-3 shrink-0" />
                         Kampanye: {message.campaignTitle}
@@ -837,7 +837,7 @@ export default function DashboardPage() {
                         </div>
                         <span className="text-xs font-semibold text-accent-foreground">You (Owner)</span>
                         {message.ownerRepliedAt && (
-                          <span className="text-[10px] text-muted-foreground ml-auto">
+                          <span className="text-[13px] text-muted-foreground ml-auto">
                             {formatDistanceToNow(new Date(message.ownerRepliedAt), { addSuffix: true })}
                           </span>
                         )}

@@ -215,7 +215,7 @@ export default function ReferralPage() {
                 </Button>
               </div>
             )}
-            <p className="text-[11px] text-muted-foreground mt-2.5 leading-relaxed">
+            <p className="text-[13px] text-muted-foreground mt-2.5 leading-relaxed">
               Kode referral: <span className="font-mono font-bold text-foreground">
                 {isLoading ? "..." : (referral?.referralCode ?? "-")}
               </span>
@@ -241,7 +241,7 @@ export default function ReferralPage() {
               </div>
               <div className="shrink-0 text-right">
                 <div className="text-2xl font-black" style={{ color: "#86ead4" }}>+{referralSignupPoints}</div>
-                <div className="text-[10px] text-muted-foreground">per referral</div>
+                <div className="text-[13px] text-muted-foreground">per referral</div>
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
@@ -256,7 +256,7 @@ export default function ReferralPage() {
               </div>
               <div className="shrink-0 text-right">
                 <div className="text-2xl font-black text-amber-600">+{referralUpgradePoints}</div>
-                <div className="text-[10px] text-muted-foreground">per upgrade</div>
+                <div className="text-[13px] text-muted-foreground">per upgrade</div>
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
@@ -271,7 +271,7 @@ export default function ReferralPage() {
               </div>
               <div className="shrink-0 text-right">
                 <div className="text-2xl font-black" style={{ color: "#86ead4" }}>+{linkOpensPointsPer1000}</div>
-                <div className="text-[10px] text-muted-foreground">per 1.000 buka</div>
+                <div className="text-[13px] text-muted-foreground">per 1.000 buka</div>
               </div>
             </div>
           </div>
@@ -355,12 +355,12 @@ export default function ReferralPage() {
                       <Star className="w-2.5 h-2.5" /> +{r.points}
                     </span>
                     {r.upgradeBonusAwarded && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
+                      <span className="inline-flex items-center gap-1 text-[13px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
                         <Crown className="w-2.5 h-2.5" /> +100
                       </span>
                     )}
                     {r.isPremium && !r.upgradeBonusAwarded && (
-                      <span className="text-[10px] text-muted-foreground">+100 segera</span>
+                      <span className="text-[13px] text-muted-foreground">+100 segera</span>
                     )}
                   </div>
                 </div>
@@ -394,7 +394,7 @@ export default function ReferralPage() {
               <p className="text-xs text-muted-foreground">Tukar poinmu menjadi saldo/uang tunai</p>
             </div>
             <div className="shrink-0 text-right">
-              <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold">Rate saat ini</p>
+              <p className="text-[13px] text-muted-foreground uppercase tracking-wide font-semibold">Rate saat ini</p>
               <p className="text-sm font-black text-amber-700">{formatRupiah(redeemRate)} <span className="font-normal text-xs text-muted-foreground">/ 1.000 poin</span></p>
             </div>
           </div>
@@ -437,7 +437,7 @@ export default function ReferralPage() {
                     placeholder="Contoh: DANA 08123456789 a.n. Budi Santoso"
                     className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none"
                   />
-                  <p className="text-[11px] text-muted-foreground mt-1">Tulis metode pembayaran, nomor rekening/dompet, dan nama pemilik.</p>
+                  <p className="text-[13px] text-muted-foreground mt-1">Tulis metode pembayaran, nomor rekening/dompet, dan nama pemilik.</p>
                 </div>
                 <Button
                   onClick={handleRedeem}
@@ -481,10 +481,10 @@ export default function ReferralPage() {
                           <span className="text-xs text-muted-foreground">·</span>
                           <span className="text-xs text-amber-700 font-semibold">{formatRupiah(Math.floor(r.points / 1000) * redeemRate)}</span>
                         </div>
-                        <p className="text-[11px] text-muted-foreground truncate">{r.paymentInfo}</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">{formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}</p>
+                        <p className="text-[13px] text-muted-foreground truncate">{r.paymentInfo}</p>
+                        <p className="text-[13px] text-muted-foreground mt-0.5">{formatDistanceToNow(new Date(r.createdAt), { addSuffix: true })}</p>
                       </div>
-                      <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-md border ${s.cls}`}>
+                      <span className={`inline-flex items-center gap-1 text-[13px] font-bold px-2.5 py-1 rounded-md border ${s.cls}`}>
                         {s.icon} {s.label}
                       </span>
                     </div>
