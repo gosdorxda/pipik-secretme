@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { ShareMessageCard } from "@/components/share-message-card";
 import { QRProfileCard } from "@/components/qr-profile-card";
 import {
@@ -97,27 +98,16 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (!showConfetti) return;
-    const duration = 3000;
-    const end = Date.now() + duration;
-    const frame = () => {
-      confetti({
-        particleCount: 6,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"],
-      });
-      confetti({
-        particleCount: 6,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981"],
-      });
-      if (Date.now() < end) requestAnimationFrame(frame);
-      else setShowConfetti(false);
-    };
-    requestAnimationFrame(frame);
+    confetti({
+      particleCount: 180,
+      spread: 120,
+      startVelocity: 45,
+      decay: 0.92,
+      origin: { x: 0.5, y: 0.6 },
+      colors: ["#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#38bdf8"],
+    });
+    const timer = setTimeout(() => setShowConfetti(false), 3000);
+    return () => clearTimeout(timer);
   }, [showConfetti]);
 
   useEffect(() => {
@@ -339,7 +329,10 @@ export default function DashboardPage() {
                   <p className="text-xs text-muted-foreground">Minimal 3 karakter</p>
                 )}
                 {onboardingUsername.trim().length >= 3 && checkingUsername && (
-                  <p className="text-xs text-muted-foreground animate-pulse">Memeriksa ketersediaan...</p>
+                  <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <Spinner className="size-3" />
+                    Memeriksa ketersediaan...
+                  </span>
                 )}
                 {onboardingUsername.trim().length >= 3 && !checkingUsername && usernameCheck?.available === true && debouncedUsername === onboardingUsername.trim() && (
                   <p className="text-xs text-emerald-600 font-medium">✓ Username tersedia</p>

@@ -90,6 +90,17 @@ export const UpdateMyProfileResponse = zod.object({
 });
 
 /**
+ * @summary Check if a username is available
+ */
+export const CheckUsernameParams = zod.object({
+  username: zod.string(),
+});
+
+export const CheckUsernameResponse = zod.object({
+  available: zod.boolean(),
+});
+
+/**
  * @summary Get public profile by username
  */
 export const GetPublicProfileParams = zod.object({
