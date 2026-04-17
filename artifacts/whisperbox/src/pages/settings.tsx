@@ -294,7 +294,7 @@ export default function SettingsPage() {
             description: "Pengaturanmu berhasil disimpan.",
           });
           if (!profile?.username && updated.username) {
-            setLocation("/dashboard");
+            setLocation("/get-started");
           }
         },
         onError: (err: any) => {
