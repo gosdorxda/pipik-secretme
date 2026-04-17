@@ -48,7 +48,7 @@ export default function LandingPage() {
 
       {/* ── Nav ── */}
       <nav className="sticky top-0 z-50 w-full border-b border-[#e4e4e7] bg-white/80 backdrop-blur-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-7xl">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-6xl">
           <div className="flex items-center gap-2 font-bold text-xl tracking-tight">
             <div className="w-8 h-8 rounded-lg bg-[#09090b] text-white flex items-center justify-center text-sm font-bold">
               W
@@ -83,11 +83,11 @@ export default function LandingPage() {
       <main>
         {/* ── Hero ── */}
         <section className="pt-24 pb-16 md:pt-32 md:pb-24 px-4 overflow-hidden">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 gap-12 items-center">
 
               {/* Left */}
-              <div className="flex flex-col gap-6 relative z-10">
+              <div className="flex flex-col gap-6 max-w-xl relative z-10">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium w-fit border border-[#e4e4e7] bg-white shadow-sm">
                   <span className="flex h-2 w-2 rounded-full" style={{ backgroundColor: BRAND.success }} />
                   Lebih dari 12.400+ pengguna aktif
@@ -191,7 +191,7 @@ export default function LandingPage() {
 
         {/* ── Feature Cards ── */}
         <section className="py-20 bg-[#f4f4f5] border-y border-[#e4e4e7]">
-          <div className="container mx-auto max-w-7xl px-4">
+          <div className="container mx-auto max-w-6xl px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Simpel, Aman, Cepat.</h2>
               <p className="text-[#71717a] text-lg">Semua yang kamu butuhkan untuk mulai menerima pesan anonim hari ini.</p>
@@ -239,7 +239,7 @@ export default function LandingPage() {
 
         {/* ── How it Works ── */}
         <section className="py-24 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-6xl">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 tracking-tight">Cara Kerjanya</h2>
 
             <div className="grid md:grid-cols-3 gap-8 relative">
@@ -265,7 +265,7 @@ export default function LandingPage() {
 
         {/* ── Stats ── */}
         <section className="py-12 border-y border-[#e4e4e7] bg-[#fafafa]">
-          <div className="container mx-auto max-w-7xl px-4">
+          <div className="container mx-auto max-w-6xl px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 { val: "12.400+", label: "pengguna aktif" },
@@ -284,7 +284,7 @@ export default function LandingPage() {
 
         {/* ── Activity ── */}
         <section className="py-24 px-4 bg-white overflow-hidden">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-6xl">
             <div className="grid md:grid-cols-2 gap-16 items-center">
 
               {/* Left text */}
@@ -349,7 +349,7 @@ export default function LandingPage() {
 
         {/* ── CTA Banner ── */}
         <section className="py-24 px-4 bg-white">
-          <div className="container mx-auto max-w-7xl">
+          <div className="container mx-auto max-w-6xl">
             <div className="rounded-[3rem] p-10 md:p-16 text-center relative overflow-hidden"
                  style={{ backgroundColor: BRAND.mint }}>
               <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 rounded-full mix-blend-overlay opacity-50 blur-3xl"
