@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { AppLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { QRProfileCard } from "@/components/qr-profile-card";
 import {
   Copy, Check, Trash2, ExternalLink, Inbox, MessageSquare,
   Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share2, Sparkles,
-  Megaphone, Plus, X, Radio, ChevronDown, Download, Star,
+  Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -77,7 +77,13 @@ export default function DashboardPage() {
   const [replyText, setReplyText] = useState("");
   const [sharingMessage, setSharingMessage] = useState<{ id: string; idx: number } | null>(null);
   const [visibleCount, setVisibleCount] = useState(5);
+  const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "unreplied" | "public">("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showCampaignForm, setShowCampaignForm] = useState(false);
+
+  useEffect(() => {
+    setVisibleCount(5);
+  }, [activeFilter, searchQuery]);
   const [campaignTitle, setCampaignTitle] = useState("");
   const [campaignQuestion, setCampaignQuestion] = useState("");
   const [campaignOpen, setCampaignOpen] = useState(false);
@@ -218,6 +224,24 @@ export default function DashboardPage() {
   const displayName = profile.displayName || profile.username;
   const initials = displayName.charAt(0).toUpperCase();
   const isPublic = profile.defaultPublicMessages;
+
+  const counts = {
+    all: messages.length,
+    unread: messages.filter(m => !m.isRead).length,
+    unreplied: messages.filter(m => !m.ownerReply).length,
+    public: messages.filter(m => m.isPublic).length,
+  };
+
+  const filteredMessages = messages.filter(m => {
+    const matchesFilter =
+      activeFilter === "all" ||
+      (activeFilter === "unread" && !m.isRead) ||
+      (activeFilter === "unreplied" && !m.ownerReply) ||
+      (activeFilter === "public" && m.isPublic);
+    const q = searchQuery.trim().toLowerCase();
+    const matchesSearch = !q || m.content.toLowerCase().includes(q);
+    return matchesFilter && matchesSearch;
+  });
 
   return (
     <AppLayout>
@@ -484,7 +508,8 @@ export default function DashboardPage() {
 
         {/* Inbox */}
         <div>
-          <div className="flex items-center gap-2 mb-4">
+          {/* Inbox header row */}
+          <div className="flex items-center gap-2 mb-3">
             <Inbox className="w-4 h-4 text-foreground" />
             <h2 className="text-sm font-semibold">Inbox</h2>
             {messages.length > 0 && (
@@ -519,6 +544,66 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          {/* Filter tabs + search */}
+          {messages.length > 0 && (
+            <div className="bg-white border border-border rounded-xs overflow-hidden mb-3">
+              {/* Tabs */}
+              <div className="flex items-center overflow-x-auto" style={{ borderBottom: "1px solid var(--border)" }}>
+                {(
+                  [
+                    { key: "all",       label: "Semua",         count: counts.all       },
+                    { key: "unread",    label: "Belum Dibaca",  count: counts.unread    },
+                    { key: "unreplied", label: "Belum Dibalas", count: counts.unreplied },
+                    { key: "public",    label: "Publik",        count: counts.public    },
+                  ] as const
+                ).map(tab => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    onClick={() => setActiveFilter(tab.key)}
+                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 border-b-2 -mb-px ${
+                      activeFilter === tab.key
+                        ? "border-primary text-primary"
+                        : "border-transparent text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {tab.label}
+                    {tab.count > 0 && (
+                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-xs ${
+                        activeFilter === tab.key
+                          ? "bg-primary/15 text-primary"
+                          : "bg-secondary text-muted-foreground"
+                      }`}>
+                        {tab.count}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {/* Search bar */}
+              <div className="px-3 py-2.5 flex items-center gap-2">
+                <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder="Cari pesan..."
+                  className="flex-1 text-xs bg-transparent outline-none placeholder:text-muted-foreground/60"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+
           {messagesLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map(i => <Skeleton key={i} className="h-28 w-full" />)}
@@ -533,9 +618,38 @@ export default function DashboardPage() {
                 Bagikan linkmu untuk mulai menerima pesan anonim.
               </p>
             </div>
+          ) : filteredMessages.length === 0 ? (
+            <div className="border border-dashed border-border bg-secondary/20 py-12 text-center flex flex-col items-center rounded-xs">
+              <div className="w-11 h-11 bg-secondary rounded-xs flex items-center justify-center mb-3">
+                <Search className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <h3 className="text-sm font-semibold mb-1">
+                {searchQuery
+                  ? `Tidak ada pesan yang cocok dengan "${searchQuery}"`
+                  : activeFilter === "unread"
+                    ? "Semua pesan sudah dibaca"
+                    : activeFilter === "unreplied"
+                      ? "Semua pesan sudah dibalas"
+                      : activeFilter === "public"
+                        ? "Belum ada pesan yang dipublikasikan"
+                        : "Tidak ada pesan"}
+              </h3>
+              <p className="text-xs text-muted-foreground max-w-xs">
+                {searchQuery ? "Coba kata kunci yang berbeda." : "Coba tab filter lain."}
+              </p>
+              {(activeFilter !== "all" || searchQuery) && (
+                <button
+                  type="button"
+                  onClick={() => { setActiveFilter("all"); setSearchQuery(""); }}
+                  className="mt-3 text-xs text-primary font-semibold hover:underline"
+                >
+                  Reset filter
+                </button>
+              )}
+            </div>
           ) : (
             <div className="space-y-3">
-              {messages.slice(0, visibleCount).map((message, idx) => {
+              {filteredMessages.slice(0, visibleCount).map((message, idx) => {
                 const palette = [
                   { bg: "rgba(134,234,212,0.12)", border: "rgba(134,234,212,0.40)", stripe: "linear-gradient(to right, #86ead4, #60c4ae)" },
                   { bg: "rgba(165,180,252,0.12)", border: "rgba(165,180,252,0.40)", stripe: "linear-gradient(to right, #86ead4, #818cf8)" },
@@ -670,7 +784,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {messages.length > visibleCount && (
+          {filteredMessages.length > visibleCount && (
             <div className="mt-4 text-center">
               <Button
                 variant="outline"
@@ -678,7 +792,7 @@ export default function DashboardPage() {
                 className="gap-2 text-xs"
                 onClick={() => setVisibleCount(v => v + 5)}
               >
-                Muat Lebih ({messages.length - visibleCount} pesan lagi)
+                Muat Lebih ({filteredMessages.length - visibleCount} pesan lagi)
               </Button>
             </div>
           )}
