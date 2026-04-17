@@ -1,19 +1,28 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Shield, Zap, ArrowRight, Crown, Lock, Bell } from "lucide-react";
+import { MessageSquare, Zap, ArrowRight, Crown, Lock } from "lucide-react";
 import { Footer } from "@/components/footer";
 
+const BRAND = {
+  mint:    "#86ead4",
+  mintDark:"#1a443c",
+  mintLight:"#ddf9f2",
+  gold:    "#f59e0b",
+  success: "#22c55e",
+  info:    "#3b82f6",
+};
+
 const ACTIVITIES = [
-  { avatar: "A", name: "Agus",  color: "#3b82f6", text: "baru saja menerima 3 pesan baru",                        tag: "🔔", time: "2 mnt lalu" },
-  { avatar: "R", name: "Rina",  color: "#f43f5e", text: 'mendapat pesan: "Kamu itu orangnya asik banget!"',       tag: "💬", time: "5 mnt lalu" },
-  { avatar: "B", name: "Budi",  color: "#8b5cf6", text: "baru bergabung dan langsung menerima 2 pesan",           tag: "⚡", time: "11 mnt lalu" },
-  { avatar: "S", name: "Siti",  color: "#f59e0b", text: "upgrade ke Premium — social links aktif",                tag: "✨", time: "18 mnt lalu" },
-  { avatar: "D", name: "Dedi",  color: "#10b981", text: "berbagi link ke 200+ followers-nya",                     tag: "🔗", time: "24 mnt lalu" },
-  { avatar: "N", name: "Nina",  color: "#ec4899", text: "mendapat pertanyaan jujur dari temannya",                tag: "💭", time: "31 mnt lalu" },
-  { avatar: "F", name: "Fajar", color: "#f97316", text: "membalas 5 pesan anonim hari ini",                       tag: "↩️", time: "42 mnt lalu" },
-  { avatar: "M", name: "Maya",  color: "#14b8a6", text: "aktivasi notifikasi email untuk pesan baru",             tag: "📧", time: "1 jam lalu"  },
-  { avatar: "H", name: "Hadi",  color: "#6366f1", text: "profil dikunjungi 48 kali minggu ini",                   tag: "👁️", time: "1 jam lalu"  },
-  { avatar: "Y", name: "Yuna",  color: "#be185d", text: 'mendapat pesan: "Tetap semangat ya!"',                   tag: "💬", time: "2 jam lalu"  },
+  { avatar: "A", name: "Agus",  color: BRAND.info,    text: "baru saja menerima 3 pesan baru",                  tag: "🔔", time: "2 mnt lalu"  },
+  { avatar: "R", name: "Rina",  color: BRAND.gold,    text: 'mendapat pesan: "Kamu itu orangnya asik banget!"', tag: "💬", time: "5 mnt lalu"  },
+  { avatar: "B", name: "Budi",  color: BRAND.mint,    text: "baru bergabung dan langsung menerima 2 pesan",     tag: "⚡", time: "11 mnt lalu" },
+  { avatar: "S", name: "Siti",  color: BRAND.gold,    text: "upgrade ke Premium — social links aktif",          tag: "✨", time: "18 mnt lalu" },
+  { avatar: "D", name: "Dedi",  color: BRAND.success, text: "berbagi link ke 200+ followers-nya",               tag: "🔗", time: "24 mnt lalu" },
+  { avatar: "N", name: "Nina",  color: BRAND.info,    text: "mendapat pertanyaan jujur dari temannya",          tag: "💭", time: "31 mnt lalu" },
+  { avatar: "F", name: "Fajar", color: BRAND.success, text: "membalas 5 pesan anonim hari ini",                 tag: "↩️", time: "42 mnt lalu" },
+  { avatar: "M", name: "Maya",  color: BRAND.mint,    text: "aktivasi notifikasi email untuk pesan baru",       tag: "📧", time: "1 jam lalu"  },
+  { avatar: "H", name: "Hadi",  color: BRAND.info,    text: "profil dikunjungi 48 kali minggu ini",             tag: "👁️", time: "1 jam lalu"  },
+  { avatar: "Y", name: "Yuna",  color: BRAND.gold,    text: 'mendapat pesan: "Tetap semangat ya!"',             tag: "💬", time: "2 jam lalu"  },
 ];
 
 const TICKER_ITEMS = [...ACTIVITIES, ...ACTIVITIES];
@@ -60,22 +69,20 @@ function ActivityTicker() {
 }
 
 function HeroMockup() {
-  const msgStripe = "linear-gradient(to right, #86ead4, #60c4ae)";
+  const msgStripe = `linear-gradient(to right, ${BRAND.mint}, #60c4ae)`;
   const msgBg = "rgba(134,234,212,0.10)";
   const msgBorder = "rgba(134,234,212,0.38)";
 
   return (
     <div className="relative flex justify-center items-center">
-      {/* Subtle glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full opacity-25"
-             style={{ background: "radial-gradient(circle, #86ead4, transparent 70%)" }} />
+             style={{ background: `radial-gradient(circle, ${BRAND.mint}, transparent 70%)` }} />
       </div>
 
-      {/* Main dashboard-like card */}
       <div
         className="hero-card-float relative w-full max-w-[360px] bg-white border border-border overflow-hidden"
-        style={{ boxShadow: "0 20px 60px rgba(0,0,0,0.09), 0 4px 16px rgba(134,234,212,0.12)" }}
+        style={{ boxShadow: `0 20px 60px rgba(0,0,0,0.09), 0 4px 16px rgba(134,234,212,0.12)` }}
       >
         {/* Profile header */}
         <div className="px-5 pt-4 pb-3 border-b border-border flex items-center gap-3 bg-primary/5">
@@ -87,7 +94,8 @@ function HeroMockup() {
             <p className="text-xs text-muted-foreground mt-0.5">@budi_s · 47 pesan diterima</p>
           </div>
           <div className="flex items-center gap-1 text-[10px] font-semibold bg-accent text-accent-foreground px-2 py-0.5 rounded-xs border border-primary/20">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse shrink-0"
+                  style={{ backgroundColor: BRAND.success }} />
             Live
           </div>
         </div>
@@ -98,12 +106,9 @@ function HeroMockup() {
           <span className="bg-primary text-primary-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-xs leading-none">3</span>
         </div>
 
-        {/* THE message card — styled exactly like dashboard inbox */}
+        {/* Message card */}
         <div className="mx-4 mb-4 msg-bubble-1 overflow-hidden" style={{ border: `1px solid ${msgBorder}`, background: msgBg }}>
-          {/* Stripe */}
           <div style={{ height: 3, background: msgStripe }} />
-
-          {/* Message header */}
           <div className="px-4 pt-3 pb-2 flex items-center gap-2">
             <div className="w-6 h-6 rounded-full bg-white/80 border border-white flex items-center justify-center shrink-0 shadow-sm">
               <svg className="w-3 h-3 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -114,15 +119,11 @@ function HeroMockup() {
             <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
             <span className="text-[10px] text-muted-foreground ml-auto">2 jam lalu</span>
           </div>
-
-          {/* Message content */}
           <div className="px-4 pb-3">
             <p className="text-sm leading-relaxed text-foreground">
               Kamu itu orangnya sangat menyenangkan, selalu bisa bikin orang senyum 😊
             </p>
           </div>
-
-          {/* Action buttons */}
           <div className="px-4 pb-3 pt-1 border-t flex items-center gap-2" style={{ borderColor: msgBorder }}>
             <button className="flex items-center gap-1.5 text-[11px] font-semibold text-accent-foreground bg-white/70 border px-2.5 py-1.5 hover:bg-white transition-colors" style={{ borderColor: msgBorder }}>
               <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -142,7 +143,7 @@ function HeroMockup() {
         {/* More messages hint */}
         <div className="msg-bubble-2 mx-4 mb-4 px-4 py-2.5 border border-dashed border-border bg-secondary/30 flex items-center gap-3">
           <div className="flex -space-x-1.5">
-            {["#8b5cf6","#3b82f6","#f43f5e"].map((c, i) => (
+            {[BRAND.info, BRAND.gold, BRAND.success].map((c, i) => (
               <div key={i} className="w-5 h-5 rounded-full border-2 border-white flex items-center justify-center"
                    style={{ background: c, zIndex: 3 - i }}>
                 <span className="text-white text-[8px] font-bold">?</span>
@@ -167,29 +168,17 @@ function HeroMockup() {
   );
 }
 
-const STATS = [
-  { value: "12.400+", label: "Pengguna aktif" },
-  { value: "94.000+", label: "Pesan terkirim" },
-  { value: "100%",    label: "Anonim & aman" },
-  { value: "Gratis",  label: "Untuk memulai" },
+const HOW_STEPS = [
+  { step: "01", title: "Buat akun gratis",      desc: "Daftar dalam 30 detik. Langsung dapat link personalmu sendiri." },
+  { step: "02", title: "Bagikan link-mu",        desc: "Share ke bio Instagram, Twitter, atau ke teman-temanmu langsung." },
+  { step: "03", title: "Terima pesan anonim",    desc: "Semua pesan masuk ke dashboard-mu. Identitas pengirim selalu tersembunyi." },
 ];
 
-const HOW_STEPS = [
-  {
-    step: "01",
-    title: "Buat akun gratis",
-    desc: "Daftar dalam 30 detik. Langsung dapat link personalmu sendiri.",
-  },
-  {
-    step: "02",
-    title: "Bagikan link-mu",
-    desc: "Share ke bio Instagram, Twitter, atau ke teman-temanmu langsung.",
-  },
-  {
-    step: "03",
-    title: "Terima pesan anonim",
-    desc: "Semua pesan masuk ke dashboard-mu. Identitas pengirim selalu tersembunyi.",
-  },
+const STATS = [
+  { value: "12.400+", label: "Pengguna aktif" },
+  { value: "94.000+", label: "Pesan terkirim"  },
+  { value: "100%",    label: "Anonim & aman"   },
+  { value: "Gratis",  label: "Untuk memulai"   },
 ];
 
 export default function LandingPage() {
@@ -205,6 +194,17 @@ export default function LandingPage() {
             </div>
             WhisperBox
           </div>
+
+          <div className="hidden md:flex items-center gap-2 text-xs font-medium text-muted-foreground">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                    style={{ backgroundColor: BRAND.success }} />
+              <span className="relative inline-flex rounded-full h-2 w-2"
+                    style={{ backgroundColor: BRAND.success }} />
+            </span>
+            Layanan Aktif
+          </div>
+
           <div className="flex gap-2">
             <Link href="/sign-in">
               <Button variant="ghost" size="sm">Masuk</Button>
@@ -219,13 +219,13 @@ export default function LandingPage() {
       <main className="flex-1">
         <div className="max-w-5xl mx-auto px-6">
 
-          {/* Hero — split layout */}
+          {/* Hero */}
           <section className="grid md:grid-cols-2 gap-12 md:gap-8 items-center pt-20 pb-24 relative">
             <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
               <div
                 className="absolute inset-0"
                 style={{
-                  backgroundImage: "radial-gradient(circle, #86ead420 1.5px, transparent 1.5px)",
+                  backgroundImage: `radial-gradient(circle, ${BRAND.mint}20 1.5px, transparent 1.5px)`,
                   backgroundSize: "28px 28px",
                   maskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
                   WebkitMaskImage: "radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%)",
@@ -233,11 +233,20 @@ export default function LandingPage() {
               />
             </div>
 
-            {/* Left: text */}
             <div className="flex flex-col items-start text-left">
+              {/* Social proof badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold border border-border bg-white shadow-sm mb-6">
+                <span className="flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: BRAND.success }} />
+                12.400+ pengguna aktif bergabung
+              </div>
+
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-[1.05] text-foreground">
                 Terima pesan<br />
-                <span className="text-accent-foreground">tanpa batas.</span>
+                <span className="relative inline-block mt-1">
+                  <span className="relative z-10">tanpa batas.</span>
+                  <span className="absolute bottom-1 left-0 w-full h-3 -z-10 -rotate-1"
+                        style={{ backgroundColor: `${BRAND.mint}70` }} />
+                </span>
               </h1>
 
               <p className="text-base text-muted-foreground mb-8 max-w-md leading-relaxed">
@@ -262,7 +271,6 @@ export default function LandingPage() {
               </p>
             </div>
 
-            {/* Right: animated mockup */}
             <div className="relative pt-6 pb-6 flex justify-center">
               <HeroMockup />
             </div>
@@ -304,7 +312,10 @@ export default function LandingPage() {
               <div className="hidden md:block absolute top-7 left-[calc(33.33%+1rem)] right-[calc(33.33%+1rem)] h-px border-t border-dashed border-border" />
               {HOW_STEPS.map(({ step, title, desc }) => (
                 <div key={step} className="flex flex-col items-center text-center gap-3">
-                  <div className="w-14 h-14 rounded-full border-2 border-primary bg-accent flex items-center justify-center text-lg font-bold text-primary-foreground z-10 bg-white">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold z-10"
+                    style={{ backgroundColor: BRAND.mint, color: BRAND.mintDark }}
+                  >
                     {step}
                   </div>
                   <h3 className="font-semibold text-sm">{title}</h3>
@@ -315,7 +326,7 @@ export default function LandingPage() {
           </section>
 
           {/* Stats strip */}
-          <section className="border-y border-border py-10 mb-20">
+          <section className="border-y border-border py-10 mb-20 bg-secondary/20">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
               {STATS.map(({ value, label }) => (
                 <div key={label}>
@@ -330,8 +341,18 @@ export default function LandingPage() {
           <section className="pb-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-primary/20">
-                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full mb-4 border"
+                     style={{
+                       backgroundColor: `${BRAND.success}15`,
+                       color: BRAND.success,
+                       borderColor: `${BRAND.success}30`,
+                     }}>
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75"
+                          style={{ backgroundColor: BRAND.success }} />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5"
+                          style={{ backgroundColor: BRAND.success }} />
+                  </span>
                   Aktivitas Live
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
@@ -359,7 +380,8 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Aktivitas Terbaru</p>
                   <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse"
+                          style={{ backgroundColor: BRAND.success }} />
                     Live · hover untuk pause
                   </span>
                 </div>
@@ -380,7 +402,9 @@ export default function LandingPage() {
               </div>
               <div className="relative">
                 <div className="inline-flex items-center gap-2 bg-white/20 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-5">
-                  <Crown className="w-3.5 h-3.5" /> Tersedia juga versi Premium
+                  <Crown className="w-3.5 h-3.5" style={{ color: BRAND.gold }} />
+                  <span>Tersedia juga versi</span>
+                  <span style={{ color: BRAND.gold }} className="font-bold">Premium</span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
                   Siap menerima kejujuran?

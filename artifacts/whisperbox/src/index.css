@@ -23,6 +23,9 @@
   --input: #e4e4e7;
   --ring: #86ead4;
   --radius: 0.125rem;
+  --brand-gold: #f59e0b;
+  --brand-success: #22c55e;
+  --brand-info: #3b82f6;
 }
 
 @theme inline {
@@ -46,6 +49,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-success: var(--brand-success);
+  --color-brand-info: var(--brand-info);
   --radius-xs: var(--radius);
   --radius-sm: calc(var(--radius) * 2);
   --radius-md: calc(var(--radius) * 3);
