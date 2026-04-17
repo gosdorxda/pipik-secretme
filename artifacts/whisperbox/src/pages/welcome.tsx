@@ -35,7 +35,7 @@ export default function WelcomePage() {
   const { data: profile, isLoading } = useGetMyProfile();
 
   useEffect(() => {
-    if (!isLoading && profile?.username) {
+    if (!isLoading && profile?.hasSetUsername) {
       setLocation("/dashboard");
     }
   }, [isLoading, profile, setLocation]);

@@ -52,6 +52,7 @@ export interface UserProfile {
   socialFacebook?: string | null;
   socialGithub?: string | null;
   socialLinkedin?: string | null;
+  hasSetUsername: boolean;
   createdAt: string;
 }
 

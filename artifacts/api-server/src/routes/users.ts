@@ -69,7 +69,7 @@ router.put("/me", requireAuth, async (req, res) => {
     const [updated] = await db
       .update(usersTable)
       .set({
-        ...(parsed.data.username !== undefined && { username: parsed.data.username }),
+        ...(parsed.data.username !== undefined && { username: parsed.data.username, hasSetUsername: true }),
         ...(parsed.data.displayName !== undefined && { displayName: parsed.data.displayName }),
         ...(parsed.data.bio !== undefined && { bio: parsed.data.bio }),
         ...(parsed.data.avatarUrl !== undefined && { avatarUrl: parsed.data.avatarUrl }),

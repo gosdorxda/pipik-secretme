@@ -23,6 +23,7 @@ export const usersTable = pgTable("users", {
   points: integer("points").notNull().default(0),
   redeemedPoints: integer("redeemed_points").notNull().default(0),
   isAdmin: boolean("is_admin").notNull().default(false),
+  hasSetUsername: boolean("has_set_username").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

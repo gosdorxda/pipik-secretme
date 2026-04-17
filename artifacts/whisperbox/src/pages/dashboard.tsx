@@ -215,7 +215,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!profile?.username) {
+  if (!profile?.hasSetUsername) {
     setLocation("/welcome");
     return null;
   }

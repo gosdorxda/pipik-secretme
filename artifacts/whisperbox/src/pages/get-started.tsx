@@ -12,7 +12,7 @@ export default function GetStartedPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && !profile?.username) {
+    if (!isLoading && !profile?.hasSetUsername) {
       setLocation("/settings");
     }
   }, [isLoading, profile, setLocation]);
@@ -52,7 +52,7 @@ export default function GetStartedPage() {
     }
   };
 
-  if (isLoading || (!isLoading && !profile?.username)) {
+  if (isLoading || (!isLoading && !profile?.hasSetUsername)) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6">
         <Skeleton className="h-8 w-64 mb-4" />

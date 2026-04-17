@@ -666,6 +666,8 @@ components:
         socialLinkedin:
           type: string
           nullable: true
+        hasSetUsername:
+          type: boolean
         createdAt:
           type: string
           format: date-time
@@ -677,6 +679,7 @@ components:
         - defaultPublicMessages
         - emailNotifications
         - linkOpens
+        - hasSetUsername
         - createdAt
 
     PublicProfile:
