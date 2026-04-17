@@ -244,6 +244,8 @@ export interface ReferralStats {
   points: number;
   pointsFromLinkOpens: number;
   totalPoints: number;
+  availablePoints: number;
+  redeemedPoints: number;
   linkOpens: number;
   referralCount: number;
   referrals: ReferralUser[];
@@ -256,6 +258,47 @@ export interface ClaimReferralBody {
 export interface ClaimReferralResponse {
   success: boolean;
   pointsAwarded: number;
+}
+
+export interface AppConfigNotification {
+  message: string;
+  type: string;
+}
+
+export interface AppConfig {
+  premiumPrice: number;
+  redeemRate: number;
+  referralSignupPoints: number;
+  referralUpgradePoints: number;
+  linkOpensPointsPer1000: number;
+  notification?: AppConfigNotification | null;
+}
+
+export type RedeemRequestStatus = "pending" | "success" | "rejected";
+
+export interface RedeemRequest {
+  id: string;
+  userId: string;
+  points: number;
+  paymentInfo: string;
+  status: RedeemRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RedeemRequestsResponse {
+  requests: RedeemRequest[];
+}
+
+export interface CreateRedeemRequestBody {
+  /** @minimum 1000 */
+  points: number;
+  /** @minLength 1 */
+  paymentInfo: string;
+}
+
+export interface CreateRedeemRequestResponse {
+  request: RedeemRequest;
 }
 
 export type GetMyMessagesParams = {

@@ -130,7 +130,7 @@ export default function DashboardPage() {
   const endCampaign = useEndCampaign();
   const { data: usernameCheck, isFetching: checkingUsername } = useCheckUsername(
     { username: debouncedUsername },
-    { query: { enabled: debouncedUsername.length >= 3 } },
+    { query: { enabled: debouncedUsername.length >= 3 } as any },
   );
 
   const publicUrl = profile?.username

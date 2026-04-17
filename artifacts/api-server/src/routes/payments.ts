@@ -51,7 +51,7 @@ async function upgradeToPremium(userId: string, merchantRef: string, paidAt: Dat
 }
 
 router.post("/create", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
@@ -151,7 +151,7 @@ router.post("/create", requireAuth, async (req, res) => {
 });
 
 router.get("/status/:ref", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const ref = req.params.ref as string;
   try {
     const user = await db.query.usersTable.findFirst({
@@ -212,7 +212,7 @@ router.get("/status/:ref", requireAuth, async (req, res) => {
 });
 
 router.post("/callback", async (req, res) => {
-  const rawBody: Buffer = (req as any).rawBody;
+  const rawBody = req.rawBody;
   const signature = req.headers["x-callback-signature"] as string || "";
 
   const rawBodyStr = rawBody ? rawBody.toString("utf8") : JSON.stringify(req.body);

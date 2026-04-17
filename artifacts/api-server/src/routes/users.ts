@@ -7,7 +7,7 @@ import { UpdateMyProfileBody, GetPublicProfileParams } from "@workspace/api-zod"
 const router = Router();
 
 router.get("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     let user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
@@ -29,7 +29,7 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 router.put("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const parsed = UpdateMyProfileBody.safeParse(req.body);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid body", details: parsed.error });
@@ -43,6 +43,10 @@ router.put("/me", requireAuth, async (req, res) => {
       res.status(404).json({ error: "User not found" });
       return;
     }
+    if (parsed.data.username) {
+      parsed.data.username = parsed.data.username.toLowerCase();
+    }
+
     if (parsed.data.username && parsed.data.username !== user.username) {
       const existing = await db.query.usersTable.findFirst({
         where: eq(usersTable.username, parsed.data.username),

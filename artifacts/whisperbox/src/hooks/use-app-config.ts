@@ -1,15 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useGetAppConfig } from "@workspace/api-client-react";
+import type { AppConfig } from "@workspace/api-client-react";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
-
-export interface AppConfig {
-  premiumPrice: number;
-  redeemRate: number;
-  referralSignupPoints: number;
-  referralUpgradePoints: number;
-  linkOpensPointsPer1000: number;
-  notification: { message: string; type: string } | null;
-}
+export type { AppConfig };
 
 const CONFIG_DEFAULTS: AppConfig = {
   premiumPrice: 49900,
@@ -21,14 +13,5 @@ const CONFIG_DEFAULTS: AppConfig = {
 };
 
 export function useAppConfig() {
-  return useQuery<AppConfig>({
-    queryKey: ["app-config"],
-    queryFn: async () => {
-      const res = await fetch(`${API_BASE}/config`);
-      if (!res.ok) throw new Error("Failed to fetch config");
-      return res.json();
-    },
-    staleTime: 2 * 60 * 1000,
-    placeholderData: CONFIG_DEFAULTS,
-  });
+  return useGetAppConfig();
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAppConfig } from "@/hooks/use-app-config";
 import { AppLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
@@ -8,11 +8,16 @@ import {
   Copy, Check, Users, Link2, Star, Trophy, Gift, UserPlus, Crown, Send, Clock, CheckCircle2,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { useGetMyReferralStats } from "@workspace/api-client-react";
-import { useGetMyProfile } from "@workspace/api-client-react";
-import { useAuth } from "@clerk/react";
+import {
+  useGetMyReferralStats,
+  useGetMyProfile,
+  useGetMyRedeemRequests,
+  useCreateRedeemRequest,
+  getGetMyRedeemRequestsQueryKey,
+  getGetMyReferralStatsQueryKey,
+} from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 const BASE_URL = typeof window !== "undefined" ? window.location.origin : "";
 
 function formatRupiah(n: number) {
@@ -27,41 +32,25 @@ const STATUS_LABEL: Record<string, { label: string; cls: string; icon: React.Rea
 
 export default function ReferralPage() {
   const { toast } = useToast();
-  const { getToken } = useAuth();
+  const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
   const [redeemPoints, setRedeemPoints] = useState("");
   const [paymentInfo, setPaymentInfo] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [redeemRequests, setRedeemRequests] = useState<any[]>([]);
-  const [loadingRequests, setLoadingRequests] = useState(true);
   const { data: appConfig } = useAppConfig();
   const redeemRate = appConfig?.redeemRate ?? 10000;
   const referralSignupPoints = appConfig?.referralSignupPoints ?? 10;
   const referralUpgradePoints = appConfig?.referralUpgradePoints ?? 100;
   const linkOpensPointsPer1000 = appConfig?.linkOpensPointsPer1000 ?? 1;
 
-  const { data: referral, isLoading, refetch: refetchReferral } = useGetMyReferralStats();
+  const { data: referral, isLoading } = useGetMyReferralStats();
   const { data: profile } = useGetMyProfile();
+  const { data: redeemData, isLoading: loadingRequests } = useGetMyRedeemRequests();
+  const redeemRequests = redeemData?.requests ?? [];
+  const createRedeem = useCreateRedeemRequest();
 
   const referralLink = referral?.referralCode
     ? `${BASE_URL}/?ref=${referral.referralCode}`
     : "";
-
-  const fetchRedeemRequests = async () => {
-    try {
-      const token = await getToken();
-      const res = await fetch(`${API_BASE}/redeem/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setRedeemRequests(data.requests ?? []);
-      }
-    } catch {}
-    setLoadingRequests(false);
-  };
-
-  useEffect(() => { fetchRedeemRequests(); }, []);
 
   const copyLink = () => {
     if (!referralLink) return;
@@ -79,31 +68,24 @@ export default function ReferralPage() {
     ? Math.floor(parsedPoints / 1000) * redeemRate
     : 0;
 
-  const handleRedeem = async () => {
+  const handleRedeem = () => {
     if (!canSubmit) return;
-    setSubmitting(true);
-    try {
-      const token = await getToken();
-      const res = await fetch(`${API_BASE}/redeem`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ points: parsedPoints, paymentInfo: paymentInfo.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast({ title: "Gagal", description: data.error ?? "Terjadi kesalahan.", variant: "destructive" });
-        return;
+    createRedeem.mutate(
+      { data: { points: parsedPoints, paymentInfo: paymentInfo.trim() } },
+      {
+        onSuccess: () => {
+          toast({ title: "Permintaan dikirim!", description: "Admin akan memproses penukaran poinmu." });
+          setRedeemPoints("");
+          setPaymentInfo("");
+          queryClient.invalidateQueries({ queryKey: getGetMyRedeemRequestsQueryKey() });
+          queryClient.invalidateQueries({ queryKey: getGetMyReferralStatsQueryKey() });
+        },
+        onError: (err: any) => {
+          const msg = err?.response?.data?.error ?? "Terjadi kesalahan.";
+          toast({ title: "Gagal", description: msg, variant: "destructive" });
+        },
       }
-      toast({ title: "Permintaan dikirim!", description: "Admin akan memproses penukaran poinmu." });
-      setRedeemPoints("");
-      setPaymentInfo("");
-      fetchRedeemRequests();
-      refetchReferral();
-    } catch {
-      toast({ title: "Gagal", description: "Terjadi kesalahan.", variant: "destructive" });
-    } finally {
-      setSubmitting(false);
-    }
+    );
   };
 
   return (
@@ -459,15 +441,15 @@ export default function ReferralPage() {
                 </div>
                 <Button
                   onClick={handleRedeem}
-                  disabled={!canSubmit || submitting}
+                  disabled={!canSubmit || createRedeem.isPending}
                   className="gap-2"
                 >
-                  {submitting ? (
+                  {createRedeem.isPending ? (
                     <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin inline-block" />
                   ) : (
                     <Send className="w-4 h-4" />
                   )}
-                  {submitting ? "Mengirim..." : "Ajukan Penukaran"}
+                  {createRedeem.isPending ? "Mengirim..." : "Ajukan Penukaran"}
                 </Button>
               </>
             )}

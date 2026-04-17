@@ -26,7 +26,7 @@ const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY 
 const router = Router();
 
 router.get("/stats/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
@@ -73,7 +73,7 @@ const ID_STOP_WORDS = new Set([
 ]);
 
 router.get("/wrapped/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
 
   const yearRaw = parseInt(req.query.year as string);
   if (isNaN(yearRaw) || yearRaw < 2000 || yearRaw > 2100) {
@@ -159,7 +159,7 @@ router.get("/wrapped/me", requireAuth, async (req, res) => {
 });
 
 router.get("/", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const parsed = GetMyMessagesQueryParams.safeParse(req.query);
   const page = parsed.success ? (parsed.data.page ?? 1) : 1;
   const limit = parsed.success ? (parsed.data.limit ?? 20) : 20;
@@ -321,7 +321,7 @@ router.post("/:username", async (req, res) => {
 });
 
 router.post("/:id/reply", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const paramsParsed = ReplyToMessageParams.safeParse(req.params);
   if (!paramsParsed.success) {
     res.status(400).json({ error: "Invalid params" });
@@ -360,7 +360,7 @@ router.post("/:id/reply", requireAuth, async (req, res) => {
 });
 
 router.patch("/:id/visibility", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const paramsParsed = ToggleMessageVisibilityParams.safeParse(req.params);
   if (!paramsParsed.success) {
     res.status(400).json({ error: "Invalid params" });
@@ -399,7 +399,7 @@ router.patch("/:id/visibility", requireAuth, async (req, res) => {
 });
 
 router.delete("/:id", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const parsed = DeleteMessageParams.safeParse(req.params);
   if (!parsed.success) {
     res.status(400).json({ error: "Invalid params" });

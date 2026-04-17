@@ -35,6 +35,7 @@ export const GetMyProfileResponse = zod.object({
   socialFacebook: zod.string().nullish(),
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
+  hasSetUsername: zod.boolean(),
   createdAt: zod.coerce.date(),
 });
 
@@ -44,7 +45,7 @@ export const GetMyProfileResponse = zod.object({
 export const updateMyProfileBodyUsernameMin = 3;
 export const updateMyProfileBodyUsernameMax = 32;
 
-export const updateMyProfileBodyUsernameRegExp = new RegExp("^[a-zA-Z0-9_]+$");
+export const updateMyProfileBodyUsernameRegExp = new RegExp("^[a-z0-9_]+$");
 export const updateMyProfileBodyDisplayNameMax = 64;
 
 export const updateMyProfileBodyBioMax = 500;
@@ -86,6 +87,7 @@ export const UpdateMyProfileResponse = zod.object({
   socialFacebook: zod.string().nullish(),
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
+  hasSetUsername: zod.boolean(),
   createdAt: zod.coerce.date(),
 });
 
@@ -404,6 +406,8 @@ export const GetMyReferralStatsResponse = zod.object({
   points: zod.number(),
   pointsFromLinkOpens: zod.number(),
   totalPoints: zod.number(),
+  availablePoints: zod.number(),
+  redeemedPoints: zod.number(),
   linkOpens: zod.number(),
   referralCount: zod.number(),
   referrals: zod.array(
@@ -428,4 +432,51 @@ export const ClaimReferralBody = zod.object({
 export const ClaimReferralResponse = zod.object({
   success: zod.boolean(),
   pointsAwarded: zod.number(),
+});
+
+/**
+ * @summary Get public app configuration
+ */
+export const AppConfigNotification = zod.object({
+  message: zod.string(),
+  type: zod.string(),
+});
+
+export const AppConfigResponse = zod.object({
+  premiumPrice: zod.number(),
+  redeemRate: zod.number(),
+  referralSignupPoints: zod.number(),
+  referralUpgradePoints: zod.number(),
+  linkOpensPointsPer1000: zod.number(),
+  notification: AppConfigNotification.nullish(),
+});
+
+/**
+ * @summary Redeem requests
+ */
+export const RedeemRequestStatusValues = ["pending", "success", "rejected"] as const;
+
+export const RedeemRequest = zod.object({
+  id: zod.string(),
+  userId: zod.string(),
+  points: zod.number(),
+  paymentInfo: zod.string(),
+  status: zod.enum(RedeemRequestStatusValues),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+export const RedeemRequestsResponse = zod.object({
+  requests: zod.array(RedeemRequest),
+});
+
+export const createRedeemRequestBodyPointsMin = 1000;
+
+export const CreateRedeemRequestBody = zod.object({
+  points: zod.number().int().min(createRedeemRequestBodyPointsMin),
+  paymentInfo: zod.string().min(1),
+});
+
+export const CreateRedeemRequestResponse = zod.object({
+  request: RedeemRequest,
 });

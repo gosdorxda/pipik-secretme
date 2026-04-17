@@ -31,7 +31,7 @@ async function ensureReferralCode(userId: string): Promise<string> {
 }
 
 router.get("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     const user = await db.query.usersTable.findFirst({ where: eq(usersTable.clerkId, clerkUserId) });
     if (!user) { res.status(404).json({ error: "User not found" }); return; }
@@ -84,7 +84,7 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 router.post("/claim", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const { referralCode } = req.body ?? {};
   if (!referralCode || typeof referralCode !== "string") {
     res.status(400).json({ error: "referralCode is required" });

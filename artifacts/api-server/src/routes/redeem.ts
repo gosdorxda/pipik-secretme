@@ -7,7 +7,7 @@ import { getSetting } from "../lib/settingsCache";
 const router = Router();
 
 router.get("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     const user = await db.query.usersTable.findFirst({ where: eq(usersTable.clerkId, clerkUserId) });
     if (!user) { res.status(404).json({ error: "User not found" }); return; }
@@ -25,7 +25,7 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 router.post("/", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const { points, paymentInfo } = req.body ?? {};
 
   if (!Number.isInteger(points) || points < 1000) {

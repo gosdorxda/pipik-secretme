@@ -15,7 +15,7 @@ async function getCampaignWithCount(campaignId: string) {
 }
 
 router.get("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   try {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
@@ -36,7 +36,7 @@ router.get("/me", requireAuth, async (req, res) => {
 });
 
 router.post("/me", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const bodyParsed = CreateCampaignBody.safeParse(req.body);
   if (!bodyParsed.success) {
     res.status(400).json({ error: "Invalid body", details: bodyParsed.error });
@@ -74,7 +74,7 @@ router.post("/me", requireAuth, async (req, res) => {
 });
 
 router.patch("/:id/end", requireAuth, async (req, res) => {
-  const clerkUserId = (req as any).clerkUserId as string;
+  const clerkUserId = req.clerkUserId;
   const paramsParsed = EndCampaignParams.safeParse(req.params);
   if (!paramsParsed.success) {
     res.status(400).json({ error: "Invalid params" });

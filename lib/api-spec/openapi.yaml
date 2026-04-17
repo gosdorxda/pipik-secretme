@@ -22,6 +22,10 @@ tags:
     description: Object storage upload and serving endpoints.
   - name: referrals
     description: Referral and points system
+  - name: config
+    description: Public app configuration
+  - name: redeem
+    description: Point redeem requests
 paths:
   /healthz:
     get:
@@ -538,6 +542,61 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ReferralStats"
+        "401":
+          description: Unauthorized
+
+  /config:
+    get:
+      operationId: getAppConfig
+      tags: [config]
+      summary: Get public app configuration
+      responses:
+        "200":
+          description: App configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppConfig"
+
+  /redeem:
+    post:
+      operationId: createRedeemRequest
+      tags: [redeem]
+      summary: Submit a point redeem request
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRedeemRequestBody"
+      responses:
+        "201":
+          description: Redeem request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRedeemRequestResponse"
+        "400":
+          description: Invalid request (not enough points or min not met)
+        "401":
+          description: Unauthorized
+
+  /redeem/me:
+    get:
+      operationId: getMyRedeemRequests
+      tags: [redeem]
+      summary: Get my redeem requests
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Redeem requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RedeemRequestsResponse"
         "401":
           description: Unauthorized
 
@@ -1137,3 +1196,97 @@ components:
       required:
         - success
         - pointsAwarded
+
+    AppConfigNotification:
+      type: object
+      properties:
+        message:
+          type: string
+        type:
+          type: string
+      required:
+        - message
+        - type
+
+    AppConfig:
+      type: object
+      properties:
+        premiumPrice:
+          type: integer
+        redeemRate:
+          type: integer
+        referralSignupPoints:
+          type: integer
+        referralUpgradePoints:
+          type: integer
+        linkOpensPointsPer1000:
+          type: integer
+        notification:
+          $ref: "#/components/schemas/AppConfigNotification"
+          nullable: true
+      required:
+        - premiumPrice
+        - redeemRate
+        - referralSignupPoints
+        - referralUpgradePoints
+        - linkOpensPointsPer1000
+
+    RedeemRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        points:
+          type: integer
+        paymentInfo:
+          type: string
+        status:
+          type: string
+          enum: [pending, success, rejected]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - points
+        - paymentInfo
+        - status
+        - createdAt
+        - updatedAt
+
+    RedeemRequestsResponse:
+      type: object
+      properties:
+        requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/RedeemRequest"
+      required:
+        - requests
+
+    CreateRedeemRequestBody:
+      type: object
+      properties:
+        points:
+          type: integer
+          minimum: 1000
+        paymentInfo:
+          type: string
+          minLength: 1
+      required:
+        - points
+        - paymentInfo
+
+    CreateRedeemRequestResponse:
+      type: object
+      properties:
+        request:
+          $ref: "#/components/schemas/RedeemRequest"
+      required:
+        - request
