@@ -904,7 +904,7 @@ export default function DashboardPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground"
+                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground shadow-none"
                       onClick={() => {
                         if (replyingTo === message.id) {
                           setReplyingTo(null);
@@ -921,7 +921,7 @@ export default function DashboardPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground"
+                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground shadow-none"
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
                       <Share2 className="w-3.5 h-3.5" />
