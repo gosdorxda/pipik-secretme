@@ -139,14 +139,14 @@ export default function PublicProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
-        <div className="border-b border-border bg-white py-3">
-          <div className="max-w-4xl mx-auto px-6 flex justify-between items-center">
-            <div className="flex items-center gap-2 font-semibold text-sm">
-              <div className="w-5 h-5 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
+        <header className="border-b border-border bg-white sticky top-0 z-50">
+          <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 font-bold text-sm text-foreground">
+              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
               WhisperBox
-            </div>
+            </Link>
           </div>
-        </div>
+        </header>
         <div className="flex-1 flex flex-col items-center p-6 py-10">
           <div className="w-full max-w-4xl space-y-6">
             <div className="flex flex-col items-center gap-4 py-6 text-center">
@@ -167,14 +167,17 @@ export default function PublicProfilePage() {
   if (isError || !profile) {
     return (
       <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
-        <div className="border-b border-border bg-white py-3">
-          <div className="max-w-4xl mx-auto px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold text-sm text-foreground">
-              <div className="w-5 h-5 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
+        <header className="border-b border-border bg-white sticky top-0 z-50">
+          <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2 font-bold text-sm text-foreground">
+              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">W</div>
               WhisperBox
             </Link>
+            <Link href="/">
+              <Button size="sm" className="text-xs">Mulai Gratis</Button>
+            </Link>
           </div>
-        </div>
+        </header>
         <div className="flex-1 flex flex-col items-center justify-center p-4">
           <div className="border border-border bg-white p-12 shadow-sm text-center max-w-sm w-full rounded-md">
             <User className="w-14 h-14 text-muted-foreground mx-auto mb-4" />
@@ -195,21 +198,19 @@ export default function PublicProfilePage() {
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
       {/* Nav */}
-      <div className="border-b border-border bg-white sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 font-semibold text-sm text-foreground">
+      <header className="border-b border-border bg-white sticky top-0 z-50">
+        <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 font-bold text-sm text-foreground">
             <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
           </Link>
           <Link href="/">
-            <Button size="sm" variant="outline" className="text-xs">
-              Get your own link
-            </Button>
+            <Button size="sm" className="text-xs">Mulai Gratis</Button>
           </Link>
         </div>
-      </div>
+      </header>
 
       <div className="flex-1 max-w-4xl mx-auto px-6 py-8 w-full space-y-6">
 
