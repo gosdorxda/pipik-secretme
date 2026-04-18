@@ -469,7 +469,7 @@ export default function SettingsPage() {
                 </div>
 
                 {!profile?.isPremium && (
-                  <div className="mx-6 mb-5 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+                  <div className="mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                     <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-amber-800">Fitur Premium</p>
@@ -481,7 +481,7 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                <div className="px-6 pb-6 space-y-5">
+                <div className="px-6 pt-6 pb-6 space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {socialFields.map(({ name, label, icon, iconColor, placeholder }) => (
                       <FormField
@@ -548,14 +548,27 @@ export default function SettingsPage() {
               </div>
             )}
             <Card className="overflow-hidden gap-0 py-0">
-              <div className="bg-secondary/50 border-b border-border px-6 py-4 flex items-center gap-2">
-                <Bell className="w-4 h-4 text-muted-foreground" />
-                <div>
-                  <h2 className="text-sm font-semibold text-foreground">Notifikasi</h2>
-                  <p className="text-xs text-muted-foreground">Atur kapan dan bagaimana kamu diberi tahu.</p>
+              <div className="px-6 py-4 flex items-center justify-between gap-4"
+                   style={{ background: "rgba(254,243,199,0.55)", borderBottom: "1px solid rgba(251,191,36,0.22)" }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                       style={{ background: "rgba(245,158,11,0.15)" }}>
+                    <Bell className="w-4 h-4" style={{ color: "#d97706" }} />
+                  </div>
+                  <div>
+                    <h2 className="text-sm font-semibold text-foreground">Notifikasi</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">Atur kapan dan bagaimana kamu diberi tahu.</p>
+                  </div>
                 </div>
+                {!profile?.isPremium && (
+                  <Link href="/upgrade" className="shrink-0">
+                    <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
+                      <Lock className="w-3 h-3" /> Premium
+                    </span>
+                  </Link>
+                )}
               </div>
-              <CardContent className="pt-5">
+              <CardContent className="py-5">
                 <div className="flex items-center justify-between gap-6">
                   <div className="min-w-0">
                     <p className="text-sm font-medium">Notifikasi email</p>
