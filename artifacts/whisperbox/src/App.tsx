@@ -367,6 +367,17 @@ function ClerkProviderWithRoutes() {
               </Route>
               <Route path="/admin" component={AdminPage} />
 
+              {/* Legacy redirect: /u/username → /@username */}
+              <Route path="/u/:username">
+                {(params: { username?: string }) => {
+                  const [, setLocation] = useLocation();
+                  useEffect(() => {
+                    if (params.username) setLocation(`/@${params.username}`, { replace: true });
+                  }, [params.username]);
+                  return null;
+                }}
+              </Route>
+
               <Route path="/:handle">
                 {(params: { handle?: string }) => {
                   const handle = params.handle ?? "";

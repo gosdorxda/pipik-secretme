@@ -39,6 +39,7 @@ const PREMIUM_FEATURES = [
   { label: "Semua fitur Free", icon: <Check className="w-3.5 h-3.5" />, highlight: false },
   { label: "Social links (Instagram, TikTok, X, GitHub, LinkedIn, Facebook, dll.)", icon: <Instagram className="w-3.5 h-3.5" />, highlight: true },
   { label: "Notifikasi email otomatis tiap pesan masuk", icon: <Mail className="w-3.5 h-3.5" />, highlight: true },
+  { label: "Notifikasi balasan ke pengirim anonim (opsional)", icon: <Bell className="w-3.5 h-3.5" />, highlight: true },
   { label: "Badge ✓ Premium eksklusif di profil publik", icon: <Crown className="w-3.5 h-3.5" />, highlight: true },
   { label: "Kampanye pesan: ajukan pertanyaan ke pengunjung profilmu", icon: <Zap className="w-3.5 h-3.5" />, highlight: false },
   { label: "Akses Wrapped: ringkasan pesan tahunanmu", icon: <Sparkles className="w-3.5 h-3.5" />, highlight: false },
