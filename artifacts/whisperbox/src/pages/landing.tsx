@@ -373,32 +373,72 @@ export default function LandingPage() {
 
           {/* CTA Banner */}
           <section className="mb-20">
-            <div className="bg-primary rounded-md p-10 md:p-14 text-center relative overflow-hidden">
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full" />
-                <div className="absolute -bottom-8 -left-8 w-28 h-28 bg-white/10 rounded-full" />
+            <div className="bg-primary rounded-md relative overflow-hidden">
+              {/* Background decoration */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute -top-20 -right-20 w-64 h-64 bg-white/[0.06] rounded-full" />
+                <div className="absolute -bottom-14 -left-14 w-48 h-48 bg-white/[0.06] rounded-full" />
+                <div className="absolute inset-0" style={{
+                  backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)",
+                  backgroundSize: "22px 22px",
+                }} />
               </div>
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 bg-white/20 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-5">
-                  <Crown className="w-3.5 h-3.5" /> Tersedia juga versi Premium
+
+              <div className="relative grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
+                {/* Left: headline + CTA */}
+                <div className="px-8 py-12 md:px-12 md:py-14 flex flex-col justify-center">
+                  <div className="inline-flex items-center gap-1.5 bg-white/15 border border-white/20 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-6 w-fit">
+                    <Crown className="w-3 h-3" /> Tersedia juga versi Premium
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-primary-foreground mb-4 leading-[1.15]">
+                    Siap menerima<br />kejujuran?
+                  </h2>
+                  <p className="text-primary-foreground/70 text-sm leading-relaxed mb-8 max-w-xs">
+                    Buat link personalmu sekarang — gratis selamanya. Upgrade kapan saja.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link href="/sign-up">
+                      <Button variant="secondary" size="lg" className="font-semibold px-7">
+                        Buat Akun Gratis
+                      </Button>
+                    </Link>
+                    <Link href="/upgrade">
+                      <Button variant="ghost" size="lg" className="px-7 text-primary-foreground hover:bg-white/15 hover:text-primary-foreground border border-white/25">
+                        Lihat Premium
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-                <h2 className="text-2xl md:text-3xl font-bold text-primary-foreground mb-3">
-                  Siap menerima kejujuran?
-                </h2>
-                <p className="text-primary-foreground/80 text-sm mb-7 max-w-md mx-auto leading-relaxed">
-                  Buat link personalmu sekarang, gratis selamanya. Upgrade kapan saja untuk notifikasi email, social links, dan lebih banyak lagi.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link href="/sign-up">
-                    <Button variant="secondary" size="lg" className="px-8 font-semibold">
-                      Buat Akun Gratis
-                    </Button>
-                  </Link>
-                  <Link href="/upgrade">
-                    <Button variant="ghost" size="lg" className="px-8 text-primary-foreground hover:bg-white/15 hover:text-primary-foreground border border-white/30">
-                      Lihat Premium
-                    </Button>
-                  </Link>
+
+                {/* Right: feature highlights */}
+                <div className="px-8 py-12 md:px-12 md:py-14 flex flex-col justify-center gap-6">
+                  {[
+                    {
+                      icon: "🔒",
+                      title: "100% Anonim",
+                      desc: "Identitas pengirim tidak pernah tersimpan atau terungkap kepada siapapun.",
+                    },
+                    {
+                      icon: "⚡",
+                      title: "Terima Pesan Instan",
+                      desc: "Pesan langsung muncul di inbox-mu begitu dikirim, tanpa delay.",
+                    },
+                    {
+                      icon: "🔗",
+                      title: "Link Personal-mu",
+                      desc: "Satu link untuk dibagikan ke mana saja — siapa pun bisa kirim pesan.",
+                    },
+                  ].map(({ icon, title, desc }) => (
+                    <div key={title} className="flex items-start gap-4">
+                      <div className="w-9 h-9 rounded-md bg-white/15 border border-white/20 flex items-center justify-center text-base shrink-0">
+                        {icon}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-primary-foreground leading-none mb-1">{title}</p>
+                        <p className="text-xs text-primary-foreground/65 leading-relaxed">{desc}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
