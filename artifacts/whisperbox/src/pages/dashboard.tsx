@@ -14,8 +14,8 @@ import { ShareMessageCard } from "@/components/share-message-card";
 import { QRProfileCard } from "@/components/qr-profile-card";
 import {
   Copy, Check, Trash2, ExternalLink, Inbox, MessageSquare,
-  Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share2, Sparkles,
-  Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search, Reply,
+  Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share, Sparkles,
+  Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search, CornerUpLeft,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -915,7 +915,7 @@ export default function DashboardPage() {
                         }
                       }}
                     >
-                      <Reply className="w-3.5 h-3.5" />
+                      <CornerUpLeft className="w-3.5 h-3.5" />
                       {message.ownerReply ? "Edit Balasan" : "Balas"}
                     </Button>
                     <Button
@@ -924,7 +924,7 @@ export default function DashboardPage() {
                       className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground shadow-none"
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
-                      <Share2 className="w-3.5 h-3.5" />
+                      <Share className="w-3.5 h-3.5" />
                       Bagikan
                     </Button>
                     <div className="flex-1" />
