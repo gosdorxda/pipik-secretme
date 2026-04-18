@@ -60,7 +60,7 @@ router.put("/me", requireAuth, async (req, res) => {
     const premiumFields = [
       "socialInstagram", "socialTiktok", "socialX",
       "socialFacebook", "socialGithub", "socialLinkedin",
-      "emailNotifications",
+      "emailNotifications", "allowReplyNotif",
     ] as const;
     const hasPremiumField = premiumFields.some(
       (f) => parsed.data[f] !== undefined

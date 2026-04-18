@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   Users, MessageSquare, CreditCard, TrendingUp, Search, Crown,
   ShieldCheck, Settings, RefreshCw, ChevronLeft, ChevronRight,
-  BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star,
+  BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star, ScrollText, AlertCircle,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
@@ -51,7 +51,7 @@ function formatDate(val: string) {
   return new Date(val).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-type Tab = "overview" | "users" | "transactions" | "settings" | "redeem";
+type Tab = "overview" | "users" | "transactions" | "settings" | "redeem" | "logs";
 
 function AdminLoginScreen({ onLogin }: { onLogin: (secret: string) => void }) {
   const [code, setCode] = useState("");
@@ -128,6 +128,7 @@ export default function AdminPage() {
     { id: "users", label: "Pengguna", icon: Users },
     { id: "transactions", label: "Transaksi", icon: CreditCard },
     { id: "redeem", label: "Redeem", icon: Gift },
+    { id: "logs", label: "Server Logs", icon: ScrollText },
     { id: "settings", label: "Pengaturan", icon: Settings },
   ];
 
@@ -167,6 +168,7 @@ export default function AdminPage() {
         {tab === "users" && <UsersTab secret={secret} toast={toast} />}
         {tab === "transactions" && <TransactionsTab secret={secret} />}
         {tab === "redeem" && <RedeemTab secret={secret} toast={toast} />}
+        {tab === "logs" && <LogsTab secret={secret} />}
         {tab === "settings" && <SettingsTab secret={secret} toast={toast} />}
       </div>
     </AppLayout>
@@ -437,13 +439,17 @@ function TransactionsTab({ secret }: { secret: string }) {
   );
 }
 
-const SETTING_META: { key: string; label: string; description: string; type: "text" | "number" | "boolean" | "password"; group: string }[] = [
+const SETTING_META: { key: string; label: string; description: string; type: "text" | "number" | "boolean" | "password" | "textarea"; group: string }[] = [
   { key: "app_name", label: "Nama Aplikasi", description: "Nama yang ditampilkan di halaman", type: "text", group: "Umum" },
   { key: "app_description", label: "Deskripsi Aplikasi", description: "Deskripsi singkat aplikasi", type: "text", group: "Umum" },
   { key: "maintenance_mode", label: "Mode Maintenance", description: "Aktifkan untuk menutup sementara akses pengguna", type: "boolean", group: "Umum" },
   { key: "premium_price", label: "Harga Premium (IDR)", description: "Harga upgrade ke premium dalam Rupiah", type: "number", group: "Pembayaran" },
   { key: "tripay_merchant_code", label: "Tripay Merchant Code", description: "Kode merchant dari dashboard Tripay", type: "text", group: "Pembayaran" },
   { key: "resend_from_email", label: "Email Pengirim", description: "Alamat email untuk notifikasi (contoh: noreply@domain.com)", type: "text", group: "Email" },
+  { key: "email_new_msg_subject", label: "Subjek – Pesan Baru", description: "Subjek email saat pemilik profil mendapat pesan baru. Variabel: {{appName}}, {{name}}, {{username}}", type: "text", group: "Email" },
+  { key: "email_new_msg_intro", label: "Teks Intro – Pesan Baru", description: "Teks yang tampil di badan email pesan baru. Variabel: {{appName}}, {{name}}, {{username}}", type: "textarea", group: "Email" },
+  { key: "email_reply_subject", label: "Subjek – Notifikasi Balasan", description: "Subjek email saat pengirim anonim mendapat balasan. Variabel: {{appName}}, {{ownerUsername}}", type: "text", group: "Email" },
+  { key: "email_reply_intro", label: "Teks Intro – Notifikasi Balasan", description: "Teks yang tampil di badan email balasan. Variabel: {{appName}}, {{ownerUsername}}. Boleh pakai <strong>bold</strong>.", type: "textarea", group: "Email" },
   { key: "referral_signup_points", label: "Poin Referral Daftar", description: "Poin ketika teman yang diundang mendaftar", type: "number", group: "Referral" },
   { key: "referral_upgrade_points", label: "Poin Referral Premium", description: "Poin bonus ketika teman yang diundang upgrade ke premium", type: "number", group: "Referral" },
   { key: "link_opens_points_per_1000", label: "Poin per 1.000 Link Dibuka", description: "Jumlah poin yang diperoleh setiap 1.000 kali link profil dibuka", type: "number", group: "Referral" },
@@ -708,6 +714,13 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
                     >
                       <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${val === "true" ? "left-6" : "left-1"}`} />
                     </button>
+                  ) : meta.type === "textarea" ? (
+                    <textarea
+                      value={val}
+                      onChange={e => update(meta.key, e.target.value)}
+                      rows={3}
+                      className="w-full max-w-lg px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none font-mono"
+                    />
                   ) : (
                     <div className="relative">
                       <input
@@ -870,6 +883,132 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
             </div>
           ))}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function LogsTab({ secret }: { secret: string }) {
+  const [logs, setLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(false);
+  const [limit, setLimit] = useState(100);
+
+  const load = useCallback(async () => {
+    try {
+      const data = await apiFetch(`/admin/logs?limit=${limit}`, secret);
+      setLogs(data.logs ?? []);
+    } catch {}
+    setLoading(false);
+  }, [secret, limit]);
+
+  useEffect(() => {
+    setLoading(true);
+    load();
+  }, [load]);
+
+  useEffect(() => {
+    if (!autoRefresh) return;
+    const id = setInterval(load, 3000);
+    return () => clearInterval(id);
+  }, [autoRefresh, load]);
+
+  const statusColor = (s: number) => {
+    if (s >= 500) return "text-red-700 bg-red-100 border-red-200";
+    if (s >= 400) return "text-amber-700 bg-amber-100 border-amber-200";
+    if (s >= 300) return "text-sky-700 bg-sky-100 border-sky-200";
+    return "text-emerald-700 bg-emerald-100 border-emerald-200";
+  };
+
+  const methodColor = (m: string) => {
+    if (m === "GET") return "text-sky-700";
+    if (m === "POST") return "text-emerald-700";
+    if (m === "DELETE") return "text-red-700";
+    if (m === "PATCH" || m === "PUT") return "text-amber-700";
+    return "text-muted-foreground";
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 className="text-base font-bold">Server Logs</h2>
+          <p className="text-xs text-muted-foreground">Request log HTTP server terbaru (in-memory, max 500 entri).</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <select
+            value={limit}
+            onChange={e => setLimit(Number(e.target.value))}
+            className="text-xs px-2 py-1.5 rounded-md border border-border bg-background"
+          >
+            {[50, 100, 200].map(n => <option key={n} value={n}>{n} entri</option>)}
+          </select>
+          <button
+            onClick={() => setAutoRefresh(a => !a)}
+            className={`text-xs px-3 py-1.5 rounded-md border font-medium transition-colors flex items-center gap-1.5 ${autoRefresh ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
+          >
+            <RefreshCw className={`w-3 h-3 ${autoRefresh ? "animate-spin" : ""}`} />
+            {autoRefresh ? "Auto (3s)" : "Auto Refresh"}
+          </button>
+          <button
+            onClick={() => { setLoading(true); load(); }}
+            className="text-xs px-3 py-1.5 rounded-md border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5"
+          >
+            <RefreshCw className="w-3 h-3" /> Refresh
+          </button>
+        </div>
+      </div>
+
+      <div className="border border-border rounded-md overflow-hidden">
+        {loading ? (
+          <div className="p-6 space-y-2">
+            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-8 w-full" />)}
+          </div>
+        ) : logs.length === 0 ? (
+          <div className="px-5 py-12 text-center">
+            <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+              <AlertCircle className="w-5 h-5 text-muted-foreground" />
+            </div>
+            <p className="text-sm text-muted-foreground">Belum ada log. Log muncul setelah ada request ke server.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs font-mono">
+              <thead className="bg-secondary/30 text-muted-foreground">
+                <tr>
+                  <th className="text-left px-4 py-2.5 font-medium">Waktu</th>
+                  <th className="text-left px-3 py-2.5 font-medium">Method</th>
+                  <th className="text-left px-3 py-2.5 font-medium">URL</th>
+                  <th className="text-center px-3 py-2.5 font-medium">Status</th>
+                  <th className="text-right px-4 py-2.5 font-medium">Durasi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {logs.map((log, i) => (
+                  <tr key={i} className="hover:bg-secondary/20 transition-colors">
+                    <td className="px-4 py-2 text-muted-foreground whitespace-nowrap">
+                      {new Date(log.ts).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                    </td>
+                    <td className={`px-3 py-2 font-bold whitespace-nowrap ${methodColor(log.method)}`}>
+                      {log.method}
+                    </td>
+                    <td className="px-3 py-2 text-foreground max-w-xs truncate" title={log.url}>
+                      {log.url}
+                    </td>
+                    <td className="px-3 py-2 text-center">
+                      <span className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border ${statusColor(log.status)}`}>
+                        {log.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-right text-muted-foreground whitespace-nowrap">
+                      {log.ms != null ? `${log.ms}ms` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { eq, desc, ilike, or, count, sum, sql, and } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/requireAdmin";
 import { getBannedIps, invalidateCache } from "../lib/settingsCache";
 import { IS_SANDBOX } from "../lib/tripay";
+import { getLogs } from "../lib/logBuffer";
 
 const router = Router();
 
@@ -188,6 +189,10 @@ router.get("/settings", async (req, res) => {
       [SETTING_KEYS.APP_DESCRIPTION]: "Terima pesan anonim dari siapa saja",
       [SETTING_KEYS.RESEND_FROM_EMAIL]: process.env.RESEND_FROM_EMAIL || "",
       [SETTING_KEYS.TRIPAY_MERCHANT_CODE]: process.env.TRIPAY_MERCHANT_CODE || "",
+      [SETTING_KEYS.EMAIL_NEW_MSG_SUBJECT]: "📬 Kamu punya pesan anonim baru di {{appName}}",
+      [SETTING_KEYS.EMAIL_NEW_MSG_INTRO]: "Hei {{name}}, seseorang mengirim pesan anonim kepadamu di {{appName}}.",
+      [SETTING_KEYS.EMAIL_REPLY_SUBJECT]: "💬 @{{ownerUsername}} membalas pesanmu di {{appName}}",
+      [SETTING_KEYS.EMAIL_REPLY_INTRO]: "<strong>@{{ownerUsername}}</strong> membalas pesan anonim yang kamu kirim di {{appName}}.",
       link_opens_points_per_1000: "1",
       point_redeem_rate: "10000",
       banned_ips: "[]",
@@ -348,6 +353,11 @@ router.patch("/redeem-requests/:id/status", async (req, res) => {
   } catch {
     res.status(500).json({ error: "Internal server error" });
   }
+});
+
+router.get("/logs", (req, res) => {
+  const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 100));
+  res.json({ logs: getLogs(limit) });
 });
 
 export default router;

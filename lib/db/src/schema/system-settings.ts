@@ -18,4 +18,8 @@ export const SETTING_KEYS = {
   APP_NAME: "app_name",
   APP_DESCRIPTION: "app_description",
   POINT_REDEEM_RATE: "point_redeem_rate",
+  EMAIL_NEW_MSG_SUBJECT: "email_new_msg_subject",
+  EMAIL_NEW_MSG_INTRO: "email_new_msg_intro",
+  EMAIL_REPLY_SUBJECT: "email_reply_subject",
+  EMAIL_REPLY_INTRO: "email_reply_intro",
 } as const;
