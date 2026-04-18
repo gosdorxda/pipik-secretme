@@ -356,26 +356,26 @@ export default function PublicProfilePage() {
                 {/* Stripe */}
                 <div style={{ height: 3, background: stripe }} />
 
-                {/* Header: icon + Anonymous + timestamp in one row */}
-                <div className="px-4 pt-3 pb-2 flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-white/70 border border-white flex items-center justify-center shrink-0 shadow-sm">
+                {/* Header: icon + Anonim + timestamp */}
+                <div className="px-5 pt-3 pb-2 flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-white/70 border border-white/60 flex items-center justify-center shrink-0">
                     <User className="w-3 h-3 text-muted-foreground" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
+                  <span className="text-xs font-semibold text-foreground/70">Anonim</span>
                   <span className="text-[10px] text-muted-foreground ml-auto">
                     {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
                   </span>
                 </div>
 
                 {/* Message body */}
-                <div className="px-4 pb-4">
+                <div className="px-5 pb-3">
                   <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
                     {msg.content}
                   </p>
                 </div>
 
                 {msg.ownerReply && (
-                  <div className="mx-4 mb-4 border border-primary/20 bg-white/60 rounded-md p-3">
+                  <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-md p-3">
                     <div className="flex items-center gap-2 mb-1.5">
                       <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                         <span className="text-[9px] font-bold text-primary-foreground">{initials}</span>
