@@ -289,7 +289,6 @@ export default function PublicProfilePage() {
                 <p className="text-sm font-semibold text-white leading-tight truncate">
                   {activeCampaign.question}
                 </p>
-                <p className="text-[10px] text-white/60 mt-0.5">{activeCampaign.title}</p>
               </div>
               <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white bg-white/20 rounded-full px-2.5 py-1 shrink-0">
                 <span className="relative flex h-1.5 w-1.5">
