@@ -15,7 +15,7 @@ import { QRProfileCard } from "@/components/qr-profile-card";
 import {
   Copy, Check, Trash2, ExternalLink, Inbox, MessageSquare,
   Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share2, Sparkles,
-  Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search,
+  Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search, Reply,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -817,10 +817,10 @@ export default function DashboardPage() {
 
                   {/* Message Header: icon + Anonymous + unread dot + timestamp */}
                   <div className="px-5 pt-3 pb-2 flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-white/70 border border-white flex items-center justify-center shrink-0 shadow-sm">
+                    <div className="w-6 h-6 rounded-full bg-white/70 border border-white/60 flex items-center justify-center shrink-0">
                       <User className="w-3 h-3 text-muted-foreground" />
                     </div>
-                    <span className="text-xs font-semibold" style={{ color: "var(--violet-foreground)" }}>Anonim</span>
+                    <span className="text-xs font-semibold text-foreground/70">Anonim</span>
                     {!message.isRead && (
                       <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--sky-foreground)" }} />
                     )}
@@ -900,11 +900,11 @@ export default function DashboardPage() {
                   )}
 
                   {/* Action Bar */}
-                  <div className="border-t px-5 py-2 flex items-center gap-1 bg-white/30" style={{ borderColor: border }}>
+                  <div className="border-t px-4 py-2.5 flex items-center gap-2 bg-white/30" style={{ borderColor: border }}>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-xs gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/50 h-7 px-2"
+                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground"
                       onClick={() => {
                         if (replyingTo === message.id) {
                           setReplyingTo(null);
@@ -915,13 +915,13 @@ export default function DashboardPage() {
                         }
                       }}
                     >
-                      <CornerDownRight className="w-3.5 h-3.5" />
+                      <Reply className="w-3.5 h-3.5" />
                       {message.ownerReply ? "Edit Balasan" : "Balas"}
                     </Button>
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
-                      className="text-xs gap-1.5 text-muted-foreground hover:text-foreground hover:bg-white/50 h-7 px-2"
+                      className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground"
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
                       <Share2 className="w-3.5 h-3.5" />
