@@ -938,6 +938,17 @@ export default function DashboardPage() {
                   {/* Reply Input (if open) */}
                   {replyingTo === message.id && (
                     <div className="mx-5 mb-3 space-y-2">
+                      {message.senderEmail && (
+                        <div className="flex flex-col gap-1">
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-teal-50 border border-teal-200 w-fit">
+                            <Mail className="w-3 h-3 text-teal-600 shrink-0" />
+                            <span className="text-xs font-medium text-teal-700">Email: {message.senderEmail}</span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground">
+                            Email notifikasi akan dikirim ke pengirim saat kamu membalas
+                          </p>
+                        </div>
+                      )}
                       <Textarea
                         value={replyText}
                         onChange={e => setReplyText(e.target.value)}
