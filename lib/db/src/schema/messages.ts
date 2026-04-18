@@ -13,6 +13,7 @@ export const messagesTable = pgTable("messages", {
   ownerRepliedAt: timestamp("owner_replied_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   senderIpHash: text("sender_ip_hash"),
+  senderEmail: text("sender_email"),
   campaignId: text("campaign_id"),
 });
 

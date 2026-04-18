@@ -119,3 +119,121 @@ export async function sendNewMessageNotification({
     console.error("[email] Failed to send notification:", err);
   }
 }
+
+export async function sendReplyNotification({
+  toEmail,
+  originalMessage,
+  replyContent,
+  ownerUsername,
+}: {
+  toEmail: string;
+  originalMessage: string;
+  replyContent: string;
+  ownerUsername: string;
+}): Promise<void> {
+  if (!resend) return;
+
+  const profileUrl = `${appUrl}/${ownerUsername}`;
+
+  const html = `
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pesanmu dibalas!</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:'Segoe UI',system-ui,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width:520px;background:#ffffff;border-radius:8px;overflow:hidden;border:1px solid #e5e7eb;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#86ead4,#5ecfb7);padding:28px 32px;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="background:rgba(255,255,255,0.25);border-radius:6px;width:28px;height:28px;text-align:center;vertical-align:middle;">
+                    <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">W</span>
+                  </td>
+                  <td style="padding-left:8px;">
+                    <span style="font-size:15px;font-weight:700;color:#0a2520;">WhisperBox</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px;">
+              <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#111827;">Pesanmu dibalas! 🎉</p>
+              <p style="margin:0 0 24px;font-size:14px;color:#6b7280;">
+                <strong>@${ownerUsername}</strong> membalas pesan anonim yang kamu kirim di WhisperBox.
+              </p>
+
+              <!-- Original message -->
+              <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Pesanmu</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;margin-bottom:16px;">
+                <tr>
+                  <td style="padding:14px 18px;">
+                    <p style="margin:0;font-size:14px;color:#6b7280;font-style:italic;">"${originalMessage.length > 200 ? originalMessage.slice(0, 200) + "…" : originalMessage}"</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Reply -->
+              <p style="margin:0 0 8px;font-size:11px;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:0.05em;">Balasan dari @${ownerUsername}</p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0fdf8;border:1px solid rgba(134,234,212,0.5);border-radius:6px;margin-bottom:28px;">
+                <tr>
+                  <td style="padding:16px 18px;">
+                    <p style="margin:0;font-size:15px;color:#111827;font-weight:500;">${replyContent}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a
+                      href="${profileUrl}"
+                      style="display:inline-block;background:#14b8a6;color:#ffffff;font-size:14px;font-weight:700;padding:12px 28px;border-radius:4px;text-decoration:none;"
+                    >
+                      Kirim pesan lagi →
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="border-top:1px solid #e5e7eb;padding:20px 32px;background:#f9fafb;">
+              <p style="margin:0;font-size:11px;color:#9ca3af;text-align:center;line-height:1.6;">
+                Kamu menerima email ini karena kamu memilih untuk mendapat notifikasi balasan<br/>saat mengirim pesan anonim ke <strong>@${ownerUsername}</strong> di WhisperBox.<br/>
+                Email ini dikirim satu kali dan tidak akan digunakan untuk keperluan lain.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  try {
+    await resend.emails.send({
+      from: `WhisperBox <${fromAddress}>`,
+      to: toEmail,
+      subject: `💬 @${ownerUsername} membalas pesanmu di WhisperBox`,
+      html,
+    });
+  } catch (err) {
+    console.error("[email] Failed to send reply notification:", err);
+  }
+}

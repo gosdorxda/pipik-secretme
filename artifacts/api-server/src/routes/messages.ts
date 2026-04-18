@@ -4,7 +4,7 @@ import { db, usersTable, messagesTable, campaignsTable } from "@workspace/db";
 import { eq, desc, count, and, isNull, gte, lt, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { createClerkClient } from "@clerk/express";
-import { sendNewMessageNotification } from "../lib/email";
+import { sendNewMessageNotification, sendReplyNotification } from "../lib/email";
 import { getSetting } from "../lib/settingsCache";
 
 import {
@@ -290,6 +290,7 @@ router.post("/:username", async (req, res) => {
         content: bodyParsed.data.content,
         isPublic: recipient.defaultPublicMessages,
         senderIpHash,
+        senderEmail: bodyParsed.data.senderEmail ?? null,
         campaignId: activeCampaign?.id ?? null,
       })
       .returning();
@@ -353,6 +354,16 @@ router.post("/:id/reply", requireAuth, async (req, res) => {
       .where(eq(messagesTable.id, paramsParsed.data.id))
       .returning();
     res.json(updated);
+
+    // Fire-and-forget: notify anonymous sender if they provided an email
+    if (message.senderEmail) {
+      sendReplyNotification({
+        toEmail: message.senderEmail,
+        originalMessage: message.content,
+        replyContent: bodyParsed.data.reply,
+        ownerUsername: user.username,
+      }).catch(() => {});
+    }
   } catch (err) {
     req.log.error({ err }, "Error replying to message");
     res.status(500).json({ error: "Internal server error" });

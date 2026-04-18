@@ -137,6 +137,7 @@ export interface SendMessageBody {
    * @maxLength 1000
    */
   content: string;
+  senderEmail?: string;
 }
 
 export interface ReplyMessageBody {

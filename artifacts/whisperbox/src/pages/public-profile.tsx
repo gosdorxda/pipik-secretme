@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X, HelpCircle, MessageCircle, Flame, Star, Zap, Heart, Sparkles } from "lucide-react";
+import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X, HelpCircle, MessageCircle, Flame, Star, Zap, Heart, Sparkles, Mail } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -40,6 +40,7 @@ const CAMPAIGN_ICONS: Record<string, React.ElementType> = {
 
 const messageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(1000, "Message too long"),
+  senderEmail: z.string().email("Format email tidak valid").or(z.literal("")).optional(),
 });
 
 type MessageFormValues = z.infer<typeof messageSchema>;
@@ -118,12 +119,16 @@ export default function PublicProfilePage() {
 
   const form = useForm<MessageFormValues>({
     resolver: zodResolver(messageSchema),
-    defaultValues: { content: "" },
+    defaultValues: { content: "", senderEmail: "" },
   });
 
   const onSubmit = (data: MessageFormValues) => {
+    const payload = {
+      content: data.content,
+      ...(data.senderEmail && data.senderEmail.trim() !== "" && { senderEmail: data.senderEmail.trim() }),
+    };
     sendMessage.mutate(
-      { username, data },
+      { username, data: payload },
       {
         onSuccess: () => {
           form.reset();
@@ -321,6 +326,26 @@ export default function PublicProfilePage() {
                         />
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="senderEmail"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                          <input
+                            type="email"
+                            placeholder="Email kamu (opsional — dapat notifikasi jika dibalas)"
+                            className="w-full pl-9 pr-3 py-2.5 text-sm border border-input rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
+                            {...field}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-[11px]" />
                     </FormItem>
                   )}
                 />
