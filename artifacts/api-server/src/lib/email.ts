@@ -147,7 +147,7 @@ export async function sendReplyNotification({
 }): Promise<void> {
   if (!resend) return;
 
-  const profileUrl = `${appUrl}/u/${ownerUsername}`;
+  const profileUrl = `${appUrl}/@${ownerUsername}`;
   const fromName = await getSetting("app_name", "WhisperBox");
 
   const subject = interpolate(

@@ -156,7 +156,7 @@ export default function DashboardPage() {
   );
 
   const publicUrl = profile?.username
-    ? `${window.location.origin}/u/${profile.username}`
+    ? `${window.location.origin}/@${profile.username}`
     : "";
 
   const copyLink = () => {
@@ -367,7 +367,7 @@ export default function DashboardPage() {
                 )}
               </div>
               <p className="text-xs text-muted-foreground">
-                Link anonimmu: <span className="font-mono text-foreground">/u/{onboardingUsername || "username"}</span>
+                Link anonimmu: <span className="font-mono text-foreground">/@{onboardingUsername || "username"}</span>
               </p>
             </div>
             <div className="space-y-1.5">
@@ -433,7 +433,7 @@ export default function DashboardPage() {
                 variant="outline"
                 size="sm"
                 className="text-xs gap-1.5"
-                onClick={() => window.open(`/u/${profile.username}`, "_blank")}
+                onClick={() => window.open(`/@${profile.username}`, "_blank")}
               >
                 <ExternalLink className="w-3.5 h-3.5" /> Preview
               </Button>

@@ -308,7 +308,7 @@ function Slide7FinalCard({
   const storiesCardRef = useRef<HTMLDivElement>(null);
 
   const handleShare = async () => {
-    const profileUrl = `${window.location.origin}/u/${username}`;
+    const profileUrl = `${window.location.origin}/@${username}`;
     try {
       await navigator.clipboard.writeText(profileUrl);
       setCopied(true);

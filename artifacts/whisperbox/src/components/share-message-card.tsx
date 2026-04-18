@@ -38,7 +38,7 @@ export function ShareMessageCard({
   const initials = (displayName || username || "?")
     .split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);
 
-  const publicUrl = `whisperbox.app/u/${username}`;
+  const publicUrl = `whisperbox.app/@${username}`;
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   const truncated = content.length > 320 ? content.slice(0, 317) + "…" : content;
 

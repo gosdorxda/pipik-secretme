@@ -367,7 +367,13 @@ function ClerkProviderWithRoutes() {
               </Route>
               <Route path="/admin" component={AdminPage} />
 
-              <Route path="/u/:username" component={PublicProfilePage} />
+              <Route path="/:handle">
+                {(params: { handle?: string }) => {
+                  const handle = params.handle ?? "";
+                  if (!handle.startsWith("@")) return <NotFound />;
+                  return <PublicProfilePage />;
+                }}
+              </Route>
 
               <Route component={NotFound} />
             </Switch>

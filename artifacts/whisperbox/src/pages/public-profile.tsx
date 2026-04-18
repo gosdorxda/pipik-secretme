@@ -106,8 +106,9 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
 }
 
 export default function PublicProfilePage() {
-  const params = useParams<{ username: string }>();
-  const username = params.username!;
+  const params = useParams<{ handle: string }>();
+  const rawHandle = params.handle ?? "";
+  const username = rawHandle.startsWith("@") ? rawHandle.slice(1) : rawHandle;
   const { toast } = useToast();
   const { isSignedIn } = useAuth();
   const [bubbleDismissed, setBubbleDismissed] = useState(false);

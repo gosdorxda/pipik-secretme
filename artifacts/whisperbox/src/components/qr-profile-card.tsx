@@ -23,8 +23,8 @@ export function QRProfileCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const publicUrl = `${window.location.origin}/u/${username}`;
-  const shortUrl = `whisperbox.app/u/${username}`;
+  const publicUrl = `${window.location.origin}/@${username}`;
+  const shortUrl = `whisperbox.app/@${username}`;
 
   const initials = (displayName || username || "?")
     .split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);

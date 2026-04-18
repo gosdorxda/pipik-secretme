@@ -417,7 +417,7 @@ export default function SettingsPage() {
                         <FormLabel>Username <span className="text-destructive">*</span></FormLabel>
                         <div className="flex items-center">
                           <span className="bg-secondary text-muted-foreground px-3 py-[7px] border border-r-0 border-input rounded-l-xs text-sm whitespace-nowrap">
-                            /u/
+                            /@
                           </span>
                           <FormControl>
                             <Input
