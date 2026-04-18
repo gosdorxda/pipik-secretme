@@ -10,6 +10,8 @@ export interface Campaign {
   userId: string;
   title: string;
   question: string;
+  color?: string | null;
+  icon?: string | null;
   isActive: boolean;
   createdAt: string;
   endedAt?: string | null;
@@ -21,6 +23,8 @@ export interface CreateCampaignBody {
   title: string;
   /** @maxLength 500 */
   question: string;
+  color?: string;
+  icon?: string;
 }
 
 export interface EndCampaignParams {

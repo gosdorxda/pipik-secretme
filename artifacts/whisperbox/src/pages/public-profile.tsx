@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X } from "lucide-react";
+import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X, HelpCircle, MessageCircle, Flame, Star, Zap, Heart, Sparkles } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -18,6 +18,25 @@ import {
   useGetPublicCampaign,
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
+
+const CAMPAIGN_COLORS = [
+  { id: "teal",   gradient: "linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #2dd4bf 100%)" },
+  { id: "violet", gradient: "linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #8b5cf6 100%)" },
+  { id: "sky",    gradient: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 60%, #38bdf8 100%)" },
+  { id: "amber",  gradient: "linear-gradient(135deg, #b45309 0%, #d97706 50%, #fbbf24 100%)" },
+  { id: "rose",   gradient: "linear-gradient(135deg, #be123c 0%, #e11d48 50%, #fb7185 100%)" },
+];
+
+const CAMPAIGN_ICONS: Record<string, React.ElementType> = {
+  "megaphone":      Megaphone,
+  "help-circle":    HelpCircle,
+  "message-circle": MessageCircle,
+  "flame":          Flame,
+  "star":           Star,
+  "zap":            Zap,
+  "heart":          Heart,
+  "sparkles":       Sparkles,
+};
 
 const messageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty").max(1000, "Message too long"),
@@ -260,11 +279,11 @@ export default function PublicProfilePage() {
               (el?.querySelector("textarea") as HTMLElement | null)?.focus();
             }}
             className="group w-full rounded-md overflow-hidden text-left transition-transform hover:scale-[1.005] active:scale-[0.995]"
-            style={{ background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #2dd4bf 100%)" }}
+            style={{ background: CAMPAIGN_COLORS.find(c => c.id === (activeCampaign.color ?? "teal"))?.gradient ?? CAMPAIGN_COLORS[0].gradient }}
           >
             <div className="px-4 py-3 flex items-center gap-3">
               <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
-                <Megaphone className="w-3.5 h-3.5 text-white" />
+                {(() => { const CI = CAMPAIGN_ICONS[activeCampaign.icon ?? "megaphone"] ?? Megaphone; return <CI className="w-3.5 h-3.5 text-white" />; })()}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white leading-tight truncate">

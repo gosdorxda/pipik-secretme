@@ -63,6 +63,8 @@ router.post("/me", requireAuth, async (req, res) => {
         userId: user.id,
         title: bodyParsed.data.title,
         question: bodyParsed.data.question,
+        color: bodyParsed.data.color ?? "teal",
+        icon: bodyParsed.data.icon ?? "megaphone",
       })
       .returning();
 

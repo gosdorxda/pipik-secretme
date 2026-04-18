@@ -16,6 +16,7 @@ import {
   Copy, Check, Trash2, ExternalLink, Inbox, MessageSquare,
   Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share, Sparkles,
   Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search, CornerUpLeft,
+  HelpCircle, MessageCircle, Flame, Zap, Heart,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -38,6 +39,25 @@ import {
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { useQueryClient } from "@tanstack/react-query";
+
+const CAMPAIGN_COLORS = [
+  { id: "teal",   label: "Teal",   swatch: "#14b8a6", gradient: "linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #2dd4bf 100%)" },
+  { id: "violet", label: "Violet", swatch: "#8b5cf6", gradient: "linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #8b5cf6 100%)" },
+  { id: "sky",    label: "Biru",   swatch: "#0ea5e9", gradient: "linear-gradient(135deg, #0369a1 0%, #0ea5e9 60%, #38bdf8 100%)" },
+  { id: "amber",  label: "Amber",  swatch: "#d97706", gradient: "linear-gradient(135deg, #b45309 0%, #d97706 50%, #fbbf24 100%)" },
+  { id: "rose",   label: "Rose",   swatch: "#f43f5e", gradient: "linear-gradient(135deg, #be123c 0%, #e11d48 50%, #fb7185 100%)" },
+];
+
+const CAMPAIGN_ICONS = [
+  { id: "megaphone",      icon: Megaphone,     label: "Megafon" },
+  { id: "help-circle",    icon: HelpCircle,    label: "Tanya" },
+  { id: "message-circle", icon: MessageCircle, label: "Chat" },
+  { id: "flame",          icon: Flame,         label: "Api" },
+  { id: "star",           icon: Star,          label: "Bintang" },
+  { id: "zap",            icon: Zap,           label: "Kilat" },
+  { id: "heart",          icon: Heart,         label: "Hati" },
+  { id: "sparkles",       icon: Sparkles,      label: "Kilau" },
+];
 
 type StatAccent = "mint" | "blue" | "orange" | "amber";
 
@@ -115,6 +135,8 @@ export default function DashboardPage() {
   }, [activeFilter, searchQuery]);
   const [campaignTitle, setCampaignTitle] = useState("");
   const [campaignQuestion, setCampaignQuestion] = useState("");
+  const [campaignColor, setCampaignColor] = useState("teal");
+  const [campaignIcon, setCampaignIcon] = useState("megaphone");
   const [campaignOpen, setCampaignOpen] = useState(false);
   const [showQRCard, setShowQRCard] = useState(false);
 
@@ -203,12 +225,14 @@ export default function DashboardPage() {
   const handleCreateCampaign = () => {
     if (!campaignTitle.trim() || !campaignQuestion.trim()) return;
     createCampaign.mutate(
-      { data: { title: campaignTitle.trim(), question: campaignQuestion.trim() } },
+      { data: { title: campaignTitle.trim(), question: campaignQuestion.trim(), color: campaignColor, icon: campaignIcon } },
       {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: getGetMyCampaignQueryKey() });
           setCampaignTitle("");
           setCampaignQuestion("");
+          setCampaignColor("teal");
+          setCampaignIcon("megaphone");
           setShowCampaignForm(false);
           toast({ title: "Kampanye aktif!", description: "Pertanyaanmu kini tampil di profil publik." });
         },
@@ -616,6 +640,57 @@ export default function DashboardPage() {
                       />
                       <p className="text-[10px] text-muted-foreground mt-1">{campaignQuestion.length}/500</p>
                     </div>
+                    <div className="flex gap-4">
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Warna</label>
+                        <div className="flex gap-2">
+                          {CAMPAIGN_COLORS.map(c => (
+                            <button
+                              key={c.id}
+                              type="button"
+                              onClick={() => setCampaignColor(c.id)}
+                              title={c.label}
+                              className={`w-6 h-6 rounded-full transition-all ${campaignColor === c.id ? "ring-2 ring-offset-2 ring-foreground/50 scale-110" : "hover:scale-105 opacity-70 hover:opacity-100"}`}
+                              style={{ background: c.swatch }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 block">Ikon</label>
+                        <div className="flex gap-1.5 flex-wrap">
+                          {CAMPAIGN_ICONS.map(({ id, icon: Icon, label }) => (
+                            <button
+                              key={id}
+                              type="button"
+                              title={label}
+                              onClick={() => setCampaignIcon(id)}
+                              className={`w-6 h-6 rounded flex items-center justify-center transition-all ${
+                                campaignIcon === id
+                                  ? "bg-primary text-primary-foreground"
+                                  : "bg-secondary text-muted-foreground hover:bg-secondary/60"
+                              }`}
+                            >
+                              <Icon className="w-3.5 h-3.5" />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    {(campaignTitle || campaignQuestion) && (
+                      <div className="rounded-md overflow-hidden">
+                        <div
+                          className="px-3 py-2 flex items-center gap-2"
+                          style={{ background: CAMPAIGN_COLORS.find(c => c.id === campaignColor)?.gradient }}
+                        >
+                          <div className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                            {(() => { const CI = CAMPAIGN_ICONS.find(i => i.id === campaignIcon)?.icon ?? Megaphone; return <CI className="w-3.5 h-3.5 text-white" />; })()}
+                          </div>
+                          <p className="text-xs font-semibold text-white truncate flex-1">{campaignQuestion || campaignTitle || "Pertanyaan kampanye..."}</p>
+                          <span className="text-[9px] font-bold text-white/80 bg-white/20 rounded-full px-2 py-0.5 shrink-0">LIVE</span>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2 pt-1">
                       <Button
                         size="sm"
@@ -630,7 +705,7 @@ export default function DashboardPage() {
                         variant="ghost"
                         size="sm"
                         className="text-xs text-muted-foreground"
-                        onClick={() => { setShowCampaignForm(false); setCampaignTitle(""); setCampaignQuestion(""); }}
+                        onClick={() => { setShowCampaignForm(false); setCampaignTitle(""); setCampaignQuestion(""); setCampaignColor("teal"); setCampaignIcon("megaphone"); }}
                       >
                         Batal
                       </Button>

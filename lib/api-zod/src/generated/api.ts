@@ -339,6 +339,8 @@ export const createCampaignBodyQuestionMax = 500;
 export const CreateCampaignBody = zod.object({
   title: zod.string().max(createCampaignBodyTitleMax),
   question: zod.string().max(createCampaignBodyQuestionMax),
+  color: zod.string().optional(),
+  icon: zod.string().optional(),
 });
 
 /**
