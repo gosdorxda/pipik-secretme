@@ -239,60 +239,6 @@ export default function PublicProfilePage() {
               <p className="text-sm text-foreground/70 leading-relaxed max-w-sm mx-auto">{profile.bio}</p>
             )}
             <SocialLinkBar links={profile} />
-
-            {/* Today's Question banner — campaign aktif */}
-            {activeCampaign != null && (
-              <div className="w-full pt-2">
-                <button
-                  type="button"
-                  onClick={() => document.getElementById("send-form")?.scrollIntoView({ behavior: "smooth" })}
-                  className="group relative w-full rounded-2xl overflow-hidden text-left transition-transform hover:scale-[1.01] active:scale-[0.99]"
-                >
-                  {/* Gradient bg */}
-                  <div
-                    className="absolute inset-0"
-                    style={{ background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 55%, #2dd4bf 100%)" }}
-                  />
-                  {/* Subtle texture overlay */}
-                  <div className="absolute inset-0 opacity-10"
-                    style={{ backgroundImage: "radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-
-                  {/* Content */}
-                  <div className="relative px-5 py-4">
-                    {/* Top row */}
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/80 uppercase tracking-widest">
-                        <Megaphone className="w-3 h-3" />
-                        {activeCampaign.title}
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white bg-white/20 border border-white/25 rounded-full px-2.5 py-0.5">
-                        <span className="relative flex h-1.5 w-1.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
-                        </span>
-                        LIVE
-                      </span>
-                    </div>
-
-                    {/* Question */}
-                    <p className="text-base font-bold text-white leading-snug mb-4 line-clamp-3 text-left">
-                      {activeCampaign.question}
-                    </p>
-
-                    {/* Footer row */}
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/70 flex items-center gap-1.5">
-                        <Lock className="w-3 h-3" /> 100% Anonim
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 bg-white text-teal-700 font-bold text-xs rounded-full px-4 py-1.5 shadow-sm group-hover:bg-teal-50 transition-colors">
-                        Jawab sekarang
-                        <span className="group-hover:translate-x-0.5 transition-transform">→</span>
-                      </span>
-                    </div>
-                  </div>
-                </button>
-              </div>
-            )}
           </div>
         </div>
 
@@ -301,6 +247,40 @@ export default function PublicProfilePage() {
           <div className="h-px bg-border" />
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
         </div>
+
+        {/* Today's Question — compact banner */}
+        {activeCampaign != null && (
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("send-form");
+              el?.scrollIntoView({ behavior: "smooth" });
+              (el?.querySelector("textarea") as HTMLElement | null)?.focus();
+            }}
+            className="group w-full rounded-md overflow-hidden text-left transition-transform hover:scale-[1.005] active:scale-[0.995]"
+            style={{ background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 60%, #2dd4bf 100%)" }}
+          >
+            <div className="px-4 py-3 flex items-center gap-3">
+              <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                <Megaphone className="w-3.5 h-3.5 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-white leading-tight truncate">
+                  {activeCampaign.question}
+                </p>
+                <p className="text-[10px] text-white/60 mt-0.5">{activeCampaign.title}</p>
+              </div>
+              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white bg-white/20 rounded-full px-2.5 py-1 shrink-0">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+                </span>
+                LIVE
+              </span>
+              <span className="text-white/80 group-hover:translate-x-0.5 transition-transform shrink-0 text-sm">→</span>
+            </div>
+          </button>
+        )}
 
         {/* Send Message Card */}
         <div id="send-form" className="bg-white border border-border rounded-md overflow-hidden">
