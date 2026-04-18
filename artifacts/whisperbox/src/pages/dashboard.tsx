@@ -470,25 +470,6 @@ export default function DashboardPage() {
           />
         </div>
 
-        {/* Premium Upgrade Banner */}
-        {!profile?.isPremium && (
-          <div className="flex items-center gap-4 rounded-md px-5 py-4 border border-amber-200"
-               style={{ background: "linear-gradient(to right, #fffbeb, #fef9c3)" }}>
-            <div className="w-9 h-9 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
-              <Crown className="w-4 h-4 text-amber-600" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-amber-900 leading-none mb-0.5">Upgrade ke Premium</p>
-              <p className="text-xs text-amber-700 leading-relaxed">Buka social links, kampanye QnA, notifikasi email, dan lebih banyak lagi.</p>
-            </div>
-            <Link href="/upgrade" className="shrink-0">
-              <Button size="sm" className="gap-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white border-0">
-                <Crown className="w-3.5 h-3.5" /> Upgrade
-              </Button>
-            </Link>
-          </div>
-        )}
-
         {/* Wrapped + Kampanye QnA — merged collapsible card */}
         <div className="rounded-md overflow-hidden" style={{ border: "1px solid #86ead430" }}>
 
@@ -524,8 +505,8 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2.5 min-w-0">
                 <Crown className="w-4 h-4 text-amber-500 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-amber-900 leading-none mb-0.5">Unlock WhisperBox Premium</p>
-                  <p className="text-[10px] text-amber-700/70 truncate">Balas anonim · Kampanye QnA · Statistik lengkap</p>
+                  <p className="text-xs font-semibold text-amber-900 leading-none mb-0.5">Upgrade ke Premium</p>
+                  <p className="text-[10px] text-amber-700/70 truncate">Buka social links, kampanye QnA, notifikasi email, dan lebih banyak lagi.</p>
                 </div>
               </div>
               <Link href="/upgrade" className="shrink-0">
@@ -551,9 +532,6 @@ export default function DashboardPage() {
                   <Megaphone className="w-3 h-3 text-primary" />
                 </div>
                 <span className="text-xs font-semibold text-foreground">Kampanye QnA</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded-md">
-                  <Crown className="w-2.5 h-2.5" /> PREMIUM
-                </span>
                 {campaign != null && (
                   <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md">
                     <Radio className="w-2.5 h-2.5" /> LIVE
@@ -577,7 +555,7 @@ export default function DashboardPage() {
                         Buat pertanyaan atau topik yang tampil menonjol di profilmu. Pengunjung langsung tahu apa yang ingin kamu tanyakan.
                       </p>
                       <Link href="/upgrade">
-                        <Button size="sm" className="gap-1.5 text-xs">
+                        <Button size="sm" className="gap-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none">
                           <Crown className="w-3.5 h-3.5" /> Upgrade ke Premium
                         </Button>
                       </Link>

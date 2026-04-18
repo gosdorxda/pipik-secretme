@@ -94,7 +94,7 @@ export function QRProfileCard({
           ref={cardRef}
           style={{
             background: "#ffffff",
-            borderRadius: 14,
+            borderRadius: 8,
             overflow: "hidden",
             width: "100%",
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
