@@ -240,37 +240,56 @@ export default function PublicProfilePage() {
             )}
             <SocialLinkBar links={profile} />
 
-            {/* Status bubble — campaign aktif */}
+            {/* Today's Question banner — campaign aktif */}
             {activeCampaign != null && (
-              <div className="flex justify-center pt-1">
+              <div className="w-full pt-2">
                 <button
                   type="button"
                   onClick={() => document.getElementById("send-form")?.scrollIntoView({ behavior: "smooth" })}
-                  className="group relative inline-flex items-start gap-3 bg-white border border-primary/20 hover:border-primary/30 rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-all w-full max-w-xs text-left"
+                  className="group relative w-full rounded-2xl overflow-hidden text-left transition-transform hover:scale-[1.01] active:scale-[0.99]"
                 >
-                  {/* Icon + pulsing live dot */}
-                  <div className="relative shrink-0 mt-0.5">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Megaphone className="w-4 h-4 text-primary" />
+                  {/* Gradient bg */}
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(135deg, #0d9488 0%, #14b8a6 55%, #2dd4bf 100%)" }}
+                  />
+                  {/* Subtle texture overlay */}
+                  <div className="absolute inset-0 opacity-10"
+                    style={{ backgroundImage: "radial-gradient(circle at 80% 20%, white 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
+
+                  {/* Content */}
+                  <div className="relative px-5 py-4">
+                    {/* Top row */}
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white/80 uppercase tracking-widest">
+                        <Megaphone className="w-3 h-3" />
+                        {activeCampaign.title}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white bg-white/20 border border-white/25 rounded-full px-2.5 py-0.5">
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
+                        </span>
+                        LIVE
+                      </span>
                     </div>
-                    <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-                    </span>
-                  </div>
-                  {/* Text */}
-                  <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider leading-none mb-1.5">
-                      {activeCampaign.title} · Aktif
-                    </p>
-                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2">
+
+                    {/* Question */}
+                    <p className="text-base font-bold text-white leading-snug mb-4 line-clamp-3 text-left">
                       {activeCampaign.question}
                     </p>
-                    <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
-                      <Lock className="w-2.5 h-2.5" /> Jawab anonim di bawah ↓
-                    </p>
+
+                    {/* Footer row */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/70 flex items-center gap-1.5">
+                        <Lock className="w-3 h-3" /> 100% Anonim
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 bg-white text-teal-700 font-bold text-xs rounded-full px-4 py-1.5 shadow-sm group-hover:bg-teal-50 transition-colors">
+                        Jawab sekarang
+                        <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+                      </span>
+                    </div>
                   </div>
-                  <span className="text-primary/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 mt-1 text-sm">→</span>
                 </button>
               </div>
             )}
