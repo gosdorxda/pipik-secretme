@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, Radio, X } from "lucide-react";
+import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -239,6 +239,41 @@ export default function PublicProfilePage() {
               <p className="text-sm text-foreground/70 leading-relaxed max-w-sm mx-auto">{profile.bio}</p>
             )}
             <SocialLinkBar links={profile} />
+
+            {/* Status bubble — campaign aktif */}
+            {activeCampaign != null && (
+              <div className="flex justify-center pt-1">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("send-form")?.scrollIntoView({ behavior: "smooth" })}
+                  className="group relative inline-flex items-start gap-3 bg-white border border-primary/20 hover:border-primary/30 rounded-2xl px-4 py-3 shadow-sm hover:shadow-md transition-all w-full max-w-xs text-left"
+                >
+                  {/* Icon + pulsing live dot */}
+                  <div className="relative shrink-0 mt-0.5">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Megaphone className="w-4 h-4 text-primary" />
+                    </div>
+                    <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                    </span>
+                  </div>
+                  {/* Text */}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-bold text-primary uppercase tracking-wider leading-none mb-1.5">
+                      {activeCampaign.title} · Aktif
+                    </p>
+                    <p className="text-sm font-semibold text-foreground leading-snug line-clamp-2">
+                      {activeCampaign.question}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground mt-1.5 flex items-center gap-1">
+                      <Lock className="w-2.5 h-2.5" /> Jawab anonim di bawah ↓
+                    </p>
+                  </div>
+                  <span className="text-primary/50 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 mt-1 text-sm">→</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -248,31 +283,8 @@ export default function PublicProfilePage() {
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
         </div>
 
-        {/* Active Campaign Banner */}
-        {activeCampaign != null && (
-          <div className="rounded-md overflow-hidden shadow-sm"
-               style={{ background: "linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%)", border: "1px solid rgba(134,234,212,0.5)" }}>
-            <div className="h-1 bg-gradient-to-r from-primary via-primary/80 to-primary/60" />
-            <div className="px-5 py-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-md bg-primary/20 flex items-center justify-center">
-                  <Megaphone className="w-3 h-3 text-primary" />
-                </div>
-                <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{activeCampaign.title}</span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md ml-auto">
-                  <Radio className="w-2.5 h-2.5" /> Live
-                </span>
-              </div>
-              <p className="text-base font-bold text-foreground leading-snug">{activeCampaign.question}</p>
-              <p className="text-xs text-muted-foreground mt-1.5 flex items-center gap-1">
-                <Lock className="w-2.5 h-2.5" /> Jawab secara anonim lewat form di bawah
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* Send Message Card */}
-        <div className="bg-white border border-border rounded-md overflow-hidden">
+        <div id="send-form" className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-6 py-5">
             <div className="mb-4">
               <h2 className="text-base font-semibold text-foreground">
