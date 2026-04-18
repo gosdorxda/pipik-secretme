@@ -972,6 +972,7 @@ export default function DashboardPage() {
             paletteIdx={sharingMessage.idx}
             displayName={displayName}
             username={profile.username!}
+            totalMessages={stats?.totalMessages ?? 0}
             onClose={() => setSharingMessage(null)}
           />
         );

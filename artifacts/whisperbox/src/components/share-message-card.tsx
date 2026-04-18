@@ -1,44 +1,33 @@
 import { useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, X } from "lucide-react";
+import { Download, Share, X } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
 
 const PALETTES = [
   {
-    bg: "linear-gradient(135deg, #86ead4 0%, #5ecfb7 50%, #3ab9a1 100%)",
-    quote: "rgba(255,255,255,0.2)",
-    text: "#0a2520",
-    sub: "rgba(10,37,32,0.6)",
-    tag: "rgba(10,37,32,0.12)",
-    tagText: "#0a2520",
-    logo: "#0a2520",
+    stripe: "linear-gradient(to right, #86ead4, #60c4ae)",
+    avatarBg: "#ddf9f2", avatarColor: "#0d4038",
+    anonBg: "#f0fefa", anonColor: "#0d7062",
+    accentText: "#0d7062",
   },
   {
-    bg: "linear-gradient(135deg, #a5b4fc 0%, #818cf8 50%, #6366f1 100%)",
-    quote: "rgba(255,255,255,0.2)",
-    text: "#1e1b4b",
-    sub: "rgba(30,27,75,0.6)",
-    tag: "rgba(30,27,75,0.12)",
-    tagText: "#1e1b4b",
-    logo: "#1e1b4b",
+    stripe: "linear-gradient(to right, #a5b4fc, #818cf8)",
+    avatarBg: "#ede9fe", avatarColor: "#3730a3",
+    anonBg: "#f5f3ff", anonColor: "#4f46e5",
+    accentText: "#4f46e5",
   },
   {
-    bg: "linear-gradient(135deg, #93c5fd 0%, #60a5fa 50%, #3b82f6 100%)",
-    quote: "rgba(255,255,255,0.2)",
-    text: "#1e3a5f",
-    sub: "rgba(30,58,95,0.6)",
-    tag: "rgba(30,58,95,0.12)",
-    tagText: "#1e3a5f",
-    logo: "#1e3a5f",
+    stripe: "linear-gradient(to right, #93c5fd, #60a5fa)",
+    avatarBg: "#dbeafe", avatarColor: "#1e3a5f",
+    anonBg: "#eff6ff", anonColor: "#1d4ed8",
+    accentText: "#1d4ed8",
   },
   {
-    bg: "linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #86ead4 100%)",
-    quote: "rgba(255,255,255,0.25)",
-    text: "#422006",
-    sub: "rgba(66,32,6,0.6)",
-    tag: "rgba(66,32,6,0.12)",
-    tagText: "#422006",
-    logo: "#422006",
+    stripe: "linear-gradient(to right, #fcd34d, #86ead4)",
+    avatarBg: "#fef3c7", avatarColor: "#713f12",
+    anonBg: "#fffbeb", anonColor: "#92400e",
+    accentText: "#92400e",
   },
 ];
 
@@ -50,29 +39,35 @@ type ShareMessageCardProps = {
   paletteIdx: number;
   displayName: string;
   username: string;
+  totalMessages?: number;
   onClose: () => void;
 };
 
 export function ShareMessageCard({
   content,
+  createdAt,
   paletteIdx,
   displayName,
   username,
+  totalMessages = 0,
   onClose,
 }: ShareMessageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const p = PALETTES[paletteIdx % PALETTES.length];
 
+  const initials = (displayName || username || "?")
+    .split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);
+
+  const publicUrl = `whisperbox.app/u/${username}`;
+  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const truncated = content.length > 300 ? content.slice(0, 297) + "…" : content;
+
   const generate = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
     setIsGenerating(true);
     try {
-      const url = await toPng(cardRef.current, {
-        pixelRatio: 3,
-        cacheBust: true,
-      });
-      return url;
+      return await toPng(cardRef.current, { pixelRatio: 3, cacheBust: true });
     } catch (e) {
       console.error(e);
       return null;
@@ -86,14 +81,13 @@ export function ShareMessageCard({
     if (!url) return;
     const a = document.createElement("a");
     a.href = url;
-    a.download = `whisperbox-message.png`;
+    a.download = "whisperbox-message.png";
     a.click();
   };
 
   const handleShare = async () => {
     const url = await generate();
     if (!url) return;
-
     try {
       const blob = await (await fetch(url)).blob();
       const file = new File([blob], "whisperbox-message.png", { type: "image/png" });
@@ -101,10 +95,9 @@ export function ShareMessageCard({
         await navigator.share({
           files: [file],
           title: "WhisperBox",
-          text: "I received an anonymous message on WhisperBox!",
+          text: `Kirim pesan anonim ke ${displayName} di ${publicUrl}`,
         });
       } else {
-        // Fallback: download
         const a = document.createElement("a");
         a.href = url;
         a.download = "whisperbox-message.png";
@@ -115,115 +108,204 @@ export function ShareMessageCard({
     }
   };
 
-  const publicUrl = `${window.location.origin}/u/${username}`;
-
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4" onClick={onClose}>
-      <div className="w-full max-w-sm space-y-4" onClick={e => e.stopPropagation()}>
+    <div
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <div className="w-full max-w-sm space-y-3" onClick={e => e.stopPropagation()}>
 
-        {/* Close */}
-        <div className="flex items-center justify-between text-white">
-          <span className="text-sm font-semibold">Preview &amp; Share</span>
-          <button onClick={onClose} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
+        {/* Modal header */}
+        <div className="flex items-center justify-between text-white px-1">
+          <span className="text-sm font-semibold opacity-80">Preview Gambar</span>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
+          >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* The card that gets captured */}
+        {/* ═══ Card that gets captured ═══ */}
         <div
           ref={cardRef}
           style={{
-            background: p.bg,
-            borderRadius: 16,
-            padding: "32px 28px 24px",
-            position: "relative",
+            background: "#ffffff",
+            borderRadius: 14,
             overflow: "hidden",
             width: "100%",
-            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            fontFamily: "system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* Big decorative quote mark */}
-          <div style={{
-            position: "absolute",
-            top: -10,
-            left: 12,
-            fontSize: 140,
-            lineHeight: 1,
-            color: p.quote,
-            fontFamily: "Georgia, serif",
-            userSelect: "none",
-            pointerEvents: "none",
-          }}>"</div>
+          {/* Accent stripe */}
+          <div style={{ height: 4, background: p.stripe }} />
 
-          {/* Anonymous tag */}
+          {/* ── Header ── */}
           <div style={{
-            display: "inline-flex",
+            padding: "18px 22px 16px",
+            display: "flex",
             alignItems: "center",
-            gap: 6,
-            background: p.tag,
-            borderRadius: 99,
-            padding: "4px 12px",
-            marginBottom: 16,
-            position: "relative",
+            gap: 12,
+            borderBottom: "1px solid #f4f4f5",
           }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: p.tagText, letterSpacing: "0.05em", textTransform: "uppercase" }}>
-              Anonymous Message
-            </span>
+            {/* Avatar initials */}
+            <div style={{
+              width: 46,
+              height: 46,
+              borderRadius: "50%",
+              background: p.avatarBg,
+              color: p.avatarColor,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 17,
+              fontWeight: 800,
+              flexShrink: 0,
+              border: "2px solid rgba(0,0,0,0.04)",
+            }}>
+              {initials}
+            </div>
+
+            {/* Name + username */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: "#09090b",
+                margin: 0,
+                lineHeight: 1.3,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}>
+                {displayName || username}
+              </p>
+              <p style={{
+                fontSize: 12,
+                color: "#71717a",
+                margin: "3px 0 0",
+                lineHeight: 1,
+              }}>
+                @{username}
+              </p>
+            </div>
+
+            {/* Messages received */}
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <p style={{
+                fontSize: 24,
+                fontWeight: 900,
+                color: "#09090b",
+                margin: 0,
+                lineHeight: 1,
+                letterSpacing: "-0.02em",
+              }}>
+                {totalMessages}
+              </p>
+              <p style={{
+                fontSize: 10,
+                color: "#a1a1aa",
+                margin: "3px 0 0",
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                fontWeight: 600,
+              }}>
+                pesan masuk
+              </p>
+            </div>
           </div>
 
-          {/* Message content */}
-          <p style={{
-            fontSize: 20,
-            fontWeight: 600,
-            lineHeight: 1.5,
-            color: p.text,
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            position: "relative",
-            marginBottom: 28,
-            maxHeight: 200,
-            overflow: "hidden",
-          }}>
-            {content.length > 200 ? content.slice(0, 197) + "…" : content}
-          </p>
+          {/* ── Message body ── */}
+          <div style={{ padding: "20px 22px 22px" }}>
 
-          {/* Footer */}
+            {/* Anonim sender row */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 7,
+              marginBottom: 14,
+            }}>
+              <div style={{
+                width: 24,
+                height: 24,
+                borderRadius: "50%",
+                background: p.anonBg,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+                  stroke={p.anonColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <span style={{ fontSize: 12, fontWeight: 700, color: p.anonColor }}>Anonim</span>
+              <span style={{
+                display: "inline-block",
+                width: 4,
+                height: 4,
+                borderRadius: "50%",
+                background: p.anonColor,
+                opacity: 0.4,
+                marginLeft: 1,
+                alignSelf: "center",
+              }} />
+              <span style={{ fontSize: 11, color: "#a1a1aa", marginLeft: "auto" }}>{timeAgo}</span>
+            </div>
+
+            {/* Message text */}
+            <p style={{
+              fontSize: 17,
+              fontWeight: 450,
+              lineHeight: 1.7,
+              color: "#18181b",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+              margin: 0,
+            }}>
+              {truncated}
+            </p>
+          </div>
+
+          {/* ── Footer branding ── */}
           <div style={{
+            padding: "11px 22px",
+            background: "#f9fafb",
+            borderTop: "1px solid #f4f4f5",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            borderTop: `1px solid ${p.tag}`,
-            paddingTop: 16,
           }}>
-            <div>
-              <p style={{ fontSize: 13, fontWeight: 700, color: p.text, margin: 0 }}>{displayName}</p>
-              <p style={{ fontSize: 11, color: p.sub, margin: 0 }}>{publicUrl}</p>
-            </div>
+            <p style={{ fontSize: 11, color: "#a1a1aa", margin: 0, lineHeight: 1.4 }}>
+              Kirim pesan anonim di{" "}
+              <span style={{ fontWeight: 600, color: "#71717a" }}>{publicUrl}</span>
+            </p>
             <div style={{
-              background: p.tag,
-              borderRadius: 8,
-              padding: "4px 10px",
               display: "flex",
               alignItems: "center",
-              gap: 4,
+              gap: 5,
+              flexShrink: 0,
+              marginLeft: 12,
             }}>
               <div style={{
-                width: 16,
-                height: 16,
-                background: p.logo,
-                borderRadius: 4,
+                width: 17,
+                height: 17,
+                borderRadius: 5,
+                background: "#86ead4",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-                <span style={{ fontSize: 10, fontWeight: 800, color: p.bg.includes("#86ead4") ? "#fff" : "#fff" }}>W</span>
+                <span style={{ fontSize: 9, fontWeight: 900, color: "#0d4038" }}>W</span>
               </div>
-              <span style={{ fontSize: 11, fontWeight: 700, color: p.text }}>WhisperBox</span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>WhisperBox</span>
             </div>
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Action buttons */}
         <div className="flex gap-2">
           <Button
             className="flex-1 gap-2"
@@ -232,15 +314,15 @@ export function ShareMessageCard({
             disabled={isGenerating}
           >
             <Download className="w-4 h-4" />
-            {isGenerating ? "Generating…" : "Download"}
+            {isGenerating ? "Memproses…" : "Unduh"}
           </Button>
           <Button
             className="flex-1 gap-2"
             onClick={handleShare}
             disabled={isGenerating}
           >
-            <Share2 className="w-4 h-4" />
-            Share
+            <Share className="w-4 h-4" />
+            Bagikan
           </Button>
         </div>
       </div>
