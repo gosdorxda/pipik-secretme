@@ -517,6 +517,26 @@ export default function DashboardPage() {
             </div>
           </Link>
 
+          {/* ── Premium CTA ── */}
+          {!profile?.isPremium && (
+            <div className="flex items-center justify-between gap-3 px-5 py-3"
+                 style={{ background: "rgba(251,191,36,0.08)", borderTop: "1px solid rgba(251,191,36,0.22)" }}>
+              <div className="flex items-center gap-2.5 min-w-0">
+                <Crown className="w-4 h-4 text-amber-500 shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-amber-900 leading-none mb-0.5">Unlock WhisperBox Premium</p>
+                  <p className="text-[10px] text-amber-700/70 truncate">Balas anonim · Kampanye QnA · Statistik lengkap</p>
+                </div>
+              </div>
+              <Link href="/upgrade" className="shrink-0">
+                <Button size="sm" className="h-7 px-3 text-xs font-semibold shadow-none"
+                        style={{ background: "#f59e0b", color: "#fff", border: "none" }}>
+                  Upgrade →
+                </Button>
+              </Link>
+            </div>
+          )}
+
           {/* ── Kampanye QnA section (collapsible) ── */}
           <div className="bg-white">
             {/* Toggle row */}

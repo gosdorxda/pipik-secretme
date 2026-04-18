@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { toPng } from "html-to-image";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
-import { Download, Share2, X } from "lucide-react";
+import { Download, Share, X } from "lucide-react";
 
 type QRProfileCardProps = {
   displayName: string;
@@ -24,7 +24,10 @@ export function QRProfileCard({
   const [isGenerating, setIsGenerating] = useState(false);
 
   const publicUrl = `${window.location.origin}/u/${username}`;
-  const shortUrl = publicUrl.replace("https://", "").replace("http://", "");
+  const shortUrl = `whisperbox.app/u/${username}`;
+
+  const initials = (displayName || username || "?")
+    .split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2);
 
   const generate = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
@@ -54,7 +57,11 @@ export function QRProfileCard({
       const blob = await (await fetch(url)).blob();
       const file = new File([blob], `whisperbox-${username}.png`, { type: "image/png" });
       if (navigator.share && navigator.canShare({ files: [file] })) {
-        await navigator.share({ files: [file], title: "WhisperBox", text: `Kirimi ${displayName} pesan anonim!` });
+        await navigator.share({
+          files: [file],
+          title: "WhisperBox",
+          text: `Kirimi ${displayName || username} pesan anonim! ${shortUrl}`,
+        });
       } else {
         const a = document.createElement("a");
         a.href = url;
@@ -64,153 +71,224 @@ export function QRProfileCard({
     } catch {}
   };
 
-  const initials = displayName.charAt(0).toUpperCase();
-
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
-      <div className="w-full max-w-xs space-y-4" onClick={(e) => e.stopPropagation()}>
+      <div className="w-full max-w-xs space-y-3" onClick={e => e.stopPropagation()}>
 
-        <div className="flex items-center justify-between text-white">
-          <span className="text-sm font-semibold">Preview Kartu QR</span>
+        {/* Modal header */}
+        <div className="flex items-center justify-between text-white px-1">
+          <span className="text-sm font-semibold opacity-80">Kartu QR Profil</span>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* The card that gets captured */}
+        {/* ═══ Card that gets captured ═══ */}
         <div
           ref={cardRef}
           style={{
-            width: "100%",
-            fontFamily: "'Space Grotesk', system-ui, sans-serif",
-            background: "linear-gradient(145deg, #f0fdf9 0%, #ddf9f2 40%, #c6f2e7 100%)",
+            background: "#ffffff",
+            borderRadius: 14,
             overflow: "hidden",
-            position: "relative",
+            width: "100%",
+            fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* Top bar */}
+          {/* ── Header: mint tint ── */}
           <div style={{
-            background: "linear-gradient(135deg, #0f2e28 0%, #1a443c 100%)",
-            padding: "12px 20px",
+            padding: "18px 20px",
+            background: "rgba(134,234,212,0.18)",
+            borderBottom: "1px solid rgba(134,234,212,0.35)",
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: 12,
           }}>
+            {/* Avatar */}
             <div style={{
-              width: 20, height: 20,
-              background: "rgba(134,234,212,0.2)",
-              border: "1px solid rgba(134,234,212,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
+              width: 46,
+              height: 46,
+              borderRadius: "50%",
+              background: "#c6f6ed",
+              color: "#0d4038",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 17,
+              fontWeight: 800,
+              flexShrink: 0,
             }}>
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#86ead4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
+              {initials}
             </div>
-            <span style={{ color: "#86ead4", fontSize: "11px", fontWeight: 700, letterSpacing: "0.07em" }}>WHISPERBOX</span>
-          </div>
 
-          {/* Hero text */}
-          <div style={{ padding: "24px 20px 16px" }}>
-            <p style={{ fontSize: "11px", fontWeight: 700, color: "#3a9e88", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
-              Kirimi pesan anonim ke
-            </p>
-            <p style={{ fontSize: "26px", fontWeight: 800, color: "#0f2e28", lineHeight: 1.1, marginBottom: "4px" }}>
-              {displayName}
-            </p>
-            <p style={{ fontSize: "13px", color: "#3a9e88", fontWeight: 600 }}>@{username}</p>
-            {bio && (
-              <p style={{ fontSize: "12px", color: "#52a88d", marginTop: "6px", lineHeight: 1.45, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }}>
-                {bio}
+            {/* Name + username */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: "#09090b",
+                margin: 0,
+                lineHeight: 1.3,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}>
+                {displayName || username}
               </p>
+              <p style={{ fontSize: 12, color: "#52a88d", margin: "3px 0 0", lineHeight: 1, fontWeight: 500 }}>
+                @{username}
+              </p>
+            </div>
+
+            {/* Message count */}
+            {totalMessages > 0 && (
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <p style={{
+                  fontSize: 22,
+                  fontWeight: 900,
+                  color: "#09090b",
+                  margin: 0,
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                }}>
+                  {totalMessages.toLocaleString("id-ID")}
+                </p>
+                <p style={{
+                  fontSize: 10,
+                  color: "#52a88d",
+                  margin: "3px 0 0",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  fontWeight: 600,
+                }}>
+                  pesan masuk
+                </p>
+              </div>
             )}
           </div>
 
-          {/* Avatar + stat + QR */}
-          <div style={{ padding: "0 20px 24px", display: "flex", gap: "16px", alignItems: "flex-start" }}>
-            {/* Left: avatar + stat */}
-            <div style={{ flex: 1 }}>
-              <div style={{
-                width: 56, height: 56,
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #86ead4 0%, #1a443c 100%)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontSize: "22px", fontWeight: 800,
-                border: "3px solid rgba(26,68,60,0.15)",
-                marginBottom: "14px",
+          {/* ── Bio (if any) ── */}
+          {bio && (
+            <div style={{
+              padding: "12px 20px 0",
+              borderBottom: "none",
+            }}>
+              <p style={{
+                fontSize: 12,
+                color: "#52525b",
+                lineHeight: 1.55,
+                margin: 0,
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
               }}>
-                {initials}
-              </div>
+                {bio}
+              </p>
+            </div>
+          )}
 
-              {totalMessages > 0 && (
-                <div style={{
-                  background: "rgba(26,68,60,0.07)",
-                  border: "1px solid rgba(26,68,60,0.12)",
-                  padding: "10px 12px",
-                  marginBottom: "12px",
-                }}>
-                  <p style={{ fontSize: "28px", fontWeight: 800, color: "#0f2e28", lineHeight: 1, margin: 0 }}>
-                    {totalMessages.toLocaleString("id-ID")}
-                  </p>
-                  <p style={{ fontSize: "10px", color: "#52a88d", marginTop: "3px", fontWeight: 600 }}>
-                    pesan diterima sepanjang masa
-                  </p>
-                </div>
-              )}
-
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: "6px",
-                background: "#1a443c", padding: "7px 12px",
-              }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#86ead4" strokeWidth="2.5" strokeLinecap="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                <span style={{ fontSize: "10px", fontWeight: 700, color: "#86ead4", letterSpacing: "0.04em" }}>
-                  100% ANONIM
-                </span>
-              </div>
+          {/* ── QR Code body ── */}
+          <div style={{
+            padding: bio ? "16px 20px 20px" : "24px 20px 20px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 14,
+          }}>
+            {/* QR wrapper */}
+            <div style={{
+              background: "#ffffff",
+              padding: 12,
+              borderRadius: 12,
+              border: "1px solid rgba(134,234,212,0.4)",
+              boxShadow: "0 0 0 4px rgba(134,234,212,0.12)",
+            }}>
+              <QRCodeSVG
+                value={publicUrl}
+                size={140}
+                bgColor="#ffffff"
+                fgColor="#0f2e28"
+                level="M"
+              />
             </div>
 
-            {/* Right: QR */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-              <div style={{
-                background: "#fff",
-                padding: "10px",
-                boxShadow: "0 2px 12px rgba(26,68,60,0.15)",
-                border: "1px solid rgba(26,68,60,0.1)",
+            {/* CTA text */}
+            <div style={{ textAlign: "center" }}>
+              <p style={{
+                fontSize: 13,
+                fontWeight: 700,
+                color: "#09090b",
+                margin: 0,
+                lineHeight: 1.3,
               }}>
-                <QRCodeSVG
-                  value={publicUrl}
-                  size={110}
-                  bgColor="#ffffff"
-                  fgColor="#0f2e28"
-                  level="M"
-                />
-              </div>
-              <p style={{ fontSize: "9px", color: "#52a88d", textAlign: "center", maxWidth: "130px", lineHeight: 1.3, fontWeight: 500 }}>
-                Scan QR atau kunjungi<br />
-                <strong style={{ color: "#1a443c" }}>{shortUrl}</strong>
+                Kirimi aku pesan anonim!
               </p>
+              <p style={{ fontSize: 11, color: "#71717a", margin: "4px 0 0" }}>
+                Scan QR atau kunjungi
+              </p>
+              <p style={{ fontSize: 12, color: "#0d7062", fontWeight: 700, margin: "2px 0 0" }}>
+                {shortUrl}
+              </p>
+            </div>
+
+            {/* 100% Anonim pill */}
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              background: "rgba(134,234,212,0.15)",
+              border: "1px solid rgba(134,234,212,0.35)",
+              borderRadius: 99,
+              padding: "5px 12px",
+            }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0d7062" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style={{
+                fontSize: 10,
+                fontWeight: 700,
+                color: "#0d7062",
+                letterSpacing: "0.07em",
+                textTransform: "uppercase",
+              }}>
+                100% Anonim
+              </span>
             </div>
           </div>
 
-          {/* Bottom decoration */}
+          {/* ── Footer branding ── */}
           <div style={{
-            background: "rgba(26,68,60,0.06)",
-            borderTop: "1px solid rgba(26,68,60,0.1)",
-            padding: "8px 20px",
+            padding: "10px 20px",
+            background: "#f9fafb",
+            borderTop: "1px solid #f4f4f5",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
           }}>
-            <p style={{ fontSize: "10px", color: "#52a88d", margin: 0 }}>Bagikan ke stories atau bio-mu</p>
-            <p style={{ fontSize: "10px", fontWeight: 700, color: "#1a443c", margin: 0 }}>whisperbox.site</p>
+            <p style={{ fontSize: 11, color: "#a1a1aa", margin: 0 }}>
+              Bagikan ke stories atau bio-mu
+            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+              <div style={{
+                width: 17,
+                height: 17,
+                borderRadius: 5,
+                background: "#86ead4",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}>
+                <span style={{ fontSize: 9, fontWeight: 900, color: "#0d4038" }}>W</span>
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>WhisperBox</span>
+            </div>
           </div>
         </div>
 
@@ -223,15 +301,15 @@ export function QRProfileCard({
             disabled={isGenerating}
           >
             <Download className="w-4 h-4" />
-            {isGenerating ? "Generating…" : "Download"}
+            {isGenerating ? "Memproses…" : "Unduh"}
           </Button>
           <Button
             className="flex-1 gap-2"
             onClick={handleShare}
             disabled={isGenerating}
           >
-            <Share2 className="w-4 h-4" />
-            Share
+            <Share className="w-4 h-4" />
+            Bagikan
           </Button>
         </div>
       </div>
