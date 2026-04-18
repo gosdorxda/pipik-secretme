@@ -345,24 +345,11 @@ export default function SettingsPage() {
     <AppLayout>
       <div className="space-y-8">
 
-        {/* Page Header */}
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
-            <User className="w-5 h-5 text-primary" />
-            {isFirstSetup ? "Setup Profile" : "Settings"}
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1.5">
-            {isFirstSetup
-              ? "Pilih username untuk mulai menerima pesan."
-              : "Kelola profil publik dan pengaturan akun-mu."}
-          </p>
-        </div>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
 
             {/* Combined Profile Card */}
-            <Card className="overflow-hidden gap-0">
+            <Card className="overflow-hidden gap-0 py-0">
 
               {/* Section: Identitas Publik */}
               <div className="px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
@@ -554,13 +541,13 @@ export default function SettingsPage() {
                   </p>
                 </div>
                 <Link href="/upgrade">
-                  <Button size="sm" className="gap-1.5 text-xs mt-1">
+                  <Button size="sm" className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none">
                     <Crown className="w-3.5 h-3.5" /> Upgrade Sekarang
                   </Button>
                 </Link>
               </div>
             )}
-            <Card className="overflow-hidden gap-0">
+            <Card className="overflow-hidden gap-0 py-0">
               <div className="bg-secondary/50 border-b border-border px-6 py-4 flex items-center gap-2">
                 <Bell className="w-4 h-4 text-muted-foreground" />
                 <div>
