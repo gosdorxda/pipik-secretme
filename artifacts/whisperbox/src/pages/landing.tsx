@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Shield, Zap, ArrowRight, Crown, Lock, Bell } from "lucide-react";
+import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
 
 const ACTIVITIES = [
@@ -193,25 +194,35 @@ const HOW_STEPS = [
 ];
 
 export default function LandingPage() {
+  const { isSignedIn } = useAuth();
+
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
 
       {/* Nav */}
       <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2 font-semibold text-foreground">
+        <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2 font-bold text-sm text-foreground">
             <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
             WhisperBox
           </div>
-          <div className="flex gap-2">
-            <Link href="/sign-in">
-              <Button variant="ghost" size="sm">Masuk</Button>
-            </Link>
-            <Link href="/sign-up">
-              <Button size="sm">Mulai Gratis</Button>
-            </Link>
+          <div className="flex items-center gap-1.5">
+            {isSignedIn ? (
+              <Link href="/dashboard">
+                <Button size="sm">Buka Dashboard</Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/sign-in">
+                  <Button variant="ghost" size="sm">Masuk</Button>
+                </Link>
+                <Link href="/sign-up">
+                  <Button size="sm">Mulai Gratis</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
