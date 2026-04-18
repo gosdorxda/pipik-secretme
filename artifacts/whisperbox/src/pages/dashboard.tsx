@@ -895,7 +895,7 @@ export default function DashboardPage() {
                     </div>
                     <span className="text-xs font-semibold text-foreground/70">Anonim</span>
                     {message.senderEmail && (
-                      <span title={`Ada email: ${message.senderEmail}`} className="inline-flex items-center shrink-0">
+                      <span title="Pengirim akan dinotifikasi jika dibalas" className="inline-flex items-center shrink-0">
                         <Mail className="w-3 h-3 text-teal-500" />
                       </span>
                     )}
