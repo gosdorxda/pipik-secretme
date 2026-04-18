@@ -106,12 +106,12 @@ function HeroMockup() {
 
           {/* Message header */}
           <div className="px-4 pt-3 pb-2 flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-white/80 border border-white flex items-center justify-center shrink-0 shadow-sm">
-              <svg className="w-3 h-3 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: "var(--violet)", border: "1px solid #c4b5fd" }}>
+              <svg className="w-3 h-3" style={{ color: "var(--violet-foreground)" }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
               </svg>
             </div>
-            <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
+            <span className="text-xs font-semibold" style={{ color: "var(--violet-foreground)" }}>Anonymous</span>
             <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
             <span className="text-[10px] text-muted-foreground ml-auto">2 jam lalu</span>
           </div>
@@ -341,8 +341,8 @@ export default function LandingPage() {
           <section className="pb-24">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 bg-primary/10 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-primary/20">
-                  <span className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1 rounded-full mb-4 border" style={{ background: "var(--sky)", color: "var(--sky-foreground)", borderColor: "#bae6fd" }}>
+                  <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--sky-foreground)" }} />
                   Aktivitas Live
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
@@ -370,7 +370,7 @@ export default function LandingPage() {
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Aktivitas Terbaru</p>
                   <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "var(--sky-foreground)" }} />
                     Live · hover untuk pause
                   </span>
                 </div>

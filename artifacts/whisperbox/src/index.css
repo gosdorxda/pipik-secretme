@@ -23,6 +23,18 @@
   --input: #e4e4e7;
   --ring: #86ead4;
   --radius: 0.125rem;
+
+  /* Violet — anonim, misteri, pesan */
+  --violet: #ede9fe;
+  --violet-foreground: #6d28d9;
+
+  /* Sky — info, live, notifikasi */
+  --sky: #e0f2fe;
+  --sky-foreground: #0284c7;
+
+  /* Rose — aksi kritis, peringatan */
+  --rose: #ffe4e6;
+  --rose-foreground: #be123c;
 }
 
 @theme inline {
@@ -46,6 +58,12 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-violet: var(--violet);
+  --color-violet-foreground: var(--violet-foreground);
+  --color-sky: var(--sky);
+  --color-sky-foreground: var(--sky-foreground);
+  --color-rose: var(--rose);
+  --color-rose-foreground: var(--rose-foreground);
   --radius-xs: var(--radius);
   --radius-sm: calc(var(--radius) * 2);
   --radius-md: calc(var(--radius) * 3);
