@@ -28,6 +28,7 @@ export const GetMyProfileResponse = zod.object({
   isPremium: zod.boolean(),
   defaultPublicMessages: zod.boolean(),
   emailNotifications: zod.boolean(),
+  allowReplyNotif: zod.boolean(),
   linkOpens: zod.number(),
   socialInstagram: zod.string().nullish(),
   socialTiktok: zod.string().nullish(),
@@ -62,6 +63,7 @@ export const UpdateMyProfileBody = zod.object({
   avatarUrl: zod.string().nullish(),
   defaultPublicMessages: zod.boolean().optional(),
   emailNotifications: zod.boolean().optional(),
+  allowReplyNotif: zod.boolean().optional(),
   socialInstagram: zod.string().nullish(),
   socialTiktok: zod.string().nullish(),
   socialX: zod.string().nullish(),
@@ -80,6 +82,7 @@ export const UpdateMyProfileResponse = zod.object({
   isPremium: zod.boolean(),
   defaultPublicMessages: zod.boolean(),
   emailNotifications: zod.boolean(),
+  allowReplyNotif: zod.boolean(),
   linkOpens: zod.number(),
   socialInstagram: zod.string().nullish(),
   socialTiktok: zod.string().nullish(),
@@ -121,6 +124,7 @@ export const GetPublicProfileResponse = zod.object({
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
   isPremium: zod.boolean(),
+  allowReplyNotif: zod.boolean(),
   publicMessages: zod.array(
     zod.object({
       id: zod.string(),

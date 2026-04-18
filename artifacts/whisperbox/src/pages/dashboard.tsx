@@ -16,7 +16,7 @@ import {
   Copy, Check, Trash2, ExternalLink, Inbox, MessageSquare,
   Eye, CornerDownRight, Crown, Link2, Send, User, Globe, Lock, Share, Sparkles,
   Megaphone, Plus, X, Radio, ChevronDown, Download, Star, Search, CornerUpLeft,
-  HelpCircle, MessageCircle, Flame, Zap, Heart,
+  HelpCircle, MessageCircle, Flame, Zap, Heart, Mail,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -894,6 +894,11 @@ export default function DashboardPage() {
                       <User className="w-3 h-3 text-muted-foreground" />
                     </div>
                     <span className="text-xs font-semibold text-foreground/70">Anonim</span>
+                    {message.senderEmail && (
+                      <span title={`Ada email: ${message.senderEmail}`} className="inline-flex items-center shrink-0">
+                        <Mail className="w-3 h-3 text-teal-500" />
+                      </span>
+                    )}
                     {!message.isRead && (
                       <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--sky-foreground)" }} />
                     )}

@@ -57,6 +57,7 @@ export interface UserProfile {
   isPremium: boolean;
   defaultPublicMessages: boolean;
   emailNotifications: boolean;
+  allowReplyNotif: boolean;
   linkOpens: number;
   socialInstagram?: string | null;
   socialTiktok?: string | null;
@@ -88,6 +89,7 @@ export interface PublicProfile {
   socialGithub?: string | null;
   socialLinkedin?: string | null;
   isPremium: boolean;
+  allowReplyNotif: boolean;
   publicMessages: PublicMessage[];
 }
 
@@ -105,6 +107,7 @@ export interface UpdateProfileBody {
   avatarUrl?: string | null;
   defaultPublicMessages?: boolean;
   emailNotifications?: boolean;
+  allowReplyNotif?: boolean;
   socialInstagram?: string | null;
   socialTiktok?: string | null;
   socialX?: string | null;
@@ -122,6 +125,7 @@ export interface Message {
   ownerReply?: string | null;
   ownerRepliedAt?: string | null;
   campaignTitle?: string | null;
+  senderEmail?: string | null;
 }
 
 export interface MessagesResponse {

@@ -18,6 +18,7 @@ export const usersTable = pgTable("users", {
   socialGithub: varchar("social_github", { length: 100 }),
   socialLinkedin: varchar("social_linkedin", { length: 100 }),
   emailNotifications: boolean("email_notifications").notNull().default(false),
+  allowReplyNotif: boolean("allow_reply_notif").notNull().default(true),
   linkOpens: integer("link_opens").notNull().default(0),
   referralCode: varchar("referral_code", { length: 16 }).unique(),
   points: integer("points").notNull().default(0),

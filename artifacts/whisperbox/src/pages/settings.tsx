@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { User, Save, Camera, Loader2, Instagram, Github, Linkedin, Facebook, Bell, Lock, Crown } from "lucide-react";
+import { User, Save, Camera, Loader2, Instagram, Github, Linkedin, Facebook, Bell, Lock, Crown, Mail } from "lucide-react";
 import { useUpload } from "@workspace/object-storage-web";
 import { resolveAvatarUrl } from "@/lib/avatar";
 
@@ -212,6 +212,8 @@ export default function SettingsPage() {
 
   const [emailNotifications, setEmailNotifications] = useState(false);
   const [savingNotif, setSavingNotif] = useState(false);
+  const [allowReplyNotif, setAllowReplyNotif] = useState(true);
+  const [savingReplyNotif, setSavingReplyNotif] = useState(false);
 
   useEffect(() => {
     if (profile && !initRef.current) {
@@ -228,9 +230,40 @@ export default function SettingsPage() {
         socialLinkedin: profile.socialLinkedin || null,
       });
       setEmailNotifications(profile.emailNotifications ?? false);
+      setAllowReplyNotif(profile.allowReplyNotif ?? true);
       initRef.current = true;
     }
   }, [profile, form]);
+
+  const handleToggleAllowReplyNotif = () => {
+    const newValue = !allowReplyNotif;
+    setAllowReplyNotif(newValue);
+    setSavingReplyNotif(true);
+    updateProfile.mutate(
+      { data: { allowReplyNotif: newValue } },
+      {
+        onSuccess: (updated) => {
+          queryClient.setQueryData(getGetMyProfileQueryKey(), updated);
+          setSavingReplyNotif(false);
+          toast({
+            title: newValue ? "Input email diaktifkan" : "Input email dimatikan",
+            description: newValue
+              ? "Pengirim akan bisa isi email opsional untuk notifikasi balasan."
+              : "Form email tidak akan muncul di halaman profilmu.",
+          });
+        },
+        onError: () => {
+          setAllowReplyNotif(!newValue);
+          setSavingReplyNotif(false);
+          toast({
+            title: "Gagal",
+            description: "Gagal mengubah pengaturan.",
+            variant: "destructive",
+          });
+        },
+      }
+    );
+  };
 
   const handleToggleEmailNotifications = () => {
     const newValue = !emailNotifications;
@@ -525,6 +558,51 @@ export default function SettingsPage() {
             </Card>
           </form>
         </Form>
+
+        {/* Allow Reply Notif Card — free for all */}
+        {profile?.username && (
+          <Card className="overflow-hidden gap-0 py-0">
+            <div className="px-6 py-4 flex items-center gap-3"
+                 style={{ background: "rgba(204,251,241,0.35)", borderBottom: "1px solid rgba(20,184,166,0.18)" }}>
+              <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                   style={{ background: "rgba(20,184,166,0.12)" }}>
+                <Mail className="w-4 h-4" style={{ color: "#0d9488" }} />
+              </div>
+              <div>
+                <h2 className="text-sm font-semibold text-foreground">Notifikasi Balasan</h2>
+                <p className="text-xs text-muted-foreground mt-0.5">Izinkan pengirim meninggalkan email untuk menerima notifikasi saat kamu membalas.</p>
+              </div>
+            </div>
+            <CardContent className="py-5">
+              <div className="flex items-center justify-between gap-6">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">Tampilkan input email opsional</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Jika aktif, pengirim anonim bisa isi email agar dapat notifikasi saat pesannya dibalas.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={allowReplyNotif}
+                  disabled={savingReplyNotif}
+                  onClick={handleToggleAllowReplyNotif}
+                  className={[
+                    "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                    allowReplyNotif ? "bg-primary" : "bg-input",
+                  ].join(" ")}
+                >
+                  <span
+                    className={[
+                      "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200",
+                      allowReplyNotif ? "translate-x-5" : "translate-x-0",
+                    ].join(" ")}
+                  />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Notifications Card */}
         {profile?.username && (

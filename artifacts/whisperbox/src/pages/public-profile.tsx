@@ -329,6 +329,7 @@ export default function PublicProfilePage() {
                     </FormItem>
                   )}
                 />
+                {profile.allowReplyNotif && (
                 <FormField
                   control={form.control}
                   name="senderEmail"
@@ -349,6 +350,7 @@ export default function PublicProfilePage() {
                     </FormItem>
                   )}
                 />
+                )}
                 <Button
                   type="submit"
                   className="w-full gap-2"
