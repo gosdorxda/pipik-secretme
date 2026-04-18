@@ -1,13 +1,15 @@
+import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useAuth } from "@clerk/react";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Send, User, Lock, CornerDownRight, Crown, Instagram, Github, Linkedin, Facebook, Megaphone, Radio } from "lucide-react";
+import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, Radio, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -50,12 +52,12 @@ type SocialLinks = {
 
 function SocialLinkBar({ links }: { links: SocialLinks }) {
   const items = [
-    { key: "socialInstagram", href: (v: string) => `https://instagram.com/${v}`, icon: <Instagram className="w-3.5 h-3.5" />, label: "Instagram" },
-    { key: "socialTiktok", href: (v: string) => `https://tiktok.com/@${v}`, icon: <TiktokIcon className="w-3.5 h-3.5" />, label: "TikTok" },
-    { key: "socialX", href: (v: string) => `https://x.com/${v}`, icon: <XIcon className="w-3.5 h-3.5" />, label: "X" },
-    { key: "socialFacebook", href: (v: string) => `https://facebook.com/${v}`, icon: <Facebook className="w-3.5 h-3.5" />, label: "Facebook" },
-    { key: "socialGithub", href: (v: string) => `https://github.com/${v}`, icon: <Github className="w-3.5 h-3.5" />, label: "GitHub" },
-    { key: "socialLinkedin", href: (v: string) => `https://linkedin.com/in/${v}`, icon: <Linkedin className="w-3.5 h-3.5" />, label: "LinkedIn" },
+    { key: "socialInstagram", href: (v: string) => `https://instagram.com/${v}`, icon: <Instagram className="w-4 h-4" />, label: "Instagram", color: "#E1306C" },
+    { key: "socialTiktok", href: (v: string) => `https://tiktok.com/@${v}`, icon: <TiktokIcon className="w-4 h-4" />, label: "TikTok", color: "#010101" },
+    { key: "socialX", href: (v: string) => `https://x.com/${v}`, icon: <XIcon className="w-4 h-4" />, label: "X", color: "#000000" },
+    { key: "socialFacebook", href: (v: string) => `https://facebook.com/${v}`, icon: <Facebook className="w-4 h-4" />, label: "Facebook", color: "#1877F2" },
+    { key: "socialGithub", href: (v: string) => `https://github.com/${v}`, icon: <Github className="w-4 h-4" />, label: "GitHub", color: "#24292e" },
+    { key: "socialLinkedin", href: (v: string) => `https://linkedin.com/in/${v}`, icon: <Linkedin className="w-4 h-4" />, label: "LinkedIn", color: "#0A66C2" },
   ];
 
   const active = items.filter(item => !!(links as Record<string, unknown>)[item.key]);
@@ -72,7 +74,8 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
             target="_blank"
             rel="noopener noreferrer"
             title={item.label}
-            className="w-8 h-8 rounded-md bg-accent/60 hover:bg-accent border border-primary/20 hover:border-primary/40 flex items-center justify-center text-accent-foreground hover:text-accent-foreground transition-all duration-150"
+            style={{ color: item.color }}
+            className="w-9 h-9 rounded-md bg-white border border-border hover:border-border/60 flex items-center justify-center transition-all duration-150 hover:shadow-sm"
           >
             {item.icon}
           </a>
@@ -86,6 +89,8 @@ export default function PublicProfilePage() {
   const params = useParams<{ username: string }>();
   const username = params.username!;
   const { toast } = useToast();
+  const { isSignedIn } = useAuth();
+  const [bubbleDismissed, setBubbleDismissed] = useState(false);
 
   const { data: profile, isLoading, isError } = useGetPublicProfile(username);
   const sendMessage = useSendMessage();
@@ -227,14 +232,7 @@ export default function PublicProfilePage() {
           {/* Info */}
           <div className="space-y-2">
             <div>
-              <div className="flex items-center justify-center gap-2">
-                <h1 className="text-2xl font-bold leading-tight text-foreground">{displayName}</h1>
-                {profile.isPremium && (
-                  <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-md shrink-0">
-                    <Crown className="w-3 h-3" /> Premium
-                  </span>
-                )}
-              </div>
+              <h1 className="text-2xl font-bold leading-tight text-foreground">{displayName}</h1>
               <p className="text-sm text-muted-foreground mt-0.5">@{profile.username}</p>
             </div>
             {profile.bio && (
@@ -274,20 +272,16 @@ export default function PublicProfilePage() {
         )}
 
         {/* Send Message Card */}
-        <div className="bg-white border border-border rounded-md shadow-sm overflow-hidden">
-          {/* Mint accent top stripe */}
-          <div className="h-1 bg-gradient-to-r from-primary/80 via-primary to-primary/60" />
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-6 py-5">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  Send {profile.displayName || `@${profile.username}`} a message
-                </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">They won't know it's you</p>
-              </div>
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-accent-foreground bg-accent border border-green-100 px-2.5 py-1 rounded-md shrink-0">
-                <Lock className="w-3 h-3" /> Anonymous
-              </span>
+            <div className="mb-4">
+              <h2 className="text-base font-semibold text-foreground">
+                Kirim pesan ke {profile.displayName || `@${profile.username}`}
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
+                <Lock className="w-3 h-3 shrink-0" />
+                {profile.displayName || `@${profile.username}`} tidak akan tahu siapa pengirimnya
+              </p>
             </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
@@ -298,7 +292,7 @@ export default function PublicProfilePage() {
                     <FormItem>
                       <FormControl>
                         <Textarea
-                          placeholder="Write your anonymous message here..."
+                          placeholder="Tulis pesan anonimmu di sini..."
                           className="resize-none min-h-[120px] text-sm"
                           {...field}
                         />
@@ -307,20 +301,15 @@ export default function PublicProfilePage() {
                     </FormItem>
                   )}
                 />
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Lock className="w-3 h-3" /> We never store sender info
-                  </p>
-                  <Button
-                    type="submit"
-                    className="shrink-0 gap-2"
-                    disabled={sendMessage.isPending || !form.watch("content").trim()}
-                  >
-                    {sendMessage.isPending ? "Sending..." : (
-                      <><Send className="w-3.5 h-3.5" /> Send Anonymously</>
-                    )}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  className="w-full gap-2"
+                  disabled={sendMessage.isPending || !form.watch("content").trim()}
+                >
+                  {sendMessage.isPending ? "Mengirim..." : (
+                    <><Send className="w-3.5 h-3.5" /> Kirim Anonim</>
+                  )}
+                </Button>
               </form>
             </Form>
           </div>
@@ -397,6 +386,36 @@ export default function PublicProfilePage() {
           </div>
         )}
       </div>
+
+      {/* Floating CTA bubble — only for guests */}
+      {!isSignedIn && !bubbleDismissed && (
+        <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm pointer-events-none">
+          <div className="pointer-events-auto flex items-center gap-3 bg-white border border-border rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
+            {/* Logo */}
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shrink-0">
+              <span className="text-xs font-extrabold text-primary-foreground">W</span>
+            </div>
+            {/* Text */}
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground leading-tight truncate">Dapatkan link kamu sekarang</p>
+              <p className="text-[11px] text-muted-foreground leading-none mt-0.5">Gratis · Tanpa kartu kredit</p>
+            </div>
+            {/* CTA */}
+            <Link href="/" className="shrink-0">
+              <Button size="sm" className="rounded-full text-xs h-8 px-4 gap-1.5">
+                Mulai →
+              </Button>
+            </Link>
+            {/* Dismiss */}
+            <button
+              onClick={() => setBubbleDismissed(true)}
+              className="shrink-0 w-6 h-6 rounded-full bg-secondary hover:bg-secondary/80 flex items-center justify-center transition-colors"
+            >
+              <X className="w-3 h-3 text-muted-foreground" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
