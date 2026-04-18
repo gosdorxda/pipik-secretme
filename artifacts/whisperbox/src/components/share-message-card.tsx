@@ -5,30 +5,10 @@ import { Download, Share, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const PALETTES = [
-  {
-    stripe: "linear-gradient(to right, #86ead4, #60c4ae)",
-    avatarBg: "#ddf9f2", avatarColor: "#0d4038",
-    anonBg: "#f0fefa", anonColor: "#0d7062",
-    accentText: "#0d7062",
-  },
-  {
-    stripe: "linear-gradient(to right, #a5b4fc, #818cf8)",
-    avatarBg: "#ede9fe", avatarColor: "#3730a3",
-    anonBg: "#f5f3ff", anonColor: "#4f46e5",
-    accentText: "#4f46e5",
-  },
-  {
-    stripe: "linear-gradient(to right, #93c5fd, #60a5fa)",
-    avatarBg: "#dbeafe", avatarColor: "#1e3a5f",
-    anonBg: "#eff6ff", anonColor: "#1d4ed8",
-    accentText: "#1d4ed8",
-  },
-  {
-    stripe: "linear-gradient(to right, #fcd34d, #86ead4)",
-    avatarBg: "#fef3c7", avatarColor: "#713f12",
-    anonBg: "#fffbeb", anonColor: "#92400e",
-    accentText: "#92400e",
-  },
+  { headerBg: "rgba(134,234,212,0.18)", headerBorder: "rgba(134,234,212,0.35)", avatarBg: "#c6f6ed", avatarColor: "#0d4038" },
+  { headerBg: "rgba(165,180,252,0.18)", headerBorder: "rgba(165,180,252,0.35)", avatarBg: "#ddd6fe", avatarColor: "#3730a3" },
+  { headerBg: "rgba(147,197,253,0.18)", headerBorder: "rgba(147,197,253,0.35)", avatarBg: "#bfdbfe", avatarColor: "#1e3a5f" },
+  { headerBg: "rgba(252,211,77,0.18)",  headerBorder: "rgba(252,211,77,0.35)",  avatarBg: "#fde68a", avatarColor: "#713f12" },
 ];
 
 type ShareMessageCardProps = {
@@ -49,7 +29,6 @@ export function ShareMessageCard({
   paletteIdx,
   displayName,
   username,
-  totalMessages = 0,
   onClose,
 }: ShareMessageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -61,7 +40,7 @@ export function ShareMessageCard({
 
   const publicUrl = `whisperbox.app/u/${username}`;
   const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
-  const truncated = content.length > 300 ? content.slice(0, 297) + "…" : content;
+  const truncated = content.length > 320 ? content.slice(0, 317) + "…" : content;
 
   const generate = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
@@ -95,7 +74,7 @@ export function ShareMessageCard({
         await navigator.share({
           files: [file],
           title: "WhisperBox",
-          text: `Kirim pesan anonim ke ${displayName} di ${publicUrl}`,
+          text: `Kirim pesan anonim ke ${displayName || username} di ${publicUrl}`,
         });
       } else {
         const a = document.createElement("a");
@@ -134,19 +113,17 @@ export function ShareMessageCard({
             borderRadius: 14,
             overflow: "hidden",
             width: "100%",
-            fontFamily: "system-ui, -apple-system, sans-serif",
+            fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* Accent stripe */}
-          <div style={{ height: 4, background: p.stripe }} />
-
-          {/* ── Header ── */}
+          {/* ── Header: tinted bg matching palette ── */}
           <div style={{
-            padding: "18px 22px 16px",
+            padding: "18px 22px",
+            background: p.headerBg,
+            borderBottom: `1px solid ${p.headerBorder}`,
             display: "flex",
             alignItems: "center",
             gap: 12,
-            borderBottom: "1px solid #f4f4f5",
           }}>
             {/* Avatar initials */}
             <div style={{
@@ -161,7 +138,6 @@ export function ShareMessageCard({
               fontSize: 17,
               fontWeight: 800,
               flexShrink: 0,
-              border: "2px solid rgba(0,0,0,0.04)",
             }}>
               {initials}
             </div>
@@ -190,72 +166,22 @@ export function ShareMessageCard({
               </p>
             </div>
 
-            {/* Messages received */}
+            {/* Timestamp (when message was received) */}
             <div style={{ textAlign: "right", flexShrink: 0 }}>
               <p style={{
-                fontSize: 24,
-                fontWeight: 900,
-                color: "#09090b",
+                fontSize: 12,
+                color: "#71717a",
                 margin: 0,
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
+                lineHeight: 1.4,
+                fontWeight: 500,
               }}>
-                {totalMessages}
-              </p>
-              <p style={{
-                fontSize: 10,
-                color: "#a1a1aa",
-                margin: "3px 0 0",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                fontWeight: 600,
-              }}>
-                pesan masuk
+                {timeAgo}
               </p>
             </div>
           </div>
 
           {/* ── Message body ── */}
-          <div style={{ padding: "20px 22px 22px" }}>
-
-            {/* Anonim sender row */}
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 7,
-              marginBottom: 14,
-            }}>
-              <div style={{
-                width: 24,
-                height: 24,
-                borderRadius: "50%",
-                background: p.anonBg,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
-                  stroke={p.anonColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 700, color: p.anonColor }}>Anonim</span>
-              <span style={{
-                display: "inline-block",
-                width: 4,
-                height: 4,
-                borderRadius: "50%",
-                background: p.anonColor,
-                opacity: 0.4,
-                marginLeft: 1,
-                alignSelf: "center",
-              }} />
-              <span style={{ fontSize: 11, color: "#a1a1aa", marginLeft: "auto" }}>{timeAgo}</span>
-            </div>
-
-            {/* Message text */}
+          <div style={{ padding: "22px 22px 24px" }}>
             <p style={{
               fontSize: 17,
               fontWeight: 450,
