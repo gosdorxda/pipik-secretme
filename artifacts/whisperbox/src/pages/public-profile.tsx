@@ -290,14 +290,6 @@ export default function PublicProfilePage() {
                   {activeCampaign.question}
                 </p>
               </div>
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-white bg-white/20 rounded-full px-2.5 py-1 shrink-0">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white" />
-                </span>
-                LIVE
-              </span>
-              <span className="text-white/80 group-hover:translate-x-0.5 transition-transform shrink-0 text-sm">→</span>
             </div>
           </button>
         )}
