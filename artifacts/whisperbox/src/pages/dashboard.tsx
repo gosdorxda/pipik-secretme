@@ -59,14 +59,14 @@ function StatCard({
 }) {
   const s = ACCENT_ICON[accent];
   return (
-    <div className="bg-white border border-border rounded-md p-4 flex flex-col gap-3">
+    <div className="bg-white border border-border rounded-md px-4 py-3 flex items-center gap-3">
       <div className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 ${s.iconWrap}`}>
         <span className={s.iconColor}>{icon}</span>
       </div>
-      <div className="min-w-0">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">{label}</p>
-        <p className="text-2xl font-bold leading-none text-foreground">
-          {loading ? <span className="text-muted-foreground/40 text-lg">—</span> : value}
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground leading-none mb-1">{label}</p>
+        <p className="text-xl font-bold leading-none text-foreground">
+          {loading ? <span className="text-muted-foreground/40">—</span> : value}
         </p>
       </div>
     </div>
@@ -423,7 +423,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2 shrink-0">
               <Button onClick={copyLink} size="sm" className="gap-2 text-xs" variant="outline">
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                {copied ? "Copied!" : "Copy Link"}
+                {copied ? "Tersalin!" : "Salin Link"}
               </Button>
               <Button
                 onClick={() => setShowQRCard(true)}
@@ -469,6 +469,25 @@ export default function DashboardPage() {
             loading={statsLoading}
           />
         </div>
+
+        {/* Premium Upgrade Banner */}
+        {!profile?.isPremium && (
+          <div className="flex items-center gap-4 rounded-md px-5 py-4 border border-amber-200"
+               style={{ background: "linear-gradient(to right, #fffbeb, #fef9c3)" }}>
+            <div className="w-9 h-9 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
+              <Crown className="w-4 h-4 text-amber-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-amber-900 leading-none mb-0.5">Upgrade ke Premium</p>
+              <p className="text-xs text-amber-700 leading-relaxed">Buka social links, kampanye QnA, notifikasi email, dan lebih banyak lagi.</p>
+            </div>
+            <Link href="/upgrade" className="shrink-0">
+              <Button size="sm" className="gap-1.5 text-xs bg-amber-500 hover:bg-amber-600 text-white border-0">
+                <Crown className="w-3.5 h-3.5" /> Upgrade
+              </Button>
+            </Link>
+          </div>
+        )}
 
         {/* Wrapped + Kampanye QnA — merged collapsible card */}
         <div className="rounded-md overflow-hidden" style={{ border: "1px solid #86ead430" }}>
@@ -651,7 +670,7 @@ export default function DashboardPage() {
             )}
             <div className="ml-auto flex items-center gap-2">
               <span className="text-xs text-muted-foreground hidden sm:block">
-                {isPublic ? "Messages visible on profile" : "Messages hidden from profile"}
+                {isPublic ? "Pesan tampil di profil" : "Pesan disembunyikan dari profil"}
               </span>
               <button
                 type="button"
@@ -678,9 +697,9 @@ export default function DashboardPage() {
 
           {/* Filter tabs + search */}
           {messages.length > 0 && (
-            <div className="bg-white border border-border rounded-md overflow-hidden mb-3">
-              {/* Tabs */}
-              <div className="flex items-center overflow-x-auto" style={{ borderBottom: "1px solid var(--border)" }}>
+            <div className="mb-3 space-y-2">
+              {/* Pill tabs */}
+              <div className="flex items-center gap-1 p-1 bg-secondary rounded-md overflow-x-auto">
                 {(
                   [
                     { key: "all",       label: "Semua",         count: counts.all       },
@@ -693,17 +712,17 @@ export default function DashboardPage() {
                     key={tab.key}
                     type="button"
                     onClick={() => setActiveFilter(tab.key)}
-                    className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold whitespace-nowrap transition-colors shrink-0 border-b-2 -mb-px ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded whitespace-nowrap transition-all shrink-0 ${
                       activeFilter === tab.key
-                        ? "border-primary text-primary"
-                        : "border-transparent text-muted-foreground hover:text-foreground"
+                        ? "bg-white text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {tab.label}
-                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md ${
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                       activeFilter === tab.key
-                        ? "bg-primary/15 text-primary"
-                        : "bg-secondary text-muted-foreground"
+                        ? "bg-primary/20 text-primary-foreground/80"
+                        : "bg-border/60 text-muted-foreground"
                     }`}>
                       {tab.count}
                     </span>
@@ -711,7 +730,7 @@ export default function DashboardPage() {
                 ))}
               </div>
               {/* Search bar */}
-              <div className="px-3 py-2.5 flex items-center gap-2">
+              <div className="bg-white border border-border rounded-md px-3 py-2.5 flex items-center gap-2">
                 <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <input
                   type="text"
@@ -801,9 +820,9 @@ export default function DashboardPage() {
                     <div className="w-6 h-6 rounded-full bg-white/70 border border-white flex items-center justify-center shrink-0 shadow-sm">
                       <User className="w-3 h-3 text-muted-foreground" />
                     </div>
-                    <span className="text-xs font-semibold text-foreground/70">Anonymous</span>
+                    <span className="text-xs font-semibold" style={{ color: "var(--violet-foreground)" }}>Anonim</span>
                     {!message.isRead && (
-                      <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "var(--sky-foreground)" }} />
                     )}
                     <span className="text-[10px] text-muted-foreground ml-auto">
                       {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
@@ -854,7 +873,7 @@ export default function DashboardPage() {
                       <Textarea
                         value={replyText}
                         onChange={e => setReplyText(e.target.value)}
-                        placeholder="Write your reply..."
+                        placeholder="Tulis balasanmu..."
                         className="text-sm resize-none min-h-[80px] bg-white/80"
                         autoFocus
                       />
@@ -865,7 +884,7 @@ export default function DashboardPage() {
                           className="text-xs bg-white/60"
                           onClick={() => { setReplyingTo(null); setReplyText(""); }}
                         >
-                          Cancel
+                          Batal
                         </Button>
                         <Button
                           size="sm"
@@ -874,7 +893,7 @@ export default function DashboardPage() {
                           disabled={!replyText.trim() || replyToMessage.isPending}
                         >
                           <Send className="w-3 h-3" />
-                          {replyToMessage.isPending ? "Sending..." : "Send Reply"}
+                          {replyToMessage.isPending ? "Mengirim..." : "Kirim Balasan"}
                         </Button>
                       </div>
                     </div>
@@ -897,7 +916,7 @@ export default function DashboardPage() {
                       }}
                     >
                       <CornerDownRight className="w-3.5 h-3.5" />
-                      {message.ownerReply ? "Edit Reply" : "Reply"}
+                      {message.ownerReply ? "Edit Balasan" : "Balas"}
                     </Button>
                     <Button
                       variant="ghost"
@@ -906,7 +925,7 @@ export default function DashboardPage() {
                       onClick={() => setSharingMessage({ id: message.id, idx })}
                     >
                       <Share2 className="w-3.5 h-3.5" />
-                      Share
+                      Bagikan
                     </Button>
                     <div className="flex-1" />
                     <Button

@@ -95,9 +95,36 @@ export default function ReferralPage() {
         {/* ── Hero Points Card ── */}
         <div className="relative overflow-hidden rounded-md px-7 py-8 text-center"
              style={{ background: "linear-gradient(135deg, #0f172a 0%, #0c2318 100%)", border: "1px solid #86ead430" }}>
+          <style>{`
+            @keyframes wb-float-a { 0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.18; }
+                                    50%      { transform: translate(-50%,-50%) scale(1.25); opacity: 0.28; } }
+            @keyframes wb-float-b { 0%,100% { transform: translate(-50%,-50%) scale(1.1); opacity: 0.12; }
+                                    50%      { transform: translate(-50%,-50%) scale(0.85); opacity: 0.22; } }
+            @keyframes wb-float-c { 0%,100% { transform: translate(-50%,-50%); opacity: 0.08; }
+                                    50%      { transform: translate(-50%,-50%) scale(1.4);  opacity: 0.15; } }
+            @keyframes wb-pulse-ring { 0%,100% { transform: translate(-50%,-50%) scale(0.95); opacity: 0.10; }
+                                       50%      { transform: translate(-50%,-50%) scale(1.05); opacity: 0.20; } }
+          `}</style>
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full opacity-20"
-                 style={{ background: "radial-gradient(circle, #86ead4, transparent)" }} />
+            {/* main glow */}
+            <div className="absolute top-1/2 left-1/2 w-64 h-64 rounded-full"
+                 style={{ background: "radial-gradient(circle, #86ead4, transparent)", animation: "wb-float-a 6s ease-in-out infinite" }} />
+            {/* secondary glow bottom-right */}
+            <div className="absolute top-3/4 left-3/4 w-40 h-40 rounded-full"
+                 style={{ background: "radial-gradient(circle, #7c3aed50, transparent)", animation: "wb-float-b 8s ease-in-out infinite" }} />
+            {/* tertiary glow top-left */}
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full"
+                 style={{ background: "radial-gradient(circle, #38bdf840, transparent)", animation: "wb-float-c 10s ease-in-out infinite" }} />
+            {/* pulsing ring */}
+            <div className="absolute top-1/2 left-1/2 w-72 h-72 rounded-full"
+                 style={{ border: "1px solid rgba(134,234,212,0.15)", animation: "wb-pulse-ring 5s ease-in-out infinite" }} />
+            <div className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full"
+                 style={{ border: "1px solid rgba(134,234,212,0.07)", animation: "wb-pulse-ring 7s ease-in-out infinite reverse" }} />
+            {/* sparkle dots */}
+            <div className="absolute w-1 h-1 rounded-full" style={{ top: "20%", left: "15%", background: "#86ead4", opacity: 0.4 }} />
+            <div className="absolute w-1 h-1 rounded-full" style={{ top: "70%", left: "85%", background: "#86ead4", opacity: 0.3 }} />
+            <div className="absolute w-1.5 h-1.5 rounded-full" style={{ top: "30%", left: "78%", background: "#c4b5fd", opacity: 0.4 }} />
+            <div className="absolute w-1 h-1 rounded-full" style={{ top: "80%", left: "20%", background: "#7dd3fc", opacity: 0.35 }} />
           </div>
           <div className="relative">
             <div className="flex items-center justify-center mb-4">
@@ -153,35 +180,36 @@ export default function ReferralPage() {
         {/* ── Ticker Marquee ── */}
         {(() => {
           const TICKER_ITEMS = [
-            { name: "Rani S.",    points: 2500  },
-            { name: "Budi A.",    points: 1000  },
-            { name: "Dewi K.",    points: 5000  },
-            { name: "Fajar M.",   points: 1500  },
-            { name: "Siti R.",    points: 3000  },
-            { name: "Hendra W.", points: 1000  },
-            { name: "Maya P.",    points: 2000  },
-            { name: "Rizky D.",   points: 7500  },
+            { name: "Rani S.",   points: 2500, icon: "🎁" },
+            { name: "Budi A.",   points: 1000, icon: "⭐" },
+            { name: "Dewi K.",   points: 5000, icon: "👑" },
+            { name: "Fajar M.",  points: 1500, icon: "🎁" },
+            { name: "Siti R.",   points: 3000, icon: "⭐" },
+            { name: "Hendra W.", points: 1000, icon: "🎁" },
+            { name: "Maya P.",   points: 2000, icon: "👑" },
+            { name: "Rizky D.",  points: 7500, icon: "⭐" },
           ];
           const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
           return (
             <div className="relative overflow-hidden rounded-md"
-                 style={{ background: "rgba(15,23,42,0.7)", border: "1px solid rgba(134,234,212,0.12)", backdropFilter: "blur(4px)" }}>
+                 style={{ background: "rgba(15,23,42,0.75)", border: "1px solid rgba(134,234,212,0.14)" }}>
               <style>{`
                 @keyframes wb-marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
               `}</style>
               <div className="py-2.5 flex items-center overflow-hidden">
                 <div
                   className="flex items-center gap-0 whitespace-nowrap"
-                  style={{ animation: "wb-marquee 28s linear infinite", willChange: "transform" }}
+                  style={{ animation: "wb-marquee 30s linear infinite", willChange: "transform" }}
                 >
                   {items.map((item, i) => (
                     <span key={i} className="inline-flex items-center gap-2 px-5">
-                      <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: "#86ead4" }} />
-                      <span className="text-xs font-medium" style={{ color: "#cbd5e1" }}>
-                        <span className="font-bold text-white">{item.name}</span>
-                        {" "}baru saja menukar{" "}
+                      <span className="text-sm leading-none">{item.icon}</span>
+                      <span className="text-xs font-medium" style={{ color: "#94a3b8" }}>
+                        <span className="font-bold" style={{ color: "#e2e8f0" }}>{item.name}</span>
+                        {" "}menukar{" "}
                         <span className="font-bold" style={{ color: "#86ead4" }}>{item.points.toLocaleString("id-ID")} poin</span>
                       </span>
+                      <span className="w-px h-3 bg-white/10 mx-1" />
                     </span>
                   ))}
                 </div>

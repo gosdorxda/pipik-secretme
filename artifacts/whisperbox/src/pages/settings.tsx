@@ -333,12 +333,12 @@ export default function SettingsPage() {
   const currentAvatarUrl = form.watch("avatarUrl");
 
   const socialFields = [
-    { name: "socialInstagram" as const, label: "Instagram", icon: <Instagram className="w-4 h-4" />, placeholder: "username" },
-    { name: "socialTiktok" as const, label: "TikTok", icon: <TiktokIcon className="w-4 h-4" />, placeholder: "username" },
-    { name: "socialX" as const, label: "X (Twitter)", icon: <XIcon className="w-4 h-4" />, placeholder: "username" },
-    { name: "socialFacebook" as const, label: "Facebook", icon: <Facebook className="w-4 h-4" />, placeholder: "username or page name" },
-    { name: "socialGithub" as const, label: "GitHub", icon: <Github className="w-4 h-4" />, placeholder: "username" },
-    { name: "socialLinkedin" as const, label: "LinkedIn", icon: <Linkedin className="w-4 h-4" />, placeholder: "username or profile slug" },
+    { name: "socialInstagram" as const, label: "Instagram", icon: <Instagram className="w-4 h-4" />, iconColor: "text-pink-500", placeholder: "username" },
+    { name: "socialTiktok" as const, label: "TikTok", icon: <TiktokIcon className="w-4 h-4" />, iconColor: "text-foreground", placeholder: "username" },
+    { name: "socialX" as const, label: "X (Twitter)", icon: <XIcon className="w-4 h-4" />, iconColor: "text-foreground", placeholder: "username" },
+    { name: "socialFacebook" as const, label: "Facebook", icon: <Facebook className="w-4 h-4" />, iconColor: "text-blue-600", placeholder: "username or page name" },
+    { name: "socialGithub" as const, label: "GitHub", icon: <Github className="w-4 h-4" />, iconColor: "text-zinc-700", placeholder: "username" },
+    { name: "socialLinkedin" as const, label: "LinkedIn", icon: <Linkedin className="w-4 h-4" />, iconColor: "text-blue-700", placeholder: "username or profile slug" },
   ];
 
   return (
@@ -365,9 +365,14 @@ export default function SettingsPage() {
             <Card className="overflow-hidden gap-0">
 
               {/* Section: Identitas Publik */}
-              <div className="px-6 py-4 border-b border-border">
-                <h2 className="text-sm font-semibold text-foreground">Profil Publik</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">Ditampilkan di halaman profilmu yang bisa diakses siapa saja.</p>
+              <div className="px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-md bg-primary/15 flex items-center justify-center shrink-0">
+                  <User className="w-4 h-4 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold text-foreground">Profil Publik</h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">Ditampilkan di halaman profilmu yang bisa diakses siapa saja.</p>
+                </div>
               </div>
               <CardContent className="pt-6 pb-6 space-y-6">
 
@@ -443,14 +448,29 @@ export default function SettingsPage() {
                     </FormItem>
                   )}
                 />
+
+                <div className="flex items-center gap-3 pt-2 border-t border-border">
+                  <Button type="submit" disabled={updateProfile.isPending} className="gap-2">
+                    {updateProfile.isPending
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…</>
+                      : <><Save className="w-4 h-4" /> Simpan Profil</>}
+                  </Button>
+                </div>
               </CardContent>
 
               {/* Section divider: Social Links */}
               <div className="border-t border-border">
-                <div className="px-6 py-4 flex items-center justify-between gap-4">
-                  <div>
-                    <h2 className="text-sm font-semibold text-foreground">Social Links</h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Tampil sebagai ikon di halaman profilmu.</p>
+                <div className="px-6 py-4 flex items-center justify-between gap-4"
+                     style={{ background: "rgba(237,233,254,0.35)", borderBottom: "1px solid rgba(237,233,254,0.8)" }}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                         style={{ background: "rgba(109,40,217,0.1)" }}>
+                      <Linkedin className="w-4 h-4" style={{ color: "#6d28d9" }} />
+                    </div>
+                    <div>
+                      <h2 className="text-sm font-semibold text-foreground">Social Links</h2>
+                      <p className="text-xs text-muted-foreground mt-0.5">Tampil sebagai ikon di halaman profilmu.</p>
+                    </div>
                   </div>
                   {!profile?.isPremium && (
                     <Link href="/upgrade" className="shrink-0">
@@ -474,9 +494,9 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                <div className="px-6 pb-6">
+                <div className="px-6 pb-6 space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {socialFields.map(({ name, label, icon, placeholder }) => (
+                    {socialFields.map(({ name, label, icon, iconColor, placeholder }) => (
                       <FormField
                         key={name}
                         control={form.control}
@@ -484,7 +504,7 @@ export default function SettingsPage() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex items-center gap-1.5 text-muted-foreground text-xs font-semibold uppercase tracking-wider">
-                              {icon} {label}
+                              <span className={iconColor}>{icon}</span> {label}
                             </FormLabel>
                             <div className="flex items-center">
                               <span className="bg-secondary text-muted-foreground px-3 py-[7px] border border-r-0 border-input rounded-l-xs text-sm shrink-0">@</span>
@@ -504,22 +524,18 @@ export default function SettingsPage() {
                       />
                     ))}
                   </div>
+
+                  <div className="flex items-center gap-3 pt-2 border-t border-border">
+                    <Button type="submit" disabled={updateProfile.isPending} className="gap-2">
+                      {updateProfile.isPending
+                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…</>
+                        : <><Save className="w-4 h-4" /> Simpan Social Links</>}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
             </Card>
-
-            {/* Save Button */}
-            <div className="flex items-center gap-3 pt-1">
-              <Button type="submit" disabled={updateProfile.isPending} className="gap-2">
-                {updateProfile.isPending
-                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…</>
-                  : <><Save className="w-4 h-4" /> Simpan Perubahan</>}
-              </Button>
-              {!updateProfile.isPending && (
-                <p className="text-xs text-muted-foreground">Perubahan tidak langsung tampil — perlu disimpan dulu.</p>
-              )}
-            </div>
           </form>
         </Form>
 
