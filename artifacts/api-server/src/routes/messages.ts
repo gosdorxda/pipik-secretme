@@ -290,7 +290,7 @@ router.post("/:username", async (req, res) => {
         content: bodyParsed.data.content,
         isPublic: recipient.defaultPublicMessages,
         senderIpHash,
-        senderEmail: bodyParsed.data.senderEmail ?? null,
+        senderEmail: recipient.allowReplyNotif ? (bodyParsed.data.senderEmail ?? null) : null,
         campaignId: activeCampaign?.id ?? null,
       })
       .returning();
