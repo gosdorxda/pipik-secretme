@@ -172,7 +172,7 @@ function Slide0Intro({
   month: number | null;
 }) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
   const period = month ? `${MONTHS_ID[month - 1]} ${year}` : `Tahun ${year}`;
   return (
     <SlideShell>
@@ -506,7 +506,7 @@ function Slide7FinalCard({
   avatarUrl?: string | null;
 }) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
   const period = month ? `${MONTHS_ID[month - 1]} ${year}` : `Tahun ${year}`;
   const peakDay = data.dayDistribution.reduce((a, b) =>
     a.count >= b.count ? a : b,
@@ -1002,7 +1002,7 @@ const TOTAL_SLIDES = 8;
 export default function WrappedPage() {
   const { data: profile } = useGetMyProfile();
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
   const [phase, setPhase] = useState<"select" | "slides">("select");
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState<number | null>(new Date().getMonth() + 1);

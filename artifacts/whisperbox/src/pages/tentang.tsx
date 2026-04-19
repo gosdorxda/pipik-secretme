@@ -41,7 +41,7 @@ const VALUES = [
 
 export default function TentangPage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   return (
     <StaticPageLayout>

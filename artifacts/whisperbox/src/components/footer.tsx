@@ -3,6 +3,8 @@ import { Twitter, Instagram, Github, Mail } from "lucide-react";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 
+const CONTACT_EMAIL = "hello@whisperbox.id";
+
 const FOOTER_LINKS = {
   produk: [
     { label: "Tentang", href: "/tentang" },
@@ -12,7 +14,7 @@ const FOOTER_LINKS = {
   bantuan: [
     { label: "Cara Pakai", href: "/cara-pakai" },
     { label: "FAQ", href: "/faq" },
-    { label: "Hubungi Kami", href: "mailto:hello@whisperbox.id" },
+    { label: "Hubungi Kami", href: `mailto:${CONTACT_EMAIL}` },
   ],
   legal: [
     { label: "Kebijakan Privasi", href: "/privasi" },
@@ -28,12 +30,12 @@ const SOCIAL_LINKS = [
     icon: Instagram,
   },
   { label: "GitHub", href: "https://github.com/whisperboxid", icon: Github },
-  { label: "Email", href: "mailto:hello@whisperbox.id", icon: Mail },
+  { label: "Email", href: `mailto:${CONTACT_EMAIL}`, icon: Mail },
 ];
 
 export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   return (
     <footer className="border-t border-border bg-white">

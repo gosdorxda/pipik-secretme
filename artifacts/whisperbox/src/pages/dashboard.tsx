@@ -74,6 +74,7 @@ import {
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const CAMPAIGN_COLORS = [
   {
@@ -176,6 +177,8 @@ function StatCard({
 }
 
 export default function DashboardPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [copied, setCopied] = useState(false);
@@ -725,7 +728,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white leading-none mb-0.5">
-                    Wrapped
+                    {appName} Wrapped
                   </p>
                   <p className="text-xs" style={{ color: "#94a3b8" }}>
                     Lihat recap statistik pesanmu ✨

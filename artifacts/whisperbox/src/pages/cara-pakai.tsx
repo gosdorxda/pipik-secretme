@@ -66,7 +66,7 @@ const PREMIUM_FEATURES = [
 
 export default function CaraPakaiPage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   return (
     <StaticPageLayout>

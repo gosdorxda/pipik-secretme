@@ -5,7 +5,7 @@ const LAST_UPDATED = "19 April 2026";
 
 export default function KetentuanPage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   return (
     <StaticPageLayout>

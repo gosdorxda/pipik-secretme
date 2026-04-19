@@ -162,7 +162,7 @@ export default function UpgradePage() {
   const { data: configData } = useAppConfig();
   const premiumPrice = configData?.premiumPrice ?? 49900;
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   const handleCopyQr = () => {
     if (!qrString) return;

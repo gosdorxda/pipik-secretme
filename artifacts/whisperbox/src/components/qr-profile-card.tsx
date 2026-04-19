@@ -26,7 +26,7 @@ export function QRProfileCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
 
   const publicUrl = `${window.location.origin}/@${username}`;
   const shortUrl = `whisperbox.app/@${username}`;

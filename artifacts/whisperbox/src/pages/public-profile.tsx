@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LazyAvatar } from "@/components/lazy-avatar";
 import { useToast } from "@/hooks/use-toast";
+import { useSiteBranding } from "@/hooks/use-branding";
 import {
   Send,
   User,
@@ -195,6 +196,8 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
 }
 
 export default function PublicProfilePage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   const params = useParams<{ handle: string }>();
   const rawHandle = params.handle ?? "";
   const username = rawHandle.startsWith("@") ? rawHandle.slice(1) : rawHandle;
@@ -678,7 +681,7 @@ export default function PublicProfilePage() {
                 W
               </span>
             </div>
-            <span className="font-medium text-foreground">vooi.lol</span>
+            <span className="font-medium text-foreground">{appName}</span>
             <span>— Terima pesan anonim dari siapa saja</span>
           </div>
           <div className="flex items-center gap-3">

@@ -59,7 +59,7 @@ export function ShareMessageCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "WhisperBox";
+  const appName = branding?.appName ?? "vooi.lol";
   const p = PALETTES[paletteIdx % PALETTES.length];
 
   const initials = (displayName || username || "?")
