@@ -3,6 +3,7 @@ import { toPng } from "html-to-image";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Download, Share, X } from "lucide-react";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 type QRProfileCardProps = {
   displayName: string;
@@ -17,6 +18,7 @@ export function QRProfileCard({
   displayName,
   username,
   bio,
+  avatarUrl,
   totalMessages,
   onClose,
 }: QRProfileCardProps) {
@@ -110,21 +112,36 @@ export function QRProfileCard({
             gap: 12,
           }}>
             {/* Avatar */}
-            <div style={{
-              width: 46,
-              height: 46,
-              borderRadius: "50%",
-              background: "#c6f6ed",
-              color: "#0d4038",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 17,
-              fontWeight: 800,
-              flexShrink: 0,
-            }}>
-              {initials}
-            </div>
+            {resolveAvatarUrl(avatarUrl) ? (
+              <img
+                src={resolveAvatarUrl(avatarUrl)!}
+                alt={displayName || username}
+                crossOrigin="anonymous"
+                style={{
+                  width: 46,
+                  height: 46,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  flexShrink: 0,
+                }}
+              />
+            ) : (
+              <div style={{
+                width: 46,
+                height: 46,
+                borderRadius: "50%",
+                background: "#c6f6ed",
+                color: "#0d4038",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 17,
+                fontWeight: 800,
+                flexShrink: 0,
+              }}>
+                {initials}
+              </div>
+            )}
 
             {/* Name + username */}
             <div style={{ flex: 1, minWidth: 0 }}>

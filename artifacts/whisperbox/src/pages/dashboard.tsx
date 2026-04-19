@@ -1051,6 +1051,7 @@ export default function DashboardPage() {
             paletteIdx={sharingMessage.idx}
             displayName={displayName}
             username={profile.username!}
+            avatarUrl={profile.avatarUrl}
             totalMessages={stats?.totalMessages ?? 0}
             onClose={() => setSharingMessage(null)}
           />
@@ -1062,6 +1063,7 @@ export default function DashboardPage() {
           displayName={profile.displayName || profile.username || ""}
           username={profile.username!}
           bio={profile.bio}
+          avatarUrl={profile.avatarUrl}
           totalMessages={stats?.totalMessages ?? 0}
           onClose={() => setShowQRCard(false)}
         />

@@ -3,6 +3,7 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Download, Share, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { resolveAvatarUrl } from "@/lib/avatar";
 
 const PALETTES = [
   { headerBg: "rgba(134,234,212,0.18)", headerBorder: "rgba(134,234,212,0.35)", avatarBg: "#c6f6ed", avatarColor: "#0d4038" },
@@ -19,6 +20,7 @@ type ShareMessageCardProps = {
   paletteIdx: number;
   displayName: string;
   username: string;
+  avatarUrl?: string | null;
   totalMessages?: number;
   onClose: () => void;
 };
@@ -29,6 +31,7 @@ export function ShareMessageCard({
   paletteIdx,
   displayName,
   username,
+  avatarUrl,
   onClose,
 }: ShareMessageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -125,22 +128,37 @@ export function ShareMessageCard({
             alignItems: "center",
             gap: 12,
           }}>
-            {/* Avatar initials */}
-            <div style={{
-              width: 46,
-              height: 46,
-              borderRadius: "50%",
-              background: p.avatarBg,
-              color: p.avatarColor,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 17,
-              fontWeight: 800,
-              flexShrink: 0,
-            }}>
-              {initials}
-            </div>
+            {/* Avatar */}
+            {resolveAvatarUrl(avatarUrl) ? (
+              <img
+                src={resolveAvatarUrl(avatarUrl)!}
+                alt={displayName || username}
+                crossOrigin="anonymous"
+                style={{
+                  width: 46,
+                  height: 46,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  flexShrink: 0,
+                }}
+              />
+            ) : (
+              <div style={{
+                width: 46,
+                height: 46,
+                borderRadius: "50%",
+                background: p.avatarBg,
+                color: p.avatarColor,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 17,
+                fontWeight: 800,
+                flexShrink: 0,
+              }}>
+                {initials}
+              </div>
+            )}
 
             {/* Name + username */}
             <div style={{ flex: 1, minWidth: 0 }}>

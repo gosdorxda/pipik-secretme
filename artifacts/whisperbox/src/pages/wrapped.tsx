@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "wouter";
 import { useGetMyProfile, useGetMyWrapped } from "@workspace/api-client-react";
 import type { WrappedStats } from "@workspace/api-client-react";
+import { resolveAvatarUrl } from "@/lib/avatar";
 import { ChevronLeft, ChevronRight, Sparkles, Crown, Share2, Download, Copy, RotateCcw, ArrowLeft, ImageDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toPng } from "html-to-image";
@@ -297,8 +298,8 @@ function Slide6Replies({ data, active, isPremium }: { data: WrappedData; active:
 }
 
 function Slide7FinalCard({
-  data, displayName, username, isPremium, year, month
-}: { data: WrappedData; displayName: string; username: string; isPremium: boolean; year: number; month: number | null }) {
+  data, displayName, username, isPremium, year, month, avatarUrl,
+}: { data: WrappedData; displayName: string; username: string; isPremium: boolean; year: number; month: number | null; avatarUrl?: string | null }) {
   const period = month ? `${MONTHS_ID[month - 1]} ${year}` : `Tahun ${year}`;
   const peakDay = data.dayDistribution.reduce((a, b) => (a.count >= b.count ? a : b));
   const peakHour = data.hourDistribution.reduce((a, b) => (a.count >= b.count ? a : b));
@@ -382,9 +383,25 @@ function Slide7FinalCard({
         style={{ background: "linear-gradient(135deg, #1e293b 0%, #0f2a1e 100%)", border: `1px solid ${W_MINT}30` }}
       >
         <div className="px-6 py-5 text-center border-b" style={{ borderColor: `${W_MINT}20` }}>
-          <div className="inline-flex items-center gap-2 text-xs font-bold mb-1" style={{ color: W_MINT }}>
+          <div className="inline-flex items-center gap-2 text-xs font-bold mb-3" style={{ color: W_MINT }}>
             <Sparkles className="w-3.5 h-3.5" /> WhisperBox Wrapped
           </div>
+          {resolveAvatarUrl(avatarUrl) ? (
+            <img
+              src={resolveAvatarUrl(avatarUrl)!}
+              alt={displayName}
+              crossOrigin="anonymous"
+              className="w-14 h-14 rounded-full object-cover mx-auto mb-2 ring-2"
+              style={{ ringColor: `${W_MINT}60` }}
+            />
+          ) : (
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-xl font-bold"
+              style={{ background: `${W_MINT}25`, color: W_MINT }}
+            >
+              {(displayName || username || "?")[0].toUpperCase()}
+            </div>
+          )}
           <p className="text-2xl font-bold" style={{ color: W_TEXT }}>{displayName}</p>
           <p className="text-xs mt-0.5" style={{ color: W_MUTED }}>{period}</p>
         </div>
@@ -520,6 +537,39 @@ function Slide7FinalCard({
           }}>
             ✨ WhisperBox Wrapped
           </div>
+
+          {/* Avatar */}
+          {resolveAvatarUrl(avatarUrl) ? (
+            <img
+              src={resolveAvatarUrl(avatarUrl)!}
+              alt={displayName}
+              crossOrigin="anonymous"
+              style={{
+                width: 160,
+                height: 160,
+                borderRadius: "50%",
+                objectFit: "cover",
+                marginBottom: 40,
+                border: `4px solid ${W_MINT}60`,
+              }}
+            />
+          ) : (
+            <div style={{
+              width: 160,
+              height: 160,
+              borderRadius: "50%",
+              background: `${W_MINT}25`,
+              color: W_MINT,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 72,
+              fontWeight: 800,
+              marginBottom: 40,
+            }}>
+              {(displayName || username || "?")[0].toUpperCase()}
+            </div>
+          )}
 
           {/* Name */}
           <p style={{ fontSize: 88, fontWeight: 800, color: W_TEXT, margin: 0, lineHeight: 1.1, textAlign: "center" }}>
@@ -742,7 +792,7 @@ export default function WrappedPage() {
     <Slide4LongestMessage key="longest" data={wrapped} isPremium={isPremium} />,
     <Slide5TopWords key="words" data={wrapped} isPremium={isPremium} />,
     <Slide6Replies key="replies" data={wrapped} active={slide === 6} isPremium={isPremium} />,
-    <Slide7FinalCard key="final" data={wrapped} displayName={displayName} username={username} isPremium={isPremium} year={year} month={month} />,
+    <Slide7FinalCard key="final" data={wrapped} displayName={displayName} username={username} isPremium={isPremium} year={year} month={month} avatarUrl={profile?.avatarUrl} />,
   ];
 
   return (
