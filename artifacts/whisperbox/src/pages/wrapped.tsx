@@ -647,6 +647,8 @@ function Slide7FinalCard({
                 src={resolveAvatarUrl(avatarUrl)!}
                 alt={displayName}
                 crossOrigin="anonymous"
+                loading="lazy"
+                decoding="async"
                 className="w-14 h-14 rounded-full object-cover mx-auto mb-2 ring-2"
                 style={{ ringColor: `${W_MINT}60` }}
               />

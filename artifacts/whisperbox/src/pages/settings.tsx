@@ -171,6 +171,8 @@ function AvatarUploader({
           <img
             src={displayUrl}
             alt="Avatar"
+            loading="lazy"
+            decoding="async"
             className="w-20 h-20 rounded-full object-cover border-2 border-border shadow"
           />
         ) : (

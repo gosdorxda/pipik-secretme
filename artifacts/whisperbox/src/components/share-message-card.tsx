@@ -171,6 +171,8 @@ export function ShareMessageCard({
                 src={resolveAvatarUrl(avatarUrl)!}
                 alt={displayName || username}
                 crossOrigin="anonymous"
+                loading="lazy"
+                decoding="async"
                 style={{
                   width: 46,
                   height: 46,

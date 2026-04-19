@@ -368,6 +368,8 @@ export default function UpgradePage() {
                   <img
                     src={qrImageUrl}
                     alt="QRIS Code"
+                    loading="lazy"
+                    decoding="async"
                     className={`w-full h-full object-contain transition-opacity ${timeLeft === "expired" ? "opacity-30" : ""}`}
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
