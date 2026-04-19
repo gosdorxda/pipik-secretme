@@ -371,12 +371,12 @@ pm2 save
 
 **Troubleshoot jika upload gagal:**
 
-| Gejala | Kemungkinan penyebab | Solusi |
-|--------|----------------------|--------|
-| Error CORS di browser console | CORS bucket belum dikonfigurasi | Ulangi Langkah 4 |
-| `403 Forbidden` saat PUT ke R2 | API Token tidak punya izin write | Periksa permission token di Cloudflare |
-| Foto tidak tampil setelah upload | `STORAGE_PUBLIC_URL` salah / belum diisi | Periksa URL di `.env`, pastikan tanpa trailing slash |
-| `S3_BUCKET is not set` di log API | Env var belum ter-load | Jalankan ulang `set -a && source .env && set +a` lalu `pm2 restart vooi-api` |
+| Gejala                            | Kemungkinan penyebab                     | Solusi                                                                       |
+| --------------------------------- | ---------------------------------------- | ---------------------------------------------------------------------------- |
+| Error CORS di browser console     | CORS bucket belum dikonfigurasi          | Ulangi Langkah 4                                                             |
+| `403 Forbidden` saat PUT ke R2    | API Token tidak punya izin write         | Periksa permission token di Cloudflare                                       |
+| Foto tidak tampil setelah upload  | `STORAGE_PUBLIC_URL` salah / belum diisi | Periksa URL di `.env`, pastikan tanpa trailing slash                         |
+| `S3_BUCKET is not set` di log API | Env var belum ter-load                   | Jalankan ulang `set -a && source .env && set +a` lalu `pm2 restart vooi-api` |
 
 ---
 

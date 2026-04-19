@@ -81,6 +81,7 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - Route serve: `GET /api/storage/objects/*` — proxy atau redirect (302) ke `STORAGE_PUBLIC_URL` jika di-set
 
 **S3 env vars yang dibutuhkan (STORAGE_DRIVER=s3):**
+
 ```
 S3_ENDPOINT, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
 STORAGE_PUBLIC_URL  # optional tapi direkomendasikan (redirect vs proxy)

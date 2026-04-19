@@ -231,7 +231,12 @@ export class ObjectStorageService {
     const objectId = randomUUID();
     const fullPath = `${privateObjectDir}/uploads/${objectId}`;
     const { bucketName, objectName } = parseGcsObjectPath(fullPath);
-    return signGCSObjectURL({ bucketName, objectName, method: "PUT", ttlSec: 900 });
+    return signGCSObjectURL({
+      bucketName,
+      objectName,
+      method: "PUT",
+      ttlSec: 900,
+    });
   }
 
   private async _getS3UploadURL(): Promise<string> {
