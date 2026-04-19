@@ -21,6 +21,7 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
+- `pnpm run codegen:check` — verify generated files match the current OpenAPI spec (fails if out of sync; also runs as part of `pnpm run build`)
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
@@ -61,4 +62,6 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 ### Codegen
 - OpenAPI spec: `lib/api-spec/openapi.yaml`
 - Run codegen: `pnpm --filter @workspace/api-spec run codegen`
+- Drift check: `pnpm run codegen:check` (runs orval then `git status --porcelain` on generated dirs; catches modified and new untracked files; also runs automatically via `pnpm run build`)
+- **Convention**: whenever `openapi.yaml` or DB schema changes, run codegen and commit the updated generated files in the same task/PR
 - api-zod index exports only `./generated/api` (not api.schemas — zod mode doesn't split)
