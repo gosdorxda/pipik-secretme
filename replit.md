@@ -71,6 +71,25 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `/ketentuan` — Syarat & Ketentuan
 - Semua halaman pakai `StaticPageLayout` (`src/components/static-page-layout.tsx`) dengan header + footer konsisten
 
+### Object Storage (Upload Foto Profil & Logo Admin)
+
+- Driver dideteksi otomatis via `STORAGE_DRIVER` env var:
+  - `replit` (default): Replit Object Storage sidecar (GCS-backed, hanya di Replit)
+  - `s3`: S3-compatible storage — Cloudflare R2, MinIO, AWS S3, dll.
+- Implementation: `artifacts/api-server/src/lib/objectStorage.ts` — satu class `ObjectStorageService` yang mendukung kedua driver
+- Route upload: `POST /api/storage/uploads/request-url` (user avatar) + `POST /api/admin/upload-url` (logo/favicon admin)
+- Route serve: `GET /api/storage/objects/*` — proxy atau redirect (302) ke `STORAGE_PUBLIC_URL` jika di-set
+
+**S3 env vars yang dibutuhkan (STORAGE_DRIVER=s3):**
+```
+S3_ENDPOINT, S3_REGION, S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY
+STORAGE_PUBLIC_URL  # optional tapi direkomendasikan (redirect vs proxy)
+```
+
+- ACL untuk mode S3: semua object dianggap public (akses write dikontrol di endpoint API)
+- ACL untuk mode Replit: disimpan di GCS object metadata (`objectAcl.ts`)
+- Panduan lengkap deploy R2: lihat `DEPLOY.md` seksi 6b
+
 ### Codegen
 
 - OpenAPI spec: `lib/api-spec/openapi.yaml`

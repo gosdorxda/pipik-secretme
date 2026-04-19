@@ -165,7 +165,7 @@ Amankan file `.env` agar tidak bisa dibaca user lain:
 chmod 600 /var/www/vooi/.env
 ```
 
-> **Catatan Avatar:** Fitur upload foto profil menggunakan Replit Object Storage yang tidak tersedia di VPS. Avatar tidak akan berfungsi secara default. Lihat seksi **"Mengaktifkan Upload File di VPS"** di bawah untuk panduan menggunakan Cloudflare R2 atau MinIO.
+> **Catatan Avatar:** Fitur upload foto profil memerlukan object storage (Cloudflare R2 atau MinIO) — tidak tersedia di VPS secara default. Lihat seksi **"6b. Mengaktifkan Upload File di VPS"** untuk panduan lengkap. Backend sudah mendukung S3-compatible storage; kamu hanya perlu mengisi env vars.
 
 ---
 
@@ -200,12 +200,7 @@ chmod 600 /var/www/vooi/.env
 
 Secara default, fitur upload foto avatar menggunakan **Replit Object Storage** yang hanya tersedia di lingkungan Replit. Di VPS, fitur ini tidak berjalan sampai dikonfigurasi secara terpisah.
 
-> **Catatan:** Mengaktifkan upload file di VPS memerlukan dua hal:
->
-> 1. Menyiapkan layanan object storage (Cloudflare R2 atau MinIO)
-> 2. **Update kode backend** — file `artifacts/api-server/src/lib/objectStorage.ts` saat ini menggunakan Google Cloud Storage SDK yang terhubung ke sidecar Replit. Untuk VPS, perlu diganti dengan S3-compatible SDK (misalnya `@aws-sdk/client-s3`) agar bisa berkomunikasi dengan R2 atau MinIO. Kedua layanan di bawah mendukung S3 API.
->
-> Hubungi developer atau lihat komentar pada `objectStorage.ts` untuk panduan migrasi kode.
+Backend sudah mendukung S3-compatible storage secara native. Kamu hanya perlu menyiapkan layanan storage dan mengisi env vars — **tidak perlu mengubah kode apapun**.
 
 Tersedia dua opsi:
 
@@ -239,10 +234,32 @@ Tersedia dua opsi:
 2. Aktifkan **R2.dev subdomain** atau sambungkan domain custom
 3. Salin URL publik bucket (dipakai sebagai `STORAGE_PUBLIC_URL`)
 
-**Langkah 4: Tambahkan env vars ke `.env`**
+> Jika tidak diaktifkan, file tetap bisa diakses tapi akan di-proxy melalui API server (lebih lambat dan menggunakan bandwidth VPS).
+
+**Langkah 4: Konfigurasi CORS bucket R2**
+
+Browser perlu izin CORS untuk bisa upload langsung ke R2 dari domain kamu.
+
+1. Di halaman bucket, buka tab **Settings** → **CORS Policy**
+2. Klik **Add CORS policy** dan paste konfigurasi berikut:
+
+```json
+[
+  {
+    "AllowedOrigins": ["https://vooi.lol"],
+    "AllowedMethods": ["PUT", "GET", "HEAD"],
+    "AllowedHeaders": ["Content-Type", "Content-Length"],
+    "MaxAgeSeconds": 3600
+  }
+]
+```
+
+> Ganti `https://vooi.lol` dengan domain kamu. Untuk testing awal bisa gunakan `"*"` tapi ganti ke domain spesifik sebelum production.
+
+**Langkah 5: Tambahkan env vars ke `.env`**
 
 ```env
-# ── OBJECT STORAGE (S3-Compatible) ──────────────────────────────
+# ── OBJECT STORAGE (Cloudflare R2) ──────────────────────────────
 
 STORAGE_DRIVER=s3
 S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
@@ -336,7 +353,7 @@ STORAGE_PUBLIC_URL=https://vooi.lol/minio
 
 ### Setelah menambahkan env vars
 
-Restart API server agar perubahan env terbaca:
+Restart API server agar env vars terbaca:
 
 ```bash
 cd /var/www/vooi
@@ -346,7 +363,20 @@ pm2 start ecosystem.config.js
 pm2 save
 ```
 
-Verifikasi dengan mencoba upload foto profil di dashboard.
+**Verifikasi konfigurasi:**
+
+1. Buka aplikasi di browser → login → buka **Pengaturan Profil**
+2. Coba upload foto profil
+3. Jika berhasil, foto akan tampil di halaman profil publik
+
+**Troubleshoot jika upload gagal:**
+
+| Gejala | Kemungkinan penyebab | Solusi |
+|--------|----------------------|--------|
+| Error CORS di browser console | CORS bucket belum dikonfigurasi | Ulangi Langkah 4 |
+| `403 Forbidden` saat PUT ke R2 | API Token tidak punya izin write | Periksa permission token di Cloudflare |
+| Foto tidak tampil setelah upload | `STORAGE_PUBLIC_URL` salah / belum diisi | Periksa URL di `.env`, pastikan tanpa trailing slash |
+| `S3_BUCKET is not set` di log API | Env var belum ter-load | Jalankan ulang `set -a && source .env && set +a` lalu `pm2 restart vooi-api` |
 
 ---
 
