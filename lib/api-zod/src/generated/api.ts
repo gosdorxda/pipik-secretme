@@ -46,7 +46,7 @@ export const GetMyProfileResponse = zod.object({
 export const updateMyProfileBodyUsernameMin = 3;
 export const updateMyProfileBodyUsernameMax = 32;
 
-export const updateMyProfileBodyUsernameRegExp = new RegExp("^[a-z0-9_]+$");
+export const updateMyProfileBodyUsernameRegExp = new RegExp("^[a-zA-Z0-9_]+$");
 export const updateMyProfileBodyDisplayNameMax = 64;
 
 export const updateMyProfileBodyBioMax = 500;
@@ -97,8 +97,8 @@ export const UpdateMyProfileResponse = zod.object({
 /**
  * @summary Check if a username is available
  */
-export const CheckUsernameParams = zod.object({
-  username: zod.string(),
+export const CheckUsernameQueryParams = zod.object({
+  username: zod.coerce.string(),
 });
 
 export const CheckUsernameResponse = zod.object({
@@ -157,6 +157,8 @@ export const GetMyMessagesResponse = zod.object({
       isPublic: zod.boolean(),
       ownerReply: zod.string().nullish(),
       ownerRepliedAt: zod.coerce.date().nullish(),
+      campaignTitle: zod.string().nullish(),
+      senderEmail: zod.string().nullish(),
     }),
   ),
   total: zod.number(),
@@ -258,6 +260,8 @@ export const ReplyToMessageResponse = zod.object({
   isPublic: zod.boolean(),
   ownerReply: zod.string().nullish(),
   ownerRepliedAt: zod.coerce.date().nullish(),
+  campaignTitle: zod.string().nullish(),
+  senderEmail: zod.string().nullish(),
 });
 
 /**
@@ -329,6 +333,8 @@ export const GetMyCampaignResponse = zod.object({
   userId: zod.string(),
   title: zod.string(),
   question: zod.string(),
+  color: zod.string().nullish(),
+  icon: zod.string().nullish(),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
   endedAt: zod.coerce.date().nullish(),
@@ -361,6 +367,8 @@ export const EndCampaignResponse = zod.object({
   userId: zod.string(),
   title: zod.string(),
   question: zod.string(),
+  color: zod.string().nullish(),
+  icon: zod.string().nullish(),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
   endedAt: zod.coerce.date().nullish(),
@@ -379,6 +387,8 @@ export const GetPublicCampaignResponse = zod.object({
   userId: zod.string(),
   title: zod.string(),
   question: zod.string(),
+  color: zod.string().nullish(),
+  icon: zod.string().nullish(),
   isActive: zod.boolean(),
   createdAt: zod.coerce.date(),
   endedAt: zod.coerce.date().nullish(),
@@ -404,6 +414,8 @@ export const ToggleMessageVisibilityResponse = zod.object({
   isPublic: zod.boolean(),
   ownerReply: zod.string().nullish(),
   ownerRepliedAt: zod.coerce.date().nullish(),
+  campaignTitle: zod.string().nullish(),
+  senderEmail: zod.string().nullish(),
 });
 
 /**
@@ -431,6 +443,50 @@ export const GetMyReferralStatsResponse = zod.object({
 });
 
 /**
+ * @summary Get public app configuration
+ */
+export const GetAppConfigResponse = zod.object({
+  premiumPrice: zod.number(),
+  redeemRate: zod.number(),
+  referralSignupPoints: zod.number(),
+  referralUpgradePoints: zod.number(),
+  linkOpensPointsPer1000: zod.number(),
+  notification: zod
+    .object({
+      message: zod.string(),
+      type: zod.string(),
+    })
+    .nullish(),
+});
+
+/**
+ * @summary Submit a point redeem request
+ */
+export const createRedeemRequestBodyPointsMin = 1000;
+
+export const CreateRedeemRequestBody = zod.object({
+  points: zod.number().min(createRedeemRequestBodyPointsMin),
+  paymentInfo: zod.string().min(1),
+});
+
+/**
+ * @summary Get my redeem requests
+ */
+export const GetMyRedeemRequestsResponse = zod.object({
+  requests: zod.array(
+    zod.object({
+      id: zod.string(),
+      userId: zod.string(),
+      points: zod.number(),
+      paymentInfo: zod.string(),
+      status: zod.enum(["pending", "success", "rejected"]),
+      createdAt: zod.coerce.date(),
+      updatedAt: zod.coerce.date(),
+    }),
+  ),
+});
+
+/**
  * @summary Claim a referral code after sign-up
  */
 export const ClaimReferralBody = zod.object({
@@ -440,51 +496,4 @@ export const ClaimReferralBody = zod.object({
 export const ClaimReferralResponse = zod.object({
   success: zod.boolean(),
   pointsAwarded: zod.number(),
-});
-
-/**
- * @summary Get public app configuration
- */
-export const AppConfigNotification = zod.object({
-  message: zod.string(),
-  type: zod.string(),
-});
-
-export const AppConfigResponse = zod.object({
-  premiumPrice: zod.number(),
-  redeemRate: zod.number(),
-  referralSignupPoints: zod.number(),
-  referralUpgradePoints: zod.number(),
-  linkOpensPointsPer1000: zod.number(),
-  notification: AppConfigNotification.nullish(),
-});
-
-/**
- * @summary Redeem requests
- */
-export const RedeemRequestStatusValues = ["pending", "success", "rejected"] as const;
-
-export const RedeemRequest = zod.object({
-  id: zod.string(),
-  userId: zod.string(),
-  points: zod.number(),
-  paymentInfo: zod.string(),
-  status: zod.enum(RedeemRequestStatusValues),
-  createdAt: zod.coerce.date(),
-  updatedAt: zod.coerce.date(),
-});
-
-export const RedeemRequestsResponse = zod.object({
-  requests: zod.array(RedeemRequest),
-});
-
-export const createRedeemRequestBodyPointsMin = 1000;
-
-export const CreateRedeemRequestBody = zod.object({
-  points: zod.number().int().min(createRedeemRequestBodyPointsMin),
-  paymentInfo: zod.string().min(1),
-});
-
-export const CreateRedeemRequestResponse = zod.object({
-  request: RedeemRequest,
 });

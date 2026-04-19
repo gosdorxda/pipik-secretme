@@ -645,6 +645,12 @@ components:
           type: string
         question:
           type: string
+        color:
+          type: string
+          nullable: true
+        icon:
+          type: string
+          nullable: true
         isActive:
           type: boolean
         createdAt:
@@ -674,6 +680,10 @@ components:
         question:
           type: string
           maxLength: 500
+        color:
+          type: string
+        icon:
+          type: string
       required:
         - title
         - question
@@ -734,6 +744,8 @@ components:
           type: boolean
         emailNotifications:
           type: boolean
+        allowReplyNotif:
+          type: boolean
         linkOpens:
           type: integer
         socialInstagram:
@@ -766,6 +778,7 @@ components:
         - isPremium
         - defaultPublicMessages
         - emailNotifications
+        - allowReplyNotif
         - linkOpens
         - hasSetUsername
         - createdAt
@@ -804,6 +817,8 @@ components:
           nullable: true
         isPremium:
           type: boolean
+        allowReplyNotif:
+          type: boolean
         publicMessages:
           type: array
           items:
@@ -811,6 +826,7 @@ components:
       required:
         - username
         - isPremium
+        - allowReplyNotif
         - publicMessages
 
     PublicMessage:
@@ -858,6 +874,8 @@ components:
           type: boolean
         emailNotifications:
           type: boolean
+        allowReplyNotif:
+          type: boolean
         socialInstagram:
           type: string
           nullable: true
@@ -901,6 +919,9 @@ components:
         campaignTitle:
           type: string
           nullable: true
+        senderEmail:
+          type: string
+          nullable: true
       required:
         - id
         - content
@@ -934,6 +955,11 @@ components:
           type: string
           minLength: 1
           maxLength: 1000
+        senderEmail:
+          type: string
+          format: email
+        turnstileToken:
+          type: string
       required:
         - content
 
@@ -1161,6 +1187,10 @@ components:
           type: integer
         totalPoints:
           type: integer
+        availablePoints:
+          type: integer
+        redeemedPoints:
+          type: integer
         linkOpens:
           type: integer
         referralCount:
@@ -1174,6 +1204,8 @@ components:
         - points
         - pointsFromLinkOpens
         - totalPoints
+        - availablePoints
+        - redeemedPoints
         - linkOpens
         - referralCount
         - referrals

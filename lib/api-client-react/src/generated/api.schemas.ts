@@ -43,10 +43,6 @@ export interface UsernameAvailability {
   available: boolean;
 }
 
-export interface CheckUsernameParams {
-  username: string;
-}
-
 export interface UserProfile {
   id: string;
   clerkId: string;
@@ -142,6 +138,7 @@ export interface SendMessageBody {
    */
   content: string;
   senderEmail?: string;
+  turnstileToken?: string;
 }
 
 export interface ReplyMessageBody {
@@ -283,7 +280,14 @@ export interface AppConfig {
   notification?: AppConfigNotification | null;
 }
 
-export type RedeemRequestStatus = "pending" | "success" | "rejected";
+export type RedeemRequestStatus =
+  (typeof RedeemRequestStatus)[keyof typeof RedeemRequestStatus];
+
+export const RedeemRequestStatus = {
+  pending: "pending",
+  success: "success",
+  rejected: "rejected",
+} as const;
 
 export interface RedeemRequest {
   id: string;
@@ -309,6 +313,10 @@ export interface CreateRedeemRequestBody {
 export interface CreateRedeemRequestResponse {
   request: RedeemRequest;
 }
+
+export type CheckUsernameParams = {
+  username: string;
+};
 
 export type GetMyMessagesParams = {
   page?: number;

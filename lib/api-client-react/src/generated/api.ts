@@ -296,6 +296,100 @@ export const useUpdateMyProfile = <
 };
 
 /**
+ * @summary Check if a username is available
+ */
+export const getCheckUsernameUrl = (params: CheckUsernameParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/users/check-username?${stringifiedParams}`
+    : `/api/users/check-username`;
+};
+
+export const checkUsername = async (
+  params: CheckUsernameParams,
+  options?: RequestInit,
+): Promise<UsernameAvailability> => {
+  return customFetch<UsernameAvailability>(getCheckUsernameUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getCheckUsernameQueryKey = (params?: CheckUsernameParams) => {
+  return [`/api/users/check-username`, ...(params ? [params] : [])] as const;
+};
+
+export const getCheckUsernameQueryOptions = <
+  TData = Awaited<ReturnType<typeof checkUsername>>,
+  TError = ErrorType<void>,
+>(
+  params: CheckUsernameParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof checkUsername>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getCheckUsernameQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof checkUsername>>> = ({
+    signal,
+  }) => checkUsername(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof checkUsername>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type CheckUsernameQueryResult = NonNullable<
+  Awaited<ReturnType<typeof checkUsername>>
+>;
+export type CheckUsernameQueryError = ErrorType<void>;
+
+/**
+ * @summary Check if a username is available
+ */
+
+export function useCheckUsername<
+  TData = Awaited<ReturnType<typeof checkUsername>>,
+  TError = ErrorType<void>,
+>(
+  params: CheckUsernameParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof checkUsername>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getCheckUsernameQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
  * @summary Get public profile by username
  */
 export const getGetPublicProfileUrl = (username: string) => {
@@ -375,89 +469,6 @@ export function useGetPublicProfile<
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetPublicProfileQueryOptions(username, options);
-
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
-    queryKey: QueryKey;
-  };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Check if a username is available
- */
-export const getCheckUsernameUrl = (params: CheckUsernameParams) => {
-  return `/api/users/check-username?username=${encodeURIComponent(params.username)}`;
-};
-
-export const checkUsername = async (
-  params: CheckUsernameParams,
-  options?: RequestInit,
-): Promise<UsernameAvailability> => {
-  return customFetch<UsernameAvailability>(getCheckUsernameUrl(params), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getCheckUsernameQueryKey = (params: CheckUsernameParams) => {
-  return [`/api/users/check-username`, params] as const;
-};
-
-export const getCheckUsernameQueryOptions = <
-  TData = Awaited<ReturnType<typeof checkUsername>>,
-  TError = ErrorType<unknown>,
->(
-  params: CheckUsernameParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof checkUsername>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-
-  const queryKey = queryOptions?.queryKey ?? getCheckUsernameQueryKey(params);
-
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof checkUsername>>> = ({
-    signal,
-  }) => checkUsername(params, { signal, ...requestOptions });
-
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!params.username && params.username.length >= 3,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof checkUsername>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type CheckUsernameQueryResult = NonNullable<
-  Awaited<ReturnType<typeof checkUsername>>
->;
-export type CheckUsernameQueryError = ErrorType<unknown>;
-
-export function useCheckUsername<
-  TData = Awaited<ReturnType<typeof checkUsername>>,
-  TError = ErrorType<unknown>,
->(
-  params: CheckUsernameParams,
-  options?: {
-    query?: UseQueryOptions<
-      Awaited<ReturnType<typeof checkUsername>>,
-      TError,
-      TData
-    >;
-    request?: SecondParameter<typeof customFetch>;
-  },
-): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getCheckUsernameQueryOptions(params, options);
 
   const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
     queryKey: QueryKey;
@@ -1994,6 +2005,242 @@ export function useGetMyReferralStats<
 }
 
 /**
+ * @summary Get public app configuration
+ */
+export const getGetAppConfigUrl = () => {
+  return `/api/config`;
+};
+
+export const getAppConfig = async (
+  options?: RequestInit,
+): Promise<AppConfig> => {
+  return customFetch<AppConfig>(getGetAppConfigUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetAppConfigQueryKey = () => {
+  return [`/api/config`] as const;
+};
+
+export const getGetAppConfigQueryOptions = <
+  TData = Awaited<ReturnType<typeof getAppConfig>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAppConfig>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetAppConfigQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAppConfig>>> = ({
+    signal,
+  }) => getAppConfig({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getAppConfig>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetAppConfigQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getAppConfig>>
+>;
+export type GetAppConfigQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get public app configuration
+ */
+
+export function useGetAppConfig<
+  TData = Awaited<ReturnType<typeof getAppConfig>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getAppConfig>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetAppConfigQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Submit a point redeem request
+ */
+export const getCreateRedeemRequestUrl = () => {
+  return `/api/redeem`;
+};
+
+export const createRedeemRequest = async (
+  createRedeemRequestBody: CreateRedeemRequestBody,
+  options?: RequestInit,
+): Promise<CreateRedeemRequestResponse> => {
+  return customFetch<CreateRedeemRequestResponse>(getCreateRedeemRequestUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createRedeemRequestBody),
+  });
+};
+
+export const getCreateRedeemRequestMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createRedeemRequest>>,
+    TError,
+    { data: BodyType<CreateRedeemRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createRedeemRequest>>,
+  TError,
+  { data: BodyType<CreateRedeemRequestBody> },
+  TContext
+> => {
+  const mutationKey = ["createRedeemRequest"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createRedeemRequest>>,
+    { data: BodyType<CreateRedeemRequestBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createRedeemRequest(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateRedeemRequestMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createRedeemRequest>>
+>;
+export type CreateRedeemRequestMutationBody = BodyType<CreateRedeemRequestBody>;
+export type CreateRedeemRequestMutationError = ErrorType<void>;
+
+/**
+ * @summary Submit a point redeem request
+ */
+export const useCreateRedeemRequest = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createRedeemRequest>>,
+    TError,
+    { data: BodyType<CreateRedeemRequestBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createRedeemRequest>>,
+  TError,
+  { data: BodyType<CreateRedeemRequestBody> },
+  TContext
+> => {
+  return useMutation(getCreateRedeemRequestMutationOptions(options));
+};
+
+/**
+ * @summary Get my redeem requests
+ */
+export const getGetMyRedeemRequestsUrl = () => {
+  return `/api/redeem/me`;
+};
+
+export const getMyRedeemRequests = async (
+  options?: RequestInit,
+): Promise<RedeemRequestsResponse> => {
+  return customFetch<RedeemRequestsResponse>(getGetMyRedeemRequestsUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyRedeemRequestsQueryKey = () => {
+  return [`/api/redeem/me`] as const;
+};
+
+export const getGetMyRedeemRequestsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyRedeemRequests>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyRedeemRequests>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyRedeemRequestsQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMyRedeemRequests>>
+  > = ({ signal }) => getMyRedeemRequests({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyRedeemRequests>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyRedeemRequestsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyRedeemRequests>>
+>;
+export type GetMyRedeemRequestsQueryError = ErrorType<void>;
+
+/**
+ * @summary Get my redeem requests
+ */
+
+export function useGetMyRedeemRequests<
+  TData = Awaited<ReturnType<typeof getMyRedeemRequests>>,
+  TError = ErrorType<void>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyRedeemRequests>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyRedeemRequestsQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
  * @summary Claim a referral code after sign-up
  */
 export const getClaimReferralUrl = () => {
@@ -2077,205 +2324,4 @@ export const useClaimReferral = <
   TContext
 > => {
   return useMutation(getClaimReferralMutationOptions(options));
-};
-
-/**
- * @summary Get public app configuration
- */
-export const getGetAppConfigUrl = () => {
-  return `/api/config`;
-};
-
-export const getAppConfig = async (
-  options?: RequestInit,
-): Promise<AppConfig> => {
-  return customFetch<AppConfig>(getGetAppConfigUrl(), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getGetAppConfigQueryKey = () => {
-  return [`/api/config`] as const;
-};
-
-export const getGetAppConfigQueryOptions = <
-  TData = Awaited<ReturnType<typeof getAppConfig>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getAppConfig>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey = queryOptions?.queryKey ?? getGetAppConfigQueryKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getAppConfig>>> = ({
-    signal,
-  }) => getAppConfig({ signal, ...requestOptions });
-  return { queryKey, queryFn, staleTime: 2 * 60 * 1000, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getAppConfig>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetAppConfigQueryResult = NonNullable<Awaited<ReturnType<typeof getAppConfig>>>;
-export type GetAppConfigQueryError = ErrorType<unknown>;
-
-export function useGetAppConfig<
-  TData = Awaited<ReturnType<typeof getAppConfig>>,
-  TError = ErrorType<unknown>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getAppConfig>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetAppConfigQueryOptions(options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Get my redeem requests
- */
-export const getGetMyRedeemRequestsUrl = () => {
-  return `/api/redeem/me`;
-};
-
-export const getMyRedeemRequests = async (
-  options?: RequestInit,
-): Promise<RedeemRequestsResponse> => {
-  return customFetch<RedeemRequestsResponse>(getGetMyRedeemRequestsUrl(), {
-    ...options,
-    method: "GET",
-  });
-};
-
-export const getGetMyRedeemRequestsQueryKey = () => {
-  return [`/api/redeem/me`] as const;
-};
-
-export const getGetMyRedeemRequestsQueryOptions = <
-  TData = Awaited<ReturnType<typeof getMyRedeemRequests>>,
-  TError = ErrorType<void>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getMyRedeemRequests>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {};
-  const queryKey = queryOptions?.queryKey ?? getGetMyRedeemRequestsQueryKey();
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyRedeemRequests>>> = ({ signal }) =>
-    getMyRedeemRequests({ signal, ...requestOptions });
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof getMyRedeemRequests>>,
-    TError,
-    TData
-  > & { queryKey: QueryKey };
-};
-
-export type GetMyRedeemRequestsQueryResult = NonNullable<Awaited<ReturnType<typeof getMyRedeemRequests>>>;
-export type GetMyRedeemRequestsQueryError = ErrorType<void>;
-
-export function useGetMyRedeemRequests<
-  TData = Awaited<ReturnType<typeof getMyRedeemRequests>>,
-  TError = ErrorType<void>,
->(options?: {
-  query?: UseQueryOptions<
-    Awaited<ReturnType<typeof getMyRedeemRequests>>,
-    TError,
-    TData
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-  const queryOptions = getGetMyRedeemRequestsQueryOptions(options);
-  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & { queryKey: QueryKey };
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-/**
- * @summary Submit a point redeem request
- */
-export const getCreateRedeemRequestUrl = () => {
-  return `/api/redeem`;
-};
-
-export const createRedeemRequest = async (
-  createRedeemRequestBody: CreateRedeemRequestBody,
-  options?: RequestInit,
-): Promise<CreateRedeemRequestResponse> => {
-  return customFetch<CreateRedeemRequestResponse>(getCreateRedeemRequestUrl(), {
-    ...options,
-    method: "POST",
-    headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(createRedeemRequestBody),
-  });
-};
-
-export const getCreateRedeemRequestMutationOptions = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createRedeemRequest>>,
-    TError,
-    { data: BodyType<CreateRedeemRequestBody> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof createRedeemRequest>>,
-  TError,
-  { data: BodyType<CreateRedeemRequestBody> },
-  TContext
-> => {
-  const mutationKey = ["createRedeemRequest"];
-  const { mutation: mutationOptions, request: requestOptions } = options
-    ? options.mutation && "mutationKey" in options.mutation && options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined };
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof createRedeemRequest>>,
-    { data: BodyType<CreateRedeemRequestBody> }
-  > = (props) => {
-    const { data } = props ?? {};
-    return createRedeemRequest(data, requestOptions);
-  };
-
-  return { mutationFn, ...mutationOptions };
-};
-
-export type CreateRedeemRequestMutationResult = NonNullable<Awaited<ReturnType<typeof createRedeemRequest>>>;
-export type CreateRedeemRequestMutationBody = BodyType<CreateRedeemRequestBody>;
-export type CreateRedeemRequestMutationError = ErrorType<void>;
-
-export const useCreateRedeemRequest = <
-  TError = ErrorType<void>,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof createRedeemRequest>>,
-    TError,
-    { data: BodyType<CreateRedeemRequestBody> },
-    TContext
-  >;
-  request?: SecondParameter<typeof customFetch>;
-}): UseMutationResult<
-  Awaited<ReturnType<typeof createRedeemRequest>>,
-  TError,
-  { data: BodyType<CreateRedeemRequestBody> },
-  TContext
-> => {
-  return useMutation(getCreateRedeemRequestMutationOptions(options));
 };
