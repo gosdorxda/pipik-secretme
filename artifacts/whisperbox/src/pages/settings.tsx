@@ -752,8 +752,8 @@ export default function SettingsPage() {
                   </span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Izinkan pengirim meninggalkan email untuk menerima
-                  notifikasi saat kamu membalas.
+                  Izinkan pengirim meninggalkan email untuk menerima notifikasi
+                  saat kamu membalas.
                 </p>
               </div>
             </div>
@@ -765,7 +765,8 @@ export default function SettingsPage() {
                     Fitur Premium
                   </p>
                   <p className="text-xs text-amber-700 mt-0.5">
-                    Izinkan pengirim anonim meninggalkan email agar dapat notifikasi saat pesannya dibalas.{" "}
+                    Izinkan pengirim anonim meninggalkan email agar dapat
+                    notifikasi saat pesannya dibalas.{" "}
                     <Link href="/upgrade" className="underline font-medium">
                       Upgrade sekarang →
                     </Link>
