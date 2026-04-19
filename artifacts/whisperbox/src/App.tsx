@@ -57,92 +57,63 @@ if (!clerkPubKey) {
 
 const clerkAppearance = {
   options: {
-    logoPlacement: "inside" as const,
-    logoLinkUrl: basePath || "/",
-    logoImageUrl: `${window.location.origin}${basePath}/logo.svg`,
+    logoPlacement: "none" as const,
   },
   variables: {
     colorPrimary: "#86ead4",
     colorBackground: "#ffffff",
-    colorInputBackground: "#f9fafb",
-    colorText: "#09090b",
-    colorTextSecondary: "#71717a",
-    colorInputText: "#09090b",
-    colorNeutral: "#e4e4e7",
-    borderRadius: "6px",
+    colorInputBackground: "#f8fafc",
+    colorText: "#0f172a",
+    colorTextSecondary: "#64748b",
+    colorInputText: "#0f172a",
+    colorNeutral: "#e2e8f0",
+    borderRadius: "8px",
     fontFamily: "inherit",
     fontFamilyButtons: "inherit",
     fontSize: "0.875rem",
-    spacingUnit: "0.7rem",
+    spacingUnit: "0.8rem",
   },
   elements: {
     rootBox: "w-full",
     cardBox: "w-full !shadow-none !border-0",
     card: "!shadow-none !border-0 !bg-transparent !p-0",
     footer: "!shadow-none !border-0 !bg-transparent",
-    header: "!gap-0 !pb-3",
-    headerTitle: {
-      color: "#09090b",
-      fontSize: "1.2rem",
-      fontWeight: "700",
-      marginBottom: "2px",
-    },
-    headerSubtitle: { color: "#71717a", fontSize: "0.8rem" },
+    header: "!hidden",
     main: "!gap-3",
-    socialButtons: "!mb-0",
     socialButtonsBlockButton:
-      "border border-[#e4e4e7] hover:bg-[#f4f4f5] transition-colors rounded-md !h-9",
-    socialButtonsBlockButtonText: { color: "#09090b", fontWeight: "500" },
-    dividerRow: "!my-0",
-    dividerText: { color: "#9ca3af", fontSize: "0.75rem" },
-    dividerLine: "bg-[#e4e4e7]",
-    formFields: "!gap-2.5",
+      "!border !border-[#e2e8f0] !bg-white hover:!bg-[#f8fafc] !shadow-sm !transition-all !duration-150 !rounded-lg !h-11 !font-medium",
+    socialButtonsBlockButtonText: {
+      color: "#0f172a",
+      fontWeight: "600",
+      fontSize: "0.875rem",
+    },
+    dividerRow: "!my-1",
+    dividerText: { color: "#94a3b8", fontSize: "0.75rem" },
+    dividerLine: "bg-[#e2e8f0]",
+    formFields: "!gap-3",
     formField: "!gap-1",
     formFieldLabel: {
       color: "#374151",
-      fontSize: "0.8rem",
+      fontSize: "0.8125rem",
       fontWeight: "500",
     },
     formFieldInput:
-      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20 bg-[#f9fafb] !h-9 rounded-md",
+      "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20 !bg-[#f8fafc] !h-10 !rounded-lg !text-[0.875rem]",
     formButtonPrimary:
-      "bg-[#86ead4] hover:bg-[#7de0cb] !text-[#1a443c] font-semibold transition-colors shadow-none !h-9 !mt-0",
+      "!bg-[#0f2e28] hover:!bg-[#1a443c] !text-white !font-semibold !transition-all !duration-150 !shadow-none !h-10 !rounded-lg",
     footerAction:
-      "bg-transparent !border-t !border-[#e4e4e7] !pt-3 !mt-0 !shadow-none",
+      "!bg-transparent !border-t !border-[#f0f0f0] !pt-3 !mt-1 !shadow-none",
     footerActionLink: { color: "#1a443c", fontWeight: "600" },
-    footerActionText: { color: "#71717a" },
+    footerActionText: { color: "#94a3b8", fontSize: "0.8125rem" },
     identityPreviewEditButton: { color: "#1a443c" },
     formFieldSuccessText: { color: "#16a34a" },
-    alertText: { color: "#09090b" },
-    alert: "border-[#fca5a5] bg-[#fef2f2] rounded-md",
-    alertIcon: "text-[#ef4444]",
+    alertText: { color: "#0f172a" },
+    alert: "!border-[#fca5a5] !bg-[#fef2f2] !rounded-lg",
+    alertIcon: "!text-[#ef4444]",
     otpCodeFieldInput:
-      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20",
-    logoBox: "!pb-2 !pt-0",
-    logoImage: "h-8 w-auto",
+      "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20",
   },
 };
-
-const SAMPLE_MESSAGES = [
-  {
-    text: "Kamu itu orangnya asik banget! Selalu bikin suasana jadi lebih cair 💫",
-    time: "2 mnt lalu",
-    color: "#ede9fe",
-    dot: "#8b5cf6",
-  },
-  {
-    text: "Honest opinion: lo berbakat banget, jangan pernah berhenti berkarya ✨",
-    time: "15 mnt lalu",
-    color: "#ddf9f2",
-    dot: "#86ead4",
-  },
-  {
-    text: "Gue suka cara lo ngomong yang blak-blakan. Refreshing banget! 👏",
-    time: "1 jam lalu",
-    color: "#fff7ed",
-    dot: "#f97316",
-  },
-];
 
 function AuthLayout({
   children,
@@ -152,233 +123,88 @@ function AuthLayout({
   mode: "sign-in" | "sign-up";
 }) {
   return (
-    <div className="h-screen flex overflow-hidden bg-white">
-      {/* ── Left panel — branding & preview ── */}
-      <div
-        className="hidden lg:flex lg:w-[46%] xl:w-[48%] flex-col h-full relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(160deg, #081a17 0%, #0f2e28 40%, #1a443c 80%, #1e5248 100%)",
-        }}
-      >
-        {/* Background decoration */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div
-            className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full opacity-[0.07]"
-            style={{
-              background:
-                "radial-gradient(circle, #86ead4 0%, transparent 70%)",
-            }}
-          />
-          <div
-            className="absolute -bottom-24 -right-16 w-80 h-80 rounded-full opacity-[0.07]"
-            style={{
-              background:
-                "radial-gradient(circle, #86ead4 0%, transparent 70%)",
-            }}
-          />
-          {/* Subtle grid */}
-          <div
-            className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage:
-                "linear-gradient(#86ead4 1px, transparent 1px), linear-gradient(90deg, #86ead4 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-        </div>
-
-        {/* Inner wrapper: logo top, content middle, social proof bottom */}
-        <div className="relative z-10 flex flex-col h-full px-10 xl:px-12 py-8 xl:py-10">
-          {/* Logo */}
-          <Link href={basePath || "/"}>
-            <div className="flex items-center gap-2.5 cursor-pointer group shrink-0">
-              <img
-                src={`${basePath}/logo.svg`}
-                alt="vooi"
-                className="w-8 h-8 transition-opacity group-hover:opacity-80"
-              />
-              <span className="text-white text-lg font-bold tracking-tight">
-                vooi<span style={{ color: "#86ead4" }}>.lol</span>
-              </span>
-            </div>
-          </Link>
-
-          {/* Center content */}
-          <div className="flex-1 flex flex-col justify-center py-6">
-            {/* Headline */}
-            <h1 className="text-white font-bold leading-[1.12] mb-3">
-              <span className="text-[2.4rem] xl:text-[2.8rem] block">
-                Pesan jujur,
-              </span>
-              <span
-                className="text-[2.4rem] xl:text-[2.8rem] block"
-                style={{ color: "#86ead4" }}
-              >
-                tanpa batas.
-              </span>
-            </h1>
-
-            <p className="text-[#7eceba] text-sm leading-relaxed mb-5 max-w-[300px]">
-              Buat profil-mu, bagikan link ke bio sosial media, dan terima pesan
-              anonim jujur dari siapa saja.
-            </p>
-
-            {/* Message preview cards */}
-            <div className="space-y-2 max-w-[340px]">
-              <p
-                className="text-[11px] font-semibold uppercase tracking-widest mb-2"
-                style={{ color: "rgba(134,234,212,0.45)" }}
-              >
-                Contoh pesan yang kamu terima
-              </p>
-              {SAMPLE_MESSAGES.map((msg, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
-                    style={{ background: msg.dot }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[#d4f5ee] text-sm leading-snug">
-                      {msg.text}
-                    </p>
-                    <p
-                      className="text-[11px] mt-0.5"
-                      style={{ color: "rgba(134,234,212,0.38)" }}
-                    >
-                      {msg.time}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+    <div
+      className="min-h-screen flex flex-col"
+      style={{
+        background:
+          "linear-gradient(135deg, #f0fdf9 0%, #fafafa 50%, #f5f3ff 100%)",
+      }}
+    >
+      {/* Top navigation */}
+      <div className="flex items-center justify-between px-6 py-4">
+        <Link href={basePath || "/"}>
+          <div className="flex items-center gap-2 cursor-pointer group">
+            <img
+              src={`${basePath}/logo.svg`}
+              alt="vooi"
+              className="w-7 h-7 transition-opacity group-hover:opacity-75"
+            />
+            <span className="text-[#0f172a] text-base font-bold tracking-tight">
+              vooi<span className="text-[#3a9e88]">.lol</span>
+            </span>
           </div>
+        </Link>
 
-          {/* Bottom social proof */}
-          <div
-            className="flex items-center gap-3 px-4 py-3 rounded-lg shrink-0"
-            style={{
-              background: "rgba(134,234,212,0.07)",
-              border: "1px solid rgba(134,234,212,0.15)",
-            }}
-          >
-            <div className="flex -space-x-2 shrink-0">
-              {[
-                { l: "A", c: "#3b82f6" },
-                { l: "R", c: "#f43f5e" },
-                { l: "S", c: "#8b5cf6" },
-                { l: "D", c: "#f59e0b" },
-                { l: "M", c: "#14b8a6" },
-              ].map(({ l, c }, i) => (
-                <div
-                  key={i}
-                  className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white"
-                  style={{ backgroundColor: c, outline: "2px solid #0f2e28" }}
-                >
-                  {l}
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="text-white text-sm font-semibold leading-none">
-                10.000+
-              </p>
-              <p className="text-[#7eceba] text-[11px] mt-0.5">
-                pengguna aktif di seluruh Indonesia
-              </p>
-            </div>
-          </div>
+        <div className="flex items-center gap-1 text-sm text-[#64748b]">
+          {mode === "sign-in" ? (
+            <>
+              Belum punya akun?{" "}
+              <Link href={`${basePath}/sign-up`}>
+                <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
+                  Daftar gratis
+                </span>
+              </Link>
+            </>
+          ) : (
+            <>
+              Sudah punya akun?{" "}
+              <Link href={`${basePath}/sign-in`}>
+                <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
+                  Masuk
+                </span>
+              </Link>
+            </>
+          )}
         </div>
       </div>
 
-      {/* ── Right panel — form ── */}
-      <div className="flex-1 flex flex-col h-full overflow-y-auto bg-white">
-        {/* Top bar */}
-        <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#f0f0f0] shrink-0">
-          {/* Mobile logo */}
-          <Link href={basePath || "/"}>
-            <div className="flex items-center gap-2 cursor-pointer lg:hidden">
-              <img
-                src={`${basePath}/logo.svg`}
-                alt="vooi"
-                className="w-7 h-7"
-              />
-              <span className="text-[#09090b] text-base font-bold tracking-tight">
-                vooi<span className="text-[#3a9e88]">.lol</span>
-              </span>
-            </div>
-          </Link>
-
-          {/* Desktop back link */}
-          <Link href={basePath || "/"}>
-            <div className="hidden lg:flex items-center gap-1.5 text-sm text-[#71717a] hover:text-[#09090b] transition-colors cursor-pointer group">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                className="transition-transform group-hover:-translate-x-0.5"
-              >
-                <path
-                  d="M10 12L6 8L10 4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Kembali ke beranda
-            </div>
-          </Link>
-
-          {/* Mode switcher */}
-          <div className="flex items-center gap-1 text-sm text-[#71717a]">
-            {mode === "sign-in" ? (
-              <>
-                Belum punya akun?{" "}
-                <Link href={`${basePath}/sign-up`}>
-                  <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
-                    Daftar
-                  </span>
-                </Link>
-              </>
-            ) : (
-              <>
-                Sudah punya akun?{" "}
-                <Link href={`${basePath}/sign-in`}>
-                  <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
-                    Masuk
-                  </span>
-                </Link>
-              </>
-            )}
+      {/* Centered card */}
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div
+          className="w-full max-w-[400px] bg-white rounded-2xl p-8"
+          style={{
+            boxShadow:
+              "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
+          }}
+        >
+          {/* Custom header */}
+          <div className="mb-6">
+            <h1 className="text-xl font-bold text-[#0f172a] mb-1">
+              {mode === "sign-in"
+                ? "Selamat datang kembali"
+                : "Buat akun gratis"}
+            </h1>
+            <p className="text-sm text-[#64748b]">
+              {mode === "sign-in"
+                ? "Masuk ke akun vooi-mu"
+                : "Mulai terima pesan anonim sekarang"}
+            </p>
           </div>
-        </div>
 
-        {/* Form area */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
-          <div className="w-full max-w-[360px]">{children}</div>
-        </div>
+          {/* Clerk form */}
+          {children}
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-[#f0f0f0] text-center shrink-0">
-          <p className="text-xs text-[#9ca3af]">
+          {/* ToS */}
+          <p className="mt-5 text-center text-[11px] text-[#94a3b8]">
             Dengan {mode === "sign-in" ? "masuk" : "mendaftar"}, kamu menyetujui{" "}
             <Link href="/ketentuan">
-              <span className="underline hover:text-[#71717a] cursor-pointer transition-colors">
+              <span className="underline hover:text-[#64748b] cursor-pointer transition-colors">
                 Syarat & Ketentuan
               </span>
             </Link>{" "}
             dan{" "}
             <Link href="/privasi">
-              <span className="underline hover:text-[#71717a] cursor-pointer transition-colors">
+              <span className="underline hover:text-[#64748b] cursor-pointer transition-colors">
                 Kebijakan Privasi
               </span>
             </Link>{" "}
