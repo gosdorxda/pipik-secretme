@@ -631,14 +631,14 @@ Jika lebih suka menjalankan satu per satu, gunakan panduan skenario di bawah.
 
 #### Ringkasan — Kapan Perlu Apa?
 
-| Yang berubah di kode                | git pull | pnpm install | Build frontend | Build API | Migrasi DB | Restart PM2 |
-| ----------------------------------- | :------: | :----------: | :------------: | :-------: | :--------: | :---------: |
-| Hanya tampilan / UI frontend        | ✅       | ✅           | ✅             | —         | —          | —           |
-| Logika backend / API                | ✅       | ✅           | —              | ✅        | —          | ✅          |
-| Frontend + backend                  | ✅       | ✅           | ✅             | ✅        | —          | ✅          |
-| Ada tabel/kolom baru di database    | ✅       | ✅           | ✅             | ✅        | ✅         | ✅          |
-| Ada perubahan di file `.env`        | —        | —            | —              | —         | —          | ✅ (penuh)  |
-| Perubahan `package.json`            | ✅       | ✅           | ✅             | ✅        | —          | ✅          |
+| Yang berubah di kode             | git pull | pnpm install | Build frontend | Build API | Migrasi DB | Restart PM2 |
+| -------------------------------- | :------: | :----------: | :------------: | :-------: | :--------: | :---------: |
+| Hanya tampilan / UI frontend     |    ✅    |      ✅      |       ✅       |     —     |     —      |      —      |
+| Logika backend / API             |    ✅    |      ✅      |       —        |    ✅     |     —      |     ✅      |
+| Frontend + backend               |    ✅    |      ✅      |       ✅       |    ✅     |     —      |     ✅      |
+| Ada tabel/kolom baru di database |    ✅    |      ✅      |       ✅       |    ✅     |     ✅     |     ✅      |
+| Ada perubahan di file `.env`     |    —     |      —       |       —        |     —     |     —      | ✅ (penuh)  |
+| Perubahan `package.json`         |    ✅    |      ✅      |       ✅       |    ✅     |     —      |     ✅      |
 
 ---
 
