@@ -9,19 +9,18 @@ import {
 
 const FOOTER_LINKS = {
   produk: [
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "Tentang", href: "/tentang" },
     { label: "Upgrade Premium", href: "/upgrade" },
     { label: "Daftar Gratis", href: "/sign-up" },
   ],
   bantuan: [
-    { label: "Cara Pakai", href: "#" },
-    { label: "FAQ", href: "#" },
+    { label: "Cara Pakai", href: "/cara-pakai" },
+    { label: "FAQ", href: "/faq" },
     { label: "Hubungi Kami", href: "mailto:hello@whisperbox.id" },
   ],
   legal: [
-    { label: "Kebijakan Privasi", href: "#" },
-    { label: "Syarat & Ketentuan", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Kebijakan Privasi", href: "/privasi" },
+    { label: "Syarat & Ketentuan", href: "/ketentuan" },
   ],
 };
 
@@ -95,12 +94,21 @@ export function Footer() {
             <ul className="space-y-2">
               {FOOTER_LINKS.bantuan.map(({ label, href }) => (
                 <li key={label}>
-                  <a
-                    href={href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {label}
-                  </a>
+                  {href.startsWith("/") ? (
+                    <Link
+                      href={href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -113,12 +121,12 @@ export function Footer() {
             <ul className="space-y-2">
               {FOOTER_LINKS.legal.map(({ label, href }) => (
                 <li key={label}>
-                  <a
+                  <Link
                     href={href}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
                     {label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

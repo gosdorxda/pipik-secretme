@@ -33,6 +33,11 @@ import ReferralPage from "@/pages/referral";
 import AdminPage from "@/pages/admin";
 import PublicProfilePage from "@/pages/public-profile";
 import NotFound from "@/pages/not-found";
+import TentangPage from "@/pages/tentang";
+import CaraPakaiPage from "@/pages/cara-pakai";
+import FaqPage from "@/pages/faq";
+import PrivasiPage from "@/pages/privasi";
+import KetentuanPage from "@/pages/ketentuan";
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
@@ -481,6 +486,12 @@ function ClerkProviderWithRoutes() {
                 {() => <ProtectedRoute component={ReferralPage} />}
               </Route>
               <Route path="/admin" component={AdminPage} />
+
+              <Route path="/tentang" component={TentangPage} />
+              <Route path="/cara-pakai" component={CaraPakaiPage} />
+              <Route path="/faq" component={FaqPage} />
+              <Route path="/privasi" component={PrivasiPage} />
+              <Route path="/ketentuan" component={KetentuanPage} />
 
               {/* Legacy redirect: /u/username → /@username */}
               <Route path="/u/:username">

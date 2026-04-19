@@ -55,13 +55,21 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - Tripay mode indicator: reads `IS_SANDBOX` flag from env (TRIPAY_SANDBOX=true overrides NODE_ENV)
 - `link_opens_points_per_1000` setting: configures points earned per 1000 profile views
 
-### Cloudflare Turnstile (anti-bot untuk email notif balasan)
+### Reply Notification Email
 
-- **Frontend**: `VITE_TURNSTILE_SITE_KEY` env var (default: test key `1x00000000000000000000AA`)
-- **Backend**: `TURNSTILE_SECRET_KEY` env var (default: test key `1x0000000000000000000000000000000AA`)
-- Test keys selalu pass verifikasi tanpa akun Cloudflare; untuk production, daftar di dash.cloudflare.com → Turnstile → add site
-- Verifikasi terjadi di `messages.ts` sebelum menyimpan `senderEmail`; jika gagal, pesan tetap dikirim tanpa email
-- UI: collapsible section dengan toggle link "Mau dapat notifikasi jika [Nama] membalas? →"
+- Pengirim bisa opsional masukkan email saat kirim pesan (jika pemilik profil aktifkan `allowReplyNotif`)
+- `senderEmail` disimpan langsung tanpa verifikasi Turnstile (Turnstile dihapus karena tidak kompatibel dengan iframe)
+- Saat pemilik balas pesan, `sendReplyNotification` di `email.ts` otomatis kirim email ke pengirim
+- UI: collapsible section di public-profile.tsx dengan link "Mau dapat notifikasi jika [Nama] membalas?"
+
+### Halaman Pendukung (Static Pages)
+
+- `/tentang` — Tentang WhisperBox (misi, cerita, nilai, stats)
+- `/cara-pakai` — Panduan penggunaan langkah demi langkah
+- `/faq` — FAQ accordion dengan 4 kategori (Umum, Privasi, Fitur, Premium)
+- `/privasi` — Kebijakan Privasi
+- `/ketentuan` — Syarat & Ketentuan
+- Semua halaman pakai `StaticPageLayout` (`src/components/static-page-layout.tsx`) dengan header + footer konsisten
 
 ### Codegen
 
