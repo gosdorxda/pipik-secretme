@@ -394,6 +394,8 @@ function ClerkProviderWithRoutes() {
       publishableKey={clerkPubKey}
       proxyUrl={clerkProxyUrl}
       appearance={clerkAppearance}
+      termsPageUrl={`${basePath}/ketentuan`}
+      privacyPageUrl={`${basePath}/privasi`}
       localization={{
         signIn: {
           start: {

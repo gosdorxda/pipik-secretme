@@ -29,10 +29,17 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             href="/dashboard"
             className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0"
           >
-            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
-              W
-            </div>
-            <span className="hidden sm:inline">WhisperBox</span>
+            <img
+              src="/logo.svg"
+              alt="vooi"
+              className="w-7 h-7"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+            <span className="hidden sm:inline tracking-tight">
+              vooi<span className="text-accent-foreground">.lol</span>
+            </span>
           </Link>
 
           {/* Nav + Logout — all in one group */}

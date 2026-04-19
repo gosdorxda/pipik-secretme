@@ -270,10 +270,17 @@ export default function PublicProfilePage() {
               href="/"
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
-              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
-                W
-              </div>
-              WhisperBox
+              <img
+                src="/logo.svg"
+                alt="vooi"
+                className="w-7 h-7"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <span className="tracking-tight">
+                vooi<span className="text-accent-foreground">.lol</span>
+              </span>
             </Link>
           </div>
         </header>
@@ -303,10 +310,17 @@ export default function PublicProfilePage() {
               href="/"
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
-              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
-                W
-              </div>
-              WhisperBox
+              <img
+                src="/logo.svg"
+                alt="vooi"
+                className="w-7 h-7"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <span className="tracking-tight">
+                vooi<span className="text-accent-foreground">.lol</span>
+              </span>
             </Link>
             <Link href="/">
               <Button size="sm" className="text-xs">
@@ -347,10 +361,17 @@ export default function PublicProfilePage() {
             href="/"
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
-            <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
-              W
-            </div>
-            WhisperBox
+            <img
+              src="/logo.svg"
+              alt="vooi"
+              className="w-7 h-7"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+            <span className="tracking-tight">
+              vooi<span className="text-accent-foreground">.lol</span>
+            </span>
           </Link>
           <Link href="/">
             <Button size="sm" className="text-xs">

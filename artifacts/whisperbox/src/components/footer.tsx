@@ -1,11 +1,5 @@
 import { Link } from "wouter";
-import {
-  MessageSquareHeart,
-  Twitter,
-  Instagram,
-  Github,
-  Mail,
-} from "lucide-react";
+import { Twitter, Instagram, Github, Mail } from "lucide-react";
 
 const FOOTER_LINKS = {
   produk: [
@@ -38,15 +32,20 @@ const SOCIAL_LINKS = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-white">
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-6 py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
-                W
-              </div>
-              <span className="font-semibold text-sm text-foreground">
-                WhisperBox
+              <img
+                src="/logo.svg"
+                alt="vooi"
+                className="w-7 h-7"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+              <span className="font-bold text-sm text-foreground tracking-tight">
+                vooi<span className="text-accent-foreground">.lol</span>
               </span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-4">
