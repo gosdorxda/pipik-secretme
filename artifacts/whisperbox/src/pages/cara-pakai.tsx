@@ -68,7 +68,7 @@ export default function CaraPakaiPage() {
     <StaticPageLayout>
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="max-w-3xl mx-auto px-5 py-14 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-14 text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             Panduan Penggunaan
           </div>
@@ -84,7 +84,7 @@ export default function CaraPakaiPage() {
 
       {/* Steps */}
       <section className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-5 py-14">
+        <div className="max-w-4xl mx-auto px-5 py-14">
           <div className="space-y-8">
             {STEPS.map(({ number, icon: Icon, title, desc, tips }, idx) => (
               <div key={number} className="flex gap-5 sm:gap-7">
@@ -129,7 +129,7 @@ export default function CaraPakaiPage() {
 
       {/* Premium */}
       <section className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-5 py-14">
+        <div className="max-w-4xl mx-auto px-5 py-14">
           <div className="rounded-md border border-amber-200 bg-amber-50 p-6">
             <div className="flex items-center gap-2 mb-3">
               <Crown className="w-4 h-4 text-amber-600" />
@@ -165,7 +165,7 @@ export default function CaraPakaiPage() {
 
       {/* CTA */}
       <section>
-        <div className="max-w-3xl mx-auto px-5 py-14 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-14 text-center">
           <h2 className="text-xl font-bold text-foreground mb-3">
             Siap mulai?
           </h2>

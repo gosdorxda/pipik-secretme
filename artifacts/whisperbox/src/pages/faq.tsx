@@ -113,7 +113,7 @@ export default function FaqPage() {
     <StaticPageLayout>
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="max-w-3xl mx-auto px-5 py-14 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-14 text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             <MessageCircle className="w-3.5 h-3.5" />
             FAQ
@@ -135,7 +135,7 @@ export default function FaqPage() {
 
       {/* FAQ */}
       <section>
-        <div className="max-w-3xl mx-auto px-5 py-14 space-y-10">
+        <div className="max-w-4xl mx-auto px-5 py-14 space-y-10">
           {FAQ_ITEMS.map(({ category, items }) => (
             <div key={category}>
               <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
@@ -153,7 +153,7 @@ export default function FaqPage() {
 
       {/* CTA */}
       <section className="border-t border-border">
-        <div className="max-w-3xl mx-auto px-5 py-12 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-12 text-center">
           <p className="text-sm text-muted-foreground mb-4">
             Masih ada pertanyaan? Kami siap membantu.
           </p>

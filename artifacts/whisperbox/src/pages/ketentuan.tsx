@@ -7,7 +7,7 @@ export default function KetentuanPage() {
     <StaticPageLayout>
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="max-w-3xl mx-auto px-5 py-14">
+        <div className="max-w-4xl mx-auto px-5 py-14">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             Syarat &amp; Ketentuan
           </div>
@@ -22,7 +22,7 @@ export default function KetentuanPage() {
 
       {/* Content */}
       <section>
-        <div className="max-w-3xl mx-auto px-5 py-12 space-y-10 text-sm leading-relaxed">
+        <div className="max-w-4xl mx-auto px-5 py-12 space-y-10 text-sm leading-relaxed">
           <div>
             <p className="text-muted-foreground">
               Dengan menggunakan layanan WhisperBox ("Layanan"), kamu menyetujui

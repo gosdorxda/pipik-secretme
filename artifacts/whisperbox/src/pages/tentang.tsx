@@ -43,7 +43,7 @@ export default function TentangPage() {
     <StaticPageLayout>
       {/* Hero */}
       <section className="border-b border-border bg-gradient-to-b from-primary/5 to-transparent">
-        <div className="max-w-3xl mx-auto px-5 py-16 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-16 text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             <MessageSquareHeart className="w-3.5 h-3.5" />
             Tentang WhisperBox
@@ -62,7 +62,7 @@ export default function TentangPage() {
 
       {/* Stats */}
       <section className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-5 py-10">
+        <div className="max-w-4xl mx-auto px-5 py-10">
           <div className="grid grid-cols-3 gap-6 text-center">
             {STATS.map(({ label, value }) => (
               <div key={label}>
@@ -78,7 +78,7 @@ export default function TentangPage() {
 
       {/* Story */}
       <section className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-5 py-14">
+        <div className="max-w-4xl mx-auto px-5 py-14">
           <div className="flex items-center gap-2 mb-8">
             <div className="h-px flex-1 bg-border" />
             <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground px-3">
@@ -110,7 +110,7 @@ export default function TentangPage() {
 
       {/* Values */}
       <section className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-5 py-14">
+        <div className="max-w-4xl mx-auto px-5 py-14">
           <h2 className="text-lg font-bold text-foreground mb-8 text-center">
             Nilai yang Kami Pegang
           </h2>
@@ -139,7 +139,7 @@ export default function TentangPage() {
 
       {/* CTA */}
       <section>
-        <div className="max-w-3xl mx-auto px-5 py-14 text-center">
+        <div className="max-w-4xl mx-auto px-5 py-14 text-center">
           <Users className="w-8 h-8 text-primary mx-auto mb-4" />
           <h2 className="text-xl font-bold text-foreground mb-3">
             Bergabung bersama ribuan pengguna WhisperBox

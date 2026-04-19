@@ -14,6 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LazyAvatar } from "@/components/lazy-avatar";
 import { useToast } from "@/hooks/use-toast";
 import {
   Send,
@@ -387,12 +388,10 @@ export default function PublicProfilePage() {
           {/* Avatar */}
           <div className="shrink-0">
             {avatarUrl ? (
-              <img
+              <LazyAvatar
                 src={avatarUrl}
                 alt={displayName}
-                loading="lazy"
-                decoding="async"
-                className="w-24 h-24 rounded-full object-cover border-2 border-primary/20 shadow-sm ring-4 ring-primary/10"
+                className="w-24 h-24 border-2 border-primary/20 shadow-sm ring-4 ring-primary/10"
               />
             ) : (
               <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-3xl font-bold text-primary-foreground border-2 border-primary/20 shadow-sm ring-4 ring-primary/10">

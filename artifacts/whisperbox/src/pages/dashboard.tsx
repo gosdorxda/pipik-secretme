@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout";
+import { LazyAvatar } from "@/components/lazy-avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -583,12 +584,10 @@ export default function DashboardPage() {
           <div className="bg-primary/10 border-b border-primary/20 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="shrink-0">
               {resolveAvatarUrl(profile.avatarUrl) ? (
-                <img
+                <LazyAvatar
                   src={resolveAvatarUrl(profile.avatarUrl)!}
                   alt={displayName}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
+                  className="w-16 h-16 border-2 border-white shadow"
                 />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-2xl font-bold text-primary-foreground border-2 border-white shadow">
