@@ -69,7 +69,7 @@ export function ShareMessageCard({
     .toUpperCase()
     .slice(0, 2);
 
-  const publicUrl = `whisperbox.app/@${username}`;
+  const publicUrl = `${window.location.host}/@${username}`;
   const timeAgo = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
     locale: idLocale,
@@ -95,16 +95,17 @@ export function ShareMessageCard({
     if (!url) return;
     const a = document.createElement("a");
     a.href = url;
-    a.download = "whisperbox-message.png";
+    a.download = `${appName.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-message.png`;
     a.click();
   };
 
   const handleShare = async () => {
     const url = await generate();
     if (!url) return;
+    const slug = appName.replace(/[^a-z0-9]/gi, "-").toLowerCase();
     try {
       const blob = await (await fetch(url)).blob();
-      const file = new File([blob], "whisperbox-message.png", {
+      const file = new File([blob], `${slug}-message.png`, {
         type: "image/png",
       });
       if (navigator.share && navigator.canShare({ files: [file] })) {
@@ -116,7 +117,7 @@ export function ShareMessageCard({
       } else {
         const a = document.createElement("a");
         a.href = url;
-        a.download = "whisperbox-message.png";
+        a.download = `${slug}-message.png`;
         a.click();
       }
     } catch (e) {

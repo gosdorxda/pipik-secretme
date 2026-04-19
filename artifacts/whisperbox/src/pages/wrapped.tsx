@@ -574,7 +574,7 @@ function Slide7FinalCard({
         style: { display: "flex" },
       });
       const link = document.createElement("a");
-      link.download = `whisperbox-wrapped-${year}${month ? `-${month}` : ""}.png`;
+      link.download = `${appName.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-wrapped-${year}${month ? `-${month}` : ""}.png`;
       link.href = dataUrl;
       link.click();
       setDownloadStatus("done");
@@ -693,7 +693,7 @@ function Slide7FinalCard({
           </div>
           <div className="px-6 py-3 text-center">
             <p className="text-xs" style={{ color: W_MUTED }}>
-              whisperbox — terima kejujuran, tanpa takut.
+              {appName} — terima kejujuran, tanpa takut.
             </p>
           </div>
         </div>
@@ -977,7 +977,7 @@ function Slide7FinalCard({
                 opacity: 0.7,
               }}
             >
-              whisperbox — terima kejujuran, tanpa takut.
+              {appName} — terima kejujuran, tanpa takut.
             </p>
             <p
               style={{
@@ -987,7 +987,7 @@ function Slide7FinalCard({
                 textAlign: "center",
               }}
             >
-              whisperbox.app
+              {appName}
             </p>
           </div>
         </div>,

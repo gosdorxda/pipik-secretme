@@ -43,9 +43,9 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <SiteLogoImg className="w-7 h-7" alt="vooi" />
+              <SiteLogoImg className="w-7 h-7" alt={appName} />
               <span className="font-bold text-sm text-foreground tracking-tight">
-                vooi<span className="text-accent-foreground">.lol</span>
+                {appName}
               </span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-4">

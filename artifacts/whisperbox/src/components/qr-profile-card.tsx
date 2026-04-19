@@ -29,7 +29,7 @@ export function QRProfileCard({
   const appName = branding?.appName ?? "vooi.lol";
 
   const publicUrl = `${window.location.origin}/@${username}`;
-  const shortUrl = `whisperbox.app/@${username}`;
+  const shortUrl = `${window.location.host}/@${username}`;
 
   const initials = (displayName || username || "?")
     .split(" ")
@@ -55,16 +55,17 @@ export function QRProfileCard({
     if (!url) return;
     const a = document.createElement("a");
     a.href = url;
-    a.download = `whisperbox-qr-${username}.png`;
+    a.download = `${appName.replace(/[^a-z0-9]/gi, "-").toLowerCase()}-qr-${username}.png`;
     a.click();
   };
 
   const handleShare = async () => {
     const url = await generate();
     if (!url) return;
+    const slug = appName.replace(/[^a-z0-9]/gi, "-").toLowerCase();
     try {
       const blob = await (await fetch(url)).blob();
-      const file = new File([blob], `whisperbox-${username}.png`, {
+      const file = new File([blob], `${slug}-${username}.png`, {
         type: "image/png",
       });
       if (navigator.share && navigator.canShare({ files: [file] })) {
@@ -76,7 +77,7 @@ export function QRProfileCard({
       } else {
         const a = document.createElement("a");
         a.href = url;
-        a.download = `whisperbox-qr-${username}.png`;
+        a.download = `${slug}-qr-${username}.png`;
         a.click();
       }
     } catch {}

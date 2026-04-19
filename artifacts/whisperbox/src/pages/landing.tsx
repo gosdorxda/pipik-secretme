@@ -5,6 +5,7 @@ import { ArrowRight, Crown } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
 import { SiteLogoImg } from "@/components/site-logo";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -375,6 +376,8 @@ const HOW_STEPS = [
 ];
 
 export default function LandingPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   const { isSignedIn } = useAuth();
 
   const featRef = useReveal();
@@ -551,7 +554,7 @@ export default function LandingPage() {
           >
             <div className="text-center mb-12">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
-                Kenapa vooi.lol?
+                Kenapa {appName}?
               </p>
               <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                 Dirancang untuk kejujuran
