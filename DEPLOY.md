@@ -578,7 +578,73 @@ psql $DATABASE_URL -c "SELECT COUNT(*) FROM users;"
 
 ## 16. Update Aplikasi (Setelah Ada Perubahan Kode)
 
-Setiap kali ada update dari repo, jalankan perintah berikut secara berurutan:
+Repo sudah memiliki script `update.sh` yang mengotomatiskan seluruh proses update.
+
+### Cara pakai `update.sh` (Direkomendasikan)
+
+**Pertama kali saja** — beri izin eksekusi:
+
+```bash
+chmod +x /var/www/vooi/update.sh
+```
+
+**Update rutin (frontend + backend berubah):**
+
+```bash
+cd /var/www/vooi
+./update.sh
+```
+
+**Hanya frontend yang berubah** (lebih cepat, tidak restart PM2):
+
+```bash
+./update.sh --frontend-only
+```
+
+**Ada perubahan schema database** (tambah tabel/kolom baru):
+
+```bash
+./update.sh --migrate
+```
+
+**Hemat waktu jika `package.json` tidak berubah** (skip install):
+
+```bash
+./update.sh --skip-install
+```
+
+**Kombinasi flag:**
+
+```bash
+# Update penuh + migrasi, tanpa install ulang dependensi
+./update.sh --skip-install --migrate
+
+# Frontend only + skip install (paling cepat, untuk perubahan UI saja)
+./update.sh --frontend-only --skip-install
+```
+
+---
+
+### Panduan Manual (Tanpa Script)
+
+Jika lebih suka menjalankan satu per satu, gunakan panduan skenario di bawah.
+
+#### Ringkasan — Kapan Perlu Apa?
+
+| Yang berubah di kode                | git pull | pnpm install | Build frontend | Build API | Migrasi DB | Restart PM2 |
+| ----------------------------------- | :------: | :----------: | :------------: | :-------: | :--------: | :---------: |
+| Hanya tampilan / UI frontend        | ✅       | ✅           | ✅             | —         | —          | —           |
+| Logika backend / API                | ✅       | ✅           | —              | ✅        | —          | ✅          |
+| Frontend + backend                  | ✅       | ✅           | ✅             | ✅        | —          | ✅          |
+| Ada tabel/kolom baru di database    | ✅       | ✅           | ✅             | ✅        | ✅         | ✅          |
+| Ada perubahan di file `.env`        | —        | —            | —              | —         | —          | ✅ (penuh)  |
+| Perubahan `package.json`            | ✅       | ✅           | ✅             | ✅        | —          | ✅          |
+
+---
+
+#### Skenario A — Update Biasa (Frontend + Backend)
+
+Dipakai untuk sebagian besar update: fitur baru, perbaikan bug, perubahan UI dan API sekaligus.
 
 ```bash
 cd /var/www/vooi
@@ -586,18 +652,17 @@ cd /var/www/vooi
 # 1. Ambil kode terbaru
 git pull
 
-# 2. Update dependensi (jika ada perubahan package.json)
+# 2. Update dependensi
 pnpm install
 
 # 3. Load env vars ke shell
 set -a && source .env && set +a
 
-# 4. Build ulang frontend dan API server
+# 4. Build ulang frontend dan backend
 pnpm --filter @workspace/whisperbox build
 pnpm --filter @workspace/api-server build
 
-# 5. Restart API server dengan env terbaru
-#    (pm2 restart saja tidak reload .env — harus delete + start ulang)
+# 5. Restart API server (harus delete, bukan sekadar restart)
 pm2 delete vooi-api
 set -a && source .env && set +a
 pm2 start ecosystem.config.js
@@ -608,16 +673,73 @@ pm2 status
 pm2 logs vooi-api --lines 10
 ```
 
-> **Kenapa tidak cukup `pm2 restart`?**
-> `pm2 restart` tidak me-reload file `.env`. Jika ada perubahan env vars,
-> harus `pm2 delete` + `source .env` + `pm2 start` untuk memastikan
-> env vars terbaru terbaca oleh proses baru.
+---
 
-**Jika ada perubahan schema database**, tambahkan setelah build:
+#### Skenario B — Hanya Frontend Berubah
+
+Jika update hanya menyentuh tampilan (komponen React, CSS, halaman baru) dan tidak ada perubahan di `artifacts/api-server/`, PM2 tidak perlu di-restart karena Nginx langsung melayani file statis dari folder `dist/`.
 
 ```bash
-pnpm --filter @workspace/db run push
+cd /var/www/vooi
+git pull
+pnpm install
+set -a && source .env && set +a
+pnpm --filter @workspace/whisperbox build
+
+# Tidak perlu restart PM2 — selesai!
 ```
+
+---
+
+#### Skenario C — Ada Perubahan Schema Database
+
+Jika update menyertakan perubahan tabel (kolom baru, tabel baru), jalankan migrasi setelah build:
+
+```bash
+cd /var/www/vooi
+git pull
+pnpm install
+set -a && source .env && set +a
+
+pnpm --filter @workspace/whisperbox build
+pnpm --filter @workspace/api-server build
+
+# Migrasi schema database
+pnpm --filter @workspace/db run push
+
+# Restart PM2
+pm2 delete vooi-api
+set -a && source .env && set +a
+pm2 start ecosystem.config.js
+pm2 save
+```
+
+> **Aman:** `db push` bersifat additive — hanya menambah tabel/kolom, tidak menghapus data.
+
+---
+
+#### Skenario D — Ada Perubahan di File `.env`
+
+Jika kamu menambah atau mengubah nilai di `.env` (misalnya ganti API key, tambah env baru), PM2 harus di-restart penuh karena `pm2 restart` saja tidak me-reload file `.env`.
+
+```bash
+# Edit .env terlebih dahulu
+nano /var/www/vooi/.env
+
+# Lalu restart PM2 dengan reload env:
+cd /var/www/vooi
+pm2 delete vooi-api
+set -a && source .env && set +a
+pm2 start ecosystem.config.js
+pm2 save
+
+# Verifikasi env terbaca
+pm2 env vooi-api | grep NAMA_VARIABLE_BARU
+```
+
+> **Kenapa tidak cukup `pm2 restart`?**
+> `pm2 restart` hanya me-restart proses dengan env yang sudah ada di memori.
+> Perubahan di `.env` tidak otomatis terbaca — harus `pm2 delete` + `source .env` + `pm2 start`.
 
 ---
 
@@ -720,7 +842,13 @@ pm2 logs vooi-api --lines 100
 ## Referensi Cepat — Perintah yang Sering Dipakai
 
 ```bash
-# Lihat log API real-time
+# ── Update kode (gunakan script) ──────────────────────────────
+./update.sh                          # Update penuh
+./update.sh --frontend-only          # Hanya UI berubah
+./update.sh --migrate                # Ada perubahan schema DB
+./update.sh --skip-install --migrate # Cepat + ada migrasi
+
+# ── Lihat log API real-time
 pm2 logs vooi-api
 
 # Restart API (tanpa reload env)
