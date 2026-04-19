@@ -29,7 +29,7 @@ export function QRProfileCard({
   const appName = branding?.appName ?? "vooi.lol";
 
   const publicUrl = `${window.location.origin}/@${username}`;
-  const shortUrl = `${window.location.host}/@${username}`;
+  const shortUrl = `${window.location.origin}/@${username}`;
 
   const initials = (displayName || username || "?")
     .split(" ")

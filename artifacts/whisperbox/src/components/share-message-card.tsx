@@ -69,7 +69,7 @@ export function ShareMessageCard({
     .toUpperCase()
     .slice(0, 2);
 
-  const publicUrl = `${window.location.host}/@${username}`;
+  const publicUrl = `${window.location.origin}/@${username}`;
   const timeAgo = formatDistanceToNow(new Date(createdAt), {
     addSuffix: true,
     locale: idLocale,
