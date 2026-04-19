@@ -10,9 +10,9 @@ Browser → Nginx (reverse proxy, SSL termination)
 
 Kode sumber ada di satu repo monorepo. Dua artifact yang berjalan di VPS:
 
-| Artifact | Lokasi | Deskripsi |
-|---|---|---|
-| `@workspace/whisperbox` | `artifacts/whisperbox/` | Frontend React + Vite |
+| Artifact                | Lokasi                  | Deskripsi                 |
+| ----------------------- | ----------------------- | ------------------------- |
+| `@workspace/whisperbox` | `artifacts/whisperbox/` | Frontend React + Vite     |
 | `@workspace/api-server` | `artifacts/api-server/` | Backend Express + Drizzle |
 
 ---
@@ -168,22 +168,23 @@ chmod 600 /var/www/vooi/.env
 
 ## 6. Penjelasan Tiap Environment Variable
 
-| Variable | Keterangan | Dari mana |
-|---|---|---|
-| `NODE_ENV` | Wajib `production` | Set manual |
-| `DATABASE_URL` | Connection string PostgreSQL | Langkah 3 |
-| `APP_URL` | URL publik tanpa trailing slash | Domain kamu |
-| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys |
-| `CLERK_SECRET_KEY` | Clerk auth — secret key | Clerk Dashboard → API Keys |
-| `ADMIN_SECRET` | Password akses `/admin` | Generate bebas |
-| `SESSION_SECRET` | Salt hashing IP untuk rate limiter | Generate bebas |
-| `TRIPAY_API_KEY` | API key pembayaran | [TriPay Dashboard](https://tripay.co.id/member/merchant) |
-| `TRIPAY_PRIVATE_KEY` | Private key signature TriPay | TriPay Dashboard |
-| `TRIPAY_MERCHANT_CODE` | Kode merchant TriPay | TriPay Dashboard |
-| `RESEND_API_KEY` | API key email | [Resend Dashboard](https://resend.com) |
-| `RESEND_FROM_EMAIL` | Alamat pengirim email | Domain terverifikasi di Resend |
+| Variable                | Keterangan                         | Dari mana                                                 |
+| ----------------------- | ---------------------------------- | --------------------------------------------------------- |
+| `NODE_ENV`              | Wajib `production`                 | Set manual                                                |
+| `DATABASE_URL`          | Connection string PostgreSQL       | Langkah 3                                                 |
+| `APP_URL`               | URL publik tanpa trailing slash    | Domain kamu                                               |
+| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key            | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys |
+| `CLERK_SECRET_KEY`      | Clerk auth — secret key            | Clerk Dashboard → API Keys                                |
+| `ADMIN_SECRET`          | Password akses `/admin`            | Generate bebas                                            |
+| `SESSION_SECRET`        | Salt hashing IP untuk rate limiter | Generate bebas                                            |
+| `TRIPAY_API_KEY`        | API key pembayaran                 | [TriPay Dashboard](https://tripay.co.id/member/merchant)  |
+| `TRIPAY_PRIVATE_KEY`    | Private key signature TriPay       | TriPay Dashboard                                          |
+| `TRIPAY_MERCHANT_CODE`  | Kode merchant TriPay               | TriPay Dashboard                                          |
+| `RESEND_API_KEY`        | API key email                      | [Resend Dashboard](https://resend.com)                    |
+| `RESEND_FROM_EMAIL`     | Alamat pengirim email              | Domain terverifikasi di Resend                            |
 
 **Tidak dibutuhkan di VPS** (khusus Replit):
+
 - `DEFAULT_OBJECT_STORAGE_BUCKET_ID`
 - `PRIVATE_OBJECT_DIR`
 - `PUBLIC_OBJECT_SEARCH_PATHS`
@@ -527,6 +528,7 @@ sudo -u postgres psql -c "\l"
 ### Email tidak terkirim (Resend)
 
 Cek beberapa hal:
+
 1. `RESEND_FROM_EMAIL` harus format `noreply@vooi.lol`, bukan hanya `vooi.lol`
 2. Domain `vooi.lol` harus sudah **Verified** di Resend Dashboard
 3. DNS records (SPF, DKIM) sudah ditambahkan dengan benar

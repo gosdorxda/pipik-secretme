@@ -39,9 +39,6 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 
-const TURNSTILE_SITE_KEY =
-  import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
-
 import {
   useGetPublicProfile,
   useSendMessage,
