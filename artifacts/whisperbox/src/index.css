@@ -143,48 +143,98 @@ body {
   animation: msg-in 0.3s ease-out 2.1s both;
 }
 
-/* Landing page orb animations */
-@keyframes orb-float-1 {
+/* Landing page blob animations */
+@keyframes blob-drift-1 {
   0%,
   100% {
     transform: translate(0, 0) scale(1);
   }
-  33% {
-    transform: translate(30px, -40px) scale(1.05);
+  30% {
+    transform: translate(40px, -50px) scale(1.06);
   }
-  66% {
-    transform: translate(-20px, 20px) scale(0.97);
+  65% {
+    transform: translate(-25px, 30px) scale(0.96);
   }
 }
-@keyframes orb-float-2 {
+@keyframes blob-drift-2 {
   0%,
   100% {
     transform: translate(0, 0) scale(1);
   }
   40% {
-    transform: translate(-40px, 30px) scale(1.08);
+    transform: translate(-50px, 40px) scale(1.08);
   }
-  70% {
-    transform: translate(20px, -20px) scale(0.95);
+  75% {
+    transform: translate(30px, -25px) scale(0.94);
   }
 }
-@keyframes orb-float-3 {
+@keyframes blob-drift-3 {
   0%,
   100% {
     transform: translate(0, 0) scale(1);
   }
   50% {
-    transform: translate(25px, 35px) scale(1.04);
+    transform: translate(30px, 45px) scale(1.05);
   }
 }
-.landing-orb-1 {
-  animation: orb-float-1 14s ease-in-out infinite;
+@keyframes blob-slow {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -30px) scale(1.04);
+  }
 }
-.landing-orb-2 {
-  animation: orb-float-2 18s ease-in-out infinite;
+@keyframes blob-slow2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 25px) scale(1.03);
+  }
 }
-.landing-orb-3 {
-  animation: orb-float-3 22s ease-in-out infinite;
+.landing-blob-1 {
+  animation: blob-drift-1 16s ease-in-out infinite;
+}
+.landing-blob-2 {
+  animation: blob-drift-2 20s ease-in-out infinite;
+}
+.landing-blob-3 {
+  animation: blob-drift-3 24s ease-in-out infinite;
+}
+.landing-blob-slow {
+  animation: blob-slow 26s ease-in-out infinite;
+}
+.landing-blob-slow2 {
+  animation: blob-slow2 30s ease-in-out infinite;
+}
+
+/* Scroll reveal animations */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal-section {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+.reveal-section.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-section.revealed .reveal-card {
+  animation: reveal-up 0.5s ease both;
 }
 
 /* Force Clerk form elements to respect container width */
