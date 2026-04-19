@@ -45,12 +45,10 @@ export default function PrivasiPage() {
             <SubSection title="B. Pengirim pesan (tanpa akun)">
               <ul className="list-disc list-inside space-y-1 text-muted-foreground">
                 <li>
-                  Hash dari alamat IP (bukan IP asli) untuk keperluan
-                  pembatasan spam
+                  Hash dari alamat IP (bukan IP asli) untuk keperluan pembatasan
+                  spam
                 </li>
-                <li>
-                  Isi pesan yang dikirimkan
-                </li>
+                <li>Isi pesan yang dikirimkan</li>
                 <li>
                   Alamat email (opsional, hanya jika pengirim memilih untuk
                   mendapat notifikasi balasan)
@@ -79,10 +77,10 @@ export default function PrivasiPage() {
 
           <Section title="3. Anonimitas Pengirim">
             <p className="text-muted-foreground">
-              WhisperBox dirancang untuk menjaga anonimitas pengirim pesan.
-              Kami tidak menyimpan, menampilkan, atau membagikan informasi
-              identitas pengirim kepada pemilik profil atau pihak manapun. Hash
-              IP yang kami simpan tidak dapat digunakan untuk melacak atau
+              WhisperBox dirancang untuk menjaga anonimitas pengirim pesan. Kami
+              tidak menyimpan, menampilkan, atau membagikan informasi identitas
+              pengirim kepada pemilik profil atau pihak manapun. Hash IP yang
+              kami simpan tidak dapat digunakan untuk melacak atau
               mengidentifikasi individu.
             </p>
           </Section>

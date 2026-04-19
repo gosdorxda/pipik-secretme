@@ -24,7 +24,6 @@ import {
 // In-memory rate limiter: ipHash -> array of send timestamps
 const rateLimitMap = new Map<string, number[]>();
 
-
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });

@@ -1,5 +1,12 @@
 import { Link } from "wouter";
-import { MessageSquareHeart, Shield, Zap, Heart, Users, Lock } from "lucide-react";
+import {
+  MessageSquareHeart,
+  Shield,
+  Zap,
+  Heart,
+  Users,
+  Lock,
+} from "lucide-react";
 import { StaticPageLayout } from "@/components/static-page-layout";
 
 const STATS = [

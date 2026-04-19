@@ -57,12 +57,22 @@ export default function KetentuanPage() {
               pemblokiran akun:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-muted-foreground">
-              <li>Mengirim pesan yang bersifat pelecehan, ancaman, atau intimidasi</li>
-              <li>Konten yang mengandung kebencian berdasarkan ras, agama, gender, atau identitas lainnya</li>
+              <li>
+                Mengirim pesan yang bersifat pelecehan, ancaman, atau intimidasi
+              </li>
+              <li>
+                Konten yang mengandung kebencian berdasarkan ras, agama, gender,
+                atau identitas lainnya
+              </li>
               <li>Spam atau pengiriman pesan berulang secara berlebihan</li>
               <li>Konten pornografi, kekerasan eksplisit, atau ilegal</li>
-              <li>Upaya untuk mengidentifikasi atau mengungkap identitas pengguna lain</li>
-              <li>Menyalahgunakan platform untuk penipuan atau aktivitas kriminal</li>
+              <li>
+                Upaya untuk mengidentifikasi atau mengungkap identitas pengguna
+                lain
+              </li>
+              <li>
+                Menyalahgunakan platform untuk penipuan atau aktivitas kriminal
+              </li>
               <li>Menggunakan bot atau otomasi untuk mengirim pesan massal</li>
             </ul>
           </Section>
@@ -108,9 +118,18 @@ export default function KetentuanPage() {
               langganan berulang). Ketentuan pembayaran:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-muted-foreground">
-              <li>Harga dapat berubah sewaktu-waktu dengan pemberitahuan terlebih dahulu</li>
-              <li>Pembayaran diproses melalui Tripay dan tidak dapat dikembalikan kecuali terdapat gangguan teknis dari pihak kami</li>
-              <li>Fitur Premium berlaku seumur hidup akun selama layanan beroperasi</li>
+              <li>
+                Harga dapat berubah sewaktu-waktu dengan pemberitahuan terlebih
+                dahulu
+              </li>
+              <li>
+                Pembayaran diproses melalui Tripay dan tidak dapat dikembalikan
+                kecuali terdapat gangguan teknis dari pihak kami
+              </li>
+              <li>
+                Fitur Premium berlaku seumur hidup akun selama layanan
+                beroperasi
+              </li>
             </ul>
           </Section>
 
@@ -126,9 +145,9 @@ export default function KetentuanPage() {
           <Section title="9. Perubahan Layanan">
             <p className="text-muted-foreground">
               Kami berhak mengubah, menambah, atau menghentikan fitur Layanan
-              kapan saja. Perubahan signifikan pada Syarat ini akan diberitahukan
-              setidaknya 14 hari sebelum berlaku melalui email atau pengumuman
-              di platform.
+              kapan saja. Perubahan signifikan pada Syarat ini akan
+              diberitahukan setidaknya 14 hari sebelum berlaku melalui email
+              atau pengumuman di platform.
             </p>
           </Section>
 

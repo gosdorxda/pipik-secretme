@@ -15,28 +15,44 @@ const STEPS = [
     icon: UserPlus,
     title: "Buat Akun Gratis",
     desc: "Daftar menggunakan email atau akun Google kamu. Proses setup hanya butuh waktu 30 detik.",
-    tips: ["Tidak perlu kartu kredit", "Langsung aktif setelah daftar", "Link personal otomatis dibuat"],
+    tips: [
+      "Tidak perlu kartu kredit",
+      "Langsung aktif setelah daftar",
+      "Link personal otomatis dibuat",
+    ],
   },
   {
     number: "02",
     icon: Share2,
     title: "Bagikan Link Personalmu",
     desc: "Setiap akun mendapat link unik seperti secretme.site/u/namakamu. Bagikan ke media sosial, bio Instagram, atau kirim langsung ke teman.",
-    tips: ["Format: secretme.site/u/username", "Bisa langsung disalin dari dashboard", "Cocok untuk bio semua platform"],
+    tips: [
+      "Format: secretme.site/u/username",
+      "Bisa langsung disalin dari dashboard",
+      "Cocok untuk bio semua platform",
+    ],
   },
   {
     number: "03",
     icon: MessageSquare,
     title: "Terima Pesan Anonim",
     desc: "Siapapun bisa kirim pesan ke linkmu tanpa login dan tanpa meninggalkan identitas. Pesan langsung masuk ke dashboardmu secara real-time.",
-    tips: ["Pengirim 100% anonim", "Notifikasi email untuk pesan baru", "Bisa filter & cari pesan"],
+    tips: [
+      "Pengirim 100% anonim",
+      "Notifikasi email untuk pesan baru",
+      "Bisa filter & cari pesan",
+    ],
   },
   {
     number: "04",
     icon: CornerUpLeft,
     title: "Balas Jika Mau",
     desc: "Kamu bisa membalas pesan secara publik — balasanmu akan muncul di bawah pesan di halaman profilmu. Semua orang bisa lihat, tapi tetap tidak tahu siapa pengirimnya.",
-    tips: ["Balasan tampil di profil publik", "Bisa edit atau hapus balasan", "Pengirim bisa dapat notifikasi via email"],
+    tips: [
+      "Balasan tampil di profil publik",
+      "Bisa edit atau hapus balasan",
+      "Pengirim bisa dapat notifikasi via email",
+    ],
   },
 ];
 
@@ -71,10 +87,7 @@ export default function CaraPakaiPage() {
         <div className="max-w-3xl mx-auto px-5 py-14">
           <div className="space-y-8">
             {STEPS.map(({ number, icon: Icon, title, desc, tips }, idx) => (
-              <div
-                key={number}
-                className="flex gap-5 sm:gap-7"
-              >
+              <div key={number} className="flex gap-5 sm:gap-7">
                 {/* Number + line */}
                 <div className="flex flex-col items-center">
                   <div className="w-10 h-10 rounded-md bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0">
@@ -130,7 +143,10 @@ export default function CaraPakaiPage() {
             </p>
             <ul className="space-y-2 mb-5">
               {PREMIUM_FEATURES.map((f) => (
-                <li key={f} className="flex items-center gap-2 text-xs text-amber-800">
+                <li
+                  key={f}
+                  className="flex items-center gap-2 text-xs text-amber-800"
+                >
                   <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   {f}
                 </li>

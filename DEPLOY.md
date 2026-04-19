@@ -1,58 +1,73 @@
-# WhisperBox — Panduan Deploy ke VPS
+# vooi.lol — Panduan Deploy ke VPS
 
 ## Gambaran Arsitektur
 
 ```
-Browser → Nginx (reverse proxy, SSL) → {
-  /          → whisperbox (Vite SPA, static files)
-  /api/*     → api-server (Express, port 8080)
-}
+Browser → Nginx (reverse proxy, SSL termination)
+              ├── /api/*  → Express API (PM2, port 8080)
+              └── /*      → Static files (hasil Vite build)
 ```
+
+Kode sumber ada di satu repo monorepo. Dua artifact yang berjalan di VPS:
+
+| Artifact | Lokasi | Deskripsi |
+|---|---|---|
+| `@workspace/whisperbox` | `artifacts/whisperbox/` | Frontend React + Vite |
+| `@workspace/api-server` | `artifacts/api-server/` | Backend Express + Drizzle |
 
 ---
 
 ## 1. Setup User (Jangan Pakai Root!)
 
-Menjalankan aplikasi sebagai `root` berbahaya — kalau ada bug atau celah keamanan, penyerang langsung dapat akses penuh ke server. Gunakan user biasa dengan hak sudo.
+Menjalankan aplikasi sebagai `root` berbahaya. Gunakan user biasa dengan hak sudo.
 
-**Jika VPS kamu hanya punya user `root`**, buat user baru dulu:
+**Buat user `deploy` jika belum ada:**
 
 ```bash
 # Login sebagai root, lalu:
-adduser deploy                        # buat user baru (ganti "deploy" jika mau)
-usermod -aG sudo deploy               # beri hak sudo
-rsync --archive --chown=deploy:deploy ~/.ssh /home/deploy  # copy SSH key agar bisa login
+adduser deploy
+usermod -aG sudo deploy
+rsync --archive --chown=deploy:deploy ~/.ssh /home/deploy
 ```
 
-Setelah itu, **logout dari root** dan login ulang sebagai user baru:
+Setelah itu, logout dari root dan login ulang sebagai user `deploy`:
 
 ```bash
-ssh deploy@ip-server-kamu
+ssh deploy@ip-vps-kamu
 ```
 
-> Semua perintah di panduan ini dijalankan sebagai user ini (bukan root).
-> Perintah yang butuh akses sistem akan diawali `sudo`.
+> Semua perintah di panduan ini dijalankan sebagai user ini. Perintah yang butuh akses sistem diawali `sudo`.
 
 ---
 
-## 2. Prasyarat Server
+## 2. Install Dependensi Sistem
 
 ```bash
-# Ubuntu/Debian
-sudo apt update && sudo apt install -y curl git nginx certbot python3-certbot-nginx
+sudo apt update && sudo apt upgrade -y
 
-# Node.js 20 LTS
+# Tool dasar
+sudo apt install -y curl git nginx certbot python3-certbot-nginx
+
+# Node.js 20 LTS via NodeSource
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 
+# Verifikasi
+node -v   # harus v20.x.x
+npm -v
+
 # pnpm
 npm install -g pnpm
+pnpm -v
 
 # PM2 (process manager)
 npm install -g pm2
+pm2 -v
 
 # PostgreSQL
 sudo apt install -y postgresql postgresql-contrib
+sudo systemctl enable postgresql
+sudo systemctl start postgresql
 ```
 
 ---
@@ -61,27 +76,34 @@ sudo apt install -y postgresql postgresql-contrib
 
 ```bash
 sudo -u postgres psql
+```
 
--- Di dalam psql:
-CREATE USER whisperbox WITH PASSWORD 'ganti_password_kuat';
-CREATE DATABASE whisperbox OWNER whisperbox;
+Di dalam psql, jalankan:
+
+```sql
+CREATE USER vooi WITH PASSWORD 'ganti_dengan_password_kuat_unik';
+CREATE DATABASE vooi OWNER vooi;
 \q
 ```
 
-Catat connection string:
+Catat connection string untuk dipakai di `.env`:
 
 ```
-postgresql://whisperbox:ganti_password_kuat@localhost:5432/whisperbox
+postgresql://vooi:ganti_dengan_password_kuat_unik@localhost:5432/vooi
 ```
+
+> **Tips:** Generate password kuat dengan `openssl rand -base64 32`
 
 ---
 
-## 4. Clone dan Install Dependensi
+## 4. Clone Repo dan Install Dependensi Node
 
 ```bash
 cd /var/www
-git clone <url-repo-kamu> whisperbox
-cd whisperbox
+sudo mkdir vooi
+sudo chown deploy:deploy vooi
+git clone <url-repo-kamu> vooi
+cd vooi
 pnpm install
 ```
 
@@ -89,178 +111,213 @@ pnpm install
 
 ## 5. Konfigurasi Environment Variables
 
-Buat file `/var/www/whisperbox/.env`:
+Buat file `.env` di root proyek:
 
 ```bash
-cp .env.example .env   # jika ada, atau buat manual
-nano /var/www/whisperbox/.env
+nano /var/www/vooi/.env
 ```
 
-Isi env vars (penjelasan tiap field ada di bagian 5):
+Salin template berikut dan isi semua nilainya:
 
 ```env
-# ── WAJIB ──────────────────────────────────────────────────
+# ── WAJIB ──────────────────────────────────────────────────────
+
 NODE_ENV=production
-DATABASE_URL=postgresql://whisperbox:ganti_password_kuat@localhost:5432/whisperbox
-APP_URL=https://domainmu.com
+DATABASE_URL=postgresql://vooi:ganti_dengan_password_kuat_unik@localhost:5432/vooi
+APP_URL=https://vooi.lol
 
-# Clerk Authentication
-CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxx
-CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxx
+# Clerk Authentication (gunakan production keys: pk_live_ dan sk_live_)
+CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxxxxxxxxxxx
+CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxx
 
-# Admin Panel
-ADMIN_SECRET=buat_string_acak_panjang_minimal_32_karakter
+# Admin Panel — string acak panjang minimal 32 karakter
+ADMIN_SECRET=isi_string_acak_minimal_32_karakter_disini
 
-# Session (untuk rate limiting berbasis IP)
-SESSION_SECRET=buat_string_acak_lain_minimal_32_karakter
+# Salt untuk hashing IP (rate limiting) — string acak berbeda dari ADMIN_SECRET
+SESSION_SECRET=isi_string_acak_lain_minimal_32_karakter
 
-# ── PEMBAYARAN (TriPay) ─────────────────────────────────────
-TRIPAY_API_KEY=api_key_production_dari_dashboard_tripay
-TRIPAY_PRIVATE_KEY=private_key_production_dari_dashboard_tripay
-TRIPAY_MERCHANT_CODE=kode_merchant_production
-# Jangan set TRIPAY_SANDBOX atau set ke "false" agar pakai mode production
+# ── PEMBAYARAN (TriPay) ─────────────────────────────────────────
 
-# ── EMAIL (Resend) ──────────────────────────────────────────
-RESEND_API_KEY=re_xxxxxxxxxxxx
-RESEND_FROM_EMAIL=noreply@domainmu.com
+TRIPAY_API_KEY=api_key_dari_dashboard_tripay
+TRIPAY_PRIVATE_KEY=private_key_dari_dashboard_tripay
+TRIPAY_MERCHANT_CODE=kode_merchant_tripay
+# Hapus baris ini atau set ke false untuk mode production:
+# TRIPAY_SANDBOX=true
 
-# ── ANTI-SPAM (Cloudflare Turnstile) ───────────────────────
-TURNSTILE_SECRET_KEY=secret_key_dari_cloudflare_turnstile
+# ── EMAIL (Resend) ──────────────────────────────────────────────
 
-# ── OPSIONAL ───────────────────────────────────────────────
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxx
+# Harus berupa alamat email lengkap dengan domain yang sudah diverifikasi di Resend:
+RESEND_FROM_EMAIL=noreply@vooi.lol
+
+# ── OPSIONAL ────────────────────────────────────────────────────
+
 LOG_LEVEL=info
 PREMIUM_PRICE=49900
 ```
 
-> **Catatan Fitur Avatar (Foto Profil):**
-> Fitur upload foto profil saat ini menggunakan Replit Object Storage yang tidak tersedia di VPS.
-> Avatar yang sudah diupload di Replit tidak akan bisa diakses. Ada dua opsi:
->
-> - **Opsi A (mudah):** Biarkan saja — fitur upload avatar tidak akan berfungsi, sisanya normal.
-> - **Opsi B (perlu kode tambahan):** Ganti ke penyimpanan lokal atau S3/R2. Hubungi saya jika perlu panduan ini.
+Amankan file `.env` agar tidak bisa dibaca user lain:
+
+```bash
+chmod 600 /var/www/vooi/.env
+```
+
+> **Catatan Avatar:** Fitur upload foto profil menggunakan Replit Object Storage yang tidak tersedia di VPS. Avatar tidak akan berfungsi — sisanya normal. Hubungi developer jika butuh panduan S3/R2.
 
 ---
 
 ## 6. Penjelasan Tiap Environment Variable
 
-| Variable                | Keterangan                                 | Dari mana                                                       |
-| ----------------------- | ------------------------------------------ | --------------------------------------------------------------- |
-| `NODE_ENV`              | Wajib `production`                         | Set manual                                                      |
-| `DATABASE_URL`          | Connection string PostgreSQL               | Dari langkah 2                                                  |
-| `APP_URL`               | URL publik aplikasi (tanpa trailing slash) | Domain kamu                                                     |
-| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key                    | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys       |
-| `CLERK_SECRET_KEY`      | Clerk auth — secret key                    | Clerk Dashboard → API Keys                                      |
-| `ADMIN_SECRET`          | Password akses halaman `/admin`            | Generate bebas                                                  |
-| `SESSION_SECRET`        | Salt untuk hashing IP (rate limiting)      | Generate bebas                                                  |
-| `TRIPAY_API_KEY`        | API key pembayaran                         | [TriPay Dashboard](https://tripay.co.id/member/merchant)        |
-| `TRIPAY_PRIVATE_KEY`    | Private key signature TriPay               | TriPay Dashboard                                                |
-| `TRIPAY_MERCHANT_CODE`  | Kode merchant TriPay                       | TriPay Dashboard                                                |
-| `RESEND_API_KEY`        | API key email                              | [Resend Dashboard](https://resend.com)                          |
-| `RESEND_FROM_EMAIL`     | Alamat pengirim email                      | Domain yang sudah diverifikasi di Resend                        |
-| `TURNSTILE_SECRET_KEY`  | Verifikasi CAPTCHA server-side             | [Cloudflare Dashboard](https://dash.cloudflare.com) → Turnstile |
+| Variable | Keterangan | Dari mana |
+|---|---|---|
+| `NODE_ENV` | Wajib `production` | Set manual |
+| `DATABASE_URL` | Connection string PostgreSQL | Langkah 3 |
+| `APP_URL` | URL publik tanpa trailing slash | Domain kamu |
+| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys |
+| `CLERK_SECRET_KEY` | Clerk auth — secret key | Clerk Dashboard → API Keys |
+| `ADMIN_SECRET` | Password akses `/admin` | Generate bebas |
+| `SESSION_SECRET` | Salt hashing IP untuk rate limiter | Generate bebas |
+| `TRIPAY_API_KEY` | API key pembayaran | [TriPay Dashboard](https://tripay.co.id/member/merchant) |
+| `TRIPAY_PRIVATE_KEY` | Private key signature TriPay | TriPay Dashboard |
+| `TRIPAY_MERCHANT_CODE` | Kode merchant TriPay | TriPay Dashboard |
+| `RESEND_API_KEY` | API key email | [Resend Dashboard](https://resend.com) |
+| `RESEND_FROM_EMAIL` | Alamat pengirim email | Domain terverifikasi di Resend |
 
 **Tidak dibutuhkan di VPS** (khusus Replit):
-
 - `DEFAULT_OBJECT_STORAGE_BUCKET_ID`
 - `PRIVATE_OBJECT_DIR`
 - `PUBLIC_OBJECT_SEARCH_PATHS`
+- `BASE_PATH` (default otomatis `/`)
 
 ---
 
-## 7. Konfigurasi Clerk untuk Domain Custom
+## 7. Setup Clerk untuk Domain vooi.lol
 
-Di [Clerk Dashboard](https://dashboard.clerk.com):
+1. Masuk ke [Clerk Dashboard](https://dashboard.clerk.com)
+2. Buka **Domains** → klik **Add domain** → masukkan `vooi.lol`
+3. Ikuti langkah verifikasi DNS yang diminta (biasanya CNAME record)
+4. Setelah terverifikasi, buka **API Keys** → salin `pk_live_...` dan `sk_live_...`
+5. Masukkan ke `.env` sebagai `CLERK_PUBLISHABLE_KEY` dan `CLERK_SECRET_KEY`
 
-1. Buka **Domains** → tambahkan `domainmu.com`
-2. Verifikasi kepemilikan domain (tambahkan DNS record yang diminta)
-3. Di **API Keys**, salin `pk_live_...` dan `sk_live_...` (bukan yang `pk_test_...`)
+> Gunakan production keys (`pk_live_` / `sk_live_`), bukan development keys (`pk_test_`).
 
-Untuk Clerk proxy (opsional tapi direkomendasikan untuk SEO):
+**Opsional — Clerk Proxy** (mencegah ad-blocker memblokir auth):
 
 ```env
-CLERK_PROXY_URL=https://domainmu.com/api/__clerk
+CLERK_PROXY_URL=https://vooi.lol/api/__clerk
 ```
 
 ---
 
-## 8. Konfigurasi Cloudflare Turnstile
+## 8. Setup Resend untuk Email vooi.lol
 
-1. Masuk ke [Cloudflare Dashboard](https://dash.cloudflare.com) → **Turnstile**
-2. Tambahkan site baru → pilih **Managed** → masukkan domain
-3. Salin **Site Key** → ini untuk `VITE_TURNSTILE_SITE_KEY` saat build
-4. Salin **Secret Key** → ini untuk `TURNSTILE_SECRET_KEY` di env
+Email notifikasi (pesan masuk & notifikasi balasan) dikirim via Resend.
+
+1. Masuk ke [Resend Dashboard](https://resend.com)
+2. Buka **Domains** → **Add Domain** → masukkan `vooi.lol`
+3. Tambahkan DNS records yang diminta (SPF, DKIM, DMARC) di DNS provider kamu
+4. Tunggu hingga status domain **Verified** (bisa 5–30 menit)
+5. Buka **API Keys** → **Create API Key** → salin ke `RESEND_API_KEY`
+6. Set `RESEND_FROM_EMAIL=noreply@vooi.lol` (harus format `xxx@vooi.lol`, bukan domain saja)
+
+> **Penting:** `RESEND_FROM_EMAIL` wajib berupa alamat email lengkap, bukan hanya domain. Contoh benar: `noreply@vooi.lol`. Jika salah, email tidak akan terkirim.
 
 ---
 
-## 9. Konfigurasi TriPay Production
+## 9. Setup TriPay Production
 
 1. Login ke [TriPay Dashboard](https://tripay.co.id/member/merchant)
-2. Pastikan status merchant sudah **active** (bukan sandbox)
-3. Di **Merchant** → salin API Key, Private Key, Kode Merchant
-4. Daftarkan **Callback URL**: `https://domainmu.com/api/payments/callback`
-5. Daftarkan **Return URL**: `https://domainmu.com/upgrade`
+2. Pastikan status merchant sudah **Active** (bukan sandbox)
+3. Salin: **API Key**, **Private Key**, **Kode Merchant**
+4. Daftarkan **Callback URL**: `https://vooi.lol/api/payments/callback`
+5. Daftarkan **Return URL**: `https://vooi.lol/upgrade`
 
 ---
 
 ## 10. Build Aplikasi
 
-```bash
-cd /var/www/whisperbox
+Sebelum build, env vars wajib ter-load ke shell:
 
-# Load env vars dulu untuk proses build
+```bash
+cd /var/www/vooi
 set -a && source .env && set +a
 
-# Build frontend
-# PORT dan BASE_PATH wajib diisi saat build (nilai PORT tidak penting untuk build, hanya untuk dev server)
-# BASE_PATH=/ artinya aplikasi berjalan di root domain
-PORT=3000 \
-BASE_PATH=/ \
-VITE_TURNSTILE_SITE_KEY=site_key_turnstile_kamu \
-pnpm --filter @workspace/whisperbox run build
+# Build frontend (Vite)
+pnpm --filter @workspace/whisperbox build
 
-# Build API server
-pnpm --filter @workspace/api-server run build
+# Build API server (esbuild)
+pnpm --filter @workspace/api-server build
 ```
 
-Output frontend akan ada di: `artifacts/whisperbox/dist/public/`
+> **Kenapa `set -a && source .env && set +a`?**
+> Ini men-export semua variabel dari `.env` ke environment shell saat ini.
+> `CLERK_PUBLISHABLE_KEY` perlu di-inject ke bundle frontend saat build.
+> Tanpa ini, Clerk tidak akan berfungsi di production.
+
+Output frontend: `artifacts/whisperbox/dist/public/`
+Output API: `artifacts/api-server/dist/index.mjs`
 
 ---
 
 ## 11. Jalankan Migrasi Database
 
+Perintah ini membuat semua tabel yang dibutuhkan berdasarkan schema Drizzle:
+
 ```bash
-cd /var/www/whisperbox
-export $(cat .env | grep -v '^#' | xargs)
+cd /var/www/vooi
+set -a && source .env && set +a
 pnpm --filter @workspace/db run push
 ```
 
+> Jalankan ini juga setiap kali ada perubahan schema database setelah update kode.
+
 ---
 
-## 12. Jalankan dengan PM2
+## 12. Setup PM2 (Process Manager)
 
 Buat file `ecosystem.config.js` di root proyek:
+
+```bash
+nano /var/www/vooi/ecosystem.config.js
+```
+
+Isi dengan:
 
 ```javascript
 module.exports = {
   apps: [
     {
-      name: "whisperbox-api",
+      name: "vooi-api",
       script: "./artifacts/api-server/dist/index.mjs",
-      cwd: "/var/www/whisperbox",
+      cwd: "/var/www/vooi",
       env_file: ".env",
       instances: 1,
       autorestart: true,
       watch: false,
+      max_memory_restart: "512M",
     },
   ],
 };
 ```
 
+Jalankan PM2:
+
 ```bash
-cd /var/www/whisperbox
+cd /var/www/vooi
+
+# Load env dulu agar PM2 membacanya saat startup
+set -a && source .env && set +a
+
 pm2 start ecosystem.config.js
 pm2 save
-pm2 startup   # ikuti instruksi yang muncul agar auto-start saat reboot
+pm2 startup   # jalankan perintah yang muncul agar auto-start saat reboot
+```
+
+Cek status:
+
+```bash
+pm2 status
+pm2 logs vooi-api --lines 20
 ```
 
 ---
@@ -268,19 +325,25 @@ pm2 startup   # ikuti instruksi yang muncul agar auto-start saat reboot
 ## 13. Konfigurasi Nginx
 
 ```bash
-sudo nano /etc/nginx/sites-available/whisperbox
+sudo nano /etc/nginx/sites-available/vooi
 ```
+
+Isi dengan:
 
 ```nginx
 server {
     listen 80;
-    server_name domainmu.com www.domainmu.com;
+    server_name vooi.lol www.vooi.lol;
 
-    # Frontend (static files hasil build)
-    root /var/www/whisperbox/artifacts/whisperbox/dist/public;
+    # Keamanan dasar
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    # Frontend — static files hasil build Vite
+    root /var/www/vooi/artifacts/whisperbox/dist/public;
     index index.html;
 
-    # API — proxy ke Express
+    # API — proxy ke Express (port 8080)
     location /api/ {
         proxy_pass http://localhost:8080;
         proxy_http_version 1.1;
@@ -288,78 +351,233 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 30s;
     }
 
     # SPA fallback — semua route dikembalikan ke index.html
     location / {
         try_files $uri $uri/ /index.html;
     }
+
+    # Jangan serve file tersembunyi (.env, .git, dll)
+    location ~ /\. {
+        deny all;
+    }
 }
 ```
 
+Aktifkan dan test:
+
 ```bash
-sudo ln -s /etc/nginx/sites-available/whisperbox /etc/nginx/sites-enabled/
-sudo nginx -t   # cek tidak ada error
+sudo ln -s /etc/nginx/sites-available/vooi /etc/nginx/sites-enabled/
+sudo nginx -t        # harus: "syntax is ok" dan "test is successful"
 sudo systemctl reload nginx
 ```
 
 ---
 
-## 14. SSL dengan Certbot
+## 14. SSL dengan Certbot (HTTPS)
 
 ```bash
-sudo certbot --nginx -d domainmu.com -d www.domainmu.com
+sudo certbot --nginx -d vooi.lol -d www.vooi.lol
 ```
 
-Certbot akan otomatis mengubah config Nginx untuk HTTPS.
+Certbot akan otomatis memodifikasi konfigurasi Nginx untuk HTTPS dan mengatur auto-renewal.
+
+Verifikasi auto-renewal berjalan:
+
+```bash
+sudo certbot renew --dry-run
+```
 
 ---
 
-## 15. Verifikasi
+## 15. Verifikasi Instalasi
 
 Cek semua layanan berjalan:
 
 ```bash
 pm2 status
 sudo systemctl status nginx
-sudo -u postgres psql -c "\l"
+sudo systemctl status postgresql
 ```
 
-Test endpoint API:
+Test API:
 
 ```bash
-curl https://domainmu.com/api/config
+curl https://vooi.lol/api/config
+# Harusnya mengembalikan JSON konfigurasi
+```
+
+Test database:
+
+```bash
+psql $DATABASE_URL -c "SELECT COUNT(*) FROM users;"
+```
+
+---
+
+## 16. Update Aplikasi (Setelah Ada Perubahan Kode)
+
+Setiap kali ada update dari repo, jalankan perintah berikut secara berurutan:
+
+```bash
+cd /var/www/vooi
+
+# 1. Ambil kode terbaru
+git pull
+
+# 2. Update dependensi (jika ada perubahan package.json)
+pnpm install
+
+# 3. Load env vars ke shell
+set -a && source .env && set +a
+
+# 4. Build ulang frontend dan API server
+pnpm --filter @workspace/whisperbox build
+pnpm --filter @workspace/api-server build
+
+# 5. Restart API server dengan env terbaru
+#    (pm2 restart saja tidak reload .env — harus delete + start ulang)
+pm2 delete vooi-api
+set -a && source .env && set +a
+pm2 start ecosystem.config.js
+pm2 save
+
+# 6. Cek status
+pm2 status
+pm2 logs vooi-api --lines 10
+```
+
+> **Kenapa tidak cukup `pm2 restart`?**
+> `pm2 restart` tidak me-reload file `.env`. Jika ada perubahan env vars,
+> harus `pm2 delete` + `source .env` + `pm2 start` untuk memastikan
+> env vars terbaru terbaca oleh proses baru.
+
+**Jika ada perubahan schema database**, tambahkan setelah build:
+
+```bash
+pnpm --filter @workspace/db run push
 ```
 
 ---
 
 ## Troubleshooting
 
-**API tidak bisa diakses:**
+### API tidak bisa diakses
 
 ```bash
-pm2 logs whisperbox-api --lines 50
+# Cek apakah PM2 berjalan
+pm2 status
+pm2 logs vooi-api --lines 50
+
+# Cek apakah port 8080 aktif
+ss -tlnp | grep 8080
+
+# Test langsung tanpa Nginx
+curl http://localhost:8080/api/config
 ```
 
-**Frontend tidak tampil / blank:**
+### Frontend blank / halaman putih
 
 ```bash
 # Pastikan build sudah ada
-ls /var/www/whisperbox/artifacts/whisperbox/dist/index.html
+ls /var/www/vooi/artifacts/whisperbox/dist/public/index.html
 
-# Cek Nginx error log
+# Cek Nginx error
 sudo tail -f /var/log/nginx/error.log
+
+# Cek konfigurasi Nginx
+sudo nginx -t
 ```
 
-**Database error:**
+### Error "PORT environment variable is required"
+
+Ini terjadi jika PM2 tidak membaca `.env`. Solusi:
 
 ```bash
-# Test koneksi
-psql $DATABASE_URL -c "SELECT 1"
+pm2 delete vooi-api
+set -a && source .env && set +a
+pm2 start ecosystem.config.js
+pm2 save
 ```
 
-**TriPay callback tidak masuk:**
+### PM2 tidak otomatis start setelah reboot
 
-- Pastikan `APP_URL` sudah benar dan HTTPS
-- Cek URL callback di dashboard TriPay sudah terdaftar
-- Cek PM2 logs untuk error saat menerima callback
+```bash
+pm2 startup
+# Jalankan perintah yang dicetak (biasanya sudo env PATH=... pm2 startup ...)
+pm2 save
+```
+
+### Database error / tidak bisa konek
+
+```bash
+# Test koneksi manual
+psql $DATABASE_URL -c "SELECT 1"
+
+# Cek PostgreSQL berjalan
+sudo systemctl status postgresql
+
+# Cek user dan database ada
+sudo -u postgres psql -c "\du"
+sudo -u postgres psql -c "\l"
+```
+
+### Email tidak terkirim (Resend)
+
+Cek beberapa hal:
+1. `RESEND_FROM_EMAIL` harus format `noreply@vooi.lol`, bukan hanya `vooi.lol`
+2. Domain `vooi.lol` harus sudah **Verified** di Resend Dashboard
+3. DNS records (SPF, DKIM) sudah ditambahkan dengan benar
+
+```bash
+# Cek env sudah ter-load dengan benar
+pm2 env vooi-api | grep RESEND
+```
+
+### Clerk auth tidak berfungsi / 401
+
+```bash
+# Pastikan menggunakan production keys (pk_live_, sk_live_)
+pm2 env vooi-api | grep CLERK
+
+# Domain vooi.lol harus sudah ditambahkan dan diverifikasi di Clerk Dashboard
+```
+
+### TriPay callback tidak masuk
+
+1. Pastikan `APP_URL=https://vooi.lol` (bukan http, tidak ada trailing slash)
+2. Callback URL di dashboard TriPay: `https://vooi.lol/api/payments/callback`
+3. Cek PM2 logs saat transaksi berlangsung:
+
+```bash
+pm2 logs vooi-api --lines 100
+```
+
+---
+
+## Referensi Cepat — Perintah yang Sering Dipakai
+
+```bash
+# Lihat log API real-time
+pm2 logs vooi-api
+
+# Restart API (tanpa reload env)
+pm2 restart vooi-api
+
+# Reload env + restart lengkap
+pm2 delete vooi-api && set -a && source /var/www/vooi/.env && set +a && pm2 start /var/www/vooi/ecosystem.config.js && pm2 save
+
+# Reload Nginx (setelah ubah config)
+sudo nginx -t && sudo systemctl reload nginx
+
+# Perpanjang SSL manual
+sudo certbot renew
+
+# Backup database
+pg_dump $DATABASE_URL > backup_$(date +%Y%m%d).sql
+
+# Cek ukuran database
+psql $DATABASE_URL -c "SELECT pg_size_pretty(pg_database_size('vooi'));"
+```
