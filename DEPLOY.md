@@ -201,15 +201,18 @@ chmod 600 /var/www/vooi/.env
 Secara default, fitur upload foto avatar menggunakan **Replit Object Storage** yang hanya tersedia di lingkungan Replit. Di VPS, fitur ini tidak berjalan sampai dikonfigurasi secara terpisah.
 
 > **Catatan:** Mengaktifkan upload file di VPS memerlukan dua hal:
+>
 > 1. Menyiapkan layanan object storage (Cloudflare R2 atau MinIO)
-> 2. Update kecil pada kode backend (`artifacts/api-server/src/lib/objectStorage.ts`) untuk mengganti Google Cloud Storage SDK dengan S3-compatible SDK (misalnya `@aws-sdk/client-s3`). Jika tidak ingin melakukan perubahan kode, gunakan MinIO yang bisa dikonfigurasi sebagai proxy endpoint GCS-compatible.
+> 2. **Update kode backend** — file `artifacts/api-server/src/lib/objectStorage.ts` saat ini menggunakan Google Cloud Storage SDK yang terhubung ke sidecar Replit. Untuk VPS, perlu diganti dengan S3-compatible SDK (misalnya `@aws-sdk/client-s3`) agar bisa berkomunikasi dengan R2 atau MinIO. Kedua layanan di bawah mendukung S3 API.
+>
+> Hubungi developer atau lihat komentar pada `objectStorage.ts` untuk panduan migrasi kode.
 
 Tersedia dua opsi:
 
-| Opsi                     | Cocok untuk                   | Catatan                                 |
-| ------------------------ | ----------------------------- | --------------------------------------- |
-| **Cloudflare R2**        | Semua kasus (direkomendasikan) | Gratis hingga 10 GB/bulan, CDN global  |
-| **MinIO (self-hosted)**  | VPS tanpa ingin layanan cloud | Perlu resource VPS tambahan (~256 MB RAM) |
+| Opsi                    | Cocok untuk                    | Catatan                                   |
+| ----------------------- | ------------------------------ | ----------------------------------------- |
+| **Cloudflare R2**       | Semua kasus (direkomendasikan) | Gratis hingga 10 GB/bulan, CDN global     |
+| **MinIO (self-hosted)** | VPS tanpa ingin layanan cloud  | Perlu resource VPS tambahan (~256 MB RAM) |
 
 ---
 
@@ -321,6 +324,7 @@ STORAGE_PUBLIC_URL=https://vooi.lol/minio
 ```
 
 > **Catatan MinIO dengan Nginx:** Jika menggunakan `STORAGE_PUBLIC_URL` lewat domain, tambahkan blok proxy ke Nginx config:
+>
 > ```nginx
 > location /minio/ {
 >     proxy_pass http://localhost:9000/vooi-uploads/;
