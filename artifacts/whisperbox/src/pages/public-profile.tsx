@@ -38,6 +38,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 const TURNSTILE_SITE_KEY =
   import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
@@ -242,7 +243,7 @@ export default function PublicProfilePage() {
           turnstileRef.current?.reset();
           toast({
             title: "Pesan terkirim!",
-            description: "Pesan anonym kamu berhasil dikirim.",
+            description: "Pesan anonim kamu berhasil dikirim.",
           });
         },
         onError: (err: unknown) => {
@@ -652,6 +653,7 @@ export default function PublicProfilePage() {
                     <span className="text-[10px] text-muted-foreground ml-auto">
                       {formatDistanceToNow(new Date(msg.createdAt), {
                         addSuffix: true,
+                        locale: idLocale,
                       })}
                     </span>
                   </div>
@@ -679,6 +681,7 @@ export default function PublicProfilePage() {
                           <span className="text-[10px] text-muted-foreground ml-auto">
                             {formatDistanceToNow(new Date(msg.ownerRepliedAt), {
                               addSuffix: true,
+                              locale: idLocale,
                             })}
                           </span>
                         )}

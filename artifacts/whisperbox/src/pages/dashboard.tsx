@@ -52,6 +52,7 @@ import {
   Mail,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 import {
   useGetMyProfile,
@@ -836,6 +837,7 @@ export default function DashboardPage() {
                           {campaign.title} ·{" "}
                           {formatDistanceToNow(new Date(campaign.createdAt), {
                             addSuffix: true,
+                            locale: idLocale,
                           })}
                         </p>
                         <p className="text-sm font-medium text-foreground leading-snug">
@@ -1257,6 +1259,7 @@ export default function DashboardPage() {
                       <span className="text-[10px] text-muted-foreground ml-auto">
                         {formatDistanceToNow(new Date(message.createdAt), {
                           addSuffix: true,
+                          locale: idLocale,
                         })}
                       </span>
                     </div>
@@ -1278,13 +1281,13 @@ export default function DashboardPage() {
                             </span>
                           </div>
                           <span className="text-xs font-semibold text-accent-foreground">
-                            You (Owner)
+                            Kamu (Pemilik)
                           </span>
                           {message.ownerRepliedAt && (
                             <span className="text-[10px] text-muted-foreground ml-auto">
                               {formatDistanceToNow(
                                 new Date(message.ownerRepliedAt),
-                                { addSuffix: true },
+                                { addSuffix: true, locale: idLocale },
                               )}
                             </span>
                           )}

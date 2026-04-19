@@ -19,6 +19,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 import {
   useGetMyReferralStats,
   useGetMyProfile,
@@ -585,6 +586,7 @@ export default function ReferralPage() {
                       @{r.username} · bergabung{" "}
                       {formatDistanceToNow(new Date(r.joinedAt), {
                         addSuffix: true,
+                        locale: idLocale,
                       })}
                     </p>
                   </div>
@@ -774,6 +776,7 @@ export default function ReferralPage() {
                         <p className="text-[10px] text-muted-foreground mt-0.5">
                           {formatDistanceToNow(new Date(r.createdAt), {
                             addSuffix: true,
+                            locale: idLocale,
                           })}
                         </p>
                       </div>

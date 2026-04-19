@@ -236,7 +236,7 @@ function HeroMockup() {
               className="text-xs font-semibold"
               style={{ color: "var(--violet-foreground)" }}
             >
-              Anonymous
+              Anonim
             </span>
             <span className="w-1.5 h-1.5 bg-primary rounded-full shrink-0" />
             <span className="text-[10px] text-muted-foreground ml-auto">

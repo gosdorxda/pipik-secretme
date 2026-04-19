@@ -3,6 +3,7 @@ import { toPng } from "html-to-image";
 import { Button } from "@/components/ui/button";
 import { Download, Share, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 import { resolveAvatarUrl } from "@/lib/avatar";
 
 const PALETTES = [
@@ -66,7 +67,10 @@ export function ShareMessageCard({
     .slice(0, 2);
 
   const publicUrl = `whisperbox.app/@${username}`;
-  const timeAgo = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const timeAgo = formatDistanceToNow(new Date(createdAt), {
+    addSuffix: true,
+    locale: idLocale,
+  });
   const truncated =
     content.length > 320 ? content.slice(0, 317) + "…" : content;
 
