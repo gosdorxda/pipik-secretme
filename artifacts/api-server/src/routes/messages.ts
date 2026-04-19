@@ -24,44 +24,6 @@ import {
 // In-memory rate limiter: ipHash -> array of send timestamps
 const rateLimitMap = new Map<string, number[]>();
 
-const TURNSTILE_TEST_SECRET = "1x0000000000000000000000000000000AA";
-const TURNSTILE_SECRET_KEY =
-  process.env.TURNSTILE_SECRET_KEY ?? TURNSTILE_TEST_SECRET;
-
-if (
-  process.env.NODE_ENV === "production" &&
-  TURNSTILE_SECRET_KEY === TURNSTILE_TEST_SECRET
-) {
-  console.warn(
-    "[WhisperBox] WARNING: TURNSTILE_SECRET_KEY is not set. Using Cloudflare test key in production — " +
-      "email notification Turnstile verification will always pass. " +
-      "Set TURNSTILE_SECRET_KEY to a real Cloudflare Turnstile secret key.",
-  );
-}
-
-async function verifyTurnstileToken(
-  token: string,
-  remoteip?: string,
-): Promise<boolean> {
-  try {
-    const body = new URLSearchParams({
-      secret: TURNSTILE_SECRET_KEY,
-      response: token,
-      ...(remoteip ? { remoteip } : {}),
-    });
-    const resp = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        body,
-      },
-    );
-    const data = (await resp.json()) as { success?: boolean };
-    return data.success === true;
-  } catch {
-    return false;
-  }
-}
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -444,18 +406,11 @@ router.post("/:username", async (req, res) => {
       ),
     });
 
-    // Verify Turnstile token if senderEmail is provided
-    let verifiedSenderEmail: string | null = null;
-    if (recipient.allowReplyNotif && bodyParsed.data.senderEmail) {
-      const token = bodyParsed.data.turnstileToken;
-      if (token) {
-        const senderIp = getSenderIp(req);
-        const valid = await verifyTurnstileToken(token, senderIp);
-        if (valid) {
-          verifiedSenderEmail = bodyParsed.data.senderEmail;
-        }
-      }
-    }
+    // Save sender email for reply notification if profile owner has enabled it
+    const verifiedSenderEmail: string | null =
+      recipient.allowReplyNotif && bodyParsed.data.senderEmail
+        ? bodyParsed.data.senderEmail
+        : null;
 
     const [message] = await db
       .insert(messagesTable)

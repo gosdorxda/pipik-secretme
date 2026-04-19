@@ -1,10 +1,9 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useParams, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@clerk/react";
-import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import {
   Form,
   FormControl,
@@ -205,9 +204,6 @@ export default function PublicProfilePage() {
   const [bubbleDismissed, setBubbleDismissed] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5);
   const [emailSectionOpen, setEmailSectionOpen] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileReady, setTurnstileReady] = useState(false);
-  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const { data: profile, isLoading, isError } = useGetPublicProfile(username);
   const sendMessage = useSendMessage();
@@ -220,8 +216,6 @@ export default function PublicProfilePage() {
 
   const closeEmailSection = useCallback(() => {
     setEmailSectionOpen(false);
-    setTurnstileToken(null);
-    setTurnstileReady(false);
     form.setValue("senderEmail", "");
     form.clearErrors("senderEmail");
   }, [form]);
@@ -232,7 +226,6 @@ export default function PublicProfilePage() {
     const payload = {
       content: data.content,
       ...(hasEmail && { senderEmail: emailTrimmed }),
-      ...(hasEmail && turnstileToken ? { turnstileToken } : {}),
     };
     sendMessage.mutate(
       { username, data: payload },
@@ -240,7 +233,6 @@ export default function PublicProfilePage() {
         onSuccess: () => {
           form.reset();
           closeEmailSection();
-          turnstileRef.current?.reset();
           toast({
             title: "Pesan terkirim!",
             description: "Pesan anonim kamu berhasil dikirim.",
@@ -267,8 +259,6 @@ export default function PublicProfilePage() {
               variant: "destructive",
             });
           }
-          turnstileRef.current?.reset();
-          setTurnstileToken(null);
         },
       },
     );
@@ -542,38 +532,10 @@ export default function PublicProfilePage() {
                             </FormItem>
                           )}
                         />
-                        <div className={turnstileReady ? "hidden" : ""}>
-                          <p className="text-[10px] text-muted-foreground/70 flex items-center gap-1">
-                            <span className="inline-block w-2.5 h-2.5 rounded-full border-2 border-muted-foreground/40 border-t-primary animate-spin" />
-                            Memuat verifikasi…
-                          </p>
-                        </div>
-                        <Turnstile
-                          ref={turnstileRef}
-                          siteKey={TURNSTILE_SITE_KEY}
-                          onSuccess={(token) => {
-                            setTurnstileToken(token);
-                            setTurnstileReady(true);
-                          }}
-                          onError={() => {
-                            setTurnstileToken(null);
-                            setTurnstileReady(true);
-                          }}
-                          onExpire={() => setTurnstileToken(null)}
-                          options={{ size: "invisible" }}
-                        />
-                        {turnstileReady && turnstileToken && (
-                          <p className="text-[10px] text-green-600 flex items-center gap-1">
-                            <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
-                            Verifikasi berhasil — email siap dikirim
-                          </p>
-                        )}
-                        {turnstileReady && !turnstileToken && (
-                          <p className="text-[10px] text-amber-600 flex items-center gap-1">
-                            <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
-                            Verifikasi gagal — email tidak akan disimpan
-                          </p>
-                        )}
+                        <p className="text-[10px] text-muted-foreground/70">
+                          Email hanya dipakai untuk notifikasi balasan, tidak
+                          ditampilkan ke siapapun.
+                        </p>
                       </div>
                     )}
                   </div>
