@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/react";
 import {
   BarChart,
@@ -1184,6 +1185,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   const [dirty, setDirty] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
   const [faviconUploading, setFaviconUploading] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     (async () => {
@@ -1288,6 +1290,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
         body: JSON.stringify({ [settingKey]: objectPath }),
       });
       setSettings((prev) => ({ ...prev, [settingKey]: objectPath }));
+      queryClient.invalidateQueries({ queryKey: ["site-branding"] });
       toast({ description: `${label} berhasil diupload.` });
     } catch (e: any) {
       toast({ description: e.message, variant: "destructive" });
