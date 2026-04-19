@@ -69,58 +69,66 @@ const clerkAppearance = {
     colorTextSecondary: "#71717a",
     colorInputText: "#09090b",
     colorNeutral: "#e4e4e7",
-    borderRadius: "2px",
+    borderRadius: "6px",
     fontFamily: "inherit",
     fontFamilyButtons: "inherit",
     fontSize: "0.875rem",
   },
   elements: {
     rootBox: "w-full",
-    cardBox: "shadow-sm border border-[#e4e4e7] w-full overflow-hidden",
-    card: "!shadow-none !border-0 !bg-transparent !rounded-none",
+    cardBox: "w-full shadow-none",
+    card: "!shadow-none !border-0 !bg-transparent !p-0",
     footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: { color: "#09090b", fontSize: "1.25rem", fontWeight: "700" },
+    headerTitle: { color: "#09090b", fontSize: "1.375rem", fontWeight: "700" },
     headerSubtitle: { color: "#71717a", fontSize: "0.875rem" },
     socialButtonsBlockButtonText: { color: "#09090b", fontWeight: "500" },
     formFieldLabel: {
       color: "#374151",
-      fontSize: "0.875rem",
+      fontSize: "0.8125rem",
       fontWeight: "500",
     },
     footerActionLink: { color: "#1a443c", fontWeight: "600" },
     footerActionText: { color: "#71717a" },
-    dividerText: { color: "#9ca3af" },
+    dividerText: { color: "#9ca3af", fontSize: "0.75rem" },
     identityPreviewEditButton: { color: "#1a443c" },
     formFieldSuccessText: { color: "#16a34a" },
     alertText: { color: "#09090b" },
     socialButtonsBlockButton:
-      "border border-[#e4e4e7] hover:bg-[#f4f4f5] transition-colors",
+      "border border-[#e4e4e7] hover:bg-[#f4f4f5] transition-colors rounded-md h-10",
     formButtonPrimary:
-      "bg-[#86ead4] hover:bg-[#7de0cb] !text-[#1a443c] font-semibold transition-colors shadow-none",
+      "bg-[#86ead4] hover:bg-[#7de0cb] !text-[#1a443c] font-semibold transition-colors shadow-none h-10",
     formFieldInput:
-      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-1 focus:ring-[#86ead4] bg-[#f9fafb]",
-    footerAction: "bg-[#f9fafb] border-t border-[#e4e4e7]",
+      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20 bg-[#f9fafb] h-10 rounded-md",
+    footerAction: "bg-transparent border-t border-[#e4e4e7] mt-4",
     dividerLine: "bg-[#e4e4e7]",
-    alert: "border-[#e4e4e7]",
-    otpCodeFieldInput: "border-[#e4e4e7]",
-    logoBox: "py-2",
-    logoImage: "h-10 w-auto",
+    alert: "border-[#fca5a5] bg-[#fef2f2] rounded-md",
+    alertIcon: "text-[#ef4444]",
+    otpCodeFieldInput:
+      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20",
+    logoBox: "pb-1",
+    logoImage: "h-9 w-auto",
     main: "",
   },
 };
 
-const FEATURES = [
+const SAMPLE_MESSAGES = [
   {
-    icon: "💬",
-    text: "Terima pesan jujur dari siapa saja, tanpa mereka perlu login",
+    text: "Kamu itu orangnya asik banget! Selalu bikin suasana jadi lebih cair 💫",
+    time: "2 mnt lalu",
+    color: "#ede9fe",
+    dot: "#8b5cf6",
   },
   {
-    icon: "🔒",
-    text: "Identitas pengirim selalu anonim, aman, dan terlindungi",
+    text: "Honest opinion: lo berbakat banget, jangan pernah berhenti berkarya ✨",
+    time: "15 mnt lalu",
+    color: "#ddf9f2",
+    dot: "#86ead4",
   },
   {
-    icon: "✨",
-    text: "Bagikan link profil ke bio Instagram, Twitter, atau TikTok-mu",
+    text: "Gue suka cara lo ngomong yang blak-blakan. Refreshing banget! 👏",
+    time: "1 jam lalu",
+    color: "#fff7ed",
+    dot: "#f97316",
   },
 ];
 
@@ -133,132 +141,250 @@ function AuthLayout({
 }) {
   return (
     <div className="min-h-screen flex bg-white">
-      {/* Left panel — branding */}
+      {/* ── Left panel — branding & preview ── */}
       <div
-        className="hidden lg:flex lg:w-[52%] xl:w-[55%] flex-col justify-between p-12 relative overflow-hidden"
+        className="hidden lg:flex lg:w-[48%] xl:w-[52%] flex-col justify-between p-10 xl:p-14 relative overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, #0f2e28 0%, #1a443c 60%, #215c52 100%)",
+            "linear-gradient(160deg, #081a17 0%, #0f2e28 40%, #1a443c 80%, #1e5248 100%)",
         }}
       >
+        {/* Background decoration */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div
-            className="absolute -top-24 -left-24 w-96 h-96 rounded-full opacity-10"
+            className="absolute -top-32 -left-32 w-[480px] h-[480px] rounded-full opacity-[0.07]"
             style={{
-              background: "radial-gradient(circle, #86ead4, transparent)",
+              background:
+                "radial-gradient(circle, #86ead4 0%, transparent 70%)",
             }}
           />
           <div
-            className="absolute bottom-0 right-0 w-72 h-72 rounded-full opacity-10"
+            className="absolute -bottom-24 -right-16 w-80 h-80 rounded-full opacity-[0.07]"
             style={{
-              background: "radial-gradient(circle, #86ead4, transparent)",
+              background:
+                "radial-gradient(circle, #86ead4 0%, transparent 70%)",
+            }}
+          />
+          {/* Subtle grid */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage:
+                "linear-gradient(#86ead4 1px, transparent 1px), linear-gradient(90deg, #86ead4 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
             }}
           />
         </div>
 
+        {/* Logo */}
         <Link href={basePath || "/"}>
-          <div className="flex items-center gap-3 relative z-10 cursor-pointer">
+          <div className="flex items-center gap-2.5 relative z-10 cursor-pointer group">
             <img
               src={`${basePath}/logo.svg`}
-              alt="WhisperBox"
-              className="w-10 h-10"
+              alt="vooi"
+              className="w-9 h-9 transition-opacity group-hover:opacity-80"
             />
-            <span className="text-white text-xl font-bold tracking-tight">
-              WhisperBox
+            <span className="text-white text-lg font-bold tracking-tight">
+              vooi
+              <span style={{ color: "#86ead4" }}>.lol</span>
             </span>
           </div>
         </Link>
 
-        <div className="relative z-10">
-          <p className="text-[#86ead4] text-sm font-semibold uppercase tracking-widest mb-4">
-            Platform pesan anonim #1
-          </p>
-          <h1 className="text-white text-4xl xl:text-5xl font-bold leading-tight mb-6">
-            Pesan jujur,
-            <br />
-            <span style={{ color: "#86ead4" }}>tanpa batas.</span>
+        {/* Center content */}
+        <div className="relative z-10 flex-1 flex flex-col justify-center py-12">
+          {/* Badge */}
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 w-fit text-xs font-semibold tracking-wider uppercase"
+            style={{
+              background: "rgba(134,234,212,0.1)",
+              border: "1px solid rgba(134,234,212,0.25)",
+              color: "#86ead4",
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full animate-pulse"
+              style={{ background: "#86ead4" }}
+            />
+            Platform Pesan Anonim #1
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-white font-bold leading-[1.15] mb-4">
+            <span className="text-4xl xl:text-5xl block">Pesan jujur,</span>
+            <span
+              className="text-4xl xl:text-5xl block"
+              style={{ color: "#86ead4" }}
+            >
+              tanpa batas.
+            </span>
           </h1>
-          <p className="text-[#a7f3e4] text-lg leading-relaxed mb-10 max-w-sm">
-            Buat profil unik-mu dan terima pesan anonim dari siapa saja — teman,
-            followers, atau orang yang belum kamu kenal.
+
+          <p className="text-[#7eceba] text-base leading-relaxed mb-8 max-w-[340px]">
+            Buat profil-mu, bagikan link ke bio sosial media, dan terima pesan
+            anonim jujur dari siapa saja.
           </p>
-          <div className="space-y-4">
-            {FEATURES.map((f, i) => (
-              <div key={i} className="flex items-start gap-4">
-                <div
-                  className="w-9 h-9 flex items-center justify-center shrink-0 text-base"
-                  style={{ background: "rgba(134,234,212,0.15)" }}
-                >
-                  {f.icon}
+
+          {/* Message preview cards */}
+          <div className="space-y-2.5 max-w-[360px]">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-3"
+              style={{ color: "rgba(134,234,212,0.5)" }}
+            >
+              Contoh pesan yang kamu terima
+            </p>
+            {SAMPLE_MESSAGES.map((msg, i) => (
+              <div
+                key={i}
+                className="flex items-start gap-3 p-3.5 rounded-lg"
+                style={{
+                  background: "rgba(255,255,255,0.05)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <span
+                  className="w-2 h-2 rounded-full shrink-0 mt-1.5"
+                  style={{ background: msg.dot }}
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-[#d4f5ee] text-sm leading-relaxed">
+                    {msg.text}
+                  </p>
+                  <p
+                    className="text-xs mt-1"
+                    style={{ color: "rgba(134,234,212,0.4)" }}
+                  >
+                    {msg.time}
+                  </p>
                 </div>
-                <p className="text-[#a7f3e4] text-sm leading-relaxed pt-1">
-                  {f.text}
-                </p>
               </div>
             ))}
           </div>
         </div>
 
+        {/* Bottom social proof */}
         <div className="relative z-10">
           <div
-            className="flex items-center gap-3 p-4"
+            className="flex items-center gap-4 px-4 py-3 rounded-lg"
             style={{
-              background: "rgba(134,234,212,0.1)",
-              border: "1px solid rgba(134,234,212,0.2)",
+              background: "rgba(134,234,212,0.07)",
+              border: "1px solid rgba(134,234,212,0.15)",
             }}
           >
-            <div className="flex -space-x-2">
-              {["A", "R", "S", "D"].map((l, i) => (
+            <div className="flex -space-x-2.5 shrink-0">
+              {[
+                { l: "A", c: "#3b82f6" },
+                { l: "R", c: "#f43f5e" },
+                { l: "S", c: "#8b5cf6" },
+                { l: "D", c: "#f59e0b" },
+                { l: "M", c: "#14b8a6" },
+              ].map(({ l, c }, i) => (
                 <div
                   key={i}
-                  className="w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold text-white"
-                  style={{
-                    borderColor: "#1a443c",
-                    backgroundColor: [
-                      "#3b82f6",
-                      "#f43f5e",
-                      "#8b5cf6",
-                      "#f59e0b",
-                    ][i],
-                  }}
+                  className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white ring-2"
+                  style={{ backgroundColor: c, ringColor: "#0f2e28" }}
                 >
                   {l}
                 </div>
               ))}
             </div>
-            <p className="text-[#a7f3e4] text-sm">
-              Bergabung dengan{" "}
-              <span className="text-white font-semibold">10.000+</span> pengguna
-              aktif
-            </p>
+            <div>
+              <p className="text-white text-sm font-semibold">10.000+</p>
+              <p className="text-[#7eceba] text-xs">
+                pengguna aktif di seluruh Indonesia
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Right panel — form */}
-      <div className="flex-1 flex flex-col items-center justify-center p-6 lg:p-12 bg-white">
-        <div className="lg:hidden flex items-center gap-2.5 mb-8">
-          <img
-            src={`${basePath}/logo.svg`}
-            alt="WhisperBox"
-            className="w-8 h-8"
-          />
-          <span className="text-[#09090b] text-lg font-bold tracking-tight">
-            WhisperBox
-          </span>
+      {/* ── Right panel — form ── */}
+      <div className="flex-1 flex flex-col min-h-screen bg-white">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#f0f0f0]">
+          {/* Mobile logo */}
+          <Link href={basePath || "/"}>
+            <div className="flex items-center gap-2 cursor-pointer lg:hidden">
+              <img
+                src={`${basePath}/logo.svg`}
+                alt="vooi"
+                className="w-7 h-7"
+              />
+              <span className="text-[#09090b] text-base font-bold tracking-tight">
+                vooi<span className="text-[#3a9e88]">.lol</span>
+              </span>
+            </div>
+          </Link>
+
+          {/* Desktop back link */}
+          <Link href={basePath || "/"}>
+            <div className="hidden lg:flex items-center gap-1.5 text-sm text-[#71717a] hover:text-[#09090b] transition-colors cursor-pointer group">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                className="transition-transform group-hover:-translate-x-0.5"
+              >
+                <path
+                  d="M10 12L6 8L10 4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Kembali ke beranda
+            </div>
+          </Link>
+
+          {/* Mode switcher */}
+          <div className="flex items-center gap-1 text-sm text-[#71717a]">
+            {mode === "sign-in" ? (
+              <>
+                Belum punya akun?{" "}
+                <Link href={`${basePath}/sign-up`}>
+                  <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
+                    Daftar
+                  </span>
+                </Link>
+              </>
+            ) : (
+              <>
+                Sudah punya akun?{" "}
+                <Link href={`${basePath}/sign-in`}>
+                  <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
+                    Masuk
+                  </span>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-        <div className="w-full max-w-sm">{children}</div>
-        <p className="mt-8 text-center text-xs text-[#9ca3af]">
-          Dengan {mode === "sign-in" ? "masuk" : "mendaftar"}, kamu menyetujui{" "}
-          <a href="#" className="underline hover:text-[#71717a]">
-            Syarat & Ketentuan
-          </a>{" "}
-          dan{" "}
-          <a href="#" className="underline hover:text-[#71717a]">
-            Kebijakan Privasi
-          </a>{" "}
-          kami.
-        </p>
+
+        {/* Form area */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
+          <div className="w-full max-w-[380px]">{children}</div>
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-5 border-t border-[#f0f0f0] text-center">
+          <p className="text-xs text-[#9ca3af]">
+            Dengan {mode === "sign-in" ? "masuk" : "mendaftar"}, kamu menyetujui{" "}
+            <Link href="/ketentuan">
+              <span className="underline hover:text-[#71717a] cursor-pointer transition-colors">
+                Syarat & Ketentuan
+              </span>
+            </Link>{" "}
+            dan{" "}
+            <Link href="/privasi">
+              <span className="underline hover:text-[#71717a] cursor-pointer transition-colors">
+                Kebijakan Privasi
+              </span>
+            </Link>{" "}
+            vooi.
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -446,7 +572,7 @@ function ClerkProviderWithRoutes() {
         signIn: {
           start: {
             title: "Selamat datang kembali",
-            subtitle: "Masuk ke akun WhisperBox-mu",
+            subtitle: "Masuk ke akun vooi-mu",
           },
         },
         signUp: {
