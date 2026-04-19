@@ -11,7 +11,31 @@ Browser → Nginx (reverse proxy, SSL) → {
 
 ---
 
-## 1. Prasyarat Server
+## 1. Setup User (Jangan Pakai Root!)
+
+Menjalankan aplikasi sebagai `root` berbahaya — kalau ada bug atau celah keamanan, penyerang langsung dapat akses penuh ke server. Gunakan user biasa dengan hak sudo.
+
+**Jika VPS kamu hanya punya user `root`**, buat user baru dulu:
+
+```bash
+# Login sebagai root, lalu:
+adduser deploy                        # buat user baru (ganti "deploy" jika mau)
+usermod -aG sudo deploy               # beri hak sudo
+rsync --archive --chown=deploy:deploy ~/.ssh /home/deploy  # copy SSH key agar bisa login
+```
+
+Setelah itu, **logout dari root** dan login ulang sebagai user baru:
+
+```bash
+ssh deploy@ip-server-kamu
+```
+
+> Semua perintah di panduan ini dijalankan sebagai user ini (bukan root).
+> Perintah yang butuh akses sistem akan diawali `sudo`.
+
+---
+
+## 2. Prasyarat Server
 
 ```bash
 # Ubuntu/Debian
@@ -33,7 +57,7 @@ sudo apt install -y postgresql postgresql-contrib
 
 ---
 
-## 2. Siapkan Database PostgreSQL
+## 3. Siapkan Database PostgreSQL
 
 ```bash
 sudo -u postgres psql
@@ -52,7 +76,7 @@ postgresql://whisperbox:ganti_password_kuat@localhost:5432/whisperbox
 
 ---
 
-## 3. Clone dan Install Dependensi
+## 4. Clone dan Install Dependensi
 
 ```bash
 cd /var/www
@@ -63,7 +87,7 @@ pnpm install
 
 ---
 
-## 4. Konfigurasi Environment Variables
+## 5. Konfigurasi Environment Variables
 
 Buat file `/var/www/whisperbox/.env`:
 
@@ -117,7 +141,7 @@ PREMIUM_PRICE=49900
 
 ---
 
-## 5. Penjelasan Tiap Environment Variable
+## 6. Penjelasan Tiap Environment Variable
 
 | Variable                | Keterangan                                 | Dari mana                                                       |
 | ----------------------- | ------------------------------------------ | --------------------------------------------------------------- |
@@ -143,7 +167,7 @@ PREMIUM_PRICE=49900
 
 ---
 
-## 6. Konfigurasi Clerk untuk Domain Custom
+## 7. Konfigurasi Clerk untuk Domain Custom
 
 Di [Clerk Dashboard](https://dashboard.clerk.com):
 
@@ -159,7 +183,7 @@ CLERK_PROXY_URL=https://domainmu.com/api/__clerk
 
 ---
 
-## 7. Konfigurasi Cloudflare Turnstile
+## 8. Konfigurasi Cloudflare Turnstile
 
 1. Masuk ke [Cloudflare Dashboard](https://dash.cloudflare.com) → **Turnstile**
 2. Tambahkan site baru → pilih **Managed** → masukkan domain
@@ -168,7 +192,7 @@ CLERK_PROXY_URL=https://domainmu.com/api/__clerk
 
 ---
 
-## 8. Konfigurasi TriPay Production
+## 9. Konfigurasi TriPay Production
 
 1. Login ke [TriPay Dashboard](https://tripay.co.id/member/merchant)
 2. Pastikan status merchant sudah **active** (bukan sandbox)
@@ -178,7 +202,7 @@ CLERK_PROXY_URL=https://domainmu.com/api/__clerk
 
 ---
 
-## 9. Build Aplikasi
+## 10. Build Aplikasi
 
 ```bash
 cd /var/www/whisperbox
@@ -202,7 +226,7 @@ Output frontend akan ada di: `artifacts/whisperbox/dist/public/`
 
 ---
 
-## 10. Jalankan Migrasi Database
+## 11. Jalankan Migrasi Database
 
 ```bash
 cd /var/www/whisperbox
@@ -212,7 +236,7 @@ pnpm --filter @workspace/db run push
 
 ---
 
-## 11. Jalankan dengan PM2
+## 12. Jalankan dengan PM2
 
 Buat file `ecosystem.config.js` di root proyek:
 
@@ -241,7 +265,7 @@ pm2 startup   # ikuti instruksi yang muncul agar auto-start saat reboot
 
 ---
 
-## 12. Konfigurasi Nginx
+## 13. Konfigurasi Nginx
 
 ```bash
 sudo nano /etc/nginx/sites-available/whisperbox
@@ -281,7 +305,7 @@ sudo systemctl reload nginx
 
 ---
 
-## 13. SSL dengan Certbot
+## 14. SSL dengan Certbot
 
 ```bash
 sudo certbot --nginx -d domainmu.com -d www.domainmu.com
@@ -291,7 +315,7 @@ Certbot akan otomatis mengubah config Nginx untuk HTTPS.
 
 ---
 
-## 14. Verifikasi
+## 15. Verifikasi
 
 Cek semua layanan berjalan:
 
