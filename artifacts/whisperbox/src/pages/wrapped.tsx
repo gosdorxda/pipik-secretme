@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { useGetMyProfile, useGetMyWrapped } from "@workspace/api-client-react";
 import type { WrappedStats } from "@workspace/api-client-react";
@@ -308,6 +309,25 @@ function Slide7FinalCard({
   const [copyStatus, setCopyStatus] = useState<"idle" | "generating" | "done" | "unsupported">("idle");
   const storiesCardRef = useRef<HTMLDivElement>(null);
 
+  // Pre-fetch avatar as base64 data URL so html-to-image can inline it reliably
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
+  useEffect(() => {
+    const url = resolveAvatarUrl(avatarUrl);
+    if (!url) { setAvatarDataUrl(null); return; }
+    let cancelled = false;
+    fetch(url)
+      .then(r => r.blob())
+      .then(blob => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      }))
+      .then(dataUrl => { if (!cancelled) setAvatarDataUrl(dataUrl); })
+      .catch(() => { if (!cancelled) setAvatarDataUrl(null); });
+    return () => { cancelled = true; };
+  }, [avatarUrl]);
+
   const handleShare = async () => {
     const profileUrl = `${window.location.origin}/@${username}`;
     try {
@@ -374,6 +394,7 @@ function Slide7FinalCard({
   ];
 
   return (
+    <>
     <SlideShell style={{ position: "relative" }}>
       <PremiumLock isPremium={isPremium} />
 
@@ -486,135 +507,141 @@ function Slide7FinalCard({
         </p>
       </div>
 
-      {/* Hidden off-screen Stories card used for image capture */}
-      <div
-        ref={storiesCardRef}
-        style={{
-          position: "fixed",
-          left: "-9999px",
-          top: 0,
-          width: 1080,
-          height: 1920,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          background: "linear-gradient(160deg, #0f172a 0%, #0a2215 60%, #0f172a 100%)",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          overflow: "hidden",
-        }}
-      >
-        {/* Glow orb */}
-        <div style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 900,
-          height: 900,
-          borderRadius: "50%",
-          background: `radial-gradient(circle, ${W_MINT}18 0%, transparent 70%)`,
-          pointerEvents: "none",
-        }} />
+    </SlideShell>
 
-        {/* Content */}
-        <div style={{ position: "relative", width: 840, display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
-          {/* Badge */}
-          <div style={{
-            display: "inline-flex",
+      {/* Hidden Stories card — mounted in document.body via portal so parent
+          overflow:hidden never clips it, and avatarDataUrl (base64) is used so
+          html-to-image can inline the image without extra network requests. */}
+      {createPortal(
+        <div
+          ref={storiesCardRef}
+          style={{
+            position: "fixed",
+            left: "-9999px",
+            top: 0,
+            width: 1080,
+            height: 1920,
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 10,
-            padding: "14px 28px",
-            borderRadius: 999,
-            background: `${W_MINT}18`,
-            border: `2px solid ${W_MINT}50`,
-            color: W_MINT,
-            fontSize: 28,
-            fontWeight: 700,
-            letterSpacing: 3,
-            textTransform: "uppercase",
-            marginBottom: 72,
-          }}>
-            ✨ WhisperBox Wrapped
-          </div>
+            justifyContent: "center",
+            background: "linear-gradient(160deg, #0f172a 0%, #0a2215 60%, #0f172a 100%)",
+            fontFamily: "system-ui, -apple-system, sans-serif",
+            overflow: "hidden",
+          }}
+        >
+          {/* Glow orb */}
+          <div style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 900,
+            height: 900,
+            borderRadius: "50%",
+            background: `radial-gradient(circle, ${W_MINT}18 0%, transparent 70%)`,
+            pointerEvents: "none",
+          }} />
 
-          {/* Avatar */}
-          {resolveAvatarUrl(avatarUrl) ? (
-            <img
-              src={resolveAvatarUrl(avatarUrl)!}
-              alt={displayName}
-              crossOrigin="anonymous"
-              style={{
+          {/* Content */}
+          <div style={{ position: "relative", width: 840, display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+            {/* Badge */}
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "14px 28px",
+              borderRadius: 999,
+              background: `${W_MINT}18`,
+              border: `2px solid ${W_MINT}50`,
+              color: W_MINT,
+              fontSize: 28,
+              fontWeight: 700,
+              letterSpacing: 3,
+              textTransform: "uppercase",
+              marginBottom: 72,
+            }}>
+              ✨ WhisperBox Wrapped
+            </div>
+
+            {/* Avatar — use pre-fetched base64 data URL for reliable rendering */}
+            {avatarDataUrl ? (
+              <img
+                src={avatarDataUrl}
+                alt={displayName}
+                style={{
+                  width: 160,
+                  height: 160,
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                  marginBottom: 40,
+                  border: `4px solid ${W_MINT}60`,
+                }}
+              />
+            ) : (
+              <div style={{
                 width: 160,
                 height: 160,
                 borderRadius: "50%",
-                objectFit: "cover",
-                marginBottom: 40,
-                border: `4px solid ${W_MINT}60`,
-              }}
-            />
-          ) : (
-            <div style={{
-              width: 160,
-              height: 160,
-              borderRadius: "50%",
-              background: `${W_MINT}25`,
-              color: W_MINT,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 72,
-              fontWeight: 800,
-              marginBottom: 40,
-            }}>
-              {(displayName || username || "?")[0].toUpperCase()}
-            </div>
-          )}
-
-          {/* Name */}
-          <p style={{ fontSize: 88, fontWeight: 800, color: W_TEXT, margin: 0, lineHeight: 1.1, textAlign: "center" }}>
-            {displayName}
-          </p>
-          <p style={{ fontSize: 36, color: W_MUTED, margin: "16px 0 80px", textAlign: "center" }}>
-            {period}
-          </p>
-
-          {/* Stats grid */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 4,
-            width: "100%",
-            borderRadius: 24,
-            overflow: "hidden",
-            background: `${W_MINT}12`,
-          }}>
-            {stats.map(({ label, value }) => (
-              <div key={label} style={{
-                padding: "56px 32px",
-                background: W_CARD,
-                textAlign: "center",
+                background: `${W_MINT}25`,
+                color: W_MINT,
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                gap: 12,
+                justifyContent: "center",
+                fontSize: 72,
+                fontWeight: 800,
+                marginBottom: 40,
               }}>
-                <p style={{ fontSize: 60, fontWeight: 800, color: W_MINT, margin: 0, lineHeight: 1 }}>{value}</p>
-                <p style={{ fontSize: 26, color: W_MUTED, margin: 0 }}>{label}</p>
+                {(displayName || username || "?")[0].toUpperCase()}
               </div>
-            ))}
-          </div>
+            )}
 
-          {/* Footer */}
-          <p style={{ fontSize: 28, color: W_MUTED, marginTop: 64, textAlign: "center", opacity: 0.7 }}>
-            whisperbox — terima kejujuran, tanpa takut.
-          </p>
-          <p style={{ fontSize: 26, color: `${W_MINT}80`, marginTop: 12, textAlign: "center" }}>
-            whisperbox.app
-          </p>
-        </div>
-      </div>
-    </SlideShell>
+            {/* Name */}
+            <p style={{ fontSize: 88, fontWeight: 800, color: W_TEXT, margin: 0, lineHeight: 1.1, textAlign: "center" }}>
+              {displayName}
+            </p>
+            <p style={{ fontSize: 36, color: W_MUTED, margin: "16px 0 80px", textAlign: "center" }}>
+              {period}
+            </p>
+
+            {/* Stats grid */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 4,
+              width: "100%",
+              borderRadius: 24,
+              overflow: "hidden",
+              background: `${W_MINT}12`,
+            }}>
+              {stats.map(({ label, value }) => (
+                <div key={label} style={{
+                  padding: "56px 32px",
+                  background: W_CARD,
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 12,
+                }}>
+                  <p style={{ fontSize: 60, fontWeight: 800, color: W_MINT, margin: 0, lineHeight: 1 }}>{value}</p>
+                  <p style={{ fontSize: 26, color: W_MUTED, margin: 0 }}>{label}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <p style={{ fontSize: 28, color: W_MUTED, marginTop: 64, textAlign: "center", opacity: 0.7 }}>
+              whisperbox — terima kejujuran, tanpa takut.
+            </p>
+            <p style={{ fontSize: 26, color: `${W_MINT}80`, marginTop: 12, textAlign: "center" }}>
+              whisperbox.app
+            </p>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 

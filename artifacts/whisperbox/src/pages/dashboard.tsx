@@ -411,6 +411,8 @@ export default function DashboardPage() {
                 <img
                   src={resolveAvatarUrl(profile.avatarUrl)!}
                   alt={displayName}
+                  loading="lazy"
+                  decoding="async"
                   className="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
                 />
               ) : (

@@ -270,6 +270,8 @@ export default function PublicProfilePage() {
               <img
                 src={avatarUrl}
                 alt={displayName}
+                loading="lazy"
+                decoding="async"
                 className="w-24 h-24 rounded-full object-cover border-2 border-primary/20 shadow-sm ring-4 ring-primary/10"
               />
             ) : (
