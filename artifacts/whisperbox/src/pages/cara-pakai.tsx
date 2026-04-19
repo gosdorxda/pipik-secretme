@@ -8,6 +8,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import { StaticPageLayout } from "@/components/static-page-layout";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const STEPS = [
   {
@@ -64,6 +65,9 @@ const PREMIUM_FEATURES = [
 ];
 
 export default function CaraPakaiPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
+
   return (
     <StaticPageLayout>
       {/* Hero */}
@@ -73,7 +77,7 @@ export default function CaraPakaiPage() {
             Panduan Penggunaan
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 leading-tight">
-            Cara pakai WhisperBox
+            Cara pakai {appName}
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed max-w-lg mx-auto">
             Mulai terima pesan anonim dalam 4 langkah mudah. Tidak ada yang

@@ -1,5 +1,7 @@
 import { Link } from "wouter";
 import { Twitter, Instagram, Github, Mail } from "lucide-react";
+import { SiteLogoImg } from "@/components/site-logo";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const FOOTER_LINKS = {
   produk: [
@@ -30,20 +32,16 @@ const SOCIAL_LINKS = [
 ];
 
 export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
+
   return (
     <footer className="border-t border-border bg-white">
       <div className={`${maxWidth} mx-auto px-6 py-12`}>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
-              <img
-                src="/logo.svg"
-                alt="vooi"
-                className="w-7 h-7"
-                onError={(e) => {
-                  (e.currentTarget as HTMLImageElement).style.display = "none";
-                }}
-              />
+              <SiteLogoImg className="w-7 h-7" alt="vooi" />
               <span className="font-bold text-sm text-foreground tracking-tight">
                 vooi<span className="text-accent-foreground">.lol</span>
               </span>
@@ -134,7 +132,7 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
 
         <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} WhisperBox. Dibuat dengan ❤️ di
+            &copy; {new Date().getFullYear()} {appName}. Dibuat dengan ❤️ di
             Indonesia.
           </p>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">

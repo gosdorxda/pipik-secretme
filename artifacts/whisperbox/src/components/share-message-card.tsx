@@ -5,6 +5,7 @@ import { Download, Share, X } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 import { resolveAvatarUrl } from "@/lib/avatar";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const PALETTES = [
   {
@@ -57,6 +58,8 @@ export function ShareMessageCard({
 }: ShareMessageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
   const p = PALETTES[paletteIdx % PALETTES.length];
 
   const initials = (displayName || username || "?")
@@ -107,7 +110,7 @@ export function ShareMessageCard({
       if (navigator.share && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: "WhisperBox",
+          title: appName,
           text: `Kirim pesan anonim ke ${displayName || username} di ${publicUrl}`,
         });
       } else {
@@ -314,7 +317,7 @@ export function ShareMessageCard({
                 </span>
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>
-                WhisperBox
+                {appName}
               </span>
             </div>
           </div>

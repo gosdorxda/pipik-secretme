@@ -434,7 +434,7 @@ export default function DashboardPage() {
           setShowConfetti(true);
           toast({
             title: "Profil disimpan!",
-            description: "Selamat, selamat datang di WhisperBox!",
+            description: "Selamat, selamat datang!",
           });
         },
         onError: (err: any) => {
@@ -725,7 +725,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white leading-none mb-0.5">
-                    WhisperBox Wrapped
+                    Wrapped
                   </p>
                   <p className="text-xs" style={{ color: "#94a3b8" }}>
                     Lihat recap statistik pesanmu ✨

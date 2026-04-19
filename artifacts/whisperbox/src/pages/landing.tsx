@@ -290,29 +290,29 @@ const STATS = [
     value: "12.400+",
     label: "Pengguna aktif",
     color: "#0f9e80",
-    bg: "#ddf9f2",
-    border: "#86ead4",
+    bg: "#f0fdf9",
+    border: "#a7f3d0",
   },
   {
     value: "94.000+",
     label: "Pesan terkirim",
     color: "#6d28d9",
-    bg: "#ede9fe",
-    border: "#c4b5fd",
+    bg: "#f5f3ff",
+    border: "#ddd6fe",
   },
   {
     value: "100%",
     label: "Anonim & aman",
     color: "#0369a1",
-    bg: "#e0f2fe",
-    border: "#7dd3fc",
+    bg: "#f0f9ff",
+    border: "#bae6fd",
   },
   {
     value: "Gratis",
     label: "Untuk memulai",
     color: "#be123c",
-    bg: "#ffe4e6",
-    border: "#fda4af",
+    bg: "#fff1f2",
+    border: "#fecdd3",
   },
 ];
 
@@ -321,8 +321,8 @@ const FEATURES = [
     icon: "🔒",
     title: "100% Anonim",
     desc: "Pengirim tidak pernah teridentifikasi. Tanpa tracking, tanpa IP logging — selamanya.",
-    bg: "#fdf4ff",
-    border: "#e9d5ff",
+    bg: "#f5f3ff",
+    border: "#ede9fe",
     iconBg: "#ede9fe",
     accent: "#7c3aed",
   },
@@ -331,8 +331,8 @@ const FEATURES = [
     title: "Terima Instan",
     desc: "Pesan muncul di inbox-mu begitu dikirim. Real-time, tanpa delay, langsung notif.",
     bg: "#f0fdf9",
-    border: "#86ead4",
-    iconBg: "#ddf9f2",
+    border: "#d1fae5",
+    iconBg: "#dcfce7",
     accent: "#0f9e80",
     featured: true,
   },
@@ -341,7 +341,7 @@ const FEATURES = [
     title: "Link Personalmu",
     desc: "Satu link untuk dibagikan ke mana saja — siapa pun bisa kirim pesan tanpa akun.",
     bg: "#f0f9ff",
-    border: "#7dd3fc",
+    border: "#e0f2fe",
     iconBg: "#e0f2fe",
     accent: "#0369a1",
   },
@@ -664,23 +664,109 @@ export default function LandingPage() {
         </section>
 
         {/* ══════════════════════════════════════
-            STATS — light tinted
+            PROFILE PREVIEW
         ══════════════════════════════════════ */}
-        <section
-          className="relative py-20 overflow-hidden"
-          style={{
-            background:
-              "linear-gradient(135deg, #f0fdf9 0%, #fdf4ff 50%, #f0f9ff 100%)",
-          }}
-        >
+        <section className="relative py-24 bg-white overflow-hidden">
           <div className="absolute inset-0 pointer-events-none" aria-hidden>
             <div
-              className="landing-blob-2 absolute w-96 h-96 rounded-full blur-3xl opacity-40"
-              style={{ background: "#86ead4", top: "-30%", left: "-5%" }}
+              className="landing-blob-slow absolute w-96 h-96 rounded-full blur-3xl opacity-15"
+              style={{ background: "#ddd6fe", top: "0", right: "-5%" }}
             />
             <div
-              className="landing-blob-3 absolute w-80 h-80 rounded-full blur-3xl opacity-30"
-              style={{ background: "#ede9fe", bottom: "-20%", right: "-5%" }}
+              className="landing-blob-slow2 absolute w-72 h-72 rounded-full blur-3xl opacity-10"
+              style={{ background: "#a7f3d0", bottom: "0", left: "-5%" }}
+            />
+          </div>
+          <div className="relative max-w-5xl mx-auto px-6">
+            <div className="text-center mb-14">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-3">
+                Profil Publik
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                Tampilan yang bersih &amp; personal
+              </h2>
+              <p className="text-muted-foreground text-sm mt-3 max-w-md mx-auto leading-relaxed">
+                Halaman profil publikmu siap dibagikan ke mana saja. Desain
+                minimalis yang fokus pada satu hal — menerima pesan.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div
+                className="w-full max-w-sm bg-white border border-border rounded-2xl overflow-hidden shadow-sm"
+                style={{
+                  boxShadow:
+                    "0 12px 40px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04)",
+                }}
+              >
+                {/* Profile header */}
+                <div className="px-6 pt-8 pb-5 text-center border-b border-border bg-gradient-to-b from-secondary/30 to-transparent">
+                  <div className="w-16 h-16 rounded-full bg-primary mx-auto flex items-center justify-center text-primary-foreground text-xl font-bold mb-3">
+                    A
+                  </div>
+                  <p className="font-bold text-foreground text-base leading-tight">
+                    Anisa Rahmawati
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    @anisa_r
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2 max-w-[220px] mx-auto leading-relaxed">
+                    Kirim pesan jujur untukku, aku baca semua 💌
+                  </p>
+                </div>
+                {/* Send message area */}
+                <div className="px-5 py-5">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    Kirim Pesan Anonim
+                  </p>
+                  <div className="w-full min-h-[72px] rounded-xl border border-border bg-secondary/20 px-3 py-2.5 text-xs text-muted-foreground leading-relaxed">
+                    Tulis pesanmu di sini... (identitasmu tetap tersembunyi)
+                  </div>
+                  <div className="mt-3 flex items-center justify-between">
+                    <span className="text-[10px] text-muted-foreground">
+                      0 / 500 karakter
+                    </span>
+                    <div className="bg-primary text-primary-foreground text-xs font-semibold px-4 py-1.5 rounded-lg">
+                      Kirim →
+                    </div>
+                  </div>
+                </div>
+                {/* Footer of card */}
+                <div className="px-5 pb-4 flex items-center justify-center gap-1.5 text-[10px] text-muted-foreground border-t border-border pt-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  Identitas pengirim selalu anonim &amp; tidak tersimpan
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-wrap justify-center gap-6 mt-10">
+              {[
+                { icon: "🎨", label: "Foto profil & bio kustom" },
+                { icon: "🔗", label: "Link sosial media (Premium)" },
+                { icon: "💬", label: "Balas publik ke pesan" },
+              ].map(({ icon, label }) => (
+                <div
+                  key={label}
+                  className="flex items-center gap-2 text-sm text-muted-foreground"
+                >
+                  <span className="text-base">{icon}</span>
+                  <span>{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════
+            STATS — light tinted
+        ══════════════════════════════════════ */}
+        <section className="relative py-20 overflow-hidden bg-secondary/20">
+          <div className="absolute inset-0 pointer-events-none" aria-hidden>
+            <div
+              className="landing-blob-2 absolute w-96 h-96 rounded-full blur-3xl opacity-20"
+              style={{ background: "#a7f3d0", top: "-30%", left: "-5%" }}
+            />
+            <div
+              className="landing-blob-3 absolute w-80 h-80 rounded-full blur-3xl opacity-15"
+              style={{ background: "#ddd6fe", bottom: "-20%", right: "-5%" }}
             />
           </div>
 

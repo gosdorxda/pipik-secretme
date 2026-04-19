@@ -8,6 +8,7 @@ import {
   Lock,
 } from "lucide-react";
 import { StaticPageLayout } from "@/components/static-page-layout";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const STATS = [
   { label: "Pengguna Aktif", value: "10.000+" },
@@ -39,6 +40,9 @@ const VALUES = [
 ];
 
 export default function TentangPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
+
   return (
     <StaticPageLayout>
       {/* Hero */}
@@ -46,14 +50,14 @@ export default function TentangPage() {
         <div className="max-w-4xl mx-auto px-5 py-16 text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
             <MessageSquareHeart className="w-3.5 h-3.5" />
-            Tentang WhisperBox
+            Tentang {appName}
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 leading-tight">
             Ruang aman untuk{" "}
             <span className="text-primary">kejujuran anonim</span>
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed max-w-xl mx-auto">
-            WhisperBox adalah platform pesan anonim asal Indonesia yang
+            {appName} adalah platform pesan anonim asal Indonesia yang
             memungkinkan kamu menerima pendapat jujur, pertanyaan tulus, dan
             apresiasi tulus — semua tanpa nama, semua tanpa rasa takut.
           </p>
@@ -89,19 +93,19 @@ export default function TentangPage() {
 
           <div className="prose prose-sm max-w-none text-muted-foreground leading-relaxed space-y-4">
             <p className="text-foreground text-base font-medium">
-              WhisperBox lahir dari pertanyaan sederhana: bagaimana kalau kamu
+              {appName} lahir dari pertanyaan sederhana: bagaimana kalau kamu
               bisa tahu apa yang orang lain sebenarnya pikirkan tentang kamu?
             </p>
             <p>
               Seringkali kejujuran yang paling berharga justru tidak terucapkan
               — karena takut menyinggung, takut dihakimi, atau takut hubungan
-              menjadi awkward. WhisperBox hadir sebagai jembatan: memberikan
+              menjadi awkward. {appName} hadir sebagai jembatan: memberikan
               keberanian kepada pengirim melalui anonimitas, sekaligus
               memberikan ruang aman kepada penerima untuk benar-benar mendengar.
             </p>
             <p>
               Kami percaya bahwa umpan balik yang jujur — baik pujian maupun
-              kritik — adalah hadiah. Dan WhisperBox memastikan hadiah itu bisa
+              kritik — adalah hadiah. Dan {appName} memastikan hadiah itu bisa
               tersampaikan tanpa hambatan.
             </p>
           </div>
@@ -142,7 +146,7 @@ export default function TentangPage() {
         <div className="max-w-4xl mx-auto px-5 py-14 text-center">
           <Users className="w-8 h-8 text-primary mx-auto mb-4" />
           <h2 className="text-xl font-bold text-foreground mb-3">
-            Bergabung bersama ribuan pengguna WhisperBox
+            Bergabung bersama ribuan pengguna {appName}
           </h2>
           <p className="text-sm text-muted-foreground mb-6">
             Buat link personalmu sekarang — gratis, tanpa perlu kartu kredit.

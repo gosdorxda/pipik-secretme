@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "wouter";
 import { useGetMyProfile, useGetMyWrapped } from "@workspace/api-client-react";
+import { useSiteBranding } from "@/hooks/use-branding";
 import type { WrappedStats } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import {
@@ -170,6 +171,8 @@ function Slide0Intro({
   year: number;
   month: number | null;
 }) {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
   const period = month ? `${MONTHS_ID[month - 1]} ${year}` : `Tahun ${year}`;
   return (
     <SlideShell>
@@ -190,7 +193,7 @@ function Slide0Intro({
             border: `1px solid ${W_MINT}40`,
           }}
         >
-          <Sparkles className="w-3.5 h-3.5" /> WhisperBox Wrapped
+          <Sparkles className="w-3.5 h-3.5" /> {appName} Wrapped
         </div>
         <h1
           className="text-4xl md:text-6xl font-bold mb-4 leading-tight"
@@ -502,6 +505,8 @@ function Slide7FinalCard({
   month: number | null;
   avatarUrl?: string | null;
 }) {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
   const period = month ? `${MONTHS_ID[month - 1]} ${year}` : `Tahun ${year}`;
   const peakDay = data.dayDistribution.reduce((a, b) =>
     a.count >= b.count ? a : b,
@@ -640,7 +645,7 @@ function Slide7FinalCard({
               className="inline-flex items-center gap-2 text-xs font-bold mb-3"
               style={{ color: W_MINT }}
             >
-              <Sparkles className="w-3.5 h-3.5" /> WhisperBox Wrapped
+              <Sparkles className="w-3.5 h-3.5" /> {appName} Wrapped
             </div>
             {resolveAvatarUrl(avatarUrl) ? (
               <img
@@ -858,7 +863,7 @@ function Slide7FinalCard({
                 marginBottom: 72,
               }}
             >
-              ✨ WhisperBox Wrapped
+              ✨ {appName} Wrapped
             </div>
 
             {/* Avatar — use pre-fetched base64 data URL for reliable rendering */}
@@ -996,6 +1001,8 @@ const TOTAL_SLIDES = 8;
 
 export default function WrappedPage() {
   const { data: profile } = useGetMyProfile();
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
   const [phase, setPhase] = useState<"select" | "slides">("select");
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState<number | null>(new Date().getMonth() + 1);
@@ -1054,7 +1061,7 @@ export default function WrappedPage() {
                 border: `1px solid ${W_MINT}40`,
               }}
             >
-              <Sparkles className="w-3.5 h-3.5" /> WhisperBox Wrapped
+              <Sparkles className="w-3.5 h-3.5" /> {appName} Wrapped
             </div>
             <h1 className="text-3xl font-bold mb-2" style={{ color: W_TEXT }}>
               Lihat Recap-mu

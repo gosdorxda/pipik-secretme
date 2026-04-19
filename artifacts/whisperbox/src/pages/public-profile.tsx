@@ -678,7 +678,7 @@ export default function PublicProfilePage() {
                 W
               </span>
             </div>
-            <span className="font-medium text-foreground">WhisperBox</span>
+            <span className="font-medium text-foreground">vooi.lol</span>
             <span>— Terima pesan anonim dari siapa saja</span>
           </div>
           <div className="flex items-center gap-3">

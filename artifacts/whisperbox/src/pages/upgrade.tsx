@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAppConfig } from "@/hooks/use-app-config";
+import { useSiteBranding } from "@/hooks/use-branding";
 import {
   Crown,
   Check,
@@ -160,6 +161,8 @@ export default function UpgradePage() {
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { data: configData } = useAppConfig();
   const premiumPrice = configData?.premiumPrice ?? 49900;
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
 
   const handleCopyQr = () => {
     if (!qrString) return;
@@ -529,7 +532,7 @@ export default function UpgradePage() {
             <Crown className="w-3.5 h-3.5" /> Premium Lifetime
           </div>
           <h1 className="text-3xl font-bold mb-2">
-            Upgrade ke WhisperBox Premium
+            Upgrade ke {appName} Premium
           </h1>
           <p className="text-muted-foreground max-w-sm mx-auto text-sm leading-relaxed">
             Bayar sekali, nikmati selamanya. Buka semua fitur dan buat profilmu

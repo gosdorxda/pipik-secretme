@@ -1,8 +1,12 @@
 import { StaticPageLayout } from "@/components/static-page-layout";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const LAST_UPDATED = "19 April 2026";
 
 export default function PrivasiPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
+
   return (
     <StaticPageLayout>
       {/* Hero */}
@@ -12,7 +16,7 @@ export default function PrivasiPage() {
             Kebijakan Privasi
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-3">
-            Kebijakan Privasi WhisperBox
+            Kebijakan Privasi {appName}
           </h1>
           <p className="text-sm text-muted-foreground">
             Terakhir diperbarui: {LAST_UPDATED}
@@ -25,7 +29,7 @@ export default function PrivasiPage() {
         <div className="max-w-4xl mx-auto px-5 py-12 space-y-10 text-sm leading-relaxed">
           <div>
             <p className="text-muted-foreground">
-              WhisperBox ("kami", "kita", atau "layanan") berkomitmen untuk
+              {appName} ("kami", "kita", atau "layanan") berkomitmen untuk
               melindungi privasi penggunanya. Kebijakan ini menjelaskan data apa
               yang kami kumpulkan, bagaimana kami menggunakannya, dan hak-hak
               kamu sebagai pengguna.
@@ -62,7 +66,7 @@ export default function PrivasiPage() {
               Kami menggunakan data yang dikumpulkan untuk:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-muted-foreground">
-              <li>Menyediakan dan menjalankan layanan WhisperBox</li>
+              <li>Menyediakan dan menjalankan layanan {appName}</li>
               <li>Mengirim notifikasi email yang kamu aktifkan</li>
               <li>Mencegah spam dan penyalahgunaan layanan</li>
               <li>Meningkatkan kualitas dan keamanan platform</li>
@@ -77,7 +81,7 @@ export default function PrivasiPage() {
 
           <Section title="3. Anonimitas Pengirim">
             <p className="text-muted-foreground">
-              WhisperBox dirancang untuk menjaga anonimitas pengirim pesan. Kami
+              {appName} dirancang untuk menjaga anonimitas pengirim pesan. Kami
               tidak menyimpan, menampilkan, atau membagikan informasi identitas
               pengirim kepada pemilik profil atau pihak manapun. Hash IP yang
               kami simpan tidak dapat digunakan untuk melacak atau

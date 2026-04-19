@@ -1,8 +1,12 @@
 import { StaticPageLayout } from "@/components/static-page-layout";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const LAST_UPDATED = "19 April 2026";
 
 export default function KetentuanPage() {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
+
   return (
     <StaticPageLayout>
       {/* Hero */}
@@ -12,7 +16,7 @@ export default function KetentuanPage() {
             Syarat &amp; Ketentuan
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-3">
-            Syarat &amp; Ketentuan Layanan
+            Syarat &amp; Ketentuan {appName}
           </h1>
           <p className="text-sm text-muted-foreground">
             Terakhir diperbarui: {LAST_UPDATED}
@@ -25,7 +29,7 @@ export default function KetentuanPage() {
         <div className="max-w-4xl mx-auto px-5 py-12 space-y-10 text-sm leading-relaxed">
           <div>
             <p className="text-muted-foreground">
-              Dengan menggunakan layanan WhisperBox ("Layanan"), kamu menyetujui
+              Dengan menggunakan layanan {appName} ("Layanan"), kamu menyetujui
               Syarat &amp; Ketentuan ini. Harap baca dengan seksama sebelum
               menggunakan Layanan.
             </p>
@@ -33,15 +37,15 @@ export default function KetentuanPage() {
 
           <Section title="1. Penerimaan Syarat">
             <p className="text-muted-foreground">
-              Dengan mendaftar atau menggunakan WhisperBox, kamu menyatakan
-              bahwa kamu berusia minimal 13 tahun dan menyetujui syarat-syarat
-              ini. Jika kamu tidak setuju, harap tidak menggunakan Layanan.
+              Dengan mendaftar atau menggunakan {appName}, kamu menyatakan bahwa
+              kamu berusia minimal 13 tahun dan menyetujui syarat-syarat ini.
+              Jika kamu tidak setuju, harap tidak menggunakan Layanan.
             </p>
           </Section>
 
           <Section title="2. Penggunaan Layanan">
             <p className="text-muted-foreground mb-3">
-              WhisperBox adalah platform pesan anonim untuk tujuan yang sah dan
+              {appName} adalah platform pesan anonim untuk tujuan yang sah dan
               positif. Kamu boleh menggunakan Layanan untuk:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-muted-foreground mb-4">
@@ -87,15 +91,15 @@ export default function KetentuanPage() {
               <li>Segera melaporkan akses yang tidak sah ke akunmu</li>
             </ul>
             <p className="text-muted-foreground mt-3">
-              WhisperBox tidak bertanggung jawab atas kerugian akibat
-              kegagalanmu menjaga keamanan akun.
+              {appName} tidak bertanggung jawab atas kerugian akibat kegagalanmu
+              menjaga keamanan akun.
             </p>
           </Section>
 
           <Section title="5. Konten Pengguna">
             <p className="text-muted-foreground">
               Kamu tetap memiliki hak atas konten yang kamu kirim atau tampilkan
-              di WhisperBox. Dengan menggunakan Layanan, kamu memberi kami
+              di {appName}. Dengan menggunakan Layanan, kamu memberi kami
               lisensi terbatas untuk menyimpan dan menampilkan konten tersebut
               sesuai fungsi platform. Kami berhak menghapus konten yang
               melanggar Syarat ini kapan saja.
@@ -114,7 +118,7 @@ export default function KetentuanPage() {
 
           <Section title="7. Premium dan Pembayaran">
             <p className="text-muted-foreground mb-3">
-              Paket Premium WhisperBox adalah pembelian sekali bayar (bukan
+              Paket Premium {appName} adalah pembelian sekali bayar (bukan
               langganan berulang). Ketentuan pembayaran:
             </p>
             <ul className="list-disc list-inside space-y-1.5 text-muted-foreground">
@@ -153,7 +157,7 @@ export default function KetentuanPage() {
 
           <Section title="10. Batasan Tanggung Jawab">
             <p className="text-muted-foreground">
-              WhisperBox disediakan "sebagaimana adanya" tanpa jaminan
+              {appName} disediakan "sebagaimana adanya" tanpa jaminan
               ketersediaan 100%. Kami tidak bertanggung jawab atas kerugian
               tidak langsung yang timbul dari penggunaan atau ketidaktersediaan
               Layanan. Tanggung jawab kami terbatas pada jumlah yang telah kamu

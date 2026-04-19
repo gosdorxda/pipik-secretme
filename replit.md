@@ -62,13 +62,21 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - Saat pemilik balas pesan, `sendReplyNotification` di `email.ts` otomatis kirim email ke pengirim
 - UI: collapsible section di public-profile.tsx dengan link "Mau dapat notifikasi jika [Nama] membalas?"
 
+### Dynamic App Branding (`appName`)
+
+- `GET /api/config` returns `appName` (from `system_settings` via admin panel)
+- `use-branding.ts` hook (`useSiteBranding`) fetches `logoUrl`, `faviconUrl`, dan `appName` — staleTime 5 menit
+- Footer uses `<SiteLogoImg>` (dynamic logo from branding hook) instead of hardcoded `/logo.svg`; copyright line uses dynamic `appName`
+- All user-facing "WhisperBox" references are dynamic via `appName`: tentang, privasi, ketentuan, cara-pakai, upgrade, wrapped, dashboard, public-profile, qr-profile-card, share-message-card
+- Landing page: stat & feature card colors muted (less saturated); new "Profile Preview" section added between "How It Works" and stats
+
 ### Halaman Pendukung (Static Pages)
 
-- `/tentang` — Tentang WhisperBox (misi, cerita, nilai, stats)
+- `/tentang` — Tentang (nama aplikasi dinamis, misi, cerita, nilai, stats)
 - `/cara-pakai` — Panduan penggunaan langkah demi langkah
 - `/faq` — FAQ accordion dengan 4 kategori (Umum, Privasi, Fitur, Premium)
-- `/privasi` — Kebijakan Privasi
-- `/ketentuan` — Syarat & Ketentuan
+- `/privasi` — Kebijakan Privasi (nama aplikasi dinamis)
+- `/ketentuan` — Syarat & Ketentuan (nama aplikasi dinamis)
 - Semua halaman pakai `StaticPageLayout` (`src/components/static-page-layout.tsx`) dengan header + footer konsisten
 
 ### Object Storage (Upload Foto Profil & Logo Admin)

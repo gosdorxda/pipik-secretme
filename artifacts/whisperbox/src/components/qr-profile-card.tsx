@@ -4,6 +4,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Download, Share, X } from "lucide-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 type QRProfileCardProps = {
   displayName: string;
@@ -24,6 +25,8 @@ export function QRProfileCard({
 }: QRProfileCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "WhisperBox";
 
   const publicUrl = `${window.location.origin}/@${username}`;
   const shortUrl = `whisperbox.app/@${username}`;
@@ -67,7 +70,7 @@ export function QRProfileCard({
       if (navigator.share && navigator.canShare({ files: [file] })) {
         await navigator.share({
           files: [file],
-          title: "WhisperBox",
+          title: appName,
           text: `Kirimi ${displayName || username} pesan anonim! ${shortUrl}`,
         });
       } else {
@@ -374,7 +377,7 @@ export function QRProfileCard({
                 </span>
               </div>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>
-                WhisperBox
+                {appName}
               </span>
             </div>
           </div>
