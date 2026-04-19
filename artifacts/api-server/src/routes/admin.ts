@@ -138,6 +138,80 @@ router.patch("/users/:id", async (req, res) => {
   }
 });
 
+router.delete("/users/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const [deleted] = await db
+      .delete(usersTable)
+      .where(eq(usersTable.id, id))
+      .returning({ id: usersTable.id });
+    if (!deleted) {
+      res.status(404).json({ error: "User tidak ditemukan" });
+      return;
+    }
+    res.json({ success: true });
+  } catch (err) {
+    req.log.error({ err }, "Error deleting user");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/stats/daily", async (req, res) => {
+  try {
+    const [dailyRegistrations, dailyRevenue] = await Promise.all([
+      db.execute(sql`
+        SELECT
+          DATE(created_at AT TIME ZONE 'Asia/Jakarta') AS day,
+          COUNT(*)::int AS count
+        FROM users
+        WHERE created_at >= NOW() - INTERVAL '7 days'
+        GROUP BY day
+        ORDER BY day ASC
+      `),
+      db.execute(sql`
+        SELECT
+          DATE(paid_at AT TIME ZONE 'Asia/Jakarta') AS day,
+          SUM(amount)::bigint AS total
+        FROM transactions
+        WHERE status = 'PAID' AND paid_at >= NOW() - INTERVAL '7 days'
+        GROUP BY day
+        ORDER BY day ASC
+      `),
+    ]);
+
+    const days: string[] = [];
+    const now = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      days.push(d.toISOString().slice(0, 10));
+    }
+
+    const regMap = new Map<string, number>();
+    for (const row of dailyRegistrations.rows as any[]) {
+      regMap.set(String(row.day).slice(0, 10), Number(row.count));
+    }
+    const revMap = new Map<string, number>();
+    for (const row of dailyRevenue.rows as any[]) {
+      revMap.set(String(row.day).slice(0, 10), Number(row.total));
+    }
+
+    const registrations = days.map((d) => ({
+      day: d,
+      count: regMap.get(d) ?? 0,
+    }));
+    const revenue = days.map((d) => ({
+      day: d,
+      total: revMap.get(d) ?? 0,
+    }));
+
+    res.json({ registrations, revenue });
+  } catch (err) {
+    req.log.error({ err }, "Error getting daily stats");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.delete("/users/:id/premium", async (req, res) => {
   const { id } = req.params;
   try {

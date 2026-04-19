@@ -1,4 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 import { useAppConfig } from "@/hooks/use-app-config";
 import { AppLayout } from "@/components/layout";
 import { Button } from "@/components/ui/button";
@@ -187,11 +196,11 @@ export default function AdminPage() {
   }
 
   const tabs: { id: Tab; label: string; icon: any }[] = [
-    { id: "overview", label: "Overview", icon: BarChart3 },
+    { id: "overview", label: "Ringkasan", icon: BarChart3 },
     { id: "users", label: "Pengguna", icon: Users },
     { id: "transactions", label: "Transaksi", icon: CreditCard },
     { id: "redeem", label: "Redeem", icon: Gift },
-    { id: "logs", label: "Server Logs", icon: ScrollText },
+    { id: "logs", label: "Log Server", icon: ScrollText },
     { id: "settings", label: "Pengaturan", icon: Settings },
   ];
 
@@ -245,15 +254,25 @@ export default function AdminPage() {
   );
 }
 
+function DayLabel(day: string) {
+  const d = new Date(day + "T00:00:00");
+  return d.toLocaleDateString("id-ID", { day: "numeric", month: "short" });
+}
+
 function OverviewTab({ secret }: { secret: string }) {
   const [stats, setStats] = useState<any>(null);
+  const [daily, setDaily] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const data = await apiFetch("/admin/stats", secret);
-        setStats(data);
+        const [statsData, dailyData] = await Promise.all([
+          apiFetch("/admin/stats", secret),
+          apiFetch("/admin/stats/daily", secret),
+        ]);
+        setStats(statsData);
+        setDaily(dailyData);
       } finally {
         setLoading(false);
       }
@@ -269,8 +288,19 @@ function OverviewTab({ secret }: { secret: string }) {
           ))}
         </div>
         <Skeleton className="h-20" />
+        <Skeleton className="h-52" />
+        <Skeleton className="h-52" />
       </div>
     );
+
+  const regData = (daily?.registrations ?? []).map((r: any) => ({
+    ...r,
+    label: DayLabel(r.day),
+  }));
+  const revData = (daily?.revenue ?? []).map((r: any) => ({
+    ...r,
+    label: DayLabel(r.day),
+  }));
 
   return (
     <div className="space-y-4">
@@ -306,6 +336,72 @@ function OverviewTab({ secret }: { secret: string }) {
           {formatIDR(stats?.totalRevenue ?? 0)}
         </p>
       </div>
+
+      <div className="bg-card border border-border rounded-sm p-5">
+        <p className="text-sm font-semibold mb-4">
+          Registrasi Pengguna Baru (7 Hari Terakhir)
+        </p>
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart
+            data={regData}
+            margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
+            <YAxis
+              allowDecimals={false}
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
+            <Tooltip
+              contentStyle={{
+                background: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: 6,
+                fontSize: 12,
+              }}
+              formatter={(v: number) => [v, "Pengguna baru"]}
+            />
+            <Bar dataKey="count" fill="#7c3aed" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="bg-card border border-border rounded-sm p-5">
+        <p className="text-sm font-semibold mb-4">
+          Pendapatan Harian (7 Hari Terakhir)
+        </p>
+        <ResponsiveContainer width="100%" height={180}>
+          <BarChart
+            data={revData}
+            margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis
+              dataKey="label"
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
+            <YAxis
+              tickFormatter={(v) =>
+                v >= 1000 ? `${(v / 1000).toFixed(0)}k` : String(v)
+              }
+              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            />
+            <Tooltip
+              contentStyle={{
+                background: "hsl(var(--card))",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: 6,
+                fontSize: 12,
+              }}
+              formatter={(v: number) => [formatIDR(v), "Pendapatan"]}
+            />
+            <Bar dataKey="total" fill="#86ead4" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }
@@ -319,6 +415,11 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
   const [searchInput, setSearchInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -356,8 +457,63 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
     }
   };
 
+  const deleteUser = async () => {
+    if (!deleteConfirm) return;
+    setDeleting(true);
+    try {
+      await apiFetch(`/admin/users/${deleteConfirm.id}`, secret, {
+        method: "DELETE",
+      });
+      setUsers((prev) => prev.filter((u) => u.id !== deleteConfirm.id));
+      setTotal((t) => t - 1);
+      toast({ description: `Akun @${deleteConfirm.name} berhasil dihapus.` });
+      setDeleteConfirm(null);
+    } catch (e: any) {
+      toast({ description: e.message, variant: "destructive" });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
+      {deleteConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-card border border-border rounded-sm p-6 max-w-sm w-full space-y-4">
+            <h3 className="font-bold text-base">Hapus Akun Pengguna</h3>
+            <p className="text-sm text-muted-foreground">
+              Yakin ingin menghapus akun{" "}
+              <span className="font-semibold text-foreground">
+                @{deleteConfirm.name}
+              </span>
+              ? Semua data termasuk pesan dan transaksi akan dihapus permanen
+              dan tidak bisa dipulihkan.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={deleting}
+              >
+                Batal
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={deleteUser}
+                disabled={deleting}
+              >
+                {deleting ? (
+                  <RefreshCw className="w-4 h-4 animate-spin mr-1" />
+                ) : null}
+                Hapus Permanen
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -399,13 +555,14 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
                 <th className="text-left px-4 py-3 font-medium">Bergabung</th>
                 <th className="text-center px-4 py-3 font-medium">Premium</th>
                 <th className="text-center px-4 py-3 font-medium">Admin</th>
+                <th className="text-center px-4 py-3 font-medium">Hapus</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {loading
                 ? [...Array(5)].map((_, i) => (
                     <tr key={i}>
-                      <td colSpan={5} className="px-4 py-3">
+                      <td colSpan={6} className="px-4 py-3">
                         <Skeleton className="h-4 w-full" />
                       </td>
                     </tr>
@@ -468,6 +625,21 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
                           <span
                             className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isAdmin ? "left-[22px]" : "left-[2px]"}`}
                           />
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() =>
+                            setDeleteConfirm({
+                              id: u.id,
+                              name: u.username,
+                            })
+                          }
+                          disabled={updatingId === u.id}
+                          className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                          title="Hapus akun"
+                        >
+                          <X className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>
