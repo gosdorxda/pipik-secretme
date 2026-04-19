@@ -73,41 +73,53 @@ const clerkAppearance = {
     fontFamily: "inherit",
     fontFamilyButtons: "inherit",
     fontSize: "0.875rem",
+    spacingUnit: "0.7rem",
   },
   elements: {
     rootBox: "w-full",
-    cardBox: "w-full shadow-none",
+    cardBox: "w-full !shadow-none !border-0",
     card: "!shadow-none !border-0 !bg-transparent !p-0",
-    footer: "!shadow-none !border-0 !bg-transparent !rounded-none",
-    headerTitle: { color: "#09090b", fontSize: "1.375rem", fontWeight: "700" },
-    headerSubtitle: { color: "#71717a", fontSize: "0.875rem" },
+    footer: "!shadow-none !border-0 !bg-transparent",
+    header: "!gap-0 !pb-3",
+    headerTitle: {
+      color: "#09090b",
+      fontSize: "1.2rem",
+      fontWeight: "700",
+      marginBottom: "2px",
+    },
+    headerSubtitle: { color: "#71717a", fontSize: "0.8rem" },
+    main: "!gap-3",
+    socialButtons: "!mb-0",
+    socialButtonsBlockButton:
+      "border border-[#e4e4e7] hover:bg-[#f4f4f5] transition-colors rounded-md !h-9",
     socialButtonsBlockButtonText: { color: "#09090b", fontWeight: "500" },
+    dividerRow: "!my-0",
+    dividerText: { color: "#9ca3af", fontSize: "0.75rem" },
+    dividerLine: "bg-[#e4e4e7]",
+    formFields: "!gap-2.5",
+    formField: "!gap-1",
     formFieldLabel: {
       color: "#374151",
-      fontSize: "0.8125rem",
+      fontSize: "0.8rem",
       fontWeight: "500",
     },
+    formFieldInput:
+      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20 bg-[#f9fafb] !h-9 rounded-md",
+    formButtonPrimary:
+      "bg-[#86ead4] hover:bg-[#7de0cb] !text-[#1a443c] font-semibold transition-colors shadow-none !h-9 !mt-0",
+    footerAction:
+      "bg-transparent !border-t !border-[#e4e4e7] !pt-3 !mt-0 !shadow-none",
     footerActionLink: { color: "#1a443c", fontWeight: "600" },
     footerActionText: { color: "#71717a" },
-    dividerText: { color: "#9ca3af", fontSize: "0.75rem" },
     identityPreviewEditButton: { color: "#1a443c" },
     formFieldSuccessText: { color: "#16a34a" },
     alertText: { color: "#09090b" },
-    socialButtonsBlockButton:
-      "border border-[#e4e4e7] hover:bg-[#f4f4f5] transition-colors rounded-md h-10",
-    formButtonPrimary:
-      "bg-[#86ead4] hover:bg-[#7de0cb] !text-[#1a443c] font-semibold transition-colors shadow-none h-10",
-    formFieldInput:
-      "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20 bg-[#f9fafb] h-10 rounded-md",
-    footerAction: "bg-transparent border-t border-[#e4e4e7] mt-4",
-    dividerLine: "bg-[#e4e4e7]",
     alert: "border-[#fca5a5] bg-[#fef2f2] rounded-md",
     alertIcon: "text-[#ef4444]",
     otpCodeFieldInput:
       "border-[#e4e4e7] focus:border-[#86ead4] focus:ring-2 focus:ring-[#86ead4]/20",
-    logoBox: "pb-1",
-    logoImage: "h-9 w-auto",
-    main: "",
+    logoBox: "!pb-2 !pt-0",
+    logoImage: "h-8 w-auto",
   },
 };
 
@@ -350,8 +362,8 @@ function AuthLayout({
           </div>
         </div>
 
-        {/* Form area — flex-1 agar form tepat di tengah sisa ruang */}
-        <div className="flex-1 flex items-center justify-center px-6 py-8">
+        {/* Form area */}
+        <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
           <div className="w-full max-w-[360px]">{children}</div>
         </div>
 
