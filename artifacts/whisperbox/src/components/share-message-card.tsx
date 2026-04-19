@@ -179,6 +179,7 @@ export function ShareMessageCard({
                   borderRadius: "50%",
                   objectFit: "cover",
                   flexShrink: 0,
+                  backgroundColor: "#e2e8f0",
                 }}
               />
             ) : (
