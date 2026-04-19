@@ -41,6 +41,8 @@ import {
   Star,
   ScrollText,
   AlertCircle,
+  Upload,
+  ImageIcon,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
@@ -1134,6 +1136,42 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
   );
 }
 
+function resolveSettingUrl(val: string): string {
+  if (!val) return "";
+  if (val.startsWith("/objects/")) return `/api/storage${val}`;
+  return val;
+}
+
+async function adminUploadImage(
+  file: File,
+  secret: string,
+): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE}/admin/upload-url`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret,
+      },
+      body: JSON.stringify({ contentType: file.type, size: file.size }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    const { uploadURL, objectPath } = await res.json();
+    const putRes = await fetch(uploadURL, {
+      method: "PUT",
+      headers: { "Content-Type": file.type },
+      body: file,
+    });
+    if (!putRes.ok) throw new Error("Gagal mengupload file ke storage");
+    return objectPath as string;
+  } catch {
+    return null;
+  }
+}
+
 function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
@@ -1144,6 +1182,8 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
     {},
   );
   const [dirty, setDirty] = useState(false);
+  const [logoUploading, setLogoUploading] = useState(false);
+  const [faviconUploading, setFaviconUploading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -1233,8 +1273,146 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
       </div>
     );
 
+  const handleImageUpload = async (
+    file: File,
+    settingKey: string,
+    setUploading: (v: boolean) => void,
+    label: string,
+  ) => {
+    setUploading(true);
+    try {
+      const objectPath = await adminUploadImage(file, secret);
+      if (!objectPath) throw new Error("Upload gagal");
+      await apiFetch("/admin/settings", secret, {
+        method: "PUT",
+        body: JSON.stringify({ [settingKey]: objectPath }),
+      });
+      setSettings((prev) => ({ ...prev, [settingKey]: objectPath }));
+      toast({ description: `${label} berhasil diupload.` });
+    } catch (e: any) {
+      toast({ description: e.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Branding: Logo & Favicon */}
+      <div className="border border-border rounded-sm overflow-hidden">
+        <div className="px-5 py-3 bg-secondary/20 border-b border-border">
+          <h3 className="text-sm font-semibold">Branding Situs</h3>
+        </div>
+        <div className="divide-y divide-border">
+          {/* Logo */}
+          <div className="px-5 py-4">
+            <label className="text-sm font-medium block mb-0.5">
+              Logo Situs
+            </label>
+            <p className="text-xs text-muted-foreground mb-3">
+              Logo yang tampil di navbar seluruh halaman. Format: SVG, PNG,
+              WebP. Maks 5 MB.
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-md border border-border bg-secondary/20 flex items-center justify-center shrink-0 overflow-hidden">
+                {resolveSettingUrl(settings.site_logo_url) ? (
+                  <img
+                    src={resolveSettingUrl(settings.site_logo_url)}
+                    alt="Logo"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                )}
+              </div>
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                  className="hidden"
+                  disabled={logoUploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    handleImageUpload(
+                      file,
+                      "site_logo_url",
+                      setLogoUploading,
+                      "Logo",
+                    );
+                    e.target.value = "";
+                  }}
+                />
+                <span
+                  className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-border rounded-sm cursor-pointer transition-colors ${logoUploading ? "bg-secondary text-muted-foreground cursor-not-allowed" : "bg-background hover:bg-secondary/40"}`}
+                >
+                  {logoUploading ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  {logoUploading ? "Mengupload..." : "Pilih & Upload Logo"}
+                </span>
+              </label>
+            </div>
+          </div>
+          {/* Favicon */}
+          <div className="px-5 py-4">
+            <label className="text-sm font-medium block mb-0.5">
+              Favicon Situs
+            </label>
+            <p className="text-xs text-muted-foreground mb-3">
+              Ikon kecil yang tampil di tab browser. Format: ICO, PNG, SVG. Maks
+              5 MB.
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-md border border-border bg-secondary/20 flex items-center justify-center shrink-0 overflow-hidden">
+                {resolveSettingUrl(settings.site_favicon_url) ? (
+                  <img
+                    src={resolveSettingUrl(settings.site_favicon_url)}
+                    alt="Favicon"
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <ImageIcon className="w-6 h-6 text-muted-foreground" />
+                )}
+              </div>
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/png,image/x-icon,image/vnd.microsoft.icon,image/svg+xml"
+                  className="hidden"
+                  disabled={faviconUploading}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    handleImageUpload(
+                      file,
+                      "site_favicon_url",
+                      setFaviconUploading,
+                      "Favicon",
+                    );
+                    e.target.value = "";
+                  }}
+                />
+                <span
+                  className={`inline-flex items-center gap-2 px-4 py-2 text-sm border border-border rounded-sm cursor-pointer transition-colors ${faviconUploading ? "bg-secondary text-muted-foreground cursor-not-allowed" : "bg-background hover:bg-secondary/40"}`}
+                >
+                  {faviconUploading ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  {faviconUploading
+                    ? "Mengupload..."
+                    : "Pilih & Upload Favicon"}
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {groups.map((group) => (
         <div
           key={group}

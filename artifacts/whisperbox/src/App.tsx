@@ -21,9 +21,11 @@ import {
   QueryClientProvider,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useSiteBranding } from "@/hooks/use-branding";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { SiteLogoImg } from "@/components/site-logo";
 
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
@@ -135,11 +137,7 @@ function AuthLayout({
       <div className="flex items-center justify-between px-6 py-4">
         <Link href={basePath || "/"}>
           <div className="flex items-center gap-2 cursor-pointer group">
-            <img
-              src={`${basePath}/logo.svg`}
-              alt="vooi"
-              className="w-7 h-7 transition-opacity group-hover:opacity-75"
-            />
+            <SiteLogoImg className="w-7 h-7 transition-opacity group-hover:opacity-75" />
             <span className="text-[#0f172a] text-base font-bold tracking-tight">
               vooi<span className="text-[#3a9e88]">.lol</span>
             </span>
@@ -347,6 +345,20 @@ function ClerkReadySignal() {
   return null;
 }
 
+function FaviconUpdater() {
+  const { data } = useSiteBranding();
+  useEffect(() => {
+    if (!data?.faviconUrl) return;
+    const link =
+      (document.querySelector("link[rel~='icon']") as HTMLLinkElement) ||
+      document.createElement("link");
+    link.rel = "icon";
+    link.href = data.faviconUrl;
+    document.head.appendChild(link);
+  }, [data?.faviconUrl]);
+  return null;
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
@@ -425,6 +437,7 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ClerkReadySignal />
+          <FaviconUpdater />
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />

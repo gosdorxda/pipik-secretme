@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { getSetting } from "../lib/settingsCache";
+import { resolveStorageUrl } from "../lib/storageUrl";
 
 const router = Router();
 
@@ -33,12 +34,17 @@ router.get("/config", async (req, res) => {
     );
     const referralUpgradePoints = parseInt(referralUpgradePointsRaw, 10) || 100;
 
+    const siteLogoUrl = await getSetting("site_logo_url", "");
+    const siteFaviconUrl = await getSetting("site_favicon_url", "");
+
     res.json({
       premiumPrice,
       redeemRate,
       referralSignupPoints,
       referralUpgradePoints,
       linkOpensPointsPer1000,
+      logoUrl: resolveStorageUrl(siteLogoUrl) || null,
+      faviconUrl: resolveStorageUrl(siteFaviconUrl) || null,
       notification:
         notificationActive === "true" && notificationMessage
           ? { message: notificationMessage, type: notificationType }

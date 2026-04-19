@@ -6,6 +6,7 @@ import { LogOut, Settings, Inbox, Star } from "lucide-react";
 import { useGetMyProfile } from "@workspace/api-client-react";
 import { Footer } from "./footer";
 import { AppBanner } from "./app-banner";
+import { SiteLogoImg } from "./site-logo";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -29,14 +30,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             href="/dashboard"
             className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0"
           >
-            <img
-              src="/logo.svg"
-              alt="vooi"
-              className="w-7 h-7"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
+            <SiteLogoImg className="w-7 h-7" />
             <span className="hidden sm:inline tracking-tight">
               vooi<span className="text-accent-foreground">.lol</span>
             </span>

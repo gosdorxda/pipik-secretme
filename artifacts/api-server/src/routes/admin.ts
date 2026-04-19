@@ -14,10 +14,25 @@ import { getBannedIps, invalidateCache } from "../lib/settingsCache";
 import { IS_SANDBOX } from "../lib/tripay";
 import { getLogs } from "../lib/logBuffer";
 import { createClerkClient, getAuth } from "@clerk/express";
+import { ObjectStorageService } from "../lib/objectStorage";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });
+
+const objectStorageService = new ObjectStorageService();
+
+const ALLOWED_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+  "image/svg+xml",
+  "image/x-icon",
+  "image/vnd.microsoft.icon",
+]);
+const MAX_UPLOAD_SIZE_BYTES = 5 * 1024 * 1024;
 
 const router = Router();
 
@@ -335,6 +350,8 @@ router.get("/settings", async (req, res) => {
       notification_active: "false",
       notification_message: "",
       notification_type: "info",
+      [SETTING_KEYS.SITE_LOGO_URL]: "",
+      [SETTING_KEYS.SITE_FAVICON_URL]: "",
     };
 
     for (const [key, val] of Object.entries(defaults)) {
@@ -515,6 +532,31 @@ router.patch("/redeem-requests/:id/status", async (req, res) => {
 router.get("/logs", (req, res) => {
   const limit = Math.min(200, Math.max(1, Number(req.query.limit) || 100));
   res.json({ logs: getLogs(limit) });
+});
+
+router.post("/upload-url", async (req, res) => {
+  const { contentType, size } = req.body ?? {};
+  if (!contentType || typeof contentType !== "string") {
+    res.status(400).json({ error: "contentType diperlukan" });
+    return;
+  }
+  if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+    res.status(400).json({ error: "Hanya file gambar yang diizinkan" });
+    return;
+  }
+  if (typeof size === "number" && size > MAX_UPLOAD_SIZE_BYTES) {
+    res.status(400).json({ error: "Ukuran file melebihi batas 5 MB" });
+    return;
+  }
+  try {
+    const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+    const objectPath =
+      objectStorageService.normalizeObjectEntityPath(uploadURL);
+    res.json({ uploadURL, objectPath });
+  } catch (err) {
+    req.log.error({ err }, "Error generating admin upload URL");
+    res.status(500).json({ error: "Gagal membuat URL upload" });
+  }
 });
 
 export default router;

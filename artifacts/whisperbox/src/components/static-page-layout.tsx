@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Footer } from "./footer";
+import { SiteLogoImg } from "./site-logo";
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
@@ -14,14 +15,7 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
             href="/"
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
-            <img
-              src="/logo.svg"
-              alt="vooi"
-              className="w-7 h-7"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
+            <SiteLogoImg className="w-7 h-7" />
             <span className="tracking-tight">
               vooi<span className="text-accent-foreground">.lol</span>
             </span>

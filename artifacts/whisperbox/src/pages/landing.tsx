@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Crown } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
+import { SiteLogoImg } from "@/components/site-logo";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -388,14 +389,7 @@ export default function LandingPage() {
       <header className="border-b border-border bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <img
-              src="/logo.svg"
-              alt="vooi"
-              className="w-7 h-7"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
+            <SiteLogoImg className="w-7 h-7" />
             <span className="font-bold text-foreground tracking-tight">
               vooi<span className="text-accent-foreground">.lol</span>
             </span>
