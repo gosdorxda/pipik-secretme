@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "yNU_C6tBl24_aTHgJY2IL"
+uri = "file://DEPLOY.md"
+type = "text"
+title = "Panduan Deploy WhisperBox ke VPS"
