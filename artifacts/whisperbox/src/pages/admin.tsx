@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "@clerk/react";
 import {
   BarChart,
   Bar,
@@ -407,6 +408,7 @@ function OverviewTab({ secret }: { secret: string }) {
 }
 
 function UsersTab({ secret, toast }: { secret: string; toast: any }) {
+  const { getToken } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -461,8 +463,10 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
     if (!deleteConfirm) return;
     setDeleting(true);
     try {
+      const clerkToken = await getToken();
       await apiFetch(`/admin/users/${deleteConfirm.id}`, secret, {
         method: "DELETE",
+        headers: clerkToken ? { Authorization: `Bearer ${clerkToken}` } : {},
       });
       setUsers((prev) => prev.filter((u) => u.id !== deleteConfirm.id));
       setTotal((t) => t - 1);

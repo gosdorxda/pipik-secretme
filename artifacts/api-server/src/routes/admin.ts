@@ -13,7 +13,7 @@ import { requireAdmin } from "../middlewares/requireAdmin";
 import { getBannedIps, invalidateCache } from "../lib/settingsCache";
 import { IS_SANDBOX } from "../lib/tripay";
 import { getLogs } from "../lib/logBuffer";
-import { createClerkClient } from "@clerk/express";
+import { createClerkClient, getAuth } from "@clerk/express";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -145,11 +145,34 @@ router.patch("/users/:id", async (req, res) => {
 
 router.delete("/users/:id", async (req, res) => {
   const { id } = req.params;
+  const callerClerkId = getAuth(req).userId ?? null;
   try {
+    const [targetUser] = await db
+      .select({ id: usersTable.id, clerkId: usersTable.clerkId })
+      .from(usersTable)
+      .where(eq(usersTable.id, id));
+
+    if (!targetUser) {
+      res.status(404).json({ error: "User tidak ditemukan" });
+      return;
+    }
+
+    if (
+      callerClerkId &&
+      targetUser.clerkId &&
+      targetUser.clerkId === callerClerkId
+    ) {
+      res
+        .status(400)
+        .json({ error: "Kamu tidak dapat menghapus akunmu sendiri." });
+      return;
+    }
+
     const [deleted] = await db
       .delete(usersTable)
       .where(eq(usersTable.id, id))
       .returning({ id: usersTable.id, clerkId: usersTable.clerkId });
+
     if (!deleted) {
       res.status(404).json({ error: "User tidak ditemukan" });
       return;
