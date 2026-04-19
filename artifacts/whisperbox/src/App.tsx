@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { removeLoader } from "@/lib/loader";
 import {
   ClerkProvider,
   SignIn,
@@ -338,6 +339,14 @@ function ReferralClaimHandler() {
   return null;
 }
 
+function ClerkReadySignal() {
+  const { isLoaded } = useAuth();
+  useEffect(() => {
+    if (isLoaded) removeLoader();
+  }, [isLoaded]);
+  return null;
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
@@ -415,6 +424,7 @@ function ClerkProviderWithRoutes() {
     >
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
+          <ClerkReadySignal />
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />
