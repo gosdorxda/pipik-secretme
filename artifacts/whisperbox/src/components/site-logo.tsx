@@ -18,7 +18,7 @@ export function SiteLogoImg({ className, alt = "vooi" }: SiteLogoProps) {
       className={className}
       onError={(e) => {
         const img = e.currentTarget as HTMLImageElement;
-        if (img.src !== FALLBACK_LOGO) {
+        if (img.getAttribute("src") !== FALLBACK_LOGO) {
           img.src = FALLBACK_LOGO;
         }
       }}
