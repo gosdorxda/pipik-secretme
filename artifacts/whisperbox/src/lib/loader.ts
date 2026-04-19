@@ -6,5 +6,5 @@ export function removeLoader() {
   const loader = document.getElementById("app-loader");
   if (!loader) return;
   loader.classList.add("fade-out");
-  setTimeout(() => loader.remove(), 350);
+  setTimeout(() => loader.remove(), 450);
 }

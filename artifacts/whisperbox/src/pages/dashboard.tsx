@@ -118,6 +118,15 @@ const CAMPAIGN_ICONS = [
   { id: "sparkles", icon: Sparkles, label: "Kilau" },
 ];
 
+function maskEmail(email: string): string {
+  const atIdx = email.indexOf("@");
+  if (atIdx < 0) return "***";
+  const local = email.slice(0, atIdx);
+  const domain = email.slice(atIdx);
+  const visible = local.length > 2 ? local.slice(0, 2) : local.slice(0, 1);
+  return `${visible}***${domain}`;
+}
+
 type StatAccent = "mint" | "blue" | "orange" | "amber";
 
 const ACCENT_ICON: Record<StatAccent, { iconWrap: string; iconColor: string }> =
@@ -1306,7 +1315,7 @@ export default function DashboardPage() {
                             <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-teal-50 border border-teal-200 w-fit">
                               <Mail className="w-3 h-3 text-teal-600 shrink-0" />
                               <span className="text-xs font-medium text-teal-700">
-                                Email: {message.senderEmail}
+                                Email: {maskEmail(message.senderEmail!)}
                               </span>
                             </div>
                             <p className="text-[11px] text-muted-foreground">

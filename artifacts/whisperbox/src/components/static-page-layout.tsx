@@ -9,7 +9,7 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
       <header className="border-b border-border bg-white sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
           <Link
             href="/"
             className="flex items-center gap-2 font-bold text-sm text-foreground"

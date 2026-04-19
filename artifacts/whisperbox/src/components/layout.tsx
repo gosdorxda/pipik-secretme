@@ -81,7 +81,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <Footer />
+      <Footer maxWidth="max-w-4xl" />
     </div>
   );
 }
