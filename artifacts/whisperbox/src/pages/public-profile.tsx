@@ -276,9 +276,7 @@ export default function PublicProfilePage() {
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
               <SiteLogoImg alt="vooi" className="w-7 h-7" />
-              <span className="tracking-tight">
-                vooi<span className="text-accent-foreground">.lol</span>
-              </span>
+              <span className="tracking-tight">{appName}</span>
             </Link>
           </div>
         </header>
@@ -309,9 +307,7 @@ export default function PublicProfilePage() {
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
               <SiteLogoImg alt="vooi" className="w-7 h-7" />
-              <span className="tracking-tight">
-                vooi<span className="text-accent-foreground">.lol</span>
-              </span>
+              <span className="tracking-tight">{appName}</span>
             </Link>
             <Link href="/">
               <Button size="sm" className="text-xs">
@@ -353,9 +349,7 @@ export default function PublicProfilePage() {
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
             <SiteLogoImg alt="vooi" className="w-7 h-7" />
-            <span className="tracking-tight">
-              vooi<span className="text-accent-foreground">.lol</span>
-            </span>
+            <span className="tracking-tight">{appName}</span>
           </Link>
           <Link href="/">
             <Button size="sm" className="text-xs">

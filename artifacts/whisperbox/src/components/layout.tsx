@@ -8,6 +8,7 @@ import { Footer } from "./footer";
 import { AppBanner } from "./app-banner";
 import { SiteLogoImg } from "./site-logo";
 import { cn } from "@/lib/utils";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inbox", icon: Inbox },
@@ -18,6 +19,8 @@ const NAV_ITEMS = [
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location] = useLocation();
   const { signOut } = useClerk();
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   useGetMyProfile();
 
   return (
@@ -31,9 +34,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0"
           >
             <SiteLogoImg className="w-7 h-7" />
-            <span className="hidden sm:inline tracking-tight">
-              vooi<span className="text-accent-foreground">.lol</span>
-            </span>
+            <span className="hidden sm:inline tracking-tight">{appName}</span>
           </Link>
 
           {/* Nav + Logout — all in one group */}

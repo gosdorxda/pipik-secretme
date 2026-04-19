@@ -1,12 +1,15 @@
 import { Link } from "wouter";
 import { Footer } from "./footer";
 import { SiteLogoImg } from "./site-logo";
+import { useSiteBranding } from "@/hooks/use-branding";
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
 }
 
 export function StaticPageLayout({ children }: StaticPageLayoutProps) {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
       <header className="border-b border-border bg-white sticky top-0 z-50">
@@ -16,9 +19,7 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
             <SiteLogoImg className="w-7 h-7" />
-            <span className="tracking-tight">
-              vooi<span className="text-accent-foreground">.lol</span>
-            </span>
+            <span className="tracking-tight">{appName}</span>
           </Link>
           <nav className="flex items-center gap-4">
             <Link

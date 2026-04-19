@@ -125,6 +125,8 @@ function AuthLayout({
   children: React.ReactNode;
   mode: "sign-in" | "sign-up";
 }) {
+  const { data: branding } = useSiteBranding();
+  const appName = branding?.appName ?? "vooi.lol";
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -139,7 +141,7 @@ function AuthLayout({
           <div className="flex items-center gap-2 cursor-pointer group">
             <SiteLogoImg className="w-7 h-7 transition-opacity group-hover:opacity-75" />
             <span className="text-[#0f172a] text-base font-bold tracking-tight">
-              vooi<span className="text-[#3a9e88]">.lol</span>
+              {appName}
             </span>
           </div>
         </Link>

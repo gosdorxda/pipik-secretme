@@ -394,7 +394,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2.5">
             <SiteLogoImg className="w-7 h-7" />
             <span className="font-bold text-foreground tracking-tight">
-              vooi<span className="text-accent-foreground">.lol</span>
+              {appName}
             </span>
           </div>
           <div className="flex items-center gap-2">
