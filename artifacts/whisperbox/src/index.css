@@ -143,6 +143,50 @@ body {
   animation: msg-in 0.3s ease-out 2.1s both;
 }
 
+/* Landing page orb animations */
+@keyframes orb-float-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.05);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.97);
+  }
+}
+@keyframes orb-float-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  40% {
+    transform: translate(-40px, 30px) scale(1.08);
+  }
+  70% {
+    transform: translate(20px, -20px) scale(0.95);
+  }
+}
+@keyframes orb-float-3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(25px, 35px) scale(1.04);
+  }
+}
+.landing-orb-1 {
+  animation: orb-float-1 14s ease-in-out infinite;
+}
+.landing-orb-2 {
+  animation: orb-float-2 18s ease-in-out infinite;
+}
+.landing-orb-3 {
+  animation: orb-float-3 22s ease-in-out infinite;
+}
+
 /* Force Clerk form elements to respect container width */
 .cl-rootBox,
 .cl-cardBox,
