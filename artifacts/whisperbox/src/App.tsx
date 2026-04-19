@@ -140,10 +140,10 @@ function AuthLayout({
   mode: "sign-in" | "sign-up";
 }) {
   return (
-    <div className="min-h-screen flex bg-white">
+    <div className="h-screen flex overflow-hidden bg-white">
       {/* ── Left panel — branding & preview ── */}
       <div
-        className="hidden lg:flex lg:w-[48%] xl:w-[52%] flex-col justify-between p-10 xl:p-14 relative overflow-hidden"
+        className="hidden lg:flex lg:w-[46%] xl:w-[48%] flex-col h-full relative overflow-hidden"
         style={{
           background:
             "linear-gradient(160deg, #081a17 0%, #0f2e28 40%, #1a443c 80%, #1e5248 100%)",
@@ -176,102 +176,88 @@ function AuthLayout({
           />
         </div>
 
-        {/* Logo */}
-        <Link href={basePath || "/"}>
-          <div className="flex items-center gap-2.5 relative z-10 cursor-pointer group">
-            <img
-              src={`${basePath}/logo.svg`}
-              alt="vooi"
-              className="w-9 h-9 transition-opacity group-hover:opacity-80"
-            />
-            <span className="text-white text-lg font-bold tracking-tight">
-              vooi
-              <span style={{ color: "#86ead4" }}>.lol</span>
-            </span>
-          </div>
-        </Link>
+        {/* Inner wrapper: logo top, content middle, social proof bottom */}
+        <div className="relative z-10 flex flex-col h-full px-10 xl:px-12 py-8 xl:py-10">
+          {/* Logo */}
+          <Link href={basePath || "/"}>
+            <div className="flex items-center gap-2.5 cursor-pointer group shrink-0">
+              <img
+                src={`${basePath}/logo.svg`}
+                alt="vooi"
+                className="w-8 h-8 transition-opacity group-hover:opacity-80"
+              />
+              <span className="text-white text-lg font-bold tracking-tight">
+                vooi<span style={{ color: "#86ead4" }}>.lol</span>
+              </span>
+            </div>
+          </Link>
 
-        {/* Center content */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center py-12">
-          {/* Badge */}
-          <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 w-fit text-xs font-semibold tracking-wider uppercase"
-            style={{
-              background: "rgba(134,234,212,0.1)",
-              border: "1px solid rgba(134,234,212,0.25)",
-              color: "#86ead4",
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: "#86ead4" }}
-            />
-            Platform Pesan Anonim #1
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-white font-bold leading-[1.15] mb-4">
-            <span className="text-4xl xl:text-5xl block">Pesan jujur,</span>
-            <span
-              className="text-4xl xl:text-5xl block"
-              style={{ color: "#86ead4" }}
-            >
-              tanpa batas.
-            </span>
-          </h1>
-
-          <p className="text-[#7eceba] text-base leading-relaxed mb-8 max-w-[340px]">
-            Buat profil-mu, bagikan link ke bio sosial media, dan terima pesan
-            anonim jujur dari siapa saja.
-          </p>
-
-          {/* Message preview cards */}
-          <div className="space-y-2.5 max-w-[360px]">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-3"
-              style={{ color: "rgba(134,234,212,0.5)" }}
-            >
-              Contoh pesan yang kamu terima
-            </p>
-            {SAMPLE_MESSAGES.map((msg, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-3 p-3.5 rounded-lg"
-                style={{
-                  background: "rgba(255,255,255,0.05)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
+          {/* Center content */}
+          <div className="flex-1 flex flex-col justify-center py-6">
+            {/* Headline */}
+            <h1 className="text-white font-bold leading-[1.12] mb-3">
+              <span className="text-[2.4rem] xl:text-[2.8rem] block">
+                Pesan jujur,
+              </span>
+              <span
+                className="text-[2.4rem] xl:text-[2.8rem] block"
+                style={{ color: "#86ead4" }}
               >
-                <span
-                  className="w-2 h-2 rounded-full shrink-0 mt-1.5"
-                  style={{ background: msg.dot }}
-                />
-                <div className="flex-1 min-w-0">
-                  <p className="text-[#d4f5ee] text-sm leading-relaxed">
-                    {msg.text}
-                  </p>
-                  <p
-                    className="text-xs mt-1"
-                    style={{ color: "rgba(134,234,212,0.4)" }}
-                  >
-                    {msg.time}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+                tanpa batas.
+              </span>
+            </h1>
 
-        {/* Bottom social proof */}
-        <div className="relative z-10">
+            <p className="text-[#7eceba] text-sm leading-relaxed mb-5 max-w-[300px]">
+              Buat profil-mu, bagikan link ke bio sosial media, dan terima pesan
+              anonim jujur dari siapa saja.
+            </p>
+
+            {/* Message preview cards */}
+            <div className="space-y-2 max-w-[340px]">
+              <p
+                className="text-[11px] font-semibold uppercase tracking-widest mb-2"
+                style={{ color: "rgba(134,234,212,0.45)" }}
+              >
+                Contoh pesan yang kamu terima
+              </p>
+              {SAMPLE_MESSAGES.map((msg, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg"
+                  style={{
+                    background: "rgba(255,255,255,0.05)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                  }}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
+                    style={{ background: msg.dot }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[#d4f5ee] text-sm leading-snug">
+                      {msg.text}
+                    </p>
+                    <p
+                      className="text-[11px] mt-0.5"
+                      style={{ color: "rgba(134,234,212,0.38)" }}
+                    >
+                      {msg.time}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom social proof */}
           <div
-            className="flex items-center gap-4 px-4 py-3 rounded-lg"
+            className="flex items-center gap-3 px-4 py-3 rounded-lg shrink-0"
             style={{
               background: "rgba(134,234,212,0.07)",
               border: "1px solid rgba(134,234,212,0.15)",
             }}
           >
-            <div className="flex -space-x-2.5 shrink-0">
+            <div className="flex -space-x-2 shrink-0">
               {[
                 { l: "A", c: "#3b82f6" },
                 { l: "R", c: "#f43f5e" },
@@ -281,16 +267,18 @@ function AuthLayout({
               ].map(({ l, c }, i) => (
                 <div
                   key={i}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white ring-2"
-                  style={{ backgroundColor: c, ringColor: "#0f2e28" }}
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white"
+                  style={{ backgroundColor: c, outline: "2px solid #0f2e28" }}
                 >
                   {l}
                 </div>
               ))}
             </div>
             <div>
-              <p className="text-white text-sm font-semibold">10.000+</p>
-              <p className="text-[#7eceba] text-xs">
+              <p className="text-white text-sm font-semibold leading-none">
+                10.000+
+              </p>
+              <p className="text-[#7eceba] text-[11px] mt-0.5">
                 pengguna aktif di seluruh Indonesia
               </p>
             </div>
@@ -299,9 +287,9 @@ function AuthLayout({
       </div>
 
       {/* ── Right panel — form ── */}
-      <div className="flex-1 flex flex-col min-h-screen bg-white">
+      <div className="flex-1 flex flex-col h-full overflow-y-auto bg-white">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#f0f0f0]">
+        <div className="flex items-center justify-between px-6 py-3.5 border-b border-[#f0f0f0] shrink-0">
           {/* Mobile logo */}
           <Link href={basePath || "/"}>
             <div className="flex items-center gap-2 cursor-pointer lg:hidden">
@@ -362,13 +350,13 @@ function AuthLayout({
           </div>
         </div>
 
-        {/* Form area */}
-        <div className="flex-1 flex flex-col items-center justify-center px-6 py-10">
-          <div className="w-full max-w-[380px]">{children}</div>
+        {/* Form area — flex-1 agar form tepat di tengah sisa ruang */}
+        <div className="flex-1 flex items-center justify-center px-6 py-8">
+          <div className="w-full max-w-[360px]">{children}</div>
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-5 border-t border-[#f0f0f0] text-center">
+        <div className="px-6 py-4 border-t border-[#f0f0f0] text-center shrink-0">
           <p className="text-xs text-[#9ca3af]">
             Dengan {mode === "sign-in" ? "masuk" : "mendaftar"}, kamu menyetujui{" "}
             <Link href="/ketentuan">
