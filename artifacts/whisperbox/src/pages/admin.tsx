@@ -5,9 +5,32 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import {
-  Users, MessageSquare, CreditCard, TrendingUp, Search, Crown,
-  ShieldCheck, Settings, RefreshCw, ChevronLeft, ChevronRight,
-  BarChart3, Save, Eye, EyeOff, Lock, Plus, X, Megaphone, Gift, Trophy, CheckCircle2, Clock, Star, ScrollText, AlertCircle,
+  Users,
+  MessageSquare,
+  CreditCard,
+  TrendingUp,
+  Search,
+  Crown,
+  ShieldCheck,
+  Settings,
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+  BarChart3,
+  Save,
+  Eye,
+  EyeOff,
+  Lock,
+  Plus,
+  X,
+  Megaphone,
+  Gift,
+  Trophy,
+  CheckCircle2,
+  Clock,
+  Star,
+  ScrollText,
+  AlertCircle,
 } from "lucide-react";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
@@ -29,10 +52,22 @@ async function apiFetch(path: string, secret: string, options?: RequestInit) {
   return res.json();
 }
 
-function StatCard({ label, value, icon: Icon, color }: { label: string; value: string | number; icon: any; color: string }) {
+function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+}: {
+  label: string;
+  value: string | number;
+  icon: any;
+  color: string;
+}) {
   return (
     <div className="bg-card border border-border rounded-sm p-5 flex items-center gap-4">
-      <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 ${color}`}>
+      <div
+        className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 ${color}`}
+      >
         <Icon className="w-5 h-5" />
       </div>
       <div>
@@ -44,14 +79,28 @@ function StatCard({ label, value, icon: Icon, color }: { label: string; value: s
 }
 
 function formatIDR(val: number) {
-  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(val);
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(val);
 }
 
 function formatDate(val: string) {
-  return new Date(val).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+  return new Date(val).toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
-type Tab = "overview" | "users" | "transactions" | "settings" | "redeem" | "logs";
+type Tab =
+  | "overview"
+  | "users"
+  | "transactions"
+  | "settings"
+  | "redeem"
+  | "logs";
 
 function AdminLoginScreen({ onLogin }: { onLogin: (secret: string) => void }) {
   const [code, setCode] = useState("");
@@ -83,28 +132,40 @@ function AdminLoginScreen({ onLogin }: { onLogin: (secret: string) => void }) {
             <Lock className="w-7 h-7 text-primary" />
           </div>
           <h2 className="text-xl font-black text-center mb-1">Admin Panel</h2>
-          <p className="text-sm text-muted-foreground text-center mb-6">Masukkan kode rahasia admin untuk melanjutkan.</p>
+          <p className="text-sm text-muted-foreground text-center mb-6">
+            Masukkan kode rahasia admin untuk melanjutkan.
+          </p>
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="relative">
               <input
                 type={show ? "text" : "password"}
                 value={code}
-                onChange={e => setCode(e.target.value)}
+                onChange={(e) => setCode(e.target.value)}
                 placeholder="Kode admin..."
                 className="w-full px-4 py-3 pr-10 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-2 focus:ring-ring"
                 autoFocus
               />
               <button
                 type="button"
-                onClick={() => setShow(s => !s)}
+                onClick={() => setShow((s) => !s)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {show ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
               </button>
             </div>
             {error && <p className="text-xs text-destructive">{error}</p>}
-            <Button type="submit" className="w-full" disabled={loading || !code.trim()}>
-              {loading ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : null}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || !code.trim()}
+            >
+              {loading ? (
+                <RefreshCw className="w-4 h-4 animate-spin mr-2" />
+              ) : null}
               {loading ? "Memverifikasi..." : "Masuk"}
             </Button>
           </form>
@@ -116,7 +177,9 @@ function AdminLoginScreen({ onLogin }: { onLogin: (secret: string) => void }) {
 
 export default function AdminPage() {
   const { toast } = useToast();
-  const [secret, setSecret] = useState<string | null>(() => sessionStorage.getItem(SESSION_KEY));
+  const [secret, setSecret] = useState<string | null>(() =>
+    sessionStorage.getItem(SESSION_KEY),
+  );
   const [tab, setTab] = useState<Tab>("overview");
 
   if (!secret) {
@@ -138,24 +201,31 @@ export default function AdminPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-black">Admin Panel</h1>
-            <p className="text-sm text-muted-foreground">Kelola pengguna, transaksi, dan pengaturan aplikasi.</p>
+            <p className="text-sm text-muted-foreground">
+              Kelola pengguna, transaksi, dan pengaturan aplikasi.
+            </p>
           </div>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => { sessionStorage.removeItem(SESSION_KEY); setSecret(null); }}
+            onClick={() => {
+              sessionStorage.removeItem(SESSION_KEY);
+              setSecret(null);
+            }}
           >
             Keluar
           </Button>
         </div>
 
         <div className="flex gap-1 bg-secondary/30 rounded-sm p-1 w-fit overflow-x-auto">
-          {tabs.map(t => (
+          {tabs.map((t) => (
             <button
               key={t.id}
               onClick={() => setTab(t.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
-                tab === t.id ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"
+                tab === t.id
+                  ? "bg-background shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <t.icon className="w-4 h-4" />
@@ -190,22 +260,45 @@ function OverviewTab({ secret }: { secret: string }) {
     })();
   }, [secret]);
 
-  if (loading) return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-24" />)}
+  if (loading)
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-24" />
+          ))}
+        </div>
+        <Skeleton className="h-20" />
       </div>
-      <Skeleton className="h-20" />
-    </div>
-  );
+    );
 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Total Pengguna" value={stats?.totalUsers ?? 0} icon={Users} color="bg-blue-100 text-blue-600" />
-        <StatCard label="Pengguna Premium" value={stats?.premiumUsers ?? 0} icon={Crown} color="bg-amber-100 text-amber-600" />
-        <StatCard label="Total Pesan" value={stats?.totalMessages ?? 0} icon={MessageSquare} color="bg-purple-100 text-purple-600" />
-        <StatCard label="Transaksi Sukses" value={stats?.totalTransactions ?? 0} icon={TrendingUp} color="bg-emerald-100 text-emerald-600" />
+        <StatCard
+          label="Total Pengguna"
+          value={stats?.totalUsers ?? 0}
+          icon={Users}
+          color="bg-blue-100 text-blue-600"
+        />
+        <StatCard
+          label="Pengguna Premium"
+          value={stats?.premiumUsers ?? 0}
+          icon={Crown}
+          color="bg-amber-100 text-amber-600"
+        />
+        <StatCard
+          label="Total Pesan"
+          value={stats?.totalMessages ?? 0}
+          icon={MessageSquare}
+          color="bg-purple-100 text-purple-600"
+        />
+        <StatCard
+          label="Transaksi Sukses"
+          value={stats?.totalTransactions ?? 0}
+          icon={TrendingUp}
+          color="bg-emerald-100 text-emerald-600"
+        />
       </div>
       <div className="bg-card border border-border rounded-sm p-5">
         <p className="text-xs text-muted-foreground mb-1">Total Revenue</p>
@@ -241,7 +334,9 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
     }
   }, [secret, page, search]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const updateUser = async (id: string, patch: object) => {
     setUpdatingId(id);
@@ -250,7 +345,9 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
         method: "PATCH",
         body: JSON.stringify(patch),
       });
-      setUsers(prev => prev.map(u => u.id === id ? { ...u, ...updated } : u));
+      setUsers((prev) =>
+        prev.map((u) => (u.id === id ? { ...u, ...updated } : u)),
+      );
       toast({ description: "Berhasil diperbarui." });
     } catch (e: any) {
       toast({ description: e.message, variant: "destructive" });
@@ -268,14 +365,29 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
             className="w-full pl-9 pr-4 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring"
             placeholder="Cari username atau nama..."
             value={searchInput}
-            onChange={e => setSearchInput(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter") { setSearch(searchInput); setPage(1); } }}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setSearch(searchInput);
+                setPage(1);
+              }
+            }}
           />
         </div>
-        <Button size="sm" onClick={() => { setSearch(searchInput); setPage(1); }}>Cari</Button>
+        <Button
+          size="sm"
+          onClick={() => {
+            setSearch(searchInput);
+            setPage(1);
+          }}
+        >
+          Cari
+        </Button>
       </div>
 
-      <div className="text-xs text-muted-foreground">{total} pengguna ditemukan</div>
+      <div className="text-xs text-muted-foreground">
+        {total} pengguna ditemukan
+      </div>
 
       <div className="border border-border rounded-sm overflow-hidden">
         <div className="overflow-x-auto">
@@ -290,49 +402,76 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {loading ? (
-                [...Array(5)].map((_, i) => (
-                  <tr key={i}>
-                    <td colSpan={5} className="px-4 py-3"><Skeleton className="h-4 w-full" /></td>
-                  </tr>
-                ))
-              ) : users.map(u => (
-                <tr key={u.id} className="hover:bg-secondary/20 transition-colors">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
-                        {(u.displayName ?? u.username).charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-medium leading-none">{u.displayName ?? u.username}</p>
-                        <p className="text-xs text-muted-foreground">@{u.username}</p>
-                      </div>
-                      {u.isPremium && <Crown className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
-                      {u.isAdmin && <ShieldCheck className="w-3.5 h-3.5 text-blue-500 shrink-0" />}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-xs font-mono">{u.points}</td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(u.createdAt)}</td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => updateUser(u.id, { isPremium: !u.isPremium })}
-                      disabled={updatingId === u.id}
-                      className={`w-10 h-5 rounded-full transition-colors relative inline-flex items-center ${u.isPremium ? "bg-amber-400" : "bg-secondary"}`}
+              {loading
+                ? [...Array(5)].map((_, i) => (
+                    <tr key={i}>
+                      <td colSpan={5} className="px-4 py-3">
+                        <Skeleton className="h-4 w-full" />
+                      </td>
+                    </tr>
+                  ))
+                : users.map((u) => (
+                    <tr
+                      key={u.id}
+                      className="hover:bg-secondary/20 transition-colors"
                     >
-                      <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isPremium ? "left-[22px]" : "left-[2px]"}`} />
-                    </button>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <button
-                      onClick={() => updateUser(u.id, { isAdmin: !u.isAdmin })}
-                      disabled={updatingId === u.id}
-                      className={`w-10 h-5 rounded-full transition-colors relative inline-flex items-center ${u.isAdmin ? "bg-blue-500" : "bg-secondary"}`}
-                    >
-                      <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isAdmin ? "left-[22px]" : "left-[2px]"}`} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0">
+                            {(u.displayName ?? u.username)
+                              .charAt(0)
+                              .toUpperCase()}
+                          </div>
+                          <div>
+                            <p className="font-medium leading-none">
+                              {u.displayName ?? u.username}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              @{u.username}
+                            </p>
+                          </div>
+                          {u.isPremium && (
+                            <Crown className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                          )}
+                          {u.isAdmin && (
+                            <ShieldCheck className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-xs font-mono">
+                        {u.points}
+                      </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {formatDate(u.createdAt)}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() =>
+                            updateUser(u.id, { isPremium: !u.isPremium })
+                          }
+                          disabled={updatingId === u.id}
+                          className={`w-10 h-5 rounded-full transition-colors relative inline-flex items-center ${u.isPremium ? "bg-amber-400" : "bg-secondary"}`}
+                        >
+                          <span
+                            className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isPremium ? "left-[22px]" : "left-[2px]"}`}
+                          />
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() =>
+                            updateUser(u.id, { isAdmin: !u.isAdmin })
+                          }
+                          disabled={updatingId === u.id}
+                          className={`w-10 h-5 rounded-full transition-colors relative inline-flex items-center ${u.isAdmin ? "bg-blue-500" : "bg-secondary"}`}
+                        >
+                          <span
+                            className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isAdmin ? "left-[22px]" : "left-[2px]"}`}
+                          />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
@@ -340,12 +479,24 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">Halaman {page} dari {totalPages}</p>
+          <p className="text-xs text-muted-foreground">
+            Halaman {page} dari {totalPages}
+          </p>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
@@ -366,7 +517,10 @@ function TransactionsTab({ secret }: { secret: string }) {
     (async () => {
       setLoading(true);
       try {
-        const data = await apiFetch(`/admin/transactions?page=${page}&limit=20`, secret);
+        const data = await apiFetch(
+          `/admin/transactions?page=${page}&limit=20`,
+          secret,
+        );
         setTransactions(data.transactions);
         setTotal(data.total);
         setTotalPages(data.totalPages);
@@ -377,14 +531,18 @@ function TransactionsTab({ secret }: { secret: string }) {
   }, [secret, page]);
 
   const statusColor = (s: string) => {
-    if (s === "PAID") return "text-emerald-700 bg-emerald-100 border-emerald-200";
-    if (s === "FAILED" || s === "EXPIRED") return "text-red-700 bg-red-100 border-red-200";
+    if (s === "PAID")
+      return "text-emerald-700 bg-emerald-100 border-emerald-200";
+    if (s === "FAILED" || s === "EXPIRED")
+      return "text-red-700 bg-red-100 border-red-200";
     return "text-amber-700 bg-amber-100 border-amber-200";
   };
 
   return (
     <div className="space-y-4">
-      <div className="text-xs text-muted-foreground">{total} transaksi total</div>
+      <div className="text-xs text-muted-foreground">
+        {total} transaksi total
+      </div>
       <div className="border border-border rounded-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -398,38 +556,69 @@ function TransactionsTab({ secret }: { secret: string }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {loading ? (
-                [...Array(5)].map((_, i) => (
-                  <tr key={i}><td colSpan={5} className="px-4 py-3"><Skeleton className="h-4 w-full" /></td></tr>
-                ))
-              ) : transactions.map(t => (
-                <tr key={t.id} className="hover:bg-secondary/20 transition-colors">
-                  <td className="px-4 py-3">
-                    <p className="font-medium">{t.displayName ?? t.username ?? "—"}</p>
-                    <p className="text-xs text-muted-foreground">@{t.username ?? "—"}</p>
-                  </td>
-                  <td className="px-4 py-3 text-xs font-mono text-muted-foreground">{t.merchantRef}</td>
-                  <td className="px-4 py-3 text-right font-semibold">{formatIDR(t.amount)}</td>
-                  <td className="px-4 py-3 text-center">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${statusColor(t.status)}`}>
-                      {t.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{formatDate(t.createdAt)}</td>
-                </tr>
-              ))}
+              {loading
+                ? [...Array(5)].map((_, i) => (
+                    <tr key={i}>
+                      <td colSpan={5} className="px-4 py-3">
+                        <Skeleton className="h-4 w-full" />
+                      </td>
+                    </tr>
+                  ))
+                : transactions.map((t) => (
+                    <tr
+                      key={t.id}
+                      className="hover:bg-secondary/20 transition-colors"
+                    >
+                      <td className="px-4 py-3">
+                        <p className="font-medium">
+                          {t.displayName ?? t.username ?? "—"}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          @{t.username ?? "—"}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3 text-xs font-mono text-muted-foreground">
+                        {t.merchantRef}
+                      </td>
+                      <td className="px-4 py-3 text-right font-semibold">
+                        {formatIDR(t.amount)}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-md border ${statusColor(t.status)}`}
+                        >
+                          {t.status}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">
+                        {formatDate(t.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
             </tbody>
           </table>
         </div>
       </div>
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
-          <p className="text-xs text-muted-foreground">Halaman {page} dari {totalPages}</p>
+          <p className="text-xs text-muted-foreground">
+            Halaman {page} dari {totalPages}
+          </p>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
               <ChevronLeft className="w-4 h-4" />
             </Button>
-            <Button size="sm" variant="outline" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
@@ -439,33 +628,161 @@ function TransactionsTab({ secret }: { secret: string }) {
   );
 }
 
-const SETTING_META: { key: string; label: string; description: string; type: "text" | "number" | "boolean" | "password" | "textarea"; group: string }[] = [
-  { key: "app_name", label: "Nama Aplikasi", description: "Nama yang ditampilkan di halaman", type: "text", group: "Umum" },
-  { key: "app_description", label: "Deskripsi Aplikasi", description: "Deskripsi singkat aplikasi", type: "text", group: "Umum" },
-  { key: "maintenance_mode", label: "Mode Maintenance", description: "Aktifkan untuk menutup sementara akses pengguna", type: "boolean", group: "Umum" },
-  { key: "premium_price", label: "Harga Premium (IDR)", description: "Harga upgrade ke premium dalam Rupiah", type: "number", group: "Pembayaran" },
-  { key: "tripay_merchant_code", label: "Tripay Merchant Code", description: "Kode merchant dari dashboard Tripay", type: "text", group: "Pembayaran" },
-  { key: "resend_from_email", label: "Email Pengirim", description: "Alamat email untuk notifikasi (contoh: noreply@domain.com)", type: "text", group: "Email" },
-  { key: "email_new_msg_subject", label: "Subjek – Pesan Baru", description: "Subjek email saat pemilik profil mendapat pesan baru. Variabel: {{appName}}, {{name}}, {{username}}", type: "text", group: "Email" },
-  { key: "email_new_msg_intro", label: "Teks Intro – Pesan Baru", description: "Teks yang tampil di badan email pesan baru. Variabel: {{appName}}, {{name}}, {{username}}", type: "textarea", group: "Email" },
-  { key: "email_reply_subject", label: "Subjek – Notifikasi Balasan", description: "Subjek email saat pengirim anonim mendapat balasan. Variabel: {{appName}}, {{ownerUsername}}", type: "text", group: "Email" },
-  { key: "email_reply_intro", label: "Teks Intro – Notifikasi Balasan", description: "Teks yang tampil di badan email balasan. Variabel: {{appName}}, {{ownerUsername}}. Boleh pakai <strong>bold</strong>.", type: "textarea", group: "Email" },
-  { key: "referral_signup_points", label: "Poin Referral Daftar", description: "Poin ketika teman yang diundang mendaftar", type: "number", group: "Referral" },
-  { key: "referral_upgrade_points", label: "Poin Referral Premium", description: "Poin bonus ketika teman yang diundang upgrade ke premium", type: "number", group: "Referral" },
-  { key: "link_opens_points_per_1000", label: "Poin per 1.000 Link Dibuka", description: "Jumlah poin yang diperoleh setiap 1.000 kali link profil dibuka", type: "number", group: "Referral" },
-  { key: "point_redeem_rate", label: "Rate Tukar Poin (IDR per 1.000)", description: "Nilai rupiah yang dibayarkan per 1.000 poin. Contoh: 10000 = Rp10.000 per 1.000 poin", type: "number", group: "Referral" },
-  { key: "message_rate_limit_count", label: "Maks. Pesan per Jendela Waktu", description: "Berapa pesan maksimal yang bisa dikirim seseorang dalam jendela waktu yang ditentukan", type: "number", group: "Keamanan" },
-  { key: "message_rate_limit_window_minutes", label: "Jendela Waktu (menit)", description: "Durasi jendela waktu untuk pembatasan pesan (dalam menit)", type: "number", group: "Keamanan" },
+const SETTING_META: {
+  key: string;
+  label: string;
+  description: string;
+  type: "text" | "number" | "boolean" | "password" | "textarea";
+  group: string;
+}[] = [
+  {
+    key: "app_name",
+    label: "Nama Aplikasi",
+    description: "Nama yang ditampilkan di halaman",
+    type: "text",
+    group: "Umum",
+  },
+  {
+    key: "app_description",
+    label: "Deskripsi Aplikasi",
+    description: "Deskripsi singkat aplikasi",
+    type: "text",
+    group: "Umum",
+  },
+  {
+    key: "maintenance_mode",
+    label: "Mode Maintenance",
+    description: "Aktifkan untuk menutup sementara akses pengguna",
+    type: "boolean",
+    group: "Umum",
+  },
+  {
+    key: "premium_price",
+    label: "Harga Premium (IDR)",
+    description: "Harga upgrade ke premium dalam Rupiah",
+    type: "number",
+    group: "Pembayaran",
+  },
+  {
+    key: "tripay_merchant_code",
+    label: "Tripay Merchant Code",
+    description: "Kode merchant dari dashboard Tripay",
+    type: "text",
+    group: "Pembayaran",
+  },
+  {
+    key: "resend_from_email",
+    label: "Email Pengirim",
+    description: "Alamat email untuk notifikasi (contoh: noreply@domain.com)",
+    type: "text",
+    group: "Email",
+  },
+  {
+    key: "email_new_msg_subject",
+    label: "Subjek – Pesan Baru",
+    description:
+      "Subjek email saat pemilik profil mendapat pesan baru. Variabel: {{appName}}, {{name}}, {{username}}",
+    type: "text",
+    group: "Email",
+  },
+  {
+    key: "email_new_msg_intro",
+    label: "Teks Intro – Pesan Baru",
+    description:
+      "Teks yang tampil di badan email pesan baru. Variabel: {{appName}}, {{name}}, {{username}}",
+    type: "textarea",
+    group: "Email",
+  },
+  {
+    key: "email_reply_subject",
+    label: "Subjek – Notifikasi Balasan",
+    description:
+      "Subjek email saat pengirim anonim mendapat balasan. Variabel: {{appName}}, {{ownerUsername}}",
+    type: "text",
+    group: "Email",
+  },
+  {
+    key: "email_reply_intro",
+    label: "Teks Intro – Notifikasi Balasan",
+    description:
+      "Teks yang tampil di badan email balasan. Variabel: {{appName}}, {{ownerUsername}}. Boleh pakai <strong>bold</strong>.",
+    type: "textarea",
+    group: "Email",
+  },
+  {
+    key: "referral_signup_points",
+    label: "Poin Referral Daftar",
+    description: "Poin ketika teman yang diundang mendaftar",
+    type: "number",
+    group: "Referral",
+  },
+  {
+    key: "referral_upgrade_points",
+    label: "Poin Referral Premium",
+    description: "Poin bonus ketika teman yang diundang upgrade ke premium",
+    type: "number",
+    group: "Referral",
+  },
+  {
+    key: "link_opens_points_per_1000",
+    label: "Poin per 1.000 Link Dibuka",
+    description:
+      "Jumlah poin yang diperoleh setiap 1.000 kali link profil dibuka",
+    type: "number",
+    group: "Referral",
+  },
+  {
+    key: "point_redeem_rate",
+    label: "Rate Tukar Poin (IDR per 1.000)",
+    description:
+      "Nilai rupiah yang dibayarkan per 1.000 poin. Contoh: 10000 = Rp10.000 per 1.000 poin",
+    type: "number",
+    group: "Referral",
+  },
+  {
+    key: "message_rate_limit_count",
+    label: "Maks. Pesan per Jendela Waktu",
+    description:
+      "Berapa pesan maksimal yang bisa dikirim seseorang dalam jendela waktu yang ditentukan",
+    type: "number",
+    group: "Keamanan",
+  },
+  {
+    key: "message_rate_limit_window_minutes",
+    label: "Jendela Waktu (menit)",
+    description: "Durasi jendela waktu untuk pembatasan pesan (dalam menit)",
+    type: "number",
+    group: "Keamanan",
+  },
 ];
 
 function formatRupiah(n: number) {
-  return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(n);
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(n);
 }
 
-const REDEEM_STATUS: Record<string, { label: string; cls: string; icon: React.ReactNode }> = {
-  pending: { label: "Menunggu", cls: "bg-amber-100 text-amber-700 border-amber-200", icon: <Clock className="w-3 h-3" /> },
-  success: { label: "Sukses", cls: "bg-green-100 text-green-700 border-green-200", icon: <CheckCircle2 className="w-3 h-3" /> },
-  rejected: { label: "Ditolak", cls: "bg-red-100 text-red-700 border-red-200", icon: <X className="w-3 h-3" /> },
+const REDEEM_STATUS: Record<
+  string,
+  { label: string; cls: string; icon: React.ReactNode }
+> = {
+  pending: {
+    label: "Menunggu",
+    cls: "bg-amber-100 text-amber-700 border-amber-200",
+    icon: <Clock className="w-3 h-3" />,
+  },
+  success: {
+    label: "Sukses",
+    cls: "bg-green-100 text-green-700 border-green-200",
+    icon: <CheckCircle2 className="w-3 h-3" />,
+  },
+  rejected: {
+    label: "Ditolak",
+    cls: "bg-red-100 text-red-700 border-red-200",
+    icon: <X className="w-3 h-3" />,
+  },
 };
 
 function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
@@ -517,19 +834,27 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-base font-bold">Permintaan Redeem Poin</h2>
-          <p className="text-xs text-muted-foreground">Kelola permintaan penukaran poin dari pengguna.</p>
+          <p className="text-xs text-muted-foreground">
+            Kelola permintaan penukaran poin dari pengguna.
+          </p>
         </div>
         <div className="flex gap-1.5 flex-wrap">
-          {filters.map(f => (
+          {filters.map((f) => (
             <button
               key={f.value}
-              onClick={() => { setStatusFilter(f.value); load(f.value); }}
+              onClick={() => {
+                setStatusFilter(f.value);
+                load(f.value);
+              }}
               className={`text-xs px-3 py-1.5 rounded-md border font-medium transition-colors ${statusFilter === f.value ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border hover:text-foreground"}`}
             >
               {f.label}
             </button>
           ))}
-          <button onClick={() => load(statusFilter)} className="text-xs px-3 py-1.5 rounded-md border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5">
+          <button
+            onClick={() => load(statusFilter)}
+            className="text-xs px-3 py-1.5 rounded-md border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5"
+          >
             <RefreshCw className="w-3 h-3" /> Refresh
           </button>
         </div>
@@ -538,14 +863,18 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
       <div className="border border-border rounded-md overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-3">
-            {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
+            {[...Array(3)].map((_, i) => (
+              <Skeleton key={i} className="h-16 w-full" />
+            ))}
           </div>
         ) : requests.length === 0 ? (
           <div className="px-5 py-12 text-center">
             <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
               <Gift className="w-5 h-5 text-muted-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground">Belum ada permintaan redeem.</p>
+            <p className="text-sm text-muted-foreground">
+              Belum ada permintaan redeem.
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-border">
@@ -556,13 +885,21 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                 <div key={r.id} className="px-5 py-4">
                   <div className="flex items-start gap-3 flex-wrap sm:flex-nowrap">
                     <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0">
-                      {(r.displayName ?? r.username ?? "?").charAt(0).toUpperCase()}
+                      {(r.displayName ?? r.username ?? "?")
+                        .charAt(0)
+                        .toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <span className="text-sm font-semibold">{r.displayName ?? `@${r.username}`}</span>
-                        <span className="text-xs text-muted-foreground">@{r.username}</span>
-                        <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.cls}`}>
+                        <span className="text-sm font-semibold">
+                          {r.displayName ?? `@${r.username}`}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          @{r.username}
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md border ${s.cls}`}
+                        >
                           {s.icon} {s.label}
                         </span>
                       </div>
@@ -572,10 +909,16 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                           {r.points.toLocaleString("id-ID")} poin
                         </span>
                         <span className="text-muted-foreground">→</span>
-                        <span className="font-semibold text-amber-700">{formatRupiah(estimatedValue)}</span>
+                        <span className="font-semibold text-amber-700">
+                          {formatRupiah(estimatedValue)}
+                        </span>
                       </div>
-                      <p className="text-xs text-muted-foreground bg-secondary/30 rounded-md px-2 py-1 inline-block">{r.paymentInfo}</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">{formatDate(r.createdAt)}</p>
+                      <p className="text-xs text-muted-foreground bg-secondary/30 rounded-md px-2 py-1 inline-block">
+                        {r.paymentInfo}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        {formatDate(r.createdAt)}
+                      </p>
                     </div>
                     {r.status === "pending" && (
                       <div className="flex gap-2 shrink-0">
@@ -585,7 +928,11 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
                           disabled={updating === r.id}
                           onClick={() => updateStatus(r.id, "success")}
                         >
-                          {updating === r.id ? <RefreshCw className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                          {updating === r.id ? (
+                            <RefreshCw className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <CheckCircle2 className="w-3 h-3" />
+                          )}
                           Sukses
                         </Button>
                         <Button
@@ -617,7 +964,9 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   const [banList, setBanList] = useState<string[]>([]);
   const [ipInput, setIpInput] = useState("");
   const [saving, setSaving] = useState(false);
-  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>({});
+  const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>(
+    {},
+  );
   const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
@@ -632,7 +981,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   }, [secret]);
 
   const update = (key: string, val: string) => {
-    setSettings(prev => ({ ...prev, [key]: val }));
+    setSettings((prev) => ({ ...prev, [key]: val }));
     setDirty(true);
   };
 
@@ -641,7 +990,9 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
     try {
       // Filter out runtime-only and special keys before saving
       const saveable = Object.fromEntries(
-        Object.entries(settings).filter(([k]) => !k.startsWith("_") && k !== "banned_ips")
+        Object.entries(settings).filter(
+          ([k]) => !k.startsWith("_") && k !== "banned_ips",
+        ),
       );
       await apiFetch("/admin/settings", secret, {
         method: "PUT",
@@ -679,63 +1030,102 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
 
   const removeBan = async (ip: string) => {
     try {
-      const data = await apiFetch(`/admin/ip-bans/${encodeURIComponent(ip)}`, secret, { method: "DELETE" });
+      const data = await apiFetch(
+        `/admin/ip-bans/${encodeURIComponent(ip)}`,
+        secret,
+        { method: "DELETE" },
+      );
       setBanList(data.ips || []);
     } catch (e: any) {
       toast({ description: e.message, variant: "destructive" });
     }
   };
 
-  // Load ban list once on mount  
-  useEffect(() => { loadBans(); }, []);
+  // Load ban list once on mount
+  useEffect(() => {
+    loadBans();
+  }, []);
 
-  const groups = [...new Set(SETTING_META.map(s => s.group))];
+  const groups = [...new Set(SETTING_META.map((s) => s.group))];
 
-  if (loading) return <div className="space-y-4">{[...Array(3)].map((_, i) => <Skeleton key={i} className="h-20" />)}</div>;
+  if (loading)
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <Skeleton key={i} className="h-20" />
+        ))}
+      </div>
+    );
 
   return (
     <div className="space-y-6">
-      {groups.map(group => (
-        <div key={group} className="border border-border rounded-sm overflow-hidden">
+      {groups.map((group) => (
+        <div
+          key={group}
+          className="border border-border rounded-sm overflow-hidden"
+        >
           <div className="px-5 py-3 bg-secondary/20 border-b border-border">
             <h3 className="text-sm font-semibold">{group}</h3>
           </div>
           <div className="divide-y divide-border">
-            {SETTING_META.filter(s => s.group === group).map(meta => {
+            {SETTING_META.filter((s) => s.group === group).map((meta) => {
               const val = settings[meta.key] ?? "";
               return (
                 <div key={meta.key} className="px-5 py-4">
-                  <label className="text-sm font-medium block mb-0.5">{meta.label}</label>
-                  <p className="text-xs text-muted-foreground mb-2">{meta.description}</p>
+                  <label className="text-sm font-medium block mb-0.5">
+                    {meta.label}
+                  </label>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {meta.description}
+                  </p>
                   {meta.type === "boolean" ? (
                     <button
-                      onClick={() => update(meta.key, val === "true" ? "false" : "true")}
+                      onClick={() =>
+                        update(meta.key, val === "true" ? "false" : "true")
+                      }
                       className={`w-11 h-6 rounded-full transition-colors relative inline-flex items-center ${val === "true" ? "bg-primary" : "bg-secondary"}`}
                     >
-                      <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${val === "true" ? "left-6" : "left-1"}`} />
+                      <span
+                        className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${val === "true" ? "left-6" : "left-1"}`}
+                      />
                     </button>
                   ) : meta.type === "textarea" ? (
                     <textarea
                       value={val}
-                      onChange={e => update(meta.key, e.target.value)}
+                      onChange={(e) => update(meta.key, e.target.value)}
                       rows={3}
                       className="w-full max-w-lg px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none font-mono"
                     />
                   ) : (
                     <div className="relative">
                       <input
-                        type={meta.type === "password" && !showPasswords[meta.key] ? "password" : meta.type === "number" ? "number" : "text"}
+                        type={
+                          meta.type === "password" && !showPasswords[meta.key]
+                            ? "password"
+                            : meta.type === "number"
+                              ? "number"
+                              : "text"
+                        }
                         value={val}
-                        onChange={e => update(meta.key, e.target.value)}
+                        onChange={(e) => update(meta.key, e.target.value)}
                         className="w-full max-w-md px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring pr-10"
                       />
                       {meta.type === "password" && (
                         <button
                           type="button"
-                          onClick={() => setShowPasswords(p => ({ ...p, [meta.key]: !p[meta.key] }))}
+                          onClick={() =>
+                            setShowPasswords((p) => ({
+                              ...p,
+                              [meta.key]: !p[meta.key],
+                            }))
+                          }
                           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                         >
-                          {showPasswords[meta.key] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          {showPasswords[meta.key] ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
                         </button>
                       )}
                     </div>
@@ -745,11 +1135,22 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
             })}
             {group === "Pembayaran" && (
               <div className="px-5 py-4">
-                <label className="text-sm font-medium block mb-0.5">Mode Tripay</label>
-                <p className="text-xs text-muted-foreground mb-2">Status mode API Tripay saat ini (diatur via env var TRIPAY_SANDBOX)</p>
-                <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${settings._tripay_sandbox === "true" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${settings._tripay_sandbox === "true" ? "bg-amber-500" : "bg-green-500"}`} />
-                  {settings._tripay_sandbox === "true" ? "Sandbox (Testing)" : "Live (Production)"}
+                <label className="text-sm font-medium block mb-0.5">
+                  Mode Tripay
+                </label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Status mode API Tripay saat ini (diatur via env var
+                  TRIPAY_SANDBOX)
+                </p>
+                <span
+                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${settings._tripay_sandbox === "true" ? "bg-amber-100 text-amber-700" : "bg-green-100 text-green-700"}`}
+                >
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full ${settings._tripay_sandbox === "true" ? "bg-amber-500" : "bg-green-500"}`}
+                  />
+                  {settings._tripay_sandbox === "true"
+                    ? "Sandbox (Testing)"
+                    : "Live (Production)"}
                 </span>
               </div>
             )}
@@ -759,28 +1160,48 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
 
       <div className="flex items-center gap-3">
         <Button onClick={save} disabled={saving || !dirty} className="gap-2">
-          {saving ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+          {saving ? (
+            <RefreshCw className="w-4 h-4 animate-spin" />
+          ) : (
+            <Save className="w-4 h-4" />
+          )}
           {saving ? "Menyimpan..." : "Simpan Perubahan"}
         </Button>
-        {dirty && <span className="text-xs text-amber-600 font-medium">Ada perubahan yang belum disimpan</span>}
+        {dirty && (
+          <span className="text-xs text-amber-600 font-medium">
+            Ada perubahan yang belum disimpan
+          </span>
+        )}
       </div>
 
       <div className="border border-border rounded-sm overflow-hidden">
         <div className="px-5 py-3 bg-secondary/20 border-b border-border flex items-center justify-between">
           <h3 className="text-sm font-semibold">Notifikasi In-App</h3>
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${settings.notification_active === "true" ? "bg-green-100 text-green-700" : "bg-secondary text-muted-foreground"}`}>
+          <span
+            className={`text-xs font-medium px-2 py-0.5 rounded-full ${settings.notification_active === "true" ? "bg-green-100 text-green-700" : "bg-secondary text-muted-foreground"}`}
+          >
             {settings.notification_active === "true" ? "Aktif" : "Nonaktif"}
           </span>
         </div>
         <div className="px-5 py-4 space-y-4">
-          <p className="text-xs text-muted-foreground">Banner pengumuman yang muncul di bagian atas semua halaman untuk semua pengguna. Pengguna bisa menutupnya (dismissed per sesi).</p>
+          <p className="text-xs text-muted-foreground">
+            Banner pengumuman yang muncul di bagian atas semua halaman untuk
+            semua pengguna. Pengguna bisa menutupnya (dismissed per sesi).
+          </p>
 
           <div className="flex items-center gap-3">
             <button
-              onClick={() => update("notification_active", settings.notification_active === "true" ? "false" : "true")}
+              onClick={() =>
+                update(
+                  "notification_active",
+                  settings.notification_active === "true" ? "false" : "true",
+                )
+              }
               className={`w-11 h-6 rounded-full transition-colors relative inline-flex items-center ${settings.notification_active === "true" ? "bg-primary" : "bg-secondary"}`}
             >
-              <span className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${settings.notification_active === "true" ? "left-6" : "left-1"}`} />
+              <span
+                className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${settings.notification_active === "true" ? "left-6" : "left-1"}`}
+              />
             </button>
             <span className="text-sm">Tampilkan banner</span>
           </div>
@@ -789,7 +1210,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
             <label className="text-sm font-medium block mb-1.5">Pesan</label>
             <textarea
               value={settings.notification_message ?? ""}
-              onChange={e => update("notification_message", e.target.value)}
+              onChange={(e) => update("notification_message", e.target.value)}
               placeholder="Contoh: 🎉 Promo spesial! Upgrade premium gratis ongkir sampai akhir bulan."
               rows={2}
               className="w-full px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring resize-none"
@@ -797,14 +1218,32 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
           </div>
 
           <div>
-            <label className="text-sm font-medium block mb-2">Tipe Banner</label>
+            <label className="text-sm font-medium block mb-2">
+              Tipe Banner
+            </label>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: "info",    label: "Info",      cls: "bg-primary text-primary-foreground" },
-                { value: "warning", label: "Peringatan", cls: "bg-amber-500 text-white" },
-                { value: "success", label: "Sukses",    cls: "bg-green-600 text-white" },
-                { value: "error",   label: "Penting",   cls: "bg-red-600 text-white" },
-              ].map(t => (
+                {
+                  value: "info",
+                  label: "Info",
+                  cls: "bg-primary text-primary-foreground",
+                },
+                {
+                  value: "warning",
+                  label: "Peringatan",
+                  cls: "bg-amber-500 text-white",
+                },
+                {
+                  value: "success",
+                  label: "Sukses",
+                  cls: "bg-green-600 text-white",
+                },
+                {
+                  value: "error",
+                  label: "Penting",
+                  cls: "bg-red-600 text-white",
+                },
+              ].map((t) => (
                 <button
                   key={t.value}
                   onClick={() => update("notification_type", t.value)}
@@ -818,15 +1257,24 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
 
           {settings.notification_message && (
             <div>
-              <label className="text-xs text-muted-foreground block mb-1.5">Preview</label>
-              <div className={`w-full px-4 py-2.5 flex items-center gap-3 text-sm rounded-sm ${
-                settings.notification_type === "warning" ? "bg-amber-500 text-white" :
-                settings.notification_type === "success" ? "bg-green-600 text-white" :
-                settings.notification_type === "error"   ? "bg-red-600 text-white" :
-                "bg-primary text-primary-foreground"
-              }`}>
+              <label className="text-xs text-muted-foreground block mb-1.5">
+                Preview
+              </label>
+              <div
+                className={`w-full px-4 py-2.5 flex items-center gap-3 text-sm rounded-sm ${
+                  settings.notification_type === "warning"
+                    ? "bg-amber-500 text-white"
+                    : settings.notification_type === "success"
+                      ? "bg-green-600 text-white"
+                      : settings.notification_type === "error"
+                        ? "bg-red-600 text-white"
+                        : "bg-primary text-primary-foreground"
+                }`}
+              >
                 <Megaphone className="w-4 h-4 shrink-0 opacity-90" />
-                <p className="flex-1 text-center font-medium leading-snug">{settings.notification_message}</p>
+                <p className="flex-1 text-center font-medium leading-snug">
+                  {settings.notification_message}
+                </p>
                 <X className="w-4 h-4 opacity-60" />
               </div>
             </div>
@@ -837,28 +1285,44 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
       <div className="border border-border rounded-sm overflow-hidden">
         <div className="px-5 py-3 bg-secondary/20 border-b border-border flex items-center justify-between">
           <h3 className="text-sm font-semibold">IP Ban</h3>
-          <span className="text-xs text-muted-foreground">{banList.length} IP diblokir</span>
+          <span className="text-xs text-muted-foreground">
+            {banList.length} IP diblokir
+          </span>
         </div>
         <div className="px-5 py-4 space-y-4">
-          <p className="text-xs text-muted-foreground">Blokir akses dari IP tertentu. Pengguna dari IP yang diblokir akan mendapat error 403.</p>
+          <p className="text-xs text-muted-foreground">
+            Blokir akses dari IP tertentu. Pengguna dari IP yang diblokir akan
+            mendapat error 403.
+          </p>
           <div className="flex gap-2">
             <input
               value={ipInput}
-              onChange={e => setIpInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && addBan()}
+              onChange={(e) => setIpInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addBan()}
               placeholder="Masukkan IP (contoh: 1.2.3.4)"
               className="flex-1 max-w-xs px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring"
             />
-            <Button size="sm" onClick={addBan} className="gap-1.5"><Plus className="w-3.5 h-3.5" />Tambah</Button>
+            <Button size="sm" onClick={addBan} className="gap-1.5">
+              <Plus className="w-3.5 h-3.5" />
+              Tambah
+            </Button>
           </div>
           {banList.length === 0 ? (
-            <p className="text-xs text-muted-foreground italic">Belum ada IP yang diblokir.</p>
+            <p className="text-xs text-muted-foreground italic">
+              Belum ada IP yang diblokir.
+            </p>
           ) : (
             <div className="space-y-1">
-              {banList.map(ip => (
-                <div key={ip} className="flex items-center justify-between px-3 py-2 rounded-sm bg-secondary/30 group">
+              {banList.map((ip) => (
+                <div
+                  key={ip}
+                  className="flex items-center justify-between px-3 py-2 rounded-sm bg-secondary/30 group"
+                >
                   <code className="text-xs font-mono">{ip}</code>
-                  <button onClick={() => removeBan(ip)} className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => removeBan(ip)}
+                    className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -870,16 +1334,34 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
 
       <div className="border border-border rounded-sm overflow-hidden">
         <div className="px-5 py-3 bg-secondary/20 border-b border-border">
-          <h3 className="text-sm font-semibold">Environment Variables (Read-only)</h3>
+          <h3 className="text-sm font-semibold">
+            Environment Variables (Read-only)
+          </h3>
         </div>
         <div className="px-5 py-4 space-y-3">
           <p className="text-xs text-muted-foreground">
-            Variabel berikut diatur via env var di server. Edit file <code className="text-xs bg-secondary px-1 py-0.5 rounded">ecosystem.config.js</code> di VPS untuk mengubahnya.
+            Variabel berikut diatur via env var di server. Edit file{" "}
+            <code className="text-xs bg-secondary px-1 py-0.5 rounded">
+              ecosystem.config.js
+            </code>{" "}
+            di VPS untuk mengubahnya.
           </p>
-          {["CLERK_SECRET_KEY", "CLERK_PUBLISHABLE_KEY", "RESEND_API_KEY", "TRIPAY_API_KEY", "TRIPAY_PRIVATE_KEY", "DATABASE_URL", "ADMIN_SECRET"].map(key => (
+          {[
+            "CLERK_SECRET_KEY",
+            "CLERK_PUBLISHABLE_KEY",
+            "RESEND_API_KEY",
+            "TRIPAY_API_KEY",
+            "TRIPAY_PRIVATE_KEY",
+            "DATABASE_URL",
+            "ADMIN_SECRET",
+          ].map((key) => (
             <div key={key} className="flex items-center gap-3">
-              <code className="text-xs bg-secondary px-2 py-1 rounded w-56 shrink-0">{key}</code>
-              <span className="text-xs text-muted-foreground font-mono">••••••••••••</span>
+              <code className="text-xs bg-secondary px-2 py-1 rounded w-56 shrink-0">
+                {key}
+              </code>
+              <span className="text-xs text-muted-foreground font-mono">
+                ••••••••••••
+              </span>
             </div>
           ))}
         </div>
@@ -933,25 +1415,36 @@ function LogsTab({ secret }: { secret: string }) {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h2 className="text-base font-bold">Server Logs</h2>
-          <p className="text-xs text-muted-foreground">Request log HTTP server terbaru (in-memory, max 500 entri).</p>
+          <p className="text-xs text-muted-foreground">
+            Request log HTTP server terbaru (in-memory, max 500 entri).
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <select
             value={limit}
-            onChange={e => setLimit(Number(e.target.value))}
+            onChange={(e) => setLimit(Number(e.target.value))}
             className="text-xs px-2 py-1.5 rounded-md border border-border bg-background"
           >
-            {[50, 100, 200].map(n => <option key={n} value={n}>{n} entri</option>)}
+            {[50, 100, 200].map((n) => (
+              <option key={n} value={n}>
+                {n} entri
+              </option>
+            ))}
           </select>
           <button
-            onClick={() => setAutoRefresh(a => !a)}
+            onClick={() => setAutoRefresh((a) => !a)}
             className={`text-xs px-3 py-1.5 rounded-md border font-medium transition-colors flex items-center gap-1.5 ${autoRefresh ? "bg-primary text-primary-foreground border-primary" : "border-border text-muted-foreground hover:text-foreground"}`}
           >
-            <RefreshCw className={`w-3 h-3 ${autoRefresh ? "animate-spin" : ""}`} />
+            <RefreshCw
+              className={`w-3 h-3 ${autoRefresh ? "animate-spin" : ""}`}
+            />
             {autoRefresh ? "Auto (3s)" : "Auto Refresh"}
           </button>
           <button
-            onClick={() => { setLoading(true); load(); }}
+            onClick={() => {
+              setLoading(true);
+              load();
+            }}
             className="text-xs px-3 py-1.5 rounded-md border border-border hover:text-foreground text-muted-foreground flex items-center gap-1.5"
           >
             <RefreshCw className="w-3 h-3" /> Refresh
@@ -962,14 +1455,18 @@ function LogsTab({ secret }: { secret: string }) {
       <div className="border border-border rounded-md overflow-hidden">
         {loading ? (
           <div className="p-6 space-y-2">
-            {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-8 w-full" />)}
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-8 w-full" />
+            ))}
           </div>
         ) : logs.length === 0 ? (
           <div className="px-5 py-12 text-center">
             <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
               <AlertCircle className="w-5 h-5 text-muted-foreground" />
             </div>
-            <p className="text-sm text-muted-foreground">Belum ada log. Log muncul setelah ada request ke server.</p>
+            <p className="text-sm text-muted-foreground">
+              Belum ada log. Log muncul setelah ada request ke server.
+            </p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -979,24 +1476,40 @@ function LogsTab({ secret }: { secret: string }) {
                   <th className="text-left px-4 py-2.5 font-medium">Waktu</th>
                   <th className="text-left px-3 py-2.5 font-medium">Method</th>
                   <th className="text-left px-3 py-2.5 font-medium">URL</th>
-                  <th className="text-center px-3 py-2.5 font-medium">Status</th>
+                  <th className="text-center px-3 py-2.5 font-medium">
+                    Status
+                  </th>
                   <th className="text-right px-4 py-2.5 font-medium">Durasi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {logs.map((log, i) => (
-                  <tr key={i} className="hover:bg-secondary/20 transition-colors">
+                  <tr
+                    key={i}
+                    className="hover:bg-secondary/20 transition-colors"
+                  >
                     <td className="px-4 py-2 text-muted-foreground whitespace-nowrap">
-                      {new Date(log.ts).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+                      {new Date(log.ts).toLocaleTimeString("id-ID", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })}
                     </td>
-                    <td className={`px-3 py-2 font-bold whitespace-nowrap ${methodColor(log.method)}`}>
+                    <td
+                      className={`px-3 py-2 font-bold whitespace-nowrap ${methodColor(log.method)}`}
+                    >
                       {log.method}
                     </td>
-                    <td className="px-3 py-2 text-foreground max-w-xs truncate" title={log.url}>
+                    <td
+                      className="px-3 py-2 text-foreground max-w-xs truncate"
+                      title={log.url}
+                    >
                       {log.url}
                     </td>
                     <td className="px-3 py-2 text-center">
-                      <span className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border ${statusColor(log.status)}`}>
+                      <span
+                        className={`inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border ${statusColor(log.status)}`}
+                      >
                         {log.status}
                       </span>
                     </td>

@@ -21,8 +21,7 @@ const buttonVariants = cva(
         link: "text-accent-foreground underline-offset-4 hover:underline",
         neutral:
           "bg-secondary text-secondary-foreground border border-input shadow-sm hover:bg-zinc-200",
-        noShadow:
-          "bg-primary text-primary-foreground hover:bg-primary-hover",
+        noShadow: "bg-primary text-primary-foreground hover:bg-primary-hover",
       },
       size: {
         default: "h-9 px-4 py-2",
@@ -35,7 +34,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
+  },
 );
 
 function Button({

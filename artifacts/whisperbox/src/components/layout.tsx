@@ -24,9 +24,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <header className="border-b border-border bg-white sticky top-0 z-50">
         <AppBanner />
         <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
-
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0"
+          >
             <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
               W
             </div>
@@ -44,7 +46,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
                     "gap-1.5",
                     location === href
                       ? "bg-secondary text-foreground font-semibold"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />

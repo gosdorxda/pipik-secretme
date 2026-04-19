@@ -11,7 +11,7 @@ import { db } from "../index";
  */
 async function run() {
   const result = await db.execute(
-    sql`UPDATE users SET has_set_username = true WHERE has_set_username = false`
+    sql`UPDATE users SET has_set_username = true WHERE has_set_username = false`,
   );
   console.log(`Backfill complete. Rows updated: ${result.rowCount ?? 0}`);
   process.exit(0);

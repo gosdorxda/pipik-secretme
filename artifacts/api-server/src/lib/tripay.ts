@@ -15,8 +15,13 @@ const BASE_URL = IS_SANDBOX
 
 export const PREMIUM_AMOUNT = 49900;
 
-export const ALLOWED_STATUSES = ["UNPAID", "PAID", "EXPIRED", "FAILED"] as const;
-export type TripayStatus = typeof ALLOWED_STATUSES[number];
+export const ALLOWED_STATUSES = [
+  "UNPAID",
+  "PAID",
+  "EXPIRED",
+  "FAILED",
+] as const;
+export type TripayStatus = (typeof ALLOWED_STATUSES)[number];
 
 export function sanitizeStatus(status: string): TripayStatus {
   return ALLOWED_STATUSES.includes(status as TripayStatus)
@@ -37,7 +42,10 @@ export function createSignature(merchantRef: string, amount: number): string {
     .digest("hex");
 }
 
-export function verifyCallbackSignature(rawBody: string, headerSignature: string): boolean {
+export function verifyCallbackSignature(
+  rawBody: string,
+  headerSignature: string,
+): boolean {
   if (IS_SANDBOX) return true;
   if (!TRIPAY_PRIVATE_KEY) return false;
   try {
@@ -122,11 +130,14 @@ export async function createQrisTransaction({
 }
 
 export async function getTransactionDetail(reference: string) {
-  const res = await fetch(`${BASE_URL}/transaction/detail?reference=${reference}`, {
-    headers: {
-      Authorization: `Bearer ${TRIPAY_API_KEY}`,
+  const res = await fetch(
+    `${BASE_URL}/transaction/detail?reference=${reference}`,
+    {
+      headers: {
+        Authorization: `Bearer ${TRIPAY_API_KEY}`,
+      },
     },
-  });
+  );
 
   const json = (await res.json()) as any;
 

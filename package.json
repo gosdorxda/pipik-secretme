@@ -7,7 +7,8 @@
     "build": "pnpm run codegen:check && pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
-    "codegen:check": "pnpm --filter @workspace/api-spec run codegen:check"
+    "codegen:check": "pnpm --filter @workspace/api-spec run codegen:check",
+    "format:check": "prettier --check ."
   },
   "private": true,
   "devDependencies": {

@@ -9,8 +9,13 @@ const router = Router();
 router.get("/me", requireAuth, async (req, res) => {
   const clerkUserId = req.clerkUserId;
   try {
-    const user = await db.query.usersTable.findFirst({ where: eq(usersTable.clerkId, clerkUserId) });
-    if (!user) { res.status(404).json({ error: "User not found" }); return; }
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.clerkId, clerkUserId),
+    });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
 
     const requests = await db.query.redeemRequestsTable.findMany({
       where: eq(redeemRequestsTable.userId, user.id),
@@ -38,28 +43,41 @@ router.post("/", requireAuth, async (req, res) => {
   }
 
   try {
-    const user = await db.query.usersTable.findFirst({ where: eq(usersTable.clerkId, clerkUserId) });
-    if (!user) { res.status(404).json({ error: "User not found" }); return; }
-
-    const pointsPerThousand = parseInt(await getSetting("link_opens_points_per_1000", "1"), 10) || 1;
-    const totalEarned = user.points + Math.floor(user.linkOpens / 1000) * pointsPerThousand;
-    const availablePoints = totalEarned - (user.redeemedPoints ?? 0);
-
-    if (availablePoints < points) {
-      res.status(400).json({ error: `Poin tidak cukup. Poin tersedia: ${availablePoints}.` });
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.clerkId, clerkUserId),
+    });
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
       return;
     }
 
-    await db.update(usersTable)
+    const pointsPerThousand =
+      parseInt(await getSetting("link_opens_points_per_1000", "1"), 10) || 1;
+    const totalEarned =
+      user.points + Math.floor(user.linkOpens / 1000) * pointsPerThousand;
+    const availablePoints = totalEarned - (user.redeemedPoints ?? 0);
+
+    if (availablePoints < points) {
+      res.status(400).json({
+        error: `Poin tidak cukup. Poin tersedia: ${availablePoints}.`,
+      });
+      return;
+    }
+
+    await db
+      .update(usersTable)
       .set({ redeemedPoints: sql`${usersTable.redeemedPoints} + ${points}` })
       .where(eq(usersTable.id, user.id));
 
-    const [request] = await db.insert(redeemRequestsTable).values({
-      userId: user.id,
-      points,
-      paymentInfo: paymentInfo.trim(),
-      status: "pending",
-    }).returning();
+    const [request] = await db
+      .insert(redeemRequestsTable)
+      .values({
+        userId: user.id,
+        points,
+        paymentInfo: paymentInfo.trim(),
+        status: "pending",
+      })
+      .returning();
 
     res.status(201).json({ request });
   } catch (err) {

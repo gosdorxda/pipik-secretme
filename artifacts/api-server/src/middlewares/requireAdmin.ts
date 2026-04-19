@@ -2,7 +2,11 @@ import type { Request, Response, NextFunction } from "express";
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET;
 
-export const requireAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const requireAdmin = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   if (!ADMIN_SECRET) {
     res.status(503).json({ error: "Admin access not configured" });
     return;

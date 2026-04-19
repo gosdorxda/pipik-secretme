@@ -9,17 +9,17 @@ function getDismissKey(message: string): string {
 }
 
 const TYPE_STYLES: Record<NotificationType, string> = {
-  info:    "bg-primary text-primary-foreground",
+  info: "bg-primary text-primary-foreground",
   warning: "bg-amber-500 text-white",
   success: "bg-green-600 text-white",
-  error:   "bg-red-600 text-white",
+  error: "bg-red-600 text-white",
 };
 
 const CLOSE_STYLES: Record<NotificationType, string> = {
-  info:    "hover:bg-primary-foreground/20",
+  info: "hover:bg-primary-foreground/20",
   warning: "hover:bg-white/20",
   success: "hover:bg-white/20",
-  error:   "hover:bg-white/20",
+  error: "hover:bg-white/20",
 };
 
 export function AppBanner() {
@@ -48,9 +48,13 @@ export function AppBanner() {
   };
 
   return (
-    <div className={`w-full px-4 py-2.5 flex items-center gap-3 text-sm ${TYPE_STYLES[type]}`}>
+    <div
+      className={`w-full px-4 py-2.5 flex items-center gap-3 text-sm ${TYPE_STYLES[type]}`}
+    >
       <Megaphone className="w-4 h-4 shrink-0 opacity-90" />
-      <p className="flex-1 text-center leading-snug font-medium">{notification.message}</p>
+      <p className="flex-1 text-center leading-snug font-medium">
+        {notification.message}
+      </p>
       <button
         onClick={handleDismiss}
         className={`shrink-0 rounded-full p-0.5 transition-colors ${CLOSE_STYLES[type]}`}

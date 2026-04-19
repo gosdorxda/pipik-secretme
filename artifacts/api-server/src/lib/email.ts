@@ -11,7 +11,10 @@ if (apiKey) {
 }
 
 function interpolate(template: string, vars: Record<string, string>): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (_, key) => vars[key] ?? `{{${key}}}`);
+  return template.replace(
+    /\{\{(\w+)\}\}/g,
+    (_, key) => vars[key] ?? `{{${key}}}`,
+  );
 }
 
 export async function sendNewMessageNotification({
@@ -26,16 +29,22 @@ export async function sendNewMessageNotification({
   if (!resend) return;
 
   const dashboardUrl = `${appUrl}/dashboard`;
-  const fromName = (await getSetting("app_name", "WhisperBox"));
+  const fromName = await getSetting("app_name", "WhisperBox");
 
   const subject = interpolate(
-    await getSetting("email_new_msg_subject", "📬 Kamu punya pesan anonim baru di {{appName}}"),
-    { appName: fromName, name: toName, username }
+    await getSetting(
+      "email_new_msg_subject",
+      "📬 Kamu punya pesan anonim baru di {{appName}}",
+    ),
+    { appName: fromName, name: toName, username },
   );
 
   const introText = interpolate(
-    await getSetting("email_new_msg_intro", "Hei {{name}}, seseorang mengirim pesan anonim kepadamu di {{appName}}."),
-    { appName: fromName, name: toName, username }
+    await getSetting(
+      "email_new_msg_intro",
+      "Hei {{name}}, seseorang mengirim pesan anonim kepadamu di {{appName}}.",
+    ),
+    { appName: fromName, name: toName, username },
   );
 
   const html = `
@@ -151,13 +160,19 @@ export async function sendReplyNotification({
   const fromName = await getSetting("app_name", "WhisperBox");
 
   const subject = interpolate(
-    await getSetting("email_reply_subject", "💬 @{{ownerUsername}} membalas pesanmu di {{appName}}"),
-    { appName: fromName, ownerUsername }
+    await getSetting(
+      "email_reply_subject",
+      "💬 @{{ownerUsername}} membalas pesanmu di {{appName}}",
+    ),
+    { appName: fromName, ownerUsername },
   );
 
   const introText = interpolate(
-    await getSetting("email_reply_intro", "<strong>@{{ownerUsername}}</strong> membalas pesan anonim yang kamu kirim di {{appName}}."),
-    { appName: fromName, ownerUsername }
+    await getSetting(
+      "email_reply_intro",
+      "<strong>@{{ownerUsername}}</strong> membalas pesan anonim yang kamu kirim di {{appName}}.",
+    ),
+    { appName: fromName, ownerUsername },
   );
 
   const html = `

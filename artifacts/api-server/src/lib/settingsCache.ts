@@ -28,5 +28,9 @@ export async function getSetting(key: string, fallback = ""): Promise<string> {
 
 export async function getBannedIps(): Promise<string[]> {
   const val = await getSetting("banned_ips", "[]");
-  try { return JSON.parse(val); } catch { return []; }
+  try {
+    return JSON.parse(val);
+  } catch {
+    return [];
+  }
 }

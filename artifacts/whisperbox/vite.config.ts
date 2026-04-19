@@ -32,7 +32,9 @@ export default defineConfig({
     // Forward CLERK_PUBLISHABLE_KEY (no VITE_ prefix) into the browser bundle.
     // We do this explicitly so the backend and frontend share the same secret name.
     "import.meta.env.VITE_CLERK_PUBLISHABLE_KEY": JSON.stringify(
-      process.env.CLERK_PUBLISHABLE_KEY ?? process.env.VITE_CLERK_PUBLISHABLE_KEY ?? "",
+      process.env.CLERK_PUBLISHABLE_KEY ??
+        process.env.VITE_CLERK_PUBLISHABLE_KEY ??
+        "",
     ),
     "import.meta.env.VITE_CLERK_PROXY_URL": JSON.stringify(
       process.env.CLERK_PROXY_URL ?? process.env.VITE_CLERK_PROXY_URL ?? "",
@@ -59,7 +61,12 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
-      "@assets": path.resolve(import.meta.dirname, "..", "..", "attached_assets"),
+      "@assets": path.resolve(
+        import.meta.dirname,
+        "..",
+        "..",
+        "attached_assets",
+      ),
     },
     dedupe: ["react", "react-dom"],
   },

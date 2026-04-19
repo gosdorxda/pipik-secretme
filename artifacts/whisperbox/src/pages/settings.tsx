@@ -6,33 +6,79 @@ import { z } from "zod";
 import { useUser } from "@clerk/react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
-import { User, Save, Camera, Loader2, Instagram, Github, Linkedin, Facebook, Bell, Lock, Crown, Mail } from "lucide-react";
+import {
+  User,
+  Save,
+  Camera,
+  Loader2,
+  Instagram,
+  Github,
+  Linkedin,
+  Facebook,
+  Bell,
+  Lock,
+  Crown,
+  Mail,
+} from "lucide-react";
 import { useUpload } from "@workspace/object-storage-web";
 import { resolveAvatarUrl } from "@/lib/avatar";
 
-import { 
-  useGetMyProfile, 
+import {
+  useGetMyProfile,
   useUpdateMyProfile,
-  getGetMyProfileQueryKey
+  getGetMyProfileQueryKey,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"];
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
 
-const socialUrl = z.string().max(100).nullable().optional().transform(val => val === "" ? null : val);
+const socialUrl = z
+  .string()
+  .max(100)
+  .nullable()
+  .optional()
+  .transform((val) => (val === "" ? null : val));
 
 const profileSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters").max(32).regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
-  displayName: z.string().max(64).nullable().optional().transform(val => val === "" ? null : val),
-  bio: z.string().max(500).nullable().optional().transform(val => val === "" ? null : val),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(32)
+    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed"),
+  displayName: z
+    .string()
+    .max(64)
+    .nullable()
+    .optional()
+    .transform((val) => (val === "" ? null : val)),
+  bio: z
+    .string()
+    .max(500)
+    .nullable()
+    .optional()
+    .transform((val) => (val === "" ? null : val)),
   avatarUrl: z.string().nullable().optional(),
   socialInstagram: socialUrl,
   socialTiktok: socialUrl,
@@ -139,8 +185,12 @@ function AvatarUploader({
         )}
       </div>
       <div>
-        <p className="text-sm font-medium mb-1">{displayUrl ? "Ganti Foto" : "Upload Foto"}</p>
-        <p className="text-xs text-muted-foreground mb-3">JPG, PNG, GIF atau WebP. Maks. 5 MB.</p>
+        <p className="text-sm font-medium mb-1">
+          {displayUrl ? "Ganti Foto" : "Upload Foto"}
+        </p>
+        <p className="text-xs text-muted-foreground mb-3">
+          JPG, PNG, GIF atau WebP. Maks. 5 MB.
+        </p>
         <Button
           type="button"
           variant="outline"
@@ -150,9 +200,13 @@ function AvatarUploader({
           disabled={isUploading}
         >
           {isUploading ? (
-            <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Mengupload...</>
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin" /> Mengupload...
+            </>
           ) : (
-            <><Camera className="w-3.5 h-3.5" /> Pilih Foto</>
+            <>
+              <Camera className="w-3.5 h-3.5" /> Pilih Foto
+            </>
           )}
         </Button>
         <input
@@ -170,7 +224,7 @@ function AvatarUploader({
 function TiktokIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.19 8.19 0 0 0 4.79 1.54V6.78a4.85 4.85 0 0 1-1.02-.09z"/>
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.19 8.19 0 0 0 4.79 1.54V6.78a4.85 4.85 0 0 1-1.02-.09z" />
     </svg>
   );
 }
@@ -178,7 +232,7 @@ function TiktokIcon({ className }: { className?: string }) {
 function XIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
 }
@@ -191,7 +245,7 @@ export default function SettingsPage() {
 
   const { data: profile, isLoading } = useGetMyProfile();
   const updateProfile = useUpdateMyProfile();
-  
+
   const initRef = useRef(false);
 
   const form = useForm<ProfileFormValues>({
@@ -246,7 +300,9 @@ export default function SettingsPage() {
           queryClient.setQueryData(getGetMyProfileQueryKey(), updated);
           setSavingReplyNotif(false);
           toast({
-            title: newValue ? "Input email diaktifkan" : "Input email dimatikan",
+            title: newValue
+              ? "Input email diaktifkan"
+              : "Input email dimatikan",
             description: newValue
               ? "Pengirim akan bisa isi email opsional untuk notifikasi balasan."
               : "Form email tidak akan muncul di halaman profilmu.",
@@ -261,7 +317,7 @@ export default function SettingsPage() {
             variant: "destructive",
           });
         },
-      }
+      },
     );
   };
 
@@ -291,7 +347,10 @@ export default function SettingsPage() {
               description: "Notifikasi email eksklusif untuk Premium.",
               variant: "destructive",
               action: (
-                <ToastAction altText="Upgrade" onClick={() => setLocation("/upgrade")}>
+                <ToastAction
+                  altText="Upgrade"
+                  onClick={() => setLocation("/upgrade")}
+                >
                   Upgrade
                 </ToastAction>
               ),
@@ -304,18 +363,20 @@ export default function SettingsPage() {
             });
           }
         },
-      }
+      },
     );
   };
 
   const onSubmit = (data: ProfileFormValues) => {
     const isPremium = profile?.isPremium ?? false;
-    const payload = isPremium ? data : {
-      username: data.username,
-      displayName: data.displayName,
-      bio: data.bio,
-      avatarUrl: data.avatarUrl,
-    };
+    const payload = isPremium
+      ? data
+      : {
+          username: data.username,
+          displayName: data.displayName,
+          bio: data.bio,
+          avatarUrl: data.avatarUrl,
+        };
 
     updateProfile.mutate(
       { data: payload },
@@ -331,10 +392,14 @@ export default function SettingsPage() {
           if (err?.response?.data?.error === "upgrade_required") {
             toast({
               title: "Fitur Premium",
-              description: "Social links dan notifikasi email eksklusif untuk Premium.",
+              description:
+                "Social links dan notifikasi email eksklusif untuk Premium.",
               variant: "destructive",
               action: (
-                <ToastAction altText="Upgrade" onClick={() => setLocation("/upgrade")}>
+                <ToastAction
+                  altText="Upgrade"
+                  onClick={() => setLocation("/upgrade")}
+                >
                   Upgrade
                 </ToastAction>
               ),
@@ -342,12 +407,13 @@ export default function SettingsPage() {
           } else {
             toast({
               title: "Gagal menyimpan",
-              description: "Gagal memperbarui profil. Username mungkin sudah dipakai.",
+              description:
+                "Gagal memperbarui profil. Username mungkin sudah dipakai.",
               variant: "destructive",
             });
           }
-        }
-      }
+        },
+      },
     );
   };
 
@@ -366,43 +432,86 @@ export default function SettingsPage() {
   const currentAvatarUrl = form.watch("avatarUrl");
 
   const socialFields = [
-    { name: "socialInstagram" as const, label: "Instagram", icon: <Instagram className="w-4 h-4" />, iconColor: "text-pink-500", placeholder: "username" },
-    { name: "socialTiktok" as const, label: "TikTok", icon: <TiktokIcon className="w-4 h-4" />, iconColor: "text-foreground", placeholder: "username" },
-    { name: "socialX" as const, label: "X (Twitter)", icon: <XIcon className="w-4 h-4" />, iconColor: "text-foreground", placeholder: "username" },
-    { name: "socialFacebook" as const, label: "Facebook", icon: <Facebook className="w-4 h-4" />, iconColor: "text-blue-600", placeholder: "username or page name" },
-    { name: "socialGithub" as const, label: "GitHub", icon: <Github className="w-4 h-4" />, iconColor: "text-zinc-700", placeholder: "username" },
-    { name: "socialLinkedin" as const, label: "LinkedIn", icon: <Linkedin className="w-4 h-4" />, iconColor: "text-blue-700", placeholder: "username or profile slug" },
+    {
+      name: "socialInstagram" as const,
+      label: "Instagram",
+      icon: <Instagram className="w-4 h-4" />,
+      iconColor: "text-pink-500",
+      placeholder: "username",
+    },
+    {
+      name: "socialTiktok" as const,
+      label: "TikTok",
+      icon: <TiktokIcon className="w-4 h-4" />,
+      iconColor: "text-foreground",
+      placeholder: "username",
+    },
+    {
+      name: "socialX" as const,
+      label: "X (Twitter)",
+      icon: <XIcon className="w-4 h-4" />,
+      iconColor: "text-foreground",
+      placeholder: "username",
+    },
+    {
+      name: "socialFacebook" as const,
+      label: "Facebook",
+      icon: <Facebook className="w-4 h-4" />,
+      iconColor: "text-blue-600",
+      placeholder: "username or page name",
+    },
+    {
+      name: "socialGithub" as const,
+      label: "GitHub",
+      icon: <Github className="w-4 h-4" />,
+      iconColor: "text-zinc-700",
+      placeholder: "username",
+    },
+    {
+      name: "socialLinkedin" as const,
+      label: "LinkedIn",
+      icon: <Linkedin className="w-4 h-4" />,
+      iconColor: "text-blue-700",
+      placeholder: "username or profile slug",
+    },
   ];
 
   return (
     <AppLayout>
       <div className="space-y-8">
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-
             {/* Combined Profile Card */}
             <Card className="overflow-hidden gap-0 py-0">
-
               {/* Section: Identitas Publik */}
               <div className="px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-md bg-primary/15 flex items-center justify-center shrink-0">
                   <User className="w-4 h-4 text-primary" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-semibold text-foreground">Profil Publik</h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">Ditampilkan di halaman profilmu yang bisa diakses siapa saja.</p>
+                  <h2 className="text-sm font-semibold text-foreground">
+                    Profil Publik
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Ditampilkan di halaman profilmu yang bisa diakses siapa
+                    saja.
+                  </p>
                 </div>
               </div>
               <CardContent className="pt-6 pb-6 space-y-6">
-
                 <AvatarUploader
                   currentAvatarUrl={currentAvatarUrl}
                   displayName={form.watch("displayName")}
                   username={form.watch("username")}
                   onUploaded={(objectPath) => {
-                    form.setValue("avatarUrl", objectPath, { shouldDirty: true });
-                    toast({ title: "Foto berhasil diupload", description: "Klik Simpan Perubahan untuk menerapkan foto baru." });
+                    form.setValue("avatarUrl", objectPath, {
+                      shouldDirty: true,
+                    });
+                    toast({
+                      title: "Foto berhasil diupload",
+                      description:
+                        "Klik Simpan Perubahan untuk menerapkan foto baru.",
+                    });
                   }}
                 />
 
@@ -414,7 +523,9 @@ export default function SettingsPage() {
                     name="username"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Username <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>
+                          Username <span className="text-destructive">*</span>
+                        </FormLabel>
                         <div className="flex items-center">
                           <span className="bg-secondary text-muted-foreground px-3 py-[7px] border border-r-0 border-input rounded-l-xs text-sm whitespace-nowrap">
                             /@
@@ -424,11 +535,15 @@ export default function SettingsPage() {
                               placeholder="username"
                               className="rounded-l-none border-l-0"
                               {...field}
-                              onChange={(e) => field.onChange(e.target.value.toLowerCase())}
+                              onChange={(e) =>
+                                field.onChange(e.target.value.toLowerCase())
+                              }
                             />
                           </FormControl>
                         </div>
-                        <FormDescription>Huruf, angka, underscore. Min. 3 karakter.</FormDescription>
+                        <FormDescription>
+                          Huruf, angka, underscore. Min. 3 karakter.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -440,9 +555,15 @@ export default function SettingsPage() {
                       <FormItem>
                         <FormLabel>Nama Tampilan</FormLabel>
                         <FormControl>
-                          <Input placeholder="Nama Kamu" value={field.value || ""} onChange={field.onChange} />
+                          <Input
+                            placeholder="Nama Kamu"
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                          />
                         </FormControl>
-                        <FormDescription>Tampil besar di halaman profilmu. Opsional.</FormDescription>
+                        <FormDescription>
+                          Tampil besar di halaman profilmu. Opsional.
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -463,33 +584,60 @@ export default function SettingsPage() {
                           onChange={field.onChange}
                         />
                       </FormControl>
-                      <FormDescription>Pesan singkat untuk pengunjung profilmu. Maks. 500 karakter.</FormDescription>
+                      <FormDescription>
+                        Pesan singkat untuk pengunjung profilmu. Maks. 500
+                        karakter.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
                 <div className="flex items-center gap-3 pt-2 border-t border-border">
-                  <Button type="submit" disabled={updateProfile.isPending} className="gap-2">
-                    {updateProfile.isPending
-                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…</>
-                      : <><Save className="w-4 h-4" /> Simpan Profil</>}
+                  <Button
+                    type="submit"
+                    disabled={updateProfile.isPending}
+                    className="gap-2"
+                  >
+                    {updateProfile.isPending ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4" /> Simpan Profil
+                      </>
+                    )}
                   </Button>
                 </div>
               </CardContent>
 
               {/* Section divider: Social Links */}
               <div className="border-t border-border">
-                <div className="px-6 py-4 flex items-center justify-between gap-4"
-                     style={{ background: "rgba(237,233,254,0.35)", borderBottom: "1px solid rgba(237,233,254,0.8)" }}>
+                <div
+                  className="px-6 py-4 flex items-center justify-between gap-4"
+                  style={{
+                    background: "rgba(237,233,254,0.35)",
+                    borderBottom: "1px solid rgba(237,233,254,0.8)",
+                  }}
+                >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                         style={{ background: "rgba(109,40,217,0.1)" }}>
-                      <Linkedin className="w-4 h-4" style={{ color: "#6d28d9" }} />
+                    <div
+                      className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                      style={{ background: "rgba(109,40,217,0.1)" }}
+                    >
+                      <Linkedin
+                        className="w-4 h-4"
+                        style={{ color: "#6d28d9" }}
+                      />
                     </div>
                     <div>
-                      <h2 className="text-sm font-semibold text-foreground">Social Links</h2>
-                      <p className="text-xs text-muted-foreground mt-0.5">Tampil sebagai ikon di halaman profilmu.</p>
+                      <h2 className="text-sm font-semibold text-foreground">
+                        Social Links
+                      </h2>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Tampil sebagai ikon di halaman profilmu.
+                      </p>
                     </div>
                   </div>
                   {!profile?.isPremium && (
@@ -505,10 +653,14 @@ export default function SettingsPage() {
                   <div className="mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                     <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-amber-800">Fitur Premium</p>
+                      <p className="text-xs font-semibold text-amber-800">
+                        Fitur Premium
+                      </p>
                       <p className="text-xs text-amber-700 mt-0.5">
                         Tambahkan social links ke profil publikmu.{" "}
-                        <Link href="/upgrade" className="underline font-medium">Upgrade sekarang →</Link>
+                        <Link href="/upgrade" className="underline font-medium">
+                          Upgrade sekarang →
+                        </Link>
                       </p>
                     </div>
                   </div>
@@ -516,45 +668,60 @@ export default function SettingsPage() {
 
                 <div className="px-6 pt-6 pb-6 space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {socialFields.map(({ name, label, icon, iconColor, placeholder }) => (
-                      <FormField
-                        key={name}
-                        control={form.control}
-                        name={name}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center gap-1.5 text-muted-foreground text-xs font-semibold uppercase tracking-wider">
-                              <span className={iconColor}>{icon}</span> {label}
-                            </FormLabel>
-                            <div className="flex items-center">
-                              <span className="bg-secondary text-muted-foreground px-3 py-[7px] border border-r-0 border-input rounded-l-xs text-sm shrink-0">@</span>
-                              <FormControl>
-                                <Input
-                                  placeholder={placeholder}
-                                  className="rounded-l-none border-l-0"
-                                  value={field.value || ""}
-                                  onChange={field.onChange}
-                                  disabled={!profile?.isPremium}
-                                />
-                              </FormControl>
-                            </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    ))}
+                    {socialFields.map(
+                      ({ name, label, icon, iconColor, placeholder }) => (
+                        <FormField
+                          key={name}
+                          control={form.control}
+                          name={name}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex items-center gap-1.5 text-muted-foreground text-xs font-semibold uppercase tracking-wider">
+                                <span className={iconColor}>{icon}</span>{" "}
+                                {label}
+                              </FormLabel>
+                              <div className="flex items-center">
+                                <span className="bg-secondary text-muted-foreground px-3 py-[7px] border border-r-0 border-input rounded-l-xs text-sm shrink-0">
+                                  @
+                                </span>
+                                <FormControl>
+                                  <Input
+                                    placeholder={placeholder}
+                                    className="rounded-l-none border-l-0"
+                                    value={field.value || ""}
+                                    onChange={field.onChange}
+                                    disabled={!profile?.isPremium}
+                                  />
+                                </FormControl>
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ),
+                    )}
                   </div>
 
                   <div className="flex items-center gap-3 pt-2 border-t border-border">
-                    <Button type="submit" disabled={updateProfile.isPending} className="gap-2">
-                      {updateProfile.isPending
-                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Menyimpan…</>
-                        : <><Save className="w-4 h-4" /> Simpan Social Links</>}
+                    <Button
+                      type="submit"
+                      disabled={updateProfile.isPending}
+                      className="gap-2"
+                    >
+                      {updateProfile.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />{" "}
+                          Menyimpan…
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4" /> Simpan Social Links
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
               </div>
-
             </Card>
           </form>
         </Form>
@@ -570,39 +737,58 @@ export default function SettingsPage() {
                 <div className="text-center">
                   <p className="text-sm font-bold mb-1">Fitur Premium</p>
                   <p className="text-xs text-muted-foreground max-w-xs px-4">
-                    Izinkan pengirim anonim meninggalkan email untuk mendapat notifikasi balasan. Eksklusif Premium.
+                    Izinkan pengirim anonim meninggalkan email untuk mendapat
+                    notifikasi balasan. Eksklusif Premium.
                   </p>
                 </div>
                 <Link href="/upgrade">
-                  <Button size="sm" className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none">
+                  <Button
+                    size="sm"
+                    className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none"
+                  >
                     <Crown className="w-3.5 h-3.5" /> Upgrade Sekarang
                   </Button>
                 </Link>
               </div>
             )}
             <Card className="overflow-hidden gap-0 py-0">
-              <div className="px-6 py-4 flex items-center gap-3"
-                   style={{ background: "rgba(204,251,241,0.35)", borderBottom: "1px solid rgba(20,184,166,0.18)" }}>
-                <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                     style={{ background: "rgba(20,184,166,0.12)" }}>
+              <div
+                className="px-6 py-4 flex items-center gap-3"
+                style={{
+                  background: "rgba(204,251,241,0.35)",
+                  borderBottom: "1px solid rgba(20,184,166,0.18)",
+                }}
+              >
+                <div
+                  className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                  style={{ background: "rgba(20,184,166,0.12)" }}
+                >
                   <Mail className="w-4 h-4" style={{ color: "#0d9488" }} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-semibold text-foreground">Notifikasi Balasan</h2>
+                    <h2 className="text-sm font-semibold text-foreground">
+                      Notifikasi Balasan
+                    </h2>
                     <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">
                       <Crown className="w-2.5 h-2.5" /> Premium
                     </span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">Izinkan pengirim meninggalkan email untuk menerima notifikasi saat kamu membalas.</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Izinkan pengirim meninggalkan email untuk menerima
+                    notifikasi saat kamu membalas.
+                  </p>
                 </div>
               </div>
               <CardContent className="py-5">
                 <div className="flex items-center justify-between gap-6">
                   <div className="min-w-0">
-                    <p className="text-sm font-medium">Tampilkan input email opsional</p>
+                    <p className="text-sm font-medium">
+                      Tampilkan input email opsional
+                    </p>
                     <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                      Jika aktif, pengirim anonim bisa isi email agar dapat notifikasi saat pesannya dibalas.
+                      Jika aktif, pengirim anonim bisa isi email agar dapat
+                      notifikasi saat pesannya dibalas.
                     </p>
                   </div>
                   <button
@@ -640,27 +826,42 @@ export default function SettingsPage() {
                 <div className="text-center">
                   <p className="text-sm font-bold mb-1">Fitur Premium</p>
                   <p className="text-xs text-muted-foreground max-w-xs px-4">
-                    Notifikasi email setiap ada pesan baru. Eksklusif untuk Premium.
+                    Notifikasi email setiap ada pesan baru. Eksklusif untuk
+                    Premium.
                   </p>
                 </div>
                 <Link href="/upgrade">
-                  <Button size="sm" className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none">
+                  <Button
+                    size="sm"
+                    className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none"
+                  >
                     <Crown className="w-3.5 h-3.5" /> Upgrade Sekarang
                   </Button>
                 </Link>
               </div>
             )}
             <Card className="overflow-hidden gap-0 py-0">
-              <div className="px-6 py-4 flex items-center justify-between gap-4"
-                   style={{ background: "rgba(254,243,199,0.55)", borderBottom: "1px solid rgba(251,191,36,0.22)" }}>
+              <div
+                className="px-6 py-4 flex items-center justify-between gap-4"
+                style={{
+                  background: "rgba(254,243,199,0.55)",
+                  borderBottom: "1px solid rgba(251,191,36,0.22)",
+                }}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                       style={{ background: "rgba(245,158,11,0.15)" }}>
+                  <div
+                    className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                    style={{ background: "rgba(245,158,11,0.15)" }}
+                  >
                     <Bell className="w-4 h-4" style={{ color: "#d97706" }} />
                   </div>
                   <div>
-                    <h2 className="text-sm font-semibold text-foreground">Notifikasi</h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">Atur kapan dan bagaimana kamu diberi tahu.</p>
+                    <h2 className="text-sm font-semibold text-foreground">
+                      Notifikasi
+                    </h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Atur kapan dan bagaimana kamu diberi tahu.
+                    </p>
                   </div>
                 </div>
                 {!profile?.isPremium && (
@@ -707,7 +908,6 @@ export default function SettingsPage() {
             </Card>
           </div>
         )}
-
       </div>
     </AppLayout>
   );

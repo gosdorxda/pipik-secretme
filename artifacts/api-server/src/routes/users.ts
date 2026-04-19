@@ -2,7 +2,10 @@ import { Router } from "express";
 import { db, usersTable, messagesTable, type InsertUser } from "@workspace/db";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
-import { UpdateMyProfileBody, GetPublicProfileParams } from "@workspace/api-zod";
+import {
+  UpdateMyProfileBody,
+  GetPublicProfileParams,
+} from "@workspace/api-zod";
 
 const router = Router();
 
@@ -58,12 +61,17 @@ router.put("/me", requireAuth, async (req, res) => {
     }
 
     const premiumFields = [
-      "socialInstagram", "socialTiktok", "socialX",
-      "socialFacebook", "socialGithub", "socialLinkedin",
-      "emailNotifications", "allowReplyNotif",
+      "socialInstagram",
+      "socialTiktok",
+      "socialX",
+      "socialFacebook",
+      "socialGithub",
+      "socialLinkedin",
+      "emailNotifications",
+      "allowReplyNotif",
     ] as const;
     const hasPremiumField = premiumFields.some(
-      (f) => parsed.data[f] !== undefined
+      (f) => parsed.data[f] !== undefined,
     );
     if (hasPremiumField && !user.isPremium) {
       res.status(403).json({ error: "upgrade_required" });
@@ -73,19 +81,44 @@ router.put("/me", requireAuth, async (req, res) => {
     const [updated] = await db
       .update(usersTable)
       .set({
-        ...(parsed.data.username !== undefined && { username: parsed.data.username, hasSetUsername: true }),
-        ...(parsed.data.displayName !== undefined && { displayName: parsed.data.displayName }),
+        ...(parsed.data.username !== undefined && {
+          username: parsed.data.username,
+          hasSetUsername: true,
+        }),
+        ...(parsed.data.displayName !== undefined && {
+          displayName: parsed.data.displayName,
+        }),
         ...(parsed.data.bio !== undefined && { bio: parsed.data.bio }),
-        ...(parsed.data.avatarUrl !== undefined && { avatarUrl: parsed.data.avatarUrl }),
-        ...(parsed.data.defaultPublicMessages !== undefined && { defaultPublicMessages: parsed.data.defaultPublicMessages }),
-        ...(parsed.data.allowReplyNotif !== undefined && { allowReplyNotif: parsed.data.allowReplyNotif }),
-        ...(parsed.data.socialInstagram !== undefined && { socialInstagram: parsed.data.socialInstagram }),
-        ...(parsed.data.socialTiktok !== undefined && { socialTiktok: parsed.data.socialTiktok }),
-        ...(parsed.data.socialX !== undefined && { socialX: parsed.data.socialX }),
-        ...(parsed.data.socialFacebook !== undefined && { socialFacebook: parsed.data.socialFacebook }),
-        ...(parsed.data.socialGithub !== undefined && { socialGithub: parsed.data.socialGithub }),
-        ...(parsed.data.socialLinkedin !== undefined && { socialLinkedin: parsed.data.socialLinkedin }),
-        ...(parsed.data.emailNotifications !== undefined && { emailNotifications: parsed.data.emailNotifications }),
+        ...(parsed.data.avatarUrl !== undefined && {
+          avatarUrl: parsed.data.avatarUrl,
+        }),
+        ...(parsed.data.defaultPublicMessages !== undefined && {
+          defaultPublicMessages: parsed.data.defaultPublicMessages,
+        }),
+        ...(parsed.data.allowReplyNotif !== undefined && {
+          allowReplyNotif: parsed.data.allowReplyNotif,
+        }),
+        ...(parsed.data.socialInstagram !== undefined && {
+          socialInstagram: parsed.data.socialInstagram,
+        }),
+        ...(parsed.data.socialTiktok !== undefined && {
+          socialTiktok: parsed.data.socialTiktok,
+        }),
+        ...(parsed.data.socialX !== undefined && {
+          socialX: parsed.data.socialX,
+        }),
+        ...(parsed.data.socialFacebook !== undefined && {
+          socialFacebook: parsed.data.socialFacebook,
+        }),
+        ...(parsed.data.socialGithub !== undefined && {
+          socialGithub: parsed.data.socialGithub,
+        }),
+        ...(parsed.data.socialLinkedin !== undefined && {
+          socialLinkedin: parsed.data.socialLinkedin,
+        }),
+        ...(parsed.data.emailNotifications !== undefined && {
+          emailNotifications: parsed.data.emailNotifications,
+        }),
         updatedAt: new Date(),
       })
       .where(eq(usersTable.clerkId, clerkUserId))
@@ -105,8 +138,14 @@ router.put("/me", requireAuth, async (req, res) => {
 });
 
 router.get("/check-username", async (req, res) => {
-  const username = typeof req.query.username === "string" ? req.query.username : "";
-  if (!username || username.length < 3 || username.length > 32 || !/^[a-z0-9_]+$/i.test(username)) {
+  const username =
+    typeof req.query.username === "string" ? req.query.username : "";
+  if (
+    !username ||
+    username.length < 3 ||
+    username.length > 32 ||
+    !/^[a-z0-9_]+$/i.test(username)
+  ) {
     res.status(400).json({ error: "Invalid username" });
     return;
   }
@@ -142,7 +181,7 @@ router.get("/:username", async (req, res) => {
     const publicMessages = await db.query.messagesTable.findMany({
       where: and(
         eq(messagesTable.recipientId, user.id),
-        eq(messagesTable.isPublic, true)
+        eq(messagesTable.isPublic, true),
       ),
       orderBy: [desc(messagesTable.createdAt)],
     });
@@ -159,7 +198,7 @@ router.get("/:username", async (req, res) => {
       socialFacebook: user.socialFacebook,
       socialGithub: user.socialGithub,
       socialLinkedin: user.socialLinkedin,
-      publicMessages: publicMessages.map(m => ({
+      publicMessages: publicMessages.map((m) => ({
         id: m.id,
         content: m.content,
         createdAt: m.createdAt,

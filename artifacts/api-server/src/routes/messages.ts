@@ -4,7 +4,10 @@ import { db, usersTable, messagesTable, campaignsTable } from "@workspace/db";
 import { eq, desc, count, and, isNull, gte, lt, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { createClerkClient } from "@clerk/express";
-import { sendNewMessageNotification, sendReplyNotification } from "../lib/email";
+import {
+  sendNewMessageNotification,
+  sendReplyNotification,
+} from "../lib/email";
 import { getSetting } from "../lib/settingsCache";
 
 import {
@@ -31,30 +34,38 @@ if (
 ) {
   console.warn(
     "[WhisperBox] WARNING: TURNSTILE_SECRET_KEY is not set. Using Cloudflare test key in production — " +
-    "email notification Turnstile verification will always pass. " +
-    "Set TURNSTILE_SECRET_KEY to a real Cloudflare Turnstile secret key."
+      "email notification Turnstile verification will always pass. " +
+      "Set TURNSTILE_SECRET_KEY to a real Cloudflare Turnstile secret key.",
   );
 }
 
-async function verifyTurnstileToken(token: string, remoteip?: string): Promise<boolean> {
+async function verifyTurnstileToken(
+  token: string,
+  remoteip?: string,
+): Promise<boolean> {
   try {
     const body = new URLSearchParams({
       secret: TURNSTILE_SECRET_KEY,
       response: token,
       ...(remoteip ? { remoteip } : {}),
     });
-    const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body,
-    });
-    const data = await resp.json() as { success?: boolean };
+    const resp = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        body,
+      },
+    );
+    const data = (await resp.json()) as { success?: boolean };
     return data.success === true;
   } catch {
     return false;
   }
 }
 
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 const router = Router();
 
@@ -65,7 +76,13 @@ router.get("/stats/me", requireAuth, async (req, res) => {
       where: eq(usersTable.clerkId, clerkUserId),
     });
     if (!user) {
-      res.json({ totalMessages: 0, unreadMessages: 0, unrepliedMessages: 0, linkOpens: 0, isPremium: false });
+      res.json({
+        totalMessages: 0,
+        unreadMessages: 0,
+        unrepliedMessages: 0,
+        linkOpens: 0,
+        isPremium: false,
+      });
       return;
     }
     const [totalResult] = await db
@@ -75,11 +92,21 @@ router.get("/stats/me", requireAuth, async (req, res) => {
     const [unreadResult] = await db
       .select({ value: count() })
       .from(messagesTable)
-      .where(and(eq(messagesTable.recipientId, user.id), eq(messagesTable.isRead, false)));
+      .where(
+        and(
+          eq(messagesTable.recipientId, user.id),
+          eq(messagesTable.isRead, false),
+        ),
+      );
     const [unrepliedResult] = await db
       .select({ value: count() })
       .from(messagesTable)
-      .where(and(eq(messagesTable.recipientId, user.id), isNull(messagesTable.ownerReply)));
+      .where(
+        and(
+          eq(messagesTable.recipientId, user.id),
+          isNull(messagesTable.ownerReply),
+        ),
+      );
     res.json({
       totalMessages: totalResult?.value ?? 0,
       unreadMessages: unreadResult?.value ?? 0,
@@ -94,15 +121,89 @@ router.get("/stats/me", requireAuth, async (req, res) => {
 });
 
 const ID_STOP_WORDS = new Set([
-  "yang", "dan", "di", "ke", "dari", "ini", "itu", "dengan", "untuk", "atau",
-  "ada", "tidak", "aku", "kamu", "kami", "mereka", "dia", "saya", "kita",
-  "bisa", "sudah", "akan", "juga", "tapi", "pada", "dalam", "lebih", "sering",
-  "jadi", "sekarang", "kalau", "karena", "sangat", "punya", "sama", "satu",
-  "banget", "gak", "ga", "jg", "udah", "tuh", "gue", "lo", "lu", "bgt",
-  "wkwk", "haha", "hehe", "emang", "emg", "kalo", "kak", "mas", "mba",
-  "how", "what", "the", "a", "is", "are", "was", "and", "or", "in", "of",
-  "to", "you", "i", "it", "that", "for", "be", "do", "have", "nya", "nih",
-  "ya", "dong", "aja", "deh", "kan", "lah",
+  "yang",
+  "dan",
+  "di",
+  "ke",
+  "dari",
+  "ini",
+  "itu",
+  "dengan",
+  "untuk",
+  "atau",
+  "ada",
+  "tidak",
+  "aku",
+  "kamu",
+  "kami",
+  "mereka",
+  "dia",
+  "saya",
+  "kita",
+  "bisa",
+  "sudah",
+  "akan",
+  "juga",
+  "tapi",
+  "pada",
+  "dalam",
+  "lebih",
+  "sering",
+  "jadi",
+  "sekarang",
+  "kalau",
+  "karena",
+  "sangat",
+  "punya",
+  "sama",
+  "satu",
+  "banget",
+  "gak",
+  "ga",
+  "jg",
+  "udah",
+  "tuh",
+  "gue",
+  "lo",
+  "lu",
+  "bgt",
+  "wkwk",
+  "haha",
+  "hehe",
+  "emang",
+  "emg",
+  "kalo",
+  "kak",
+  "mas",
+  "mba",
+  "how",
+  "what",
+  "the",
+  "a",
+  "is",
+  "are",
+  "was",
+  "and",
+  "or",
+  "in",
+  "of",
+  "to",
+  "you",
+  "i",
+  "it",
+  "that",
+  "for",
+  "be",
+  "do",
+  "have",
+  "nya",
+  "nih",
+  "ya",
+  "dong",
+  "aja",
+  "deh",
+  "kan",
+  "lah",
 ]);
 
 router.get("/wrapped/me", requireAuth, async (req, res) => {
@@ -110,14 +211,19 @@ router.get("/wrapped/me", requireAuth, async (req, res) => {
 
   const yearRaw = parseInt(req.query.year as string);
   if (isNaN(yearRaw) || yearRaw < 2000 || yearRaw > 2100) {
-    res.status(400).json({ error: "Invalid year. Must be an integer between 2000 and 2100." });
+    res.status(400).json({
+      error: "Invalid year. Must be an integer between 2000 and 2100.",
+    });
     return;
   }
   const year = yearRaw;
 
-  const monthRaw = req.query.month !== undefined ? parseInt(req.query.month as string) : null;
+  const monthRaw =
+    req.query.month !== undefined ? parseInt(req.query.month as string) : null;
   if (monthRaw !== null && (isNaN(monthRaw) || monthRaw < 1 || monthRaw > 12)) {
-    res.status(400).json({ error: "Invalid month. Must be an integer between 1 and 12." });
+    res
+      .status(400)
+      .json({ error: "Invalid month. Must be an integer between 1 and 12." });
     return;
   }
   const month = monthRaw;
@@ -143,7 +249,9 @@ router.get("/wrapped/me", requireAuth, async (req, res) => {
     });
 
     const totalMessages = messages.length;
-    const repliedMessages = messages.filter((m) => m.ownerReply !== null).length;
+    const repliedMessages = messages.filter(
+      (m) => m.ownerReply !== null,
+    ).length;
 
     const dayCount = new Array(7).fill(0);
     const hourCount = new Array(24).fill(0);
@@ -218,12 +326,21 @@ router.get("/", requireAuth, async (req, res) => {
     await db
       .update(messagesTable)
       .set({ isRead: true })
-      .where(and(eq(messagesTable.recipientId, user.id), eq(messagesTable.isRead, false)));
+      .where(
+        and(
+          eq(messagesTable.recipientId, user.id),
+          eq(messagesTable.isRead, false),
+        ),
+      );
 
     // Batch-fetch campaign titles for messages that have a campaignId
-    const campaignIds = [...new Set(
-      messages.map(m => m.campaignId).filter((id): id is string => id !== null)
-    )];
+    const campaignIds = [
+      ...new Set(
+        messages
+          .map((m) => m.campaignId)
+          .filter((id): id is string => id !== null),
+      ),
+    ];
     const campaignTitleMap = new Map<string, string>();
     if (campaignIds.length > 0) {
       const campaigns = await db
@@ -235,9 +352,11 @@ router.get("/", requireAuth, async (req, res) => {
       }
     }
 
-    const messagesWithCampaign = messages.map(m => ({
+    const messagesWithCampaign = messages.map((m) => ({
       ...m,
-      campaignTitle: m.campaignId ? (campaignTitleMap.get(m.campaignId) ?? null) : null,
+      campaignTitle: m.campaignId
+        ? (campaignTitleMap.get(m.campaignId) ?? null)
+        : null,
     }));
 
     res.json({
@@ -254,7 +373,9 @@ router.get("/", requireAuth, async (req, res) => {
 
 function hashIp(ip: string): string {
   const salt = process.env.SESSION_SECRET ?? "whisperbox-ip-salt";
-  return createHash("sha256").update(ip + salt).digest("hex");
+  return createHash("sha256")
+    .update(ip + salt)
+    .digest("hex");
 }
 
 function getSenderIp(req: import("express").Request): string {
@@ -289,12 +410,19 @@ router.post("/:username", async (req, res) => {
     const senderIpHash = hashIp(senderIp);
 
     // Configurable rate limiting: max N messages per M minutes
-    const limitCount = parseInt(await getSetting("message_rate_limit_count", "5"), 10) || 5;
-    const windowMinutes = parseInt(await getSetting("message_rate_limit_window_minutes", "10"), 10) || 10;
+    const limitCount =
+      parseInt(await getSetting("message_rate_limit_count", "5"), 10) || 5;
+    const windowMinutes =
+      parseInt(
+        await getSetting("message_rate_limit_window_minutes", "10"),
+        10,
+      ) || 10;
     const windowMs = windowMinutes * 60 * 1000;
     const now = Date.now();
 
-    const timestamps = (rateLimitMap.get(senderIpHash) ?? []).filter(t => now - t < windowMs);
+    const timestamps = (rateLimitMap.get(senderIpHash) ?? []).filter(
+      (t) => now - t < windowMs,
+    );
     if (timestamps.length >= limitCount) {
       rateLimitMap.set(senderIpHash, timestamps);
       const oldestTs = timestamps[0];
@@ -346,9 +474,10 @@ router.post("/:username", async (req, res) => {
     if (recipient.emailNotifications) {
       try {
         const clerkUser = await clerkClient.users.getUser(recipient.clerkId);
-        const primaryEmail = clerkUser.emailAddresses.find(
-          e => e.id === clerkUser.primaryEmailAddressId
-        )?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress;
+        const primaryEmail =
+          clerkUser.emailAddresses.find(
+            (e) => e.id === clerkUser.primaryEmailAddressId,
+          )?.emailAddress ?? clerkUser.emailAddresses[0]?.emailAddress;
         if (primaryEmail) {
           const displayName = recipient.displayName || recipient.username;
           sendNewMessageNotification({
@@ -388,7 +517,10 @@ router.post("/:id/reply", requireAuth, async (req, res) => {
       return;
     }
     const message = await db.query.messagesTable.findFirst({
-      where: and(eq(messagesTable.id, paramsParsed.data.id), eq(messagesTable.recipientId, user.id)),
+      where: and(
+        eq(messagesTable.id, paramsParsed.data.id),
+        eq(messagesTable.recipientId, user.id),
+      ),
     });
     if (!message) {
       res.status(404).json({ error: "Message not found" });
@@ -437,7 +569,10 @@ router.patch("/:id/visibility", requireAuth, async (req, res) => {
       return;
     }
     const message = await db.query.messagesTable.findFirst({
-      where: and(eq(messagesTable.id, paramsParsed.data.id), eq(messagesTable.recipientId, user.id)),
+      where: and(
+        eq(messagesTable.id, paramsParsed.data.id),
+        eq(messagesTable.recipientId, user.id),
+      ),
     });
     if (!message) {
       res.status(404).json({ error: "Message not found" });
@@ -471,7 +606,10 @@ router.delete("/:id", requireAuth, async (req, res) => {
       return;
     }
     const message = await db.query.messagesTable.findFirst({
-      where: and(eq(messagesTable.id, parsed.data.id), eq(messagesTable.recipientId, user.id)),
+      where: and(
+        eq(messagesTable.id, parsed.data.id),
+        eq(messagesTable.recipientId, user.id),
+      ),
     });
     if (!message) {
       res.status(404).json({ error: "Message not found" });

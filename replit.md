@@ -30,10 +30,12 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 ## WhisperBox App Features
 
 ### Database Schema
+
 - **users**: id, clerkId, username, displayName, bio, avatarUrl, `isPremium`, `defaultPublicMessages`, `emailNotifications`, `linkOpens`, `socialInstagram`, `socialTiktok`, `socialX`, `socialFacebook`, `socialGithub`, `socialLinkedin`, createdAt, updatedAt
 - **messages**: id, recipientId, content, isRead, `isPublic`, `ownerReply`, `ownerRepliedAt`, createdAt
 
 ### API Endpoints
+
 - `GET /api/users/me` — current user profile (includes isPremium, linkOpens)
 - `PUT /api/users/me` — update profile
 - `GET /api/users/:username` — public profile + public messages (increments linkOpens)
@@ -45,6 +47,7 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `DELETE /api/messages/:id` — delete message
 
 ### Admin Panel (`/admin`)
+
 - Auth: ADMIN_SECRET env var + sessionStorage key "wb_admin_secret" + x-admin-secret header
 - 4 tabs: Overview (stats), Pengguna, Transaksi, Pengaturan
 - Settings backed by `system_settings` table; cache TTL 60s via `settingsCache.ts`; invalidated on PUT /admin/settings
@@ -53,6 +56,7 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `link_opens_points_per_1000` setting: configures points earned per 1000 profile views
 
 ### Cloudflare Turnstile (anti-bot untuk email notif balasan)
+
 - **Frontend**: `VITE_TURNSTILE_SITE_KEY` env var (default: test key `1x00000000000000000000AA`)
 - **Backend**: `TURNSTILE_SECRET_KEY` env var (default: test key `1x0000000000000000000000000000000AA`)
 - Test keys selalu pass verifikasi tanpa akun Cloudflare; untuk production, daftar di dash.cloudflare.com → Turnstile → add site
@@ -60,6 +64,7 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - UI: collapsible section dengan toggle link "Mau dapat notifikasi jika [Nama] membalas? →"
 
 ### Codegen
+
 - OpenAPI spec: `lib/api-spec/openapi.yaml`
 - Run codegen: `pnpm --filter @workspace/api-spec run codegen`
 - Drift check: `pnpm run codegen:check` (runs orval then `git status --porcelain` on generated dirs; catches modified and new untracked files; also runs automatically via `pnpm run build`)

@@ -1,5 +1,11 @@
 import { Link } from "wouter";
-import { MessageSquareHeart, Twitter, Instagram, Github, Mail } from "lucide-react";
+import {
+  MessageSquareHeart,
+  Twitter,
+  Instagram,
+  Github,
+  Mail,
+} from "lucide-react";
 
 const FOOTER_LINKS = {
   produk: [
@@ -21,7 +27,11 @@ const FOOTER_LINKS = {
 
 const SOCIAL_LINKS = [
   { label: "Twitter / X", href: "https://x.com/whisperboxid", icon: Twitter },
-  { label: "Instagram", href: "https://instagram.com/whisperboxid", icon: Instagram },
+  {
+    label: "Instagram",
+    href: "https://instagram.com/whisperboxid",
+    icon: Instagram,
+  },
   { label: "GitHub", href: "https://github.com/whisperboxid", icon: Github },
   { label: "Email", href: "mailto:hello@whisperbox.id", icon: Mail },
 ];
@@ -36,10 +46,13 @@ export function Footer() {
               <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center text-primary-foreground text-xs font-bold">
                 W
               </div>
-              <span className="font-semibold text-sm text-foreground">WhisperBox</span>
+              <span className="font-semibold text-sm text-foreground">
+                WhisperBox
+              </span>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-4">
-              Platform pesan anonim yang aman dan personal. Terima jujur tanpa rasa takut.
+              Platform pesan anonim yang aman dan personal. Terima jujur tanpa
+              rasa takut.
             </p>
             <div className="flex items-center gap-2">
               {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
@@ -58,11 +71,16 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Produk</p>
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">
+              Produk
+            </p>
             <ul className="space-y-2">
               {FOOTER_LINKS.produk.map(({ label, href }) => (
                 <li key={label}>
-                  <Link href={href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    href={href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     {label}
                   </Link>
                 </li>
@@ -71,11 +89,16 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Bantuan</p>
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">
+              Bantuan
+            </p>
             <ul className="space-y-2">
               {FOOTER_LINKS.bantuan.map(({ label, href }) => (
                 <li key={label}>
-                  <a href={href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a
+                    href={href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     {label}
                   </a>
                 </li>
@@ -84,11 +107,16 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">Legal</p>
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">
+              Legal
+            </p>
             <ul className="space-y-2">
               {FOOTER_LINKS.legal.map(({ label, href }) => (
                 <li key={label}>
-                  <a href={href} className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  <a
+                    href={href}
+                    className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     {label}
                   </a>
                 </li>
@@ -99,7 +127,8 @@ export function Footer() {
 
         <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} WhisperBox. Dibuat dengan ❤️ di Indonesia.
+            &copy; {new Date().getFullYear()} WhisperBox. Dibuat dengan ❤️ di
+            Indonesia.
           </p>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />

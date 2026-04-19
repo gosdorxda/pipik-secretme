@@ -3,7 +3,9 @@ import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 export const systemSettingsTable = pgTable("system_settings", {
   key: varchar("key", { length: 100 }).primaryKey(),
   value: text("value"),
-  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
 });
 
 export type SystemSetting = typeof systemSettingsTable.$inferSelect;

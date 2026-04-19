@@ -2,7 +2,11 @@ import { Router } from "express";
 import { db, usersTable, campaignsTable, messagesTable } from "@workspace/db";
 import { eq, and, count } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
-import { CreateCampaignBody, EndCampaignParams, GetPublicCampaignParams } from "@workspace/api-zod";
+import {
+  CreateCampaignBody,
+  EndCampaignParams,
+  GetPublicCampaignParams,
+} from "@workspace/api-zod";
 
 const router = Router();
 
@@ -20,12 +24,21 @@ router.get("/me", requireAuth, async (req, res) => {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
     });
-    if (!user) { res.status(204).send(); return; }
+    if (!user) {
+      res.status(204).send();
+      return;
+    }
 
     const campaign = await db.query.campaignsTable.findFirst({
-      where: and(eq(campaignsTable.userId, user.id), eq(campaignsTable.isActive, true)),
+      where: and(
+        eq(campaignsTable.userId, user.id),
+        eq(campaignsTable.isActive, true),
+      ),
     });
-    if (!campaign) { res.status(204).send(); return; }
+    if (!campaign) {
+      res.status(204).send();
+      return;
+    }
 
     const responseCount = await getCampaignWithCount(campaign.id);
     res.json({ ...campaign, responseCount });
@@ -46,16 +59,26 @@ router.post("/me", requireAuth, async (req, res) => {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
     });
-    if (!user) { res.status(401).json({ error: "User not found" }); return; }
+    if (!user) {
+      res.status(401).json({ error: "User not found" });
+      return;
+    }
     if (!user.isPremium) {
-      res.status(403).json({ error: "Fitur ini hanya untuk pengguna Premium." });
+      res
+        .status(403)
+        .json({ error: "Fitur ini hanya untuk pengguna Premium." });
       return;
     }
 
     await db
       .update(campaignsTable)
       .set({ isActive: false, endedAt: new Date() })
-      .where(and(eq(campaignsTable.userId, user.id), eq(campaignsTable.isActive, true)));
+      .where(
+        and(
+          eq(campaignsTable.userId, user.id),
+          eq(campaignsTable.isActive, true),
+        ),
+      );
 
     const [campaign] = await db
       .insert(campaignsTable)
@@ -86,7 +109,10 @@ router.patch("/:id/end", requireAuth, async (req, res) => {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.clerkId, clerkUserId),
     });
-    if (!user) { res.status(401).json({ error: "Unauthorized" }); return; }
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
 
     const [updated] = await db
       .update(campaignsTable)
@@ -99,7 +125,10 @@ router.patch("/:id/end", requireAuth, async (req, res) => {
       )
       .returning();
 
-    if (!updated) { res.status(404).json({ error: "Campaign not found" }); return; }
+    if (!updated) {
+      res.status(404).json({ error: "Campaign not found" });
+      return;
+    }
 
     const responseCount = await getCampaignWithCount(updated.id);
     res.json({ ...updated, responseCount });
@@ -119,12 +148,21 @@ router.get("/public/:username", async (req, res) => {
     const user = await db.query.usersTable.findFirst({
       where: eq(usersTable.username, paramsParsed.data.username),
     });
-    if (!user) { res.status(204).send(); return; }
+    if (!user) {
+      res.status(204).send();
+      return;
+    }
 
     const campaign = await db.query.campaignsTable.findFirst({
-      where: and(eq(campaignsTable.userId, user.id), eq(campaignsTable.isActive, true)),
+      where: and(
+        eq(campaignsTable.userId, user.id),
+        eq(campaignsTable.isActive, true),
+      ),
     });
-    if (!campaign) { res.status(204).send(); return; }
+    if (!campaign) {
+      res.status(204).send();
+      return;
+    }
 
     const responseCount = await getCampaignWithCount(campaign.id);
     res.json({ ...campaign, responseCount });

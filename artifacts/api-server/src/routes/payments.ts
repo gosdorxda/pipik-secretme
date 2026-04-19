@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { db, usersTable, transactionsTable, referralsTable } from "@workspace/db";
+import {
+  db,
+  usersTable,
+  transactionsTable,
+  referralsTable,
+} from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import {
@@ -13,9 +18,12 @@ import { getSetting } from "../lib/settingsCache";
 import { createClerkClient } from "@clerk/express";
 
 const router = Router();
-const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
-const appUrl = process.env.APP_URL || `https://${process.env.REPLIT_DEV_DOMAIN}`;
+const appUrl =
+  process.env.APP_URL || `https://${process.env.REPLIT_DEV_DOMAIN}`;
 const callbackUrl = `${appUrl}/api/payments/callback`;
 
 async function awardUpgradeBonus(upgradedUserId: string) {
@@ -32,19 +40,27 @@ async function awardUpgradeBonus(upgradedUserId: string) {
   const bonusRaw = await getSetting("referral_upgrade_points", "100");
   const bonus = parseInt(bonusRaw, 10) || 100;
 
-  await db.update(usersTable)
+  await db
+    .update(usersTable)
     .set({ points: sql`${usersTable.points} + ${bonus}` })
     .where(eq(usersTable.id, referrer.id));
-  await db.update(referralsTable)
+  await db
+    .update(referralsTable)
     .set({ upgradeBonusAwarded: true })
     .where(eq(referralsTable.id, referral.id));
 }
 
-async function upgradeToPremium(userId: string, merchantRef: string, paidAt: Date | null) {
-  await db.update(transactionsTable)
+async function upgradeToPremium(
+  userId: string,
+  merchantRef: string,
+  paidAt: Date | null,
+) {
+  await db
+    .update(transactionsTable)
     .set({ status: "PAID", paidAt: paidAt ?? new Date() })
     .where(eq(transactionsTable.merchantRef, merchantRef));
-  await db.update(usersTable)
+  await db
+    .update(usersTable)
     .set({ isPremium: true, updatedAt: new Date() })
     .where(eq(usersTable.id, userId));
   await awardUpgradeBonus(userId);
@@ -71,7 +87,9 @@ router.post("/create", requireAuth, async (req, res) => {
     });
 
     if (existing && existing.tripayRef) {
-      const detail = await getTransactionDetail(existing.tripayRef).catch(() => null);
+      const detail = await getTransactionDetail(existing.tripayRef).catch(
+        () => null,
+      );
       if (detail) {
         if (detail.status === "PAID") {
           await upgradeToPremium(user.id, existing.merchantRef, detail.paidAt);
@@ -79,8 +97,13 @@ router.post("/create", requireAuth, async (req, res) => {
           return;
         }
         const nowSec = Math.floor(Date.now() / 1000);
-        const isExpiredByTime = detail.expiresAt != null && detail.expiresAt < nowSec;
-        if (detail.status === "UNPAID" && !isExpiredByTime && (detail.qrString || detail.qrUrl)) {
+        const isExpiredByTime =
+          detail.expiresAt != null && detail.expiresAt < nowSec;
+        if (
+          detail.status === "UNPAID" &&
+          !isExpiredByTime &&
+          (detail.qrString || detail.qrUrl)
+        ) {
           res.json({
             merchantRef: existing.merchantRef,
             tripayRef: existing.tripayRef,
@@ -92,9 +115,12 @@ router.post("/create", requireAuth, async (req, res) => {
           return;
         }
         // EXPIRED / FAILED or past expiresAt — mark old record and fall through to create new
-        const closedStatus = isExpiredByTime ? "EXPIRED" : sanitizeStatus(detail.status);
+        const closedStatus = isExpiredByTime
+          ? "EXPIRED"
+          : sanitizeStatus(detail.status);
         if (closedStatus !== existing.status) {
-          await db.update(transactionsTable)
+          await db
+            .update(transactionsTable)
             .set({ status: closedStatus })
             .where(eq(transactionsTable.merchantRef, existing.merchantRef));
         }
@@ -106,10 +132,12 @@ router.post("/create", requireAuth, async (req, res) => {
     try {
       const clerkUser = await clerkClient.users.getUser(clerkUserId);
       const primaryEmail = clerkUser.emailAddresses.find(
-        (e) => e.id === clerkUser.primaryEmailAddressId
+        (e) => e.id === clerkUser.primaryEmailAddressId,
       )?.emailAddress;
       if (primaryEmail) customerEmail = primaryEmail;
-      const fullName = [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ");
+      const fullName = [clerkUser.firstName, clerkUser.lastName]
+        .filter(Boolean)
+        .join(" ");
       if (fullName) customerName = fullName;
     } catch {
       // Use fallback values
@@ -146,7 +174,9 @@ router.post("/create", requireAuth, async (req, res) => {
     });
   } catch (err: any) {
     req.log.error({ err }, "Error creating payment");
-    res.status(503).json({ error: "payment_service_error", message: err.message });
+    res
+      .status(503)
+      .json({ error: "payment_service_error", message: err.message });
   }
 });
 
@@ -199,7 +229,8 @@ router.get("/status/:ref", requireAuth, async (req, res) => {
     }
 
     if (remoteStatus !== tx.status) {
-      await db.update(transactionsTable)
+      await db
+        .update(transactionsTable)
         .set({ status: sanitizeStatus(remoteStatus) })
         .where(eq(transactionsTable.merchantRef, ref));
     }
@@ -213,9 +244,11 @@ router.get("/status/:ref", requireAuth, async (req, res) => {
 
 router.post("/callback", async (req, res) => {
   const rawBody = req.rawBody;
-  const signature = req.headers["x-callback-signature"] as string || "";
+  const signature = (req.headers["x-callback-signature"] as string) || "";
 
-  const rawBodyStr = rawBody ? rawBody.toString("utf8") : JSON.stringify(req.body);
+  const rawBodyStr = rawBody
+    ? rawBody.toString("utf8")
+    : JSON.stringify(req.body);
 
   if (!verifyCallbackSignature(rawBodyStr, signature)) {
     res.status(400).json({ success: false, message: "Invalid signature" });
@@ -237,7 +270,8 @@ router.post("/callback", async (req, res) => {
       return;
     }
 
-    await db.update(transactionsTable)
+    await db
+      .update(transactionsTable)
       .set({
         status,
         tripayRef: body.reference || tx.tripayRef,
@@ -246,7 +280,8 @@ router.post("/callback", async (req, res) => {
       .where(eq(transactionsTable.merchantRef, merchantRef));
 
     if (status === "PAID") {
-      await db.update(usersTable)
+      await db
+        .update(usersTable)
         .set({ isPremium: true, updatedAt: new Date() })
         .where(eq(usersTable.id, tx.userId));
       await awardUpgradeBonus(tx.userId);

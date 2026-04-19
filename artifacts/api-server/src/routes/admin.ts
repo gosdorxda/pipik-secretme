@@ -1,5 +1,13 @@
 import { Router } from "express";
-import { db, usersTable, messagesTable, transactionsTable, systemSettingsTable, SETTING_KEYS, redeemRequestsTable } from "@workspace/db";
+import {
+  db,
+  usersTable,
+  messagesTable,
+  transactionsTable,
+  systemSettingsTable,
+  SETTING_KEYS,
+  redeemRequestsTable,
+} from "@workspace/db";
 import { eq, desc, ilike, or, count, sum, sql, and } from "drizzle-orm";
 import { requireAdmin } from "../middlewares/requireAdmin";
 import { getBannedIps, invalidateCache } from "../lib/settingsCache";
@@ -20,10 +28,19 @@ router.get("/stats", async (req, res) => {
       revenueResult,
     ] = await Promise.all([
       db.select({ count: count() }).from(usersTable),
-      db.select({ count: count() }).from(usersTable).where(eq(usersTable.isPremium, true)),
+      db
+        .select({ count: count() })
+        .from(usersTable)
+        .where(eq(usersTable.isPremium, true)),
       db.select({ count: count() }).from(messagesTable),
-      db.select({ count: count() }).from(transactionsTable).where(eq(transactionsTable.status, "PAID")),
-      db.select({ total: sum(transactionsTable.amount) }).from(transactionsTable).where(eq(transactionsTable.status, "PAID")),
+      db
+        .select({ count: count() })
+        .from(transactionsTable)
+        .where(eq(transactionsTable.status, "PAID")),
+      db
+        .select({ total: sum(transactionsTable.amount) })
+        .from(transactionsTable)
+        .where(eq(transactionsTable.status, "PAID")),
     ]);
 
     res.json({
@@ -54,19 +71,20 @@ router.get("/users", async (req, res) => {
       : undefined;
 
     const [users, totalResult] = await Promise.all([
-      db.select({
-        id: usersTable.id,
-        clerkId: usersTable.clerkId,
-        username: usersTable.username,
-        displayName: usersTable.displayName,
-        avatarUrl: usersTable.avatarUrl,
-        isPremium: usersTable.isPremium,
-        isAdmin: usersTable.isAdmin,
-        points: usersTable.points,
-        linkOpens: usersTable.linkOpens,
-        emailNotifications: usersTable.emailNotifications,
-        createdAt: usersTable.createdAt,
-      })
+      db
+        .select({
+          id: usersTable.id,
+          clerkId: usersTable.clerkId,
+          username: usersTable.username,
+          displayName: usersTable.displayName,
+          avatarUrl: usersTable.avatarUrl,
+          isPremium: usersTable.isPremium,
+          isAdmin: usersTable.isAdmin,
+          points: usersTable.points,
+          linkOpens: usersTable.linkOpens,
+          emailNotifications: usersTable.emailNotifications,
+          createdAt: usersTable.createdAt,
+        })
         .from(usersTable)
         .where(whereClause)
         .orderBy(desc(usersTable.createdAt))
@@ -103,7 +121,8 @@ router.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    const [updated] = await db.update(usersTable)
+    const [updated] = await db
+      .update(usersTable)
       .set(updates)
       .where(eq(usersTable.id, id))
       .returning();
@@ -122,7 +141,8 @@ router.patch("/users/:id", async (req, res) => {
 router.delete("/users/:id/premium", async (req, res) => {
   const { id } = req.params;
   try {
-    await db.update(usersTable)
+    await db
+      .update(usersTable)
       .set({ isPremium: false, updatedAt: new Date() })
       .where(eq(usersTable.id, id));
     res.json({ success: true });
@@ -188,11 +208,16 @@ router.get("/settings", async (req, res) => {
       [SETTING_KEYS.APP_NAME]: "WhisperBox",
       [SETTING_KEYS.APP_DESCRIPTION]: "Terima pesan anonim dari siapa saja",
       [SETTING_KEYS.RESEND_FROM_EMAIL]: process.env.RESEND_FROM_EMAIL || "",
-      [SETTING_KEYS.TRIPAY_MERCHANT_CODE]: process.env.TRIPAY_MERCHANT_CODE || "",
-      [SETTING_KEYS.EMAIL_NEW_MSG_SUBJECT]: "📬 Kamu punya pesan anonim baru di {{appName}}",
-      [SETTING_KEYS.EMAIL_NEW_MSG_INTRO]: "Hei {{name}}, seseorang mengirim pesan anonim kepadamu di {{appName}}.",
-      [SETTING_KEYS.EMAIL_REPLY_SUBJECT]: "💬 @{{ownerUsername}} membalas pesanmu di {{appName}}",
-      [SETTING_KEYS.EMAIL_REPLY_INTRO]: "<strong>@{{ownerUsername}}</strong> membalas pesan anonim yang kamu kirim di {{appName}}.",
+      [SETTING_KEYS.TRIPAY_MERCHANT_CODE]:
+        process.env.TRIPAY_MERCHANT_CODE || "",
+      [SETTING_KEYS.EMAIL_NEW_MSG_SUBJECT]:
+        "📬 Kamu punya pesan anonim baru di {{appName}}",
+      [SETTING_KEYS.EMAIL_NEW_MSG_INTRO]:
+        "Hei {{name}}, seseorang mengirim pesan anonim kepadamu di {{appName}}.",
+      [SETTING_KEYS.EMAIL_REPLY_SUBJECT]:
+        "💬 @{{ownerUsername}} membalas pesanmu di {{appName}}",
+      [SETTING_KEYS.EMAIL_REPLY_INTRO]:
+        "<strong>@{{ownerUsername}}</strong> membalas pesan anonim yang kamu kirim di {{appName}}.",
       link_opens_points_per_1000: "1",
       point_redeem_rate: "10000",
       banned_ips: "[]",
@@ -272,9 +297,17 @@ router.post("/ip-bans", async (req, res) => {
     if (!ips.includes(trimmed)) {
       ips.push(trimmed);
       const now = new Date();
-      await db.insert(systemSettingsTable)
-        .values({ key: "banned_ips", value: JSON.stringify(ips), updatedAt: now })
-        .onConflictDoUpdate({ target: systemSettingsTable.key, set: { value: JSON.stringify(ips), updatedAt: now } });
+      await db
+        .insert(systemSettingsTable)
+        .values({
+          key: "banned_ips",
+          value: JSON.stringify(ips),
+          updatedAt: now,
+        })
+        .onConflictDoUpdate({
+          target: systemSettingsTable.key,
+          set: { value: JSON.stringify(ips), updatedAt: now },
+        });
       invalidateCache();
     }
     res.json({ ips });
@@ -287,11 +320,19 @@ router.delete("/ip-bans/:ip", async (req, res) => {
   const ip = decodeURIComponent(req.params.ip);
   try {
     const ips = await getBannedIps();
-    const filtered = ips.filter(i => i !== ip);
+    const filtered = ips.filter((i) => i !== ip);
     const now = new Date();
-    await db.insert(systemSettingsTable)
-      .values({ key: "banned_ips", value: JSON.stringify(filtered), updatedAt: now })
-      .onConflictDoUpdate({ target: systemSettingsTable.key, set: { value: JSON.stringify(filtered), updatedAt: now } });
+    await db
+      .insert(systemSettingsTable)
+      .values({
+        key: "banned_ips",
+        value: JSON.stringify(filtered),
+        updatedAt: now,
+      })
+      .onConflictDoUpdate({
+        target: systemSettingsTable.key,
+        set: { value: JSON.stringify(filtered), updatedAt: now },
+      });
     invalidateCache();
     res.json({ ips: filtered });
   } catch {
@@ -336,16 +377,23 @@ router.patch("/redeem-requests/:id/status", async (req, res) => {
     const existing = await db.query.redeemRequestsTable.findFirst({
       where: eq(redeemRequestsTable.id, id),
     });
-    if (!existing) { res.status(404).json({ error: "Request tidak ditemukan." }); return; }
+    if (!existing) {
+      res.status(404).json({ error: "Request tidak ditemukan." });
+      return;
+    }
 
-    const [updated] = await db.update(redeemRequestsTable)
+    const [updated] = await db
+      .update(redeemRequestsTable)
       .set({ status, updatedAt: new Date() })
       .where(eq(redeemRequestsTable.id, id))
       .returning();
 
     if (status === "rejected" && existing.status !== "rejected") {
-      await db.update(usersTable)
-        .set({ redeemedPoints: sql`GREATEST(0, ${usersTable.redeemedPoints} - ${existing.points})` })
+      await db
+        .update(usersTable)
+        .set({
+          redeemedPoints: sql`GREATEST(0, ${usersTable.redeemedPoints} - ${existing.points})`,
+        })
         .where(eq(usersTable.id, existing.userId));
     }
 
