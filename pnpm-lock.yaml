@@ -337,6 +337,9 @@ importers:
       '@clerk/react':
         specifier: ^6.4.1
         version: 6.4.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@marsidev/react-turnstile':
+        specifier: ^1.5.0
+        version: 1.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@workspace/object-storage-web':
         specifier: workspace:*
         version: link:../../lib/object-storage-web
@@ -1264,6 +1267,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@marsidev/react-turnstile@1.5.0':
+    resolution: {integrity: sha512-Ph6mcj8u9WBDsBO7s9jKPsyRDz1sBPBJwrk+Ngx09vFInvKsQ6U6kW5amEcGq4dHOreB6DgFrOJk7/fy318YlQ==}
+    peerDependencies:
+      react: 19.1.0
+      react-dom: 19.1.0
 
   '@nodable/entities@1.1.0':
     resolution: {integrity: sha512-bidpxmTBP0pOsxULw6XlxzQpTgrAGLDHGBK/JuWhPDL6ZV0GZ/PmN9CA9do6e+A9lYI6qx6ikJUtJYRxup141g==}
@@ -5192,6 +5201,11 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@marsidev/react-turnstile@1.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
+    dependencies:
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
 
   '@nodable/entities@1.1.0': {}
 

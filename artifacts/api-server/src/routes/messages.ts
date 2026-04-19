@@ -21,6 +21,27 @@ import {
 // In-memory rate limiter: ipHash -> array of send timestamps
 const rateLimitMap = new Map<string, number[]>();
 
+const TURNSTILE_SECRET_KEY =
+  process.env.TURNSTILE_SECRET_KEY ?? "1x0000000000000000000000000000000AA";
+
+async function verifyTurnstileToken(token: string, remoteip?: string): Promise<boolean> {
+  try {
+    const body = new URLSearchParams({
+      secret: TURNSTILE_SECRET_KEY,
+      response: token,
+      ...(remoteip ? { remoteip } : {}),
+    });
+    const resp = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body,
+    });
+    const data = await resp.json() as { success?: boolean };
+    return data.success === true;
+  } catch {
+    return false;
+  }
+}
+
 const clerkClient = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 const router = Router();
@@ -283,6 +304,19 @@ router.post("/:username", async (req, res) => {
       ),
     });
 
+    // Verify Turnstile token if senderEmail is provided
+    let verifiedSenderEmail: string | null = null;
+    if (recipient.allowReplyNotif && bodyParsed.data.senderEmail) {
+      const token = bodyParsed.data.turnstileToken;
+      if (token) {
+        const senderIp = getSenderIp(req);
+        const valid = await verifyTurnstileToken(token, senderIp);
+        if (valid) {
+          verifiedSenderEmail = bodyParsed.data.senderEmail;
+        }
+      }
+    }
+
     const [message] = await db
       .insert(messagesTable)
       .values({
@@ -290,7 +324,7 @@ router.post("/:username", async (req, res) => {
         content: bodyParsed.data.content,
         isPublic: recipient.defaultPublicMessages,
         senderIpHash,
-        senderEmail: recipient.allowReplyNotif ? (bodyParsed.data.senderEmail ?? null) : null,
+        senderEmail: verifiedSenderEmail,
         campaignId: activeCampaign?.id ?? null,
       })
       .returning();

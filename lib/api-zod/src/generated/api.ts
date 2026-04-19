@@ -176,6 +176,7 @@ export const sendMessageBodyContentMax = 1000;
 export const SendMessageBody = zod.object({
   content: zod.string().min(1).max(sendMessageBodyContentMax),
   senderEmail: zod.string().email().optional(),
+  turnstileToken: zod.string().optional(),
 });
 
 /**

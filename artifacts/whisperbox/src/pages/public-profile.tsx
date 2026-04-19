@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useParams, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useAuth } from "@clerk/react";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X, HelpCircle, MessageCircle, Flame, Star, Zap, Heart, Sparkles, Mail } from "lucide-react";
+import { Send, User, Lock, CornerDownRight, Instagram, Github, Linkedin, Facebook, Megaphone, X, HelpCircle, MessageCircle, Flame, Star, Zap, Heart, Sparkles, Mail, ChevronRight } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+
+const TURNSTILE_SITE_KEY =
+  import.meta.env.VITE_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
 
 import {
   useGetPublicProfile,
@@ -113,6 +117,10 @@ export default function PublicProfilePage() {
   const { isSignedIn } = useAuth();
   const [bubbleDismissed, setBubbleDismissed] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5);
+  const [emailSectionOpen, setEmailSectionOpen] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileReady, setTurnstileReady] = useState(false);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const { data: profile, isLoading, isError } = useGetPublicProfile(username);
   const sendMessage = useSendMessage();
@@ -123,16 +131,29 @@ export default function PublicProfilePage() {
     defaultValues: { content: "", senderEmail: "" },
   });
 
+  const closeEmailSection = useCallback(() => {
+    setEmailSectionOpen(false);
+    setTurnstileToken(null);
+    setTurnstileReady(false);
+    form.setValue("senderEmail", "");
+    form.clearErrors("senderEmail");
+  }, [form]);
+
   const onSubmit = (data: MessageFormValues) => {
+    const emailTrimmed = data.senderEmail?.trim() ?? "";
+    const hasEmail = emailSectionOpen && emailTrimmed !== "";
     const payload = {
       content: data.content,
-      ...(data.senderEmail && data.senderEmail.trim() !== "" && { senderEmail: data.senderEmail.trim() }),
+      ...(hasEmail && { senderEmail: emailTrimmed }),
+      ...(hasEmail && turnstileToken ? { turnstileToken } : {}),
     };
     sendMessage.mutate(
       { username, data: payload },
       {
         onSuccess: () => {
           form.reset();
+          closeEmailSection();
+          turnstileRef.current?.reset();
           toast({
             title: "Pesan terkirim!",
             description: "Pesan anonym kamu berhasil dikirim.",
@@ -156,6 +177,8 @@ export default function PublicProfilePage() {
               variant: "destructive",
             });
           }
+          turnstileRef.current?.reset();
+          setTurnstileToken(null);
         }
       }
     );
@@ -331,26 +354,90 @@ export default function PublicProfilePage() {
                   )}
                 />
                 {profile.allowReplyNotif && (
-                <FormField
-                  control={form.control}
-                  name="senderEmail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
-                          <input
-                            type="email"
-                            placeholder="Email kamu (opsional — dapat notifikasi jika dibalas)"
-                            className="w-full pl-9 pr-3 py-2.5 text-sm border border-input rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
-                            {...field}
-                          />
+                  <div>
+                    {!emailSectionOpen ? (
+                      <button
+                        type="button"
+                        onClick={() => setEmailSectionOpen(true)}
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors group"
+                      >
+                        <Mail className="w-3 h-3 shrink-0" />
+                        <span>
+                          Mau dapat notifikasi jika{" "}
+                          <span className="font-medium">{profile.displayName || `@${profile.username}`}</span>{" "}
+                          membalas?
+                        </span>
+                        <ChevronRight className="w-3 h-3 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                      </button>
+                    ) : (
+                      <div className="space-y-2 rounded-md border border-border bg-secondary/30 p-3 animate-in fade-in slide-in-from-top-1 duration-150">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                            <Mail className="w-3 h-3 shrink-0" />
+                            Masukkan emailmu — kami kirim notif saat dibalas
+                          </p>
+                          <button
+                            type="button"
+                            onClick={closeEmailSection}
+                            className="text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                            aria-label="Tutup"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
                         </div>
-                      </FormControl>
-                      <FormMessage className="text-[11px]" />
-                    </FormItem>
-                  )}
-                />
+                        <FormField
+                          control={form.control}
+                          name="senderEmail"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <input
+                                  type="email"
+                                  placeholder="emailkamu@contoh.com"
+                                  autoFocus
+                                  className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage className="text-[11px]" />
+                            </FormItem>
+                          )}
+                        />
+                        <div className={turnstileReady ? "hidden" : ""}>
+                          <p className="text-[10px] text-muted-foreground/70 flex items-center gap-1">
+                            <span className="inline-block w-2.5 h-2.5 rounded-full border-2 border-muted-foreground/40 border-t-primary animate-spin" />
+                            Memuat verifikasi…
+                          </p>
+                        </div>
+                        <Turnstile
+                          ref={turnstileRef}
+                          siteKey={TURNSTILE_SITE_KEY}
+                          onSuccess={(token) => {
+                            setTurnstileToken(token);
+                            setTurnstileReady(true);
+                          }}
+                          onError={() => {
+                            setTurnstileToken(null);
+                            setTurnstileReady(true);
+                          }}
+                          onExpire={() => setTurnstileToken(null)}
+                          options={{ size: "invisible" }}
+                        />
+                        {turnstileReady && turnstileToken && (
+                          <p className="text-[10px] text-green-600 flex items-center gap-1">
+                            <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+                            Verifikasi berhasil — email siap dikirim
+                          </p>
+                        )}
+                        {turnstileReady && !turnstileToken && (
+                          <p className="text-[10px] text-amber-600 flex items-center gap-1">
+                            <span className="inline-block w-2 h-2 rounded-full bg-amber-500" />
+                            Verifikasi gagal — email tidak akan disimpan
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 )}
                 <Button
                   type="submit"
