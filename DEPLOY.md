@@ -45,6 +45,7 @@ CREATE DATABASE whisperbox OWNER whisperbox;
 ```
 
 Catat connection string:
+
 ```
 postgresql://whisperbox:ganti_password_kuat@localhost:5432/whisperbox
 ```
@@ -110,6 +111,7 @@ PREMIUM_PRICE=49900
 > **Catatan Fitur Avatar (Foto Profil):**
 > Fitur upload foto profil saat ini menggunakan Replit Object Storage yang tidak tersedia di VPS.
 > Avatar yang sudah diupload di Replit tidak akan bisa diakses. Ada dua opsi:
+>
 > - **Opsi A (mudah):** Biarkan saja — fitur upload avatar tidak akan berfungsi, sisanya normal.
 > - **Opsi B (perlu kode tambahan):** Ganti ke penyimpanan lokal atau S3/R2. Hubungi saya jika perlu panduan ini.
 
@@ -117,23 +119,24 @@ PREMIUM_PRICE=49900
 
 ## 5. Penjelasan Tiap Environment Variable
 
-| Variable | Keterangan | Dari mana |
-|---|---|---|
-| `NODE_ENV` | Wajib `production` | Set manual |
-| `DATABASE_URL` | Connection string PostgreSQL | Dari langkah 2 |
-| `APP_URL` | URL publik aplikasi (tanpa trailing slash) | Domain kamu |
-| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys |
-| `CLERK_SECRET_KEY` | Clerk auth — secret key | Clerk Dashboard → API Keys |
-| `ADMIN_SECRET` | Password akses halaman `/admin` | Generate bebas |
-| `SESSION_SECRET` | Salt untuk hashing IP (rate limiting) | Generate bebas |
-| `TRIPAY_API_KEY` | API key pembayaran | [TriPay Dashboard](https://tripay.co.id/member/merchant) |
-| `TRIPAY_PRIVATE_KEY` | Private key signature TriPay | TriPay Dashboard |
-| `TRIPAY_MERCHANT_CODE` | Kode merchant TriPay | TriPay Dashboard |
-| `RESEND_API_KEY` | API key email | [Resend Dashboard](https://resend.com) |
-| `RESEND_FROM_EMAIL` | Alamat pengirim email | Domain yang sudah diverifikasi di Resend |
-| `TURNSTILE_SECRET_KEY` | Verifikasi CAPTCHA server-side | [Cloudflare Dashboard](https://dash.cloudflare.com) → Turnstile |
+| Variable                | Keterangan                                 | Dari mana                                                       |
+| ----------------------- | ------------------------------------------ | --------------------------------------------------------------- |
+| `NODE_ENV`              | Wajib `production`                         | Set manual                                                      |
+| `DATABASE_URL`          | Connection string PostgreSQL               | Dari langkah 2                                                  |
+| `APP_URL`               | URL publik aplikasi (tanpa trailing slash) | Domain kamu                                                     |
+| `CLERK_PUBLISHABLE_KEY` | Clerk auth — public key                    | [Clerk Dashboard](https://dashboard.clerk.com) → API Keys       |
+| `CLERK_SECRET_KEY`      | Clerk auth — secret key                    | Clerk Dashboard → API Keys                                      |
+| `ADMIN_SECRET`          | Password akses halaman `/admin`            | Generate bebas                                                  |
+| `SESSION_SECRET`        | Salt untuk hashing IP (rate limiting)      | Generate bebas                                                  |
+| `TRIPAY_API_KEY`        | API key pembayaran                         | [TriPay Dashboard](https://tripay.co.id/member/merchant)        |
+| `TRIPAY_PRIVATE_KEY`    | Private key signature TriPay               | TriPay Dashboard                                                |
+| `TRIPAY_MERCHANT_CODE`  | Kode merchant TriPay                       | TriPay Dashboard                                                |
+| `RESEND_API_KEY`        | API key email                              | [Resend Dashboard](https://resend.com)                          |
+| `RESEND_FROM_EMAIL`     | Alamat pengirim email                      | Domain yang sudah diverifikasi di Resend                        |
+| `TURNSTILE_SECRET_KEY`  | Verifikasi CAPTCHA server-side             | [Cloudflare Dashboard](https://dash.cloudflare.com) → Turnstile |
 
 **Tidak dibutuhkan di VPS** (khusus Replit):
+
 - `DEFAULT_OBJECT_STORAGE_BUCKET_ID`
 - `PRIVATE_OBJECT_DIR`
 - `PUBLIC_OBJECT_SEARCH_PATHS`
@@ -149,6 +152,7 @@ Di [Clerk Dashboard](https://dashboard.clerk.com):
 3. Di **API Keys**, salin `pk_live_...` dan `sk_live_...` (bukan yang `pk_test_...`)
 
 Untuk Clerk proxy (opsional tapi direkomendasikan untuk SEO):
+
 ```env
 CLERK_PROXY_URL=https://domainmu.com/api/__clerk
 ```
@@ -298,6 +302,7 @@ sudo -u postgres psql -c "\l"
 ```
 
 Test endpoint API:
+
 ```bash
 curl https://domainmu.com/api/config
 ```
@@ -307,11 +312,13 @@ curl https://domainmu.com/api/config
 ## Troubleshooting
 
 **API tidak bisa diakses:**
+
 ```bash
 pm2 logs whisperbox-api --lines 50
 ```
 
 **Frontend tidak tampil / blank:**
+
 ```bash
 # Pastikan build sudah ada
 ls /var/www/whisperbox/artifacts/whisperbox/dist/index.html
@@ -321,12 +328,14 @@ sudo tail -f /var/log/nginx/error.log
 ```
 
 **Database error:**
+
 ```bash
 # Test koneksi
 psql $DATABASE_URL -c "SELECT 1"
 ```
 
 **TriPay callback tidak masuk:**
+
 - Pastikan `APP_URL` sudah benar dan HTTPS
 - Cek URL callback di dashboard TriPay sudah terdaftar
 - Cek PM2 logs untuk error saat menerima callback
