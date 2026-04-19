@@ -142,3 +142,24 @@ body {
 .msg-typing {
   animation: msg-in 0.3s ease-out 2.1s both;
 }
+
+/* Force Clerk form elements to respect container width */
+.cl-rootBox,
+.cl-cardBox,
+.cl-card,
+.cl-main,
+.cl-form {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.cl-socialButtonsBlockButton,
+.cl-formButtonPrimary,
+.cl-formFieldInput {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
