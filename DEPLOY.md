@@ -154,6 +154,9 @@ RESEND_FROM_EMAIL=noreply@vooi.lol
 
 LOG_LEVEL=info
 PREMIUM_PRICE=49900
+
+# Port yang didengarkan Express API (default 8080, sesuaikan jika konflik)
+PORT=8080
 ```
 
 Amankan file `.env` agar tidak bisa dibaca user lain:
@@ -162,7 +165,7 @@ Amankan file `.env` agar tidak bisa dibaca user lain:
 chmod 600 /var/www/vooi/.env
 ```
 
-> **Catatan Avatar:** Fitur upload foto profil menggunakan Replit Object Storage yang tidak tersedia di VPS. Avatar tidak akan berfungsi — sisanya normal. Hubungi developer jika butuh panduan S3/R2.
+> **Catatan Avatar:** Fitur upload foto profil menggunakan Replit Object Storage yang tidak tersedia di VPS. Avatar tidak akan berfungsi secara default. Lihat seksi **"Mengaktifkan Upload File di VPS"** di bawah untuk panduan menggunakan Cloudflare R2 atau MinIO.
 
 ---
 
@@ -182,6 +185,7 @@ chmod 600 /var/www/vooi/.env
 | `TRIPAY_MERCHANT_CODE`  | Kode merchant TriPay               | TriPay Dashboard                                          |
 | `RESEND_API_KEY`        | API key email                      | [Resend Dashboard](https://resend.com)                    |
 | `RESEND_FROM_EMAIL`     | Alamat pengirim email              | Domain terverifikasi di Resend                            |
+| `PORT`                  | Port Express API (default `8080`)  | Set manual (opsional)                                     |
 
 **Tidak dibutuhkan di VPS** (khusus Replit):
 
@@ -189,6 +193,156 @@ chmod 600 /var/www/vooi/.env
 - `PRIVATE_OBJECT_DIR`
 - `PUBLIC_OBJECT_SEARCH_PATHS`
 - `BASE_PATH` (default otomatis `/`)
+
+---
+
+## 6b. Mengaktifkan Upload File di VPS (Foto Profil)
+
+Secara default, fitur upload foto avatar menggunakan **Replit Object Storage** yang hanya tersedia di lingkungan Replit. Di VPS, fitur ini tidak berjalan sampai dikonfigurasi secara terpisah.
+
+> **Catatan:** Mengaktifkan upload file di VPS memerlukan dua hal:
+> 1. Menyiapkan layanan object storage (Cloudflare R2 atau MinIO)
+> 2. Update kecil pada kode backend (`artifacts/api-server/src/lib/objectStorage.ts`) untuk mengganti Google Cloud Storage SDK dengan S3-compatible SDK (misalnya `@aws-sdk/client-s3`). Jika tidak ingin melakukan perubahan kode, gunakan MinIO yang bisa dikonfigurasi sebagai proxy endpoint GCS-compatible.
+
+Tersedia dua opsi:
+
+| Opsi                     | Cocok untuk                   | Catatan                                 |
+| ------------------------ | ----------------------------- | --------------------------------------- |
+| **Cloudflare R2**        | Semua kasus (direkomendasikan) | Gratis hingga 10 GB/bulan, CDN global  |
+| **MinIO (self-hosted)**  | VPS tanpa ingin layanan cloud | Perlu resource VPS tambahan (~256 MB RAM) |
+
+---
+
+### Opsi A — Cloudflare R2 (Direkomendasikan)
+
+**Langkah 1: Buat bucket R2**
+
+1. Masuk ke [Cloudflare Dashboard](https://dash.cloudflare.com) → pilih akun
+2. Di sidebar kiri, klik **R2 Object Storage** → **Create bucket**
+3. Beri nama bucket, misalnya `vooi-uploads`
+4. Pilih region terdekat → **Create bucket**
+
+**Langkah 2: Buat API token R2**
+
+1. Di halaman R2, klik **Manage R2 API Tokens** (pojok kanan atas)
+2. Klik **Create API Token**
+3. Beri permission **Object Read & Write** untuk bucket `vooi-uploads`
+4. Salin: **Access Key ID** dan **Secret Access Key**
+5. Catat juga **S3 Endpoint** format: `https://<account-id>.r2.cloudflarestorage.com`
+
+**Langkah 3: Buat domain publik untuk bucket (opsional tapi direkomendasikan)**
+
+1. Di halaman bucket, buka tab **Settings** → **Public access**
+2. Aktifkan **R2.dev subdomain** atau sambungkan domain custom
+3. Salin URL publik bucket (dipakai sebagai `STORAGE_PUBLIC_URL`)
+
+**Langkah 4: Tambahkan env vars ke `.env`**
+
+```env
+# ── OBJECT STORAGE (S3-Compatible) ──────────────────────────────
+
+STORAGE_DRIVER=s3
+S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+S3_REGION=auto
+S3_BUCKET=vooi-uploads
+S3_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+S3_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# URL publik untuk mengakses file yang diupload (tanpa trailing slash):
+STORAGE_PUBLIC_URL=https://pub-xxxx.r2.dev
+```
+
+---
+
+### Opsi B — MinIO (Self-hosted di VPS)
+
+**Langkah 1: Install MinIO**
+
+```bash
+wget https://dl.min.io/server/minio/release/linux-amd64/minio
+chmod +x minio
+sudo mv minio /usr/local/bin/
+
+# Buat direktori data
+sudo mkdir -p /data/minio
+sudo chown deploy:deploy /data/minio
+```
+
+**Langkah 2: Jalankan MinIO sebagai service**
+
+```bash
+sudo nano /etc/systemd/system/minio.service
+```
+
+Isi dengan:
+
+```ini
+[Unit]
+Description=MinIO Object Storage
+After=network.target
+
+[Service]
+User=deploy
+Group=deploy
+Environment="MINIO_ROOT_USER=admin"
+Environment="MINIO_ROOT_PASSWORD=ganti_dengan_password_kuat"
+ExecStart=/usr/local/bin/minio server /data/minio --console-address ":9001"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable minio
+sudo systemctl start minio
+```
+
+**Langkah 3: Buat bucket via MinIO Console**
+
+1. Buka browser: `http://ip-vps-kamu:9001`
+2. Login dengan username/password yang diset di atas
+3. Klik **Create Bucket** → beri nama `vooi-uploads`
+4. Di bucket settings, aktifkan **Access Policy: public** (untuk avatar yang bisa dilihat publik)
+
+**Langkah 4: Tambahkan env vars ke `.env`**
+
+```env
+# ── OBJECT STORAGE (MinIO Self-hosted) ──────────────────────────
+
+STORAGE_DRIVER=s3
+S3_ENDPOINT=http://localhost:9000
+S3_REGION=us-east-1
+S3_BUCKET=vooi-uploads
+S3_ACCESS_KEY_ID=admin
+S3_SECRET_ACCESS_KEY=ganti_dengan_password_kuat
+# Ganti dengan domain/IP publik VPS kamu agar avatar bisa diakses dari browser:
+STORAGE_PUBLIC_URL=https://vooi.lol/minio
+```
+
+> **Catatan MinIO dengan Nginx:** Jika menggunakan `STORAGE_PUBLIC_URL` lewat domain, tambahkan blok proxy ke Nginx config:
+> ```nginx
+> location /minio/ {
+>     proxy_pass http://localhost:9000/vooi-uploads/;
+>     proxy_set_header Host $host;
+> }
+> ```
+
+---
+
+### Setelah menambahkan env vars
+
+Restart API server agar perubahan env terbaca:
+
+```bash
+cd /var/www/vooi
+pm2 delete vooi-api
+set -a && source .env && set +a
+pm2 start ecosystem.config.js
+pm2 save
+```
+
+Verifikasi dengan mencoba upload foto profil di dashboard.
 
 ---
 
