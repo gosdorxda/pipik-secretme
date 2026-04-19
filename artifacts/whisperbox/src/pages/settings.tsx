@@ -728,185 +728,169 @@ export default function SettingsPage() {
 
         {/* Allow Reply Notif Card — Premium only */}
         {profile?.username && (
-          <div className="relative">
-            {!profile?.isPremium && (
-              <div className="absolute inset-0 z-10 rounded-md bg-white/85 dark:bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center gap-3 border border-border">
-                <div className="w-10 h-10 rounded-md bg-amber-100 flex items-center justify-center mb-1">
-                  <Crown className="w-5 h-5 text-amber-600" />
+          <Card className="overflow-hidden gap-0 py-0">
+            <div
+              className="px-6 py-4 flex items-center gap-3"
+              style={{
+                background: "rgba(204,251,241,0.35)",
+                borderBottom: "1px solid rgba(20,184,166,0.18)",
+              }}
+            >
+              <div
+                className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: "rgba(20,184,166,0.12)" }}
+              >
+                <Mail className="w-4 h-4" style={{ color: "#0d9488" }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-semibold text-foreground">
+                    Notifikasi Balasan
+                  </h2>
+                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">
+                    <Crown className="w-2.5 h-2.5" /> Premium
+                  </span>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold mb-1">Fitur Premium</p>
-                  <p className="text-xs text-muted-foreground max-w-xs px-4">
-                    Izinkan pengirim anonim meninggalkan email untuk mendapat
-                    notifikasi balasan. Eksklusif Premium.
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Izinkan pengirim meninggalkan email untuk menerima
+                  notifikasi saat kamu membalas.
+                </p>
+              </div>
+            </div>
+            {!profile?.isPremium && (
+              <div className="mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+                <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-amber-800">
+                    Fitur Premium
+                  </p>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    Izinkan pengirim anonim meninggalkan email agar dapat notifikasi saat pesannya dibalas.{" "}
+                    <Link href="/upgrade" className="underline font-medium">
+                      Upgrade sekarang →
+                    </Link>
                   </p>
                 </div>
-                <Link href="/upgrade">
-                  <Button
-                    size="sm"
-                    className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none"
-                  >
-                    <Crown className="w-3.5 h-3.5" /> Upgrade Sekarang
-                  </Button>
-                </Link>
               </div>
             )}
-            <Card className="overflow-hidden gap-0 py-0">
-              <div
-                className="px-6 py-4 flex items-center gap-3"
-                style={{
-                  background: "rgba(204,251,241,0.35)",
-                  borderBottom: "1px solid rgba(20,184,166,0.18)",
-                }}
-              >
-                <div
-                  className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                  style={{ background: "rgba(20,184,166,0.12)" }}
-                >
-                  <Mail className="w-4 h-4" style={{ color: "#0d9488" }} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-sm font-semibold text-foreground">
-                      Notifikasi Balasan
-                    </h2>
-                    <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">
-                      <Crown className="w-2.5 h-2.5" /> Premium
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    Izinkan pengirim meninggalkan email untuk menerima
-                    notifikasi saat kamu membalas.
+            <CardContent className="py-5">
+              <div className="flex items-center justify-between gap-6">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">
+                    Tampilkan input email opsional
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Jika aktif, pengirim anonim bisa isi email agar dapat
+                    notifikasi saat pesannya dibalas.
                   </p>
                 </div>
-              </div>
-              <CardContent className="py-5">
-                <div className="flex items-center justify-between gap-6">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">
-                      Tampilkan input email opsional
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                      Jika aktif, pengirim anonim bisa isi email agar dapat
-                      notifikasi saat pesannya dibalas.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={allowReplyNotif}
-                    disabled={savingReplyNotif || !profile?.isPremium}
-                    onClick={handleToggleAllowReplyNotif}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={allowReplyNotif}
+                  disabled={savingReplyNotif || !profile?.isPremium}
+                  onClick={handleToggleAllowReplyNotif}
+                  className={[
+                    "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                    allowReplyNotif ? "bg-primary" : "bg-input",
+                  ].join(" ")}
+                >
+                  <span
                     className={[
-                      "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                      allowReplyNotif ? "bg-primary" : "bg-input",
+                      "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200",
+                      allowReplyNotif ? "translate-x-5" : "translate-x-0",
                     ].join(" ")}
-                  >
-                    <span
-                      className={[
-                        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200",
-                        allowReplyNotif ? "translate-x-5" : "translate-x-0",
-                      ].join(" ")}
-                    />
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                  />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Notifications Card */}
         {profile?.username && (
-          <div className="relative">
-            {!profile?.isPremium && (
-              <div className="absolute inset-0 z-10 rounded-md bg-white/85 backdrop-blur-sm flex flex-col items-center justify-center gap-3 border border-border">
-                <div className="w-10 h-10 rounded-md bg-amber-100 flex items-center justify-center mb-1">
-                  <Crown className="w-5 h-5 text-amber-600" />
+          <Card className="overflow-hidden gap-0 py-0">
+            <div
+              className="px-6 py-4 flex items-center justify-between gap-4"
+              style={{
+                background: "rgba(254,243,199,0.55)",
+                borderBottom: "1px solid rgba(251,191,36,0.22)",
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                  style={{ background: "rgba(245,158,11,0.15)" }}
+                >
+                  <Bell className="w-4 h-4" style={{ color: "#d97706" }} />
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-bold mb-1">Fitur Premium</p>
-                  <p className="text-xs text-muted-foreground max-w-xs px-4">
-                    Notifikasi email setiap ada pesan baru. Eksklusif untuk
-                    Premium.
+                <div>
+                  <h2 className="text-sm font-semibold text-foreground">
+                    Notifikasi
+                  </h2>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Atur kapan dan bagaimana kamu diberi tahu.
                   </p>
                 </div>
-                <Link href="/upgrade">
-                  <Button
-                    size="sm"
-                    className="gap-1.5 text-xs mt-1 bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-none"
-                  >
-                    <Crown className="w-3.5 h-3.5" /> Upgrade Sekarang
-                  </Button>
+              </div>
+              {!profile?.isPremium && (
+                <Link href="/upgrade" className="shrink-0">
+                  <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
+                    <Lock className="w-3 h-3" /> Premium
+                  </span>
                 </Link>
+              )}
+            </div>
+            {!profile?.isPremium && (
+              <div className="mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+                <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-amber-800">
+                    Fitur Premium
+                  </p>
+                  <p className="text-xs text-amber-700 mt-0.5">
+                    Terima notifikasi email setiap ada pesan anonim baru.{" "}
+                    <Link href="/upgrade" className="underline font-medium">
+                      Upgrade sekarang →
+                    </Link>
+                  </p>
+                </div>
               </div>
             )}
-            <Card className="overflow-hidden gap-0 py-0">
-              <div
-                className="px-6 py-4 flex items-center justify-between gap-4"
-                style={{
-                  background: "rgba(254,243,199,0.55)",
-                  borderBottom: "1px solid rgba(251,191,36,0.22)",
-                }}
-              >
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
-                    style={{ background: "rgba(245,158,11,0.15)" }}
-                  >
-                    <Bell className="w-4 h-4" style={{ color: "#d97706" }} />
-                  </div>
-                  <div>
-                    <h2 className="text-sm font-semibold text-foreground">
-                      Notifikasi
-                    </h2>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      Atur kapan dan bagaimana kamu diberi tahu.
+            <CardContent className="py-5">
+              <div className="flex items-center justify-between gap-6">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium">Notifikasi email</p>
+                  <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                    Terima email setiap ada pesan anonim baru.
+                  </p>
+                  {clerkUser?.primaryEmailAddress?.emailAddress && (
+                    <p className="mt-1.5 font-mono text-xs text-foreground/60 bg-secondary rounded-md px-2 py-1 inline-block">
+                      {clerkUser.primaryEmailAddress.emailAddress}
                     </p>
-                  </div>
+                  )}
                 </div>
-                {!profile?.isPremium && (
-                  <Link href="/upgrade" className="shrink-0">
-                    <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
-                      <Lock className="w-3 h-3" /> Premium
-                    </span>
-                  </Link>
-                )}
-              </div>
-              <CardContent className="py-5">
-                <div className="flex items-center justify-between gap-6">
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">Notifikasi email</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                      Terima email setiap ada pesan anonim baru.
-                    </p>
-                    {clerkUser?.primaryEmailAddress?.emailAddress && (
-                      <p className="mt-1.5 font-mono text-xs text-foreground/60 bg-secondary rounded-md px-2 py-1 inline-block">
-                        {clerkUser.primaryEmailAddress.emailAddress}
-                      </p>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={emailNotifications}
-                    disabled={savingNotif}
-                    onClick={handleToggleEmailNotifications}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={emailNotifications}
+                  disabled={savingNotif || !profile?.isPremium}
+                  onClick={handleToggleEmailNotifications}
+                  className={[
+                    "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+                    emailNotifications ? "bg-primary" : "bg-input",
+                  ].join(" ")}
+                >
+                  <span
                     className={[
-                      "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                      emailNotifications ? "bg-primary" : "bg-input",
+                      "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200",
+                      emailNotifications ? "translate-x-5" : "translate-x-0",
                     ].join(" ")}
-                  >
-                    <span
-                      className={[
-                        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform duration-200",
-                        emailNotifications ? "translate-x-5" : "translate-x-0",
-                      ].join(" ")}
-                    />
-                  </button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                  />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </AppLayout>
