@@ -13,6 +13,11 @@ import { requireAdmin } from "../middlewares/requireAdmin";
 import { getBannedIps, invalidateCache } from "../lib/settingsCache";
 import { IS_SANDBOX } from "../lib/tripay";
 import { getLogs } from "../lib/logBuffer";
+import { createClerkClient } from "@clerk/express";
+
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 const router = Router();
 
@@ -144,10 +149,17 @@ router.delete("/users/:id", async (req, res) => {
     const [deleted] = await db
       .delete(usersTable)
       .where(eq(usersTable.id, id))
-      .returning({ id: usersTable.id });
+      .returning({ id: usersTable.id, clerkId: usersTable.clerkId });
     if (!deleted) {
       res.status(404).json({ error: "User tidak ditemukan" });
       return;
+    }
+    if (deleted.clerkId) {
+      try {
+        await clerkClient.users.deleteUser(deleted.clerkId);
+      } catch (clerkErr) {
+        req.log.warn({ clerkErr }, "Failed to delete Clerk user, skipping");
+      }
     }
     res.json({ success: true });
   } catch (err) {
