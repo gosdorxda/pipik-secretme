@@ -16,32 +16,35 @@ const STATS = [
   { label: "Negara Pengguna", value: "12+" },
 ];
 
-const VALUES = [
-  {
-    icon: Lock,
-    title: "Privasi Utama",
-    desc: "Kami tidak pernah menyimpan identitas pengirim. Setiap pesan benar-benar anonim — bahkan untuk kami sendiri.",
-  },
-  {
-    icon: Shield,
-    title: "Aman & Terpercaya",
-    desc: "Data dienkripsi, sistem diproteksi, dan kami tidak pernah menjual data pengguna ke pihak manapun.",
-  },
-  {
-    icon: Zap,
-    title: "Sederhana & Cepat",
-    desc: "Tidak perlu install app. Cukup bagikan linkmu, dan siapapun bisa langsung kirim pesan dalam hitungan detik.",
-  },
-  {
-    icon: Heart,
-    title: "Dibuat dengan Cinta",
-    desc: "WhisperBox lahir dari kebutuhan nyata — ruang aman untuk mendengar pendapat jujur tanpa rasa takut.",
-  },
-];
+function getValues(appName: string) {
+  return [
+    {
+      icon: Lock,
+      title: "Privasi Utama",
+      desc: "Kami tidak pernah menyimpan identitas pengirim. Setiap pesan benar-benar anonim — bahkan untuk kami sendiri.",
+    },
+    {
+      icon: Shield,
+      title: "Aman & Terpercaya",
+      desc: "Data dienkripsi, sistem diproteksi, dan kami tidak pernah menjual data pengguna ke pihak manapun.",
+    },
+    {
+      icon: Zap,
+      title: "Sederhana & Cepat",
+      desc: "Tidak perlu install app. Cukup bagikan linkmu, dan siapapun bisa langsung kirim pesan dalam hitungan detik.",
+    },
+    {
+      icon: Heart,
+      title: "Dibuat dengan Cinta",
+      desc: `${appName} lahir dari kebutuhan nyata — ruang aman untuk mendengar pendapat jujur tanpa rasa takut.`,
+    },
+  ];
+}
 
 export default function TentangPage() {
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "vooi.lol";
+  const VALUES = getValues(appName);
 
   return (
     <StaticPageLayout>
