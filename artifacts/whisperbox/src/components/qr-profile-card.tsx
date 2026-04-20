@@ -1,9 +1,9 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { Download, Share, X } from "lucide-react";
-import { resolveAvatarUrl } from "@/lib/avatar";
+import { resolveAvatarUrl, fetchAsDataUrl } from "@/lib/avatar";
 import { useSiteBranding } from "@/hooks/use-branding";
 
 type QRProfileCardProps = {
@@ -27,6 +27,23 @@ export function QRProfileCard({
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "vooi.lol";
+
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
+  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const resolved = resolveAvatarUrl(avatarUrl);
+    if (resolved) {
+      fetchAsDataUrl(resolved).then(setAvatarDataUrl);
+    } else {
+      setAvatarDataUrl(null);
+    }
+  }, [avatarUrl]);
+
+  useEffect(() => {
+    const logoSrc = branding?.logoUrl ?? "/logo.svg";
+    fetchAsDataUrl(logoSrc).then(setLogoDataUrl);
+  }, [branding?.logoUrl]);
 
   const publicUrl = `${window.location.origin}/@${username}`;
   const shortUrl = `${window.location.origin}/@${username}`;
@@ -116,7 +133,7 @@ export function QRProfileCard({
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* ── Header: mint tint ── */}
+          {/* ── Header ── */}
           <div
             style={{
               padding: "18px 20px",
@@ -128,13 +145,10 @@ export function QRProfileCard({
             }}
           >
             {/* Avatar */}
-            {resolveAvatarUrl(avatarUrl) ? (
+            {avatarDataUrl ? (
               <img
-                src={resolveAvatarUrl(avatarUrl)!}
+                src={avatarDataUrl}
                 alt={displayName || username}
-                crossOrigin="anonymous"
-                loading="lazy"
-                decoding="async"
                 style={{
                   width: 46,
                   height: 46,
@@ -226,12 +240,7 @@ export function QRProfileCard({
 
           {/* ── Bio (if any) ── */}
           {bio && (
-            <div
-              style={{
-                padding: "12px 20px 0",
-                borderBottom: "none",
-              }}
-            >
+            <div style={{ padding: "12px 20px 0" }}>
               <p
                 style={{
                   fontSize: 12,
@@ -360,23 +369,31 @@ export function QRProfileCard({
               Bagikan ke stories atau bio-mu
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <div
-                style={{
-                  width: 17,
-                  height: 17,
-                  borderRadius: 5,
-                  background: "#86ead4",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <span
-                  style={{ fontSize: 9, fontWeight: 900, color: "#0d4038" }}
+              {logoDataUrl ? (
+                <img
+                  src={logoDataUrl}
+                  alt={appName}
+                  style={{ width: 17, height: 17, borderRadius: 4 }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 17,
+                    height: 17,
+                    borderRadius: 5,
+                    background: "#86ead4",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
                 >
-                  W
-                </span>
-              </div>
+                  <span
+                    style={{ fontSize: 9, fontWeight: 900, color: "#0d4038" }}
+                  >
+                    {appName[0]?.toUpperCase()}
+                  </span>
+                </div>
+              )}
               <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>
                 {appName}
               </span>
