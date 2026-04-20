@@ -22,7 +22,7 @@ export async function fetchAsDataUrl(url: string): Promise<string | null> {
   };
 
   try {
-    const result = await tryFetch(url, { credentials: "include" });
+    const result = await tryFetch(url, { credentials: "omit" });
     if (!result) console.warn("[avatar] fetch not-ok:", url);
     return result;
   } catch (err) {
