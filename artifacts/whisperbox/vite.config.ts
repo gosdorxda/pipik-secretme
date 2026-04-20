@@ -3,21 +3,46 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
+import http from "node:http";
 
-// PORT is used by the dev/preview server only — not needed for production builds.
-// Default to 3000 so `vite build` works without setting PORT explicitly.
 const port = Number(process.env.PORT ?? "3000");
-
-// BASE_PATH is the URL prefix where the app is mounted.
-// For VPS deployments at domain root, this is "/".
-// Replit sets this automatically for its proxy routing.
 const basePath = process.env.BASE_PATH ?? "/";
+
+const API_PORT = 8080;
+const USERNAME_RE = /^\/@[a-zA-Z0-9_]{3,32}([?#].*)?$/;
+
+function ogProfileProxy() {
+  return {
+    name: "og-profile-proxy",
+    configureServer(server: import("vite").ViteDevServer) {
+      server.middlewares.use((req, res, next) => {
+        if (req.method === "GET" && USERNAME_RE.test(req.url ?? "")) {
+          const proxyReq = http.request(
+            {
+              hostname: "localhost",
+              port: API_PORT,
+              path: req.url,
+              method: "GET",
+              headers: { ...req.headers, host: `localhost:${API_PORT}` },
+            },
+            (proxyRes) => {
+              res.writeHead(proxyRes.statusCode ?? 200, proxyRes.headers);
+              proxyRes.pipe(res);
+            },
+          );
+          proxyReq.on("error", () => next());
+          req.pipe(proxyReq);
+        } else {
+          next();
+        }
+      });
+    },
+  };
+}
 
 export default defineConfig({
   base: basePath,
   define: {
-    // Forward CLERK_PUBLISHABLE_KEY (no VITE_ prefix) into the browser bundle.
-    // We do this explicitly so the backend and frontend share the same secret name.
     "import.meta.env.VITE_CLERK_PUBLISHABLE_KEY": JSON.stringify(
       process.env.CLERK_PUBLISHABLE_KEY ??
         process.env.VITE_CLERK_PUBLISHABLE_KEY ??
@@ -28,6 +53,7 @@ export default defineConfig({
     ),
   },
   plugins: [
+    ogProfileProxy(),
     react(),
     tailwindcss(),
     runtimeErrorOverlay(),
