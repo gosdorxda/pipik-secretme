@@ -57,7 +57,10 @@ router.get("/config", async (req, res) => {
       premiumPrice: 49900,
       redeemRate: 10000,
       referralSignupPoints: 10,
+      referralUpgradePoints: 100,
       linkOpensPointsPer1000: 1,
+      logoUrl: null,
+      faviconUrl: null,
       appName: "vooi.lol",
       notification: null,
     });

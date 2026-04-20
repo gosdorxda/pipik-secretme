@@ -24,6 +24,22 @@ import {
 // In-memory rate limiter: ipHash -> array of send timestamps
 const rateLimitMap = new Map<string, number[]>();
 
+// Periodic cleanup: remove stale IP entries every 30 minutes
+setInterval(
+  () => {
+    const cutoff = Date.now() - 60 * 60 * 1000; // keep last 1 hour max
+    for (const [key, timestamps] of rateLimitMap) {
+      const fresh = timestamps.filter((t) => t > cutoff);
+      if (fresh.length === 0) {
+        rateLimitMap.delete(key);
+      } else {
+        rateLimitMap.set(key, fresh);
+      }
+    }
+  },
+  30 * 60 * 1000,
+).unref();
+
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });

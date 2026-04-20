@@ -49,7 +49,6 @@ export function QRProfileCard({
   }, [branding?.logoUrl]);
 
   const publicUrl = `${window.location.origin}/@${username}`;
-  const shortUrl = `${window.location.origin}/@${username}`;
 
   const initials = (displayName || username || "?")
     .split(" ")
@@ -92,7 +91,7 @@ export function QRProfileCard({
         await navigator.share({
           files: [file],
           title: appName,
-          text: `Kirimi ${displayName || username} pesan anonim! ${shortUrl}`,
+          text: `Kirimi ${displayName || username} pesan anonim! ${publicUrl}`,
         });
       } else {
         const a = document.createElement("a");
@@ -314,7 +313,7 @@ export function QRProfileCard({
                   margin: "2px 0 0",
                 }}
               >
-                {shortUrl}
+                {publicUrl}
               </p>
             </div>
 

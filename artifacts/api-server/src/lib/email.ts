@@ -70,7 +70,7 @@ export async function sendNewMessageNotification({
                     <table cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="background:rgba(255,255,255,0.25);border-radius:6px;width:28px;height:28px;text-align:center;vertical-align:middle;">
-                          <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">W</span>
+                          <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">${fromName.charAt(0).toUpperCase()}</span>
                         </td>
                         <td style="padding-left:8px;">
                           <span style="font-size:15px;font-weight:700;color:#0a2520;">${fromName}</span>
@@ -195,7 +195,7 @@ export async function sendReplyNotification({
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background:rgba(255,255,255,0.25);border-radius:6px;width:28px;height:28px;text-align:center;vertical-align:middle;">
-                    <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">W</span>
+                    <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">${fromName.charAt(0).toUpperCase()}</span>
                   </td>
                   <td style="padding-left:8px;">
                     <span style="font-size:15px;font-weight:700;color:#0a2520;">${fromName}</span>

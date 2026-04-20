@@ -265,10 +265,15 @@ router.get("/stats/daily", async (req, res) => {
 router.delete("/users/:id/premium", async (req, res) => {
   const { id } = req.params;
   try {
-    await db
+    const [updated] = await db
       .update(usersTable)
       .set({ isPremium: false, updatedAt: new Date() })
-      .where(eq(usersTable.id, id));
+      .where(eq(usersTable.id, id))
+      .returning({ id: usersTable.id });
+    if (!updated) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });

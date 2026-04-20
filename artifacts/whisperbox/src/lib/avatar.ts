@@ -23,10 +23,8 @@ export async function fetchAsDataUrl(url: string): Promise<string | null> {
 
   try {
     const result = await tryFetch(url, { credentials: "omit" });
-    if (!result) console.warn("[avatar] fetch not-ok:", url);
     return result;
-  } catch (err) {
-    console.warn("[avatar] fetch error:", url, err);
+  } catch {
     if (!url.startsWith("http")) return null;
     return new Promise((resolve) => {
       const img = new Image();

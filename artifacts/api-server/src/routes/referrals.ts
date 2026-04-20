@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db, usersTable, referralsTable } from "@workspace/db";
-import { eq, desc, sql } from "drizzle-orm";
+import { eq, desc, sql, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { getSetting } from "../lib/settingsCache";
 
@@ -58,24 +58,32 @@ router.get("/me", requireAuth, async (req, res) => {
       orderBy: [desc(referralsTable.createdAt)],
     });
 
-    const referredUsers =
-      referralsList.length > 0
-        ? await Promise.all(
-            referralsList.map(async (r) => {
-              const referred = await db.query.usersTable.findFirst({
-                where: eq(usersTable.id, r.referredUserId),
-              });
-              return {
-                username: referred?.username ?? "unknown",
-                displayName: referred?.displayName ?? null,
-                joinedAt: r.createdAt,
-                points: r.pointsAwarded,
-                upgradeBonusAwarded: r.upgradeBonusAwarded,
-                isPremium: referred?.isPremium ?? false,
-              };
-            }),
-          )
+    const referredIds = referralsList.map((r) => r.referredUserId);
+    const referredUsersRows =
+      referredIds.length > 0
+        ? await db
+            .select({
+              id: usersTable.id,
+              username: usersTable.username,
+              displayName: usersTable.displayName,
+              isPremium: usersTable.isPremium,
+            })
+            .from(usersTable)
+            .where(inArray(usersTable.id, referredIds))
         : [];
+    const referredMap = new Map(referredUsersRows.map((u) => [u.id, u]));
+
+    const referredUsers = referralsList.map((r) => {
+      const referred = referredMap.get(r.referredUserId);
+      return {
+        username: referred?.username ?? "unknown",
+        displayName: referred?.displayName ?? null,
+        joinedAt: r.createdAt,
+        points: r.pointsAwarded,
+        upgradeBonusAwarded: r.upgradeBonusAwarded,
+        isPremium: referred?.isPremium ?? false,
+      };
+    });
 
     const pointsPerThousand =
       parseInt(await getSetting("link_opens_points_per_1000", "1"), 10) || 1;

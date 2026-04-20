@@ -35,7 +35,6 @@ const PALETTES = [
 ];
 
 type ShareMessageCardProps = {
-  messageId: string;
   content: string;
   createdAt: string;
   ownerReply?: string | null;
@@ -43,7 +42,6 @@ type ShareMessageCardProps = {
   displayName: string;
   username: string;
   avatarUrl?: string | null;
-  totalMessages?: number;
   onClose: () => void;
 };
 

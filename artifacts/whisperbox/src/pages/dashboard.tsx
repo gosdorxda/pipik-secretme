@@ -1432,7 +1432,6 @@ export default function DashboardPage() {
           if (!msg) return null;
           return (
             <ShareMessageCard
-              messageId={msg.id}
               content={msg.content}
               createdAt={msg.createdAt}
               ownerReply={msg.ownerReply}
@@ -1440,7 +1439,6 @@ export default function DashboardPage() {
               displayName={displayName}
               username={profile.username!}
               avatarUrl={profile.avatarUrl}
-              totalMessages={stats?.totalMessages ?? 0}
               onClose={() => setSharingMessage(null)}
             />
           );
