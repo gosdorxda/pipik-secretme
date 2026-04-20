@@ -108,7 +108,8 @@ export function ShareMessageCard({
     setIsGenerating(true);
     try {
       return await toPng(cardRef.current, { pixelRatio: 3, cacheBust: true });
-    } catch {
+    } catch (e) {
+      console.error("[share-card] Failed to generate image:", e);
       return null;
     } finally {
       setIsGenerating(false);
@@ -145,7 +146,9 @@ export function ShareMessageCard({
         a.download = `${slug}-message.png`;
         a.click();
       }
-    } catch {}
+    } catch (e) {
+      console.error("[share-card] Failed to share:", e);
+    }
   };
 
   return (
@@ -260,6 +263,7 @@ export function ShareMessageCard({
                     alignItems: "center",
                     justifyContent: "center",
                     flexShrink: 0,
+                    position: "relative",
                   }}
                 >
                   <svg
@@ -276,6 +280,27 @@ export function ShareMessageCard({
                     <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
                     <line x1="12" y1="15" x2="12" y2="15.01" />
                   </svg>
+                  {/* "?" badge indicating unknown sender */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: -1,
+                      right: -1,
+                      width: 13,
+                      height: 13,
+                      borderRadius: "50%",
+                      background: "#64748b",
+                      color: "#fff",
+                      fontSize: 8,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      lineHeight: 1,
+                    }}
+                  >
+                    ?
+                  </div>
                 </div>
                 <div>
                   <p
