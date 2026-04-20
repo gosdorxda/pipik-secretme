@@ -3,6 +3,7 @@ import { Footer } from "./footer";
 import { SiteLogoImg } from "./site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "./brand-name";
+import { useAuth } from "@clerk/react";
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
@@ -11,6 +12,8 @@ interface StaticPageLayoutProps {
 export function StaticPageLayout({ children }: StaticPageLayoutProps) {
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "vooi.lol";
+  const { isSignedIn } = useAuth();
+
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
       <header className="border-b border-border bg-white sticky top-0 z-50">
@@ -23,18 +26,29 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
             <BrandName name={appName} className="tracking-tight" />
           </Link>
           <nav className="flex items-center gap-4">
-            <Link
-              href="/sign-in"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Masuk
-            </Link>
-            <Link
-              href="/sign-up"
-              className="text-sm bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors"
-            >
-              Mulai Gratis
-            </Link>
+            {isSignedIn ? (
+              <Link
+                href="/dashboard"
+                className="text-sm bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors"
+              >
+                Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/sign-in"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Masuk
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="text-sm bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Mulai Gratis
+                </Link>
+              </>
+            )}
           </nav>
         </div>
       </header>
