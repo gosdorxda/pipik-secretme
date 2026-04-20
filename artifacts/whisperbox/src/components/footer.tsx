@@ -4,7 +4,7 @@ import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
 
-const CONTACT_EMAIL = "hello@whisperbox.id";
+const CONTACT_EMAIL = "gosdorteam@gmail.com";
 
 const FOOTER_LINKS = {
   produk: [

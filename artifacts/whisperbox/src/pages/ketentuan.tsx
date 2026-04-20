@@ -179,10 +179,10 @@ export default function KetentuanPage() {
               Pertanyaan tentang Syarat &amp; Ketentuan ini dapat disampaikan
               ke:{" "}
               <a
-                href="mailto:hello@whisperbox.id"
+                href="mailto:gosdorteam@gmail.com"
                 className="text-primary hover:underline"
               >
-                hello@whisperbox.id
+                gosdorteam@gmail.com
               </a>
             </p>
           </Section>

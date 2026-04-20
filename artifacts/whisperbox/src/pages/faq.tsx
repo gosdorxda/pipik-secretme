@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const CONTACT_EMAIL = "hello@whisperbox.id";
+const CONTACT_EMAIL = "gosdorteam@gmail.com";
 
 function getFaqItems(appName: string) {
   return [

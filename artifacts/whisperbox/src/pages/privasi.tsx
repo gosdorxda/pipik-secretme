@@ -144,10 +144,10 @@ export default function PrivasiPage() {
             <p className="text-muted-foreground mt-3">
               Untuk mengajukan permintaan, hubungi kami di{" "}
               <a
-                href="mailto:hello@whisperbox.id"
+                href="mailto:gosdorteam@gmail.com"
                 className="text-primary hover:underline"
               >
-                hello@whisperbox.id
+                gosdorteam@gmail.com
               </a>
             </p>
           </Section>
@@ -166,10 +166,10 @@ export default function PrivasiPage() {
               Jika ada pertanyaan tentang kebijakan privasi ini, hubungi kami
               di:{" "}
               <a
-                href="mailto:hello@whisperbox.id"
+                href="mailto:gosdorteam@gmail.com"
                 className="text-primary hover:underline"
               >
-                hello@whisperbox.id
+                gosdorteam@gmail.com
               </a>
             </p>
           </Section>
