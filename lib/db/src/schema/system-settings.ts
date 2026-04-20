@@ -26,4 +26,5 @@ export const SETTING_KEYS = {
   EMAIL_REPLY_INTRO: "email_reply_intro",
   SITE_LOGO_URL: "site_logo_url",
   SITE_FAVICON_URL: "site_favicon_url",
+  FREE_PREMIUM_MODE: "free_premium_mode",
 } as const;

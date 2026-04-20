@@ -1039,6 +1039,14 @@ const SETTING_META: {
     group: "Umum",
   },
   {
+    key: "free_premium_mode",
+    label: "Mode Promosi — Semua Pendaftar Baru Gratis Premium",
+    description:
+      "Jika aktif, setiap pengguna yang mendaftar pertama kali otomatis mendapat status Premium tanpa bayar. Matikan saat promosi selesai — pengguna yang sudah premium tidak terpengaruh.",
+    type: "boolean",
+    group: "Umum",
+  },
+  {
     key: "maintenance_mode",
     label: "Mode Maintenance",
     description: "Aktifkan untuk menutup sementara akses pengguna",

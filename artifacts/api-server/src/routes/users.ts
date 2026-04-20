@@ -1,7 +1,14 @@
 import { Router } from "express";
-import { db, usersTable, messagesTable, type InsertUser } from "@workspace/db";
+import {
+  db,
+  usersTable,
+  messagesTable,
+  SETTING_KEYS,
+  type InsertUser,
+} from "@workspace/db";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
+import { getSetting } from "../lib/settingsCache";
 import {
   UpdateMyProfileBody,
   GetPublicProfileParams,
@@ -17,9 +24,12 @@ router.get("/me", requireAuth, async (req, res) => {
     });
     if (!user) {
       const username = `user_${clerkUserId.slice(-8)}`;
+      const freePremiumMode =
+        (await getSetting(SETTING_KEYS.FREE_PREMIUM_MODE, "false")) === "true";
       const newUser: InsertUser = {
         clerkId: clerkUserId,
         username,
+        ...(freePremiumMode && { isPremium: true }),
       };
       const [created] = await db.insert(usersTable).values(newUser).returning();
       user = created;
