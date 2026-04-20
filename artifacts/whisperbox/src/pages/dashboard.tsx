@@ -1451,6 +1451,7 @@ export default function DashboardPage() {
           bio={profile.bio}
           avatarUrl={profile.avatarUrl}
           totalMessages={stats?.totalMessages ?? 0}
+          paletteIdx={0}
           onClose={() => setShowQRCard(false)}
         />
       )}
