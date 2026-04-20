@@ -51,6 +51,7 @@ import {
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { SiteLogoImg } from "@/components/site-logo";
+import { BrandName } from "@/components/brand-name";
 import { Footer } from "@/components/footer";
 import { ShareMessageCard } from "@/components/share-message-card";
 
@@ -286,7 +287,7 @@ export default function PublicProfilePage() {
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
               <SiteLogoImg alt="vooi" className="w-7 h-7" />
-              <span className="tracking-tight">{appName}</span>
+              <BrandName name={appName} className="tracking-tight" />
             </Link>
           </div>
         </header>
@@ -317,7 +318,7 @@ export default function PublicProfilePage() {
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
               <SiteLogoImg alt="vooi" className="w-7 h-7" />
-              <span className="tracking-tight">{appName}</span>
+              <BrandName name={appName} className="tracking-tight" />
             </Link>
             <Link href="/">
               <Button size="sm" className="text-xs">
@@ -382,7 +383,7 @@ export default function PublicProfilePage() {
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
             <SiteLogoImg alt="vooi" className="w-7 h-7" />
-            <span className="tracking-tight">{appName}</span>
+            <BrandName name={appName} className="tracking-tight" />
           </Link>
           <Link href="/">
             <Button size="sm" className="text-xs">
