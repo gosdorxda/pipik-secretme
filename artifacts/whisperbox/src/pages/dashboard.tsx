@@ -627,11 +627,11 @@ export default function DashboardPage() {
               <Link2 className="w-3.5 h-3.5 shrink-0 text-primary" />
               <span className="truncate font-mono text-xs">{publicUrl}</span>
             </div>
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-2 w-full sm:w-auto sm:shrink-0">
               <Button
                 onClick={copyLink}
                 size="sm"
-                className="gap-2 text-xs"
+                className="flex-1 sm:flex-none gap-2 text-xs"
                 variant="outline"
               >
                 {copied ? (
@@ -644,7 +644,7 @@ export default function DashboardPage() {
               <Button
                 onClick={() => setShowQRCard(true)}
                 size="sm"
-                className="gap-2 text-xs"
+                className="flex-1 sm:flex-none gap-2 text-xs"
                 style={{
                   background:
                     "linear-gradient(135deg, #0f172a 0%, #164e3a 100%)",
