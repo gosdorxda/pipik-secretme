@@ -139,10 +139,15 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
             &copy; {new Date().getFullYear()} {appName}. Dibuat dengan ❤️ di
             Indonesia.
           </p>
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <a
+            href="https://linktr.ee/maskripto"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold hover:bg-primary/15 transition-colors"
+          >
             <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            Semua sistem berjalan normal
-          </div>
+            @maskripto
+          </a>
         </div>
       </div>
     </footer>

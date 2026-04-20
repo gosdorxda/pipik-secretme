@@ -302,23 +302,25 @@ function ProfileMockup() {
 
 /* ─── Premium comparison data ─── */
 const FREE_FEATURES = [
-  "Foto avatar & bio profil kustom",
+  "Foto avatar profil",
   "Username & display name kustom",
+  "Bio profil singkat",
   "Terima pesan anonim tak terbatas",
-  "Balas & publikasi pesan",
-  "QR code profil + share kartu pesan",
+  "Balas pesan",
+  "Share message card ke IG/Twitter",
   "Profil publik dengan link personal",
+  "Statistik pesan dasar",
 ];
 
 const PREMIUM_EXTRAS = [
-  "Social links (Instagram, TikTok, X, GitHub, dll.)",
+  "Social links (Instagram, TikTok, X, GitHub, LinkedIn, Facebook, dll.)",
   "Notifikasi email otomatis tiap pesan masuk",
-  "Notifikasi balasan ke pengirim anonim",
+  "Notifikasi balasan ke pengirim anonim (opsional)",
   "Badge ✓ Premium eksklusif di profil publik",
-  "Kampanye pesan: ajukan pertanyaan ke pengunjung",
+  "Kampanye pesan: ajukan pertanyaan ke pengunjung profilmu",
   "Akses Wrapped: ringkasan pesan tahunanmu",
   "Poin referral bonus saat ajak teman upgrade",
-  "Prioritas dukungan & fitur baru lebih cepat",
+  "Prioritas dukungan & fitur baru",
 ];
 
 export default function LandingPage() {
