@@ -9,8 +9,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const CONTACT_EMAIL = "gosdorteam@gmail.com";
-
 function getFaqItems(appName: string) {
   return [
     {
@@ -99,6 +97,7 @@ function getFaqItems(appName: string) {
 export default function FaqPage() {
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "vooi.lol";
+  const contactEmail = branding?.contactEmail ?? null;
   const faqItems = getFaqItems(appName);
 
   return (
@@ -114,13 +113,20 @@ export default function FaqPage() {
             Pertanyaan yang sering ditanyakan
           </h1>
           <p className="text-base text-muted-foreground leading-relaxed max-w-lg mx-auto">
-            Tidak menemukan jawaban yang kamu cari? Hubungi kami di{" "}
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="text-primary hover:underline"
-            >
-              {CONTACT_EMAIL}
-            </a>
+            Tidak menemukan jawaban yang kamu cari?{" "}
+            {contactEmail ? (
+              <>
+                Hubungi kami di{" "}
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="text-primary hover:underline"
+                >
+                  {contactEmail}
+                </a>
+              </>
+            ) : (
+              "Hubungi kami melalui email."
+            )}
           </p>
         </div>
       </section>
@@ -163,12 +169,14 @@ export default function FaqPage() {
             Masih ada pertanyaan? Kami siap membantu.
           </p>
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <a
-              href={`mailto:${CONTACT_EMAIL}`}
-              className="inline-flex items-center gap-2 border border-border bg-white text-foreground px-5 py-2.5 rounded-md text-sm font-medium hover:bg-secondary/50 transition-colors"
-            >
-              Hubungi Kami
-            </a>
+            {contactEmail && (
+              <a
+                href={`mailto:${contactEmail}`}
+                className="inline-flex items-center gap-2 border border-border bg-white text-foreground px-5 py-2.5 rounded-md text-sm font-medium hover:bg-secondary/50 transition-colors"
+              >
+                Hubungi Kami
+              </a>
+            )}
             <Link
               href="/sign-up"
               className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2.5 rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"

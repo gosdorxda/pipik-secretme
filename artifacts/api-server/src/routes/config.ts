@@ -37,6 +37,7 @@ router.get("/config", async (req, res) => {
     const siteLogoUrl = await getSetting("site_logo_url", "");
     const siteFaviconUrl = await getSetting("site_favicon_url", "");
     const appName = await getSetting("app_name", "vooi.lol");
+    const contactEmail = await getSetting("contact_email", "");
 
     res.json({
       premiumPrice,
@@ -47,6 +48,7 @@ router.get("/config", async (req, res) => {
       logoUrl: resolveStorageUrl(siteLogoUrl) || null,
       faviconUrl: resolveStorageUrl(siteFaviconUrl) || null,
       appName: appName || "vooi.lol",
+      contactEmail: contactEmail || null,
       notification:
         notificationActive === "true" && notificationMessage
           ? { message: notificationMessage, type: notificationType }
@@ -62,6 +64,7 @@ router.get("/config", async (req, res) => {
       logoUrl: null,
       faviconUrl: null,
       appName: "vooi.lol",
+      contactEmail: null,
       notification: null,
     });
   }

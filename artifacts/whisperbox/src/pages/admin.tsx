@@ -1024,6 +1024,14 @@ const SETTING_META: {
     group: "Umum",
   },
   {
+    key: "contact_email",
+    label: "Email Kontak",
+    description:
+      "Alamat email yang ditampilkan di halaman FAQ untuk menghubungi tim",
+    type: "text",
+    group: "Umum",
+  },
+  {
     key: "app_description",
     label: "Deskripsi Aplikasi",
     description: "Deskripsi singkat aplikasi",
