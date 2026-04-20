@@ -68,7 +68,7 @@ See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and pa
 - `use-branding.ts` hook (`useSiteBranding`) fetches `logoUrl`, `faviconUrl`, dan `appName` — staleTime 5 menit
 - Footer uses `<SiteLogoImg>` (dynamic logo from branding hook) instead of hardcoded `/logo.svg`; copyright line uses dynamic `appName`
 - All user-facing "WhisperBox" references are dynamic via `appName`: tentang, privasi, ketentuan, cara-pakai, upgrade, wrapped, dashboard, public-profile, qr-profile-card, share-message-card
-- Landing page: stat & feature card colors muted (less saturated); new "Profile Preview" section added between "How It Works" and stats
+- Landing page: fully restructured — Hero → Profil Publik → Aktivitas Live → Premium vs Free comparison → CTA. FEATURES/HOW_IT_WORKS/STATS sections removed. ActivityTicker outer border removed (mask-gradient only). Palette minimal (teal + indigo only, no multi-color cards). Border-radius standardised to rounded-xl/rounded-2xl throughout.
 
 ### Halaman Pendukung (Static Pages)
 
