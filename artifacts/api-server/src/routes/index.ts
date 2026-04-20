@@ -9,11 +9,13 @@ import referralsRouter from "./referrals";
 import adminRouter from "./admin";
 import configRouter from "./config";
 import redeemRouter from "./redeem";
+import statsRouter from "./stats";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(configRouter);
+router.use(statsRouter);
 router.use("/users", usersRouter);
 router.use("/messages", messagesRouter);
 router.use("/campaigns", campaignsRouter);

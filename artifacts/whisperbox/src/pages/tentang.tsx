@@ -9,12 +9,13 @@ import {
 } from "lucide-react";
 import { StaticPageLayout } from "@/components/static-page-layout";
 import { useSiteBranding } from "@/hooks/use-branding";
+import { usePublicStats } from "@/hooks/use-stats";
 
-const STATS = [
-  { label: "Pengguna Aktif", value: "10.000+" },
-  { label: "Pesan Terkirim", value: "500.000+" },
-  { label: "Negara Pengguna", value: "12+" },
-];
+function formatStatNumber(n: number): string {
+  if (n < 100) return n.toLocaleString("id-ID");
+  const rounded = Math.floor(n / 100) * 100;
+  return rounded.toLocaleString("id-ID") + "+";
+}
 
 function getValues(appName: string) {
   return [
@@ -43,8 +44,26 @@ function getValues(appName: string) {
 
 export default function TentangPage() {
   const { data: branding } = useSiteBranding();
+  const { data: stats, isError: statsError } = usePublicStats();
   const appName = branding?.appName ?? "vooi.lol";
   const VALUES = getValues(appName);
+
+  function statValue(n: number | undefined): string {
+    if (statsError) return "–";
+    if (n === undefined) return "...";
+    return formatStatNumber(n);
+  }
+
+  const statItems = [
+    {
+      label: "Pengguna Terdaftar",
+      value: statValue(stats?.totalUsers),
+    },
+    {
+      label: "Pesan Terkirim",
+      value: statValue(stats?.totalMessages),
+    },
+  ];
 
   return (
     <StaticPageLayout>
@@ -70,8 +89,8 @@ export default function TentangPage() {
       {/* Stats */}
       <section className="border-b border-border">
         <div className="max-w-4xl mx-auto px-5 py-10">
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
-            {STATS.map(({ label, value }) => (
+          <div className="grid grid-cols-2 gap-6 text-center">
+            {statItems.map(({ label, value }) => (
               <div key={label}>
                 <p className="text-2xl sm:text-3xl font-bold text-primary mb-1">
                   {value}
