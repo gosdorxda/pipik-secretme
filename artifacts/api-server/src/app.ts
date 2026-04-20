@@ -10,6 +10,9 @@ import { ipBanMiddleware } from "./middlewares/ipBan";
 import router from "./routes";
 import { logger } from "./lib/logger";
 import { pushLog } from "./lib/logBuffer";
+import { db, usersTable, messagesTable } from "@workspace/db";
+import { eq, count } from "drizzle-orm";
+import { buildProfileHtml } from "./lib/profileHtml";
 
 const app: Express = express();
 
@@ -68,5 +71,49 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", router);
+
+app.get(/^\/@([a-zA-Z0-9_]{3,32})$/, async (req, res) => {
+  const username = (req.params as Record<string, string>)[0];
+  if (!username) {
+    res.status(404).send("Not found");
+    return;
+  }
+  try {
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.username, username.toLowerCase()),
+      columns: { id: true, username: true, displayName: true, bio: true },
+    });
+    if (!user) {
+      res.redirect("/");
+      return;
+    }
+    const [{ msgCount }] = await db
+      .select({ msgCount: count() })
+      .from(messagesTable)
+      .where(eq(messagesTable.recipientId, user.id));
+
+    const proto =
+      (req.headers["x-forwarded-proto"] as string | undefined) ?? req.protocol;
+    const host =
+      (req.headers["x-forwarded-host"] as string | undefined) ??
+      (req.headers["host"] as string | undefined) ??
+      "vooi.lol";
+    const siteBaseUrl = `${proto}://${host}`;
+
+    const html = buildProfileHtml({
+      username: user.username,
+      displayName: user.displayName ?? user.username,
+      bio: user.bio,
+      messageCount: Number(msgCount),
+      siteBaseUrl,
+    });
+    res.set("Content-Type", "text/html; charset=utf-8");
+    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
+    res.send(html);
+  } catch (err) {
+    logger.error({ err }, "Error serving profile page");
+    res.status(500).send("Internal server error");
+  }
+});
 
 export default app;
