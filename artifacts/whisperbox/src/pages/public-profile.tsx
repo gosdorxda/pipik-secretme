@@ -47,10 +47,12 @@ import {
   useGetPublicProfile,
   useSendMessage,
   useGetPublicCampaign,
+  type PublicMessage,
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { SiteLogoImg } from "@/components/site-logo";
 import { Footer } from "@/components/footer";
+import { ShareMessageCard } from "@/components/share-message-card";
 
 const CAMPAIGN_COLORS = [
   {
@@ -210,6 +212,10 @@ export default function PublicProfilePage() {
   const [visibleCount, setVisibleCount] = useState(5);
   const [emailSectionOpen, setEmailSectionOpen] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const [sharingMessage, setSharingMessage] = useState<{
+    msg: PublicMessage;
+    idx: number;
+  } | null>(null);
 
   const { data: profile, isLoading, isError } = useGetPublicProfile(username);
   const sendMessage = useSendMessage();
@@ -690,6 +696,17 @@ export default function PublicProfilePage() {
                       </p>
                     </div>
                   )}
+
+                  {/* Share button */}
+                  <div className="px-5 pb-3 flex justify-end">
+                    <button
+                      onClick={() => setSharingMessage({ msg, idx })}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-full border border-border/60 hover:border-border bg-white/60 hover:bg-white"
+                    >
+                      <Share2 className="w-3 h-3" />
+                      Bagikan
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -710,6 +727,20 @@ export default function PublicProfilePage() {
       </div>
 
       <Footer maxWidth="max-w-4xl" />
+
+      {/* Share Message Card Modal */}
+      {sharingMessage && profile && (
+        <ShareMessageCard
+          content={sharingMessage.msg.content}
+          createdAt={sharingMessage.msg.createdAt}
+          ownerReply={sharingMessage.msg.ownerReply}
+          paletteIdx={sharingMessage.idx}
+          displayName={profile.displayName || profile.username || ""}
+          username={profile.username}
+          avatarUrl={profile.avatarUrl}
+          onClose={() => setSharingMessage(null)}
+        />
+      )}
 
       {/* Floating CTA bubble — only for guests */}
       {!isSignedIn && !bubbleDismissed && (
