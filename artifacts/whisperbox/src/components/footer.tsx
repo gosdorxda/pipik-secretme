@@ -3,6 +3,7 @@ import { Twitter, Instagram, Github, Mail } from "lucide-react";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
+import { Badge } from "@/components/ui/badge";
 
 const CONTACT_EMAIL = "gosdorteam@gmail.com";
 
@@ -143,10 +144,8 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
             href="https://linktr.ee/maskripto"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold hover:bg-primary/15 transition-colors"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-            @maskripto
+            <Badge variant="surface">@maskripto</Badge>
           </a>
         </div>
       </div>
