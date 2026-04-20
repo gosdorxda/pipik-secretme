@@ -29,7 +29,6 @@ export function QRProfileCard({
   const appName = branding?.appName ?? "vooi.lol";
 
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
-  const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const resolved = resolveAvatarUrl(avatarUrl);
@@ -39,11 +38,6 @@ export function QRProfileCard({
       setAvatarDataUrl(null);
     }
   }, [avatarUrl]);
-
-  useEffect(() => {
-    const logoSrc = branding?.logoUrl ?? "/logo.svg";
-    fetchAsDataUrl(logoSrc).then(setLogoDataUrl);
-  }, [branding?.logoUrl]);
 
   const publicUrl = `${window.location.origin}/@${username}`;
   const shortUrl = `${window.location.origin}/@${username}`;
@@ -369,31 +363,23 @@ export function QRProfileCard({
               Bagikan ke stories atau bio-mu
             </p>
             <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              {logoDataUrl ? (
-                <img
-                  src={logoDataUrl}
-                  alt={appName}
-                  style={{ width: 17, height: 17, borderRadius: 4 }}
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 160 160"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                style={{ borderRadius: 4, flexShrink: 0 }}
+              >
+                <rect width="160" height="160" rx="36" fill="#86ead4" />
+                <path
+                  d="M32 44C32 37.373 37.373 32 44 32H116C122.627 32 128 37.373 128 44V92C128 98.627 122.627 104 116 104H90L80 124L70 104H44C37.373 104 32 98.627 32 92V44Z"
+                  fill="#1a443c"
                 />
-              ) : (
-                <div
-                  style={{
-                    width: 17,
-                    height: 17,
-                    borderRadius: 5,
-                    background: "#86ead4",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    style={{ fontSize: 9, fontWeight: 900, color: "#0d4038" }}
-                  >
-                    {appName[0]?.toUpperCase()}
-                  </span>
-                </div>
-              )}
+                <circle cx="60" cy="68" r="7" fill="#86ead4" />
+                <circle cx="80" cy="68" r="7" fill="#86ead4" />
+                <circle cx="100" cy="68" r="7" fill="#86ead4" />
+              </svg>
               <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>
                 {appName}
               </span>
