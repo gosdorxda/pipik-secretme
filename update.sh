@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ============================================================
-# update.sh — Script update vooi.lol di VPS
+# update.sh — Script update kepoin.me di VPS
 # ============================================================
 # Cara pakai:
 #   ./update.sh                  Update penuh (frontend + backend)
@@ -38,7 +38,7 @@ for arg in "$@"; do
     --migrate)       RUN_MIGRATE=true ;;
     --help|-h)
       echo ""
-      echo -e "${BOLD}update.sh${NC} — Script update vooi.lol di VPS"
+      echo -e "${BOLD}update.sh${NC} — Script update kepoin.me di VPS"
       echo ""
       echo "Penggunaan:"
       echo "  ./update.sh                  Update penuh (frontend + backend)"
@@ -169,7 +169,7 @@ log_ok "════════════════════════
 
 if [ "$FRONTEND_ONLY" = false ]; then
   echo ""
-  echo "  Uji API   : curl https://vooi.lol/api/config"
+  echo "  Uji API   : curl https://kepoin.me/api/config"
   echo "  Lihat log : pm2 logs vooi-api"
 fi
 echo ""

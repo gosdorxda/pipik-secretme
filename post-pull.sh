@@ -116,6 +116,6 @@ echo ""
 if [ "$FRONTEND_ONLY" = false ]; then
   echo "  Status PM2 : pm2 status"
   echo "  Log API    : pm2 logs vooi-api"
-  echo "  Uji API    : curl https://vooi.lol/api/config"
+  echo "  Uji API    : curl https://kepoin.me/api/config"
 fi
 echo ""
