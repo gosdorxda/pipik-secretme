@@ -71,7 +71,7 @@ export function QRProfileCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
 
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);

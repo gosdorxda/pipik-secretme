@@ -7,7 +7,7 @@ interface SiteLogoProps {
   alt?: string;
 }
 
-export function SiteLogoImg({ className, alt = "vooi" }: SiteLogoProps) {
+export function SiteLogoImg({ className, alt = "kepoin" }: SiteLogoProps) {
   const { data } = useSiteBranding();
   const src = data?.logoUrl ?? FALLBACK_LOGO;
 

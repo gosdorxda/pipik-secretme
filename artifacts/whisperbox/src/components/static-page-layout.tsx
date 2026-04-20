@@ -11,7 +11,7 @@ interface StaticPageLayoutProps {
 
 export function StaticPageLayout({ children }: StaticPageLayoutProps) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const { isSignedIn } = useAuth();
 
   return (

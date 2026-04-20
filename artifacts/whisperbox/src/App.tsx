@@ -127,7 +127,7 @@ function AuthLayout({
   mode: "sign-in" | "sign-up";
 }) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   return (
     <div
       className="min-h-screen flex flex-col"
@@ -425,7 +425,7 @@ function ClerkProviderWithRoutes() {
         signIn: {
           start: {
             title: "Selamat datang kembali",
-            subtitle: "Masuk ke akun vooi-mu",
+            subtitle: "Masuk ke akunmu",
           },
         },
         signUp: {

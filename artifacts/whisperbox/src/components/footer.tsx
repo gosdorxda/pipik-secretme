@@ -25,7 +25,7 @@ const FOOTER_LINKS = {
 
 export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
 
   return (
     <footer className="border-t border-border bg-white">

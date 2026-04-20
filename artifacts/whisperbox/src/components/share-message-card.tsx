@@ -65,7 +65,7 @@ export function ShareMessageCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const p = PALETTES[paletteIdx % PALETTES.length];
 
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);

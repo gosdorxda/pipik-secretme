@@ -97,7 +97,7 @@ app.get(/^\/@([a-zA-Z0-9_]{3,32})$/, async (req, res) => {
     const host =
       (req.headers["x-forwarded-host"] as string | undefined) ??
       (req.headers["host"] as string | undefined) ??
-      "vooi.lol";
+      "kepoin.me";
     const siteBaseUrl = `${proto}://${host}`;
 
     const html = buildProfileHtml({

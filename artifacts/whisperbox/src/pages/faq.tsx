@@ -96,7 +96,7 @@ function getFaqItems(appName: string) {
 
 export default function FaqPage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const contactEmail = branding?.contactEmail ?? null;
   const faqItems = getFaqItems(appName);
 

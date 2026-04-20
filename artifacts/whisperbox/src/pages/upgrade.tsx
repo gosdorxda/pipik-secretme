@@ -182,7 +182,7 @@ export default function UpgradePage() {
   const { data: configData } = useAppConfig();
   const premiumPrice = configData?.premiumPrice ?? 49900;
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
 
   const handleCopyQr = () => {
     if (!qrString) return;

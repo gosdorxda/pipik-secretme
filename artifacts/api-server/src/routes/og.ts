@@ -150,7 +150,7 @@ router.get("/profile/:username", async (req, res) => {
         .from(messagesTable)
         .where(eq(messagesTable.recipientId, user.id)),
       loadFont(),
-      QRCode.toDataURL(`https://vooi.lol/@${user.username}`, {
+      QRCode.toDataURL(`https://kepoin.me/@${user.username}`, {
         width: 280,
         margin: 1,
         color: {
@@ -370,7 +370,7 @@ router.get("/profile/:username", async (req, res) => {
               color: p.accent,
               letterSpacing: "-0.5px",
             },
-            "vooi.lol",
+            "kepoin.me",
           ),
         ),
       ),
@@ -392,7 +392,7 @@ router.get("/profile/:username", async (req, res) => {
             color: "#475569",
             letterSpacing: "0.3px",
           },
-          "vooi.lol — Platform Pesan Anonim #1 di Indonesia",
+          "kepoin.me — Platform Pesan Anonim #1 di Indonesia",
         ),
       ),
     );

@@ -36,7 +36,7 @@ router.get("/config", async (req, res) => {
 
     const siteLogoUrl = await getSetting("site_logo_url", "");
     const siteFaviconUrl = await getSetting("site_favicon_url", "");
-    const appName = await getSetting("app_name", "vooi.lol");
+    const appName = await getSetting("app_name", "kepoin.me");
     const contactEmail = await getSetting("contact_email", "");
 
     res.json({
@@ -47,7 +47,7 @@ router.get("/config", async (req, res) => {
       linkOpensPointsPer1000,
       logoUrl: resolveStorageUrl(siteLogoUrl) || null,
       faviconUrl: resolveStorageUrl(siteFaviconUrl) || null,
-      appName: appName || "vooi.lol",
+      appName: appName || "kepoin.me",
       contactEmail: contactEmail || null,
       notification:
         notificationActive === "true" && notificationMessage
@@ -63,7 +63,7 @@ router.get("/config", async (req, res) => {
       linkOpensPointsPer1000: 1,
       logoUrl: null,
       faviconUrl: null,
-      appName: "vooi.lol",
+      appName: "kepoin.me",
       contactEmail: null,
       notification: null,
     });

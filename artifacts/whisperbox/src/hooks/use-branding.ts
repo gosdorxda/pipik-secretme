@@ -15,7 +15,7 @@ function resolveStorageUrl(path: string | null | undefined): string | null {
   return path || null;
 }
 
-const DEFAULT_APP_NAME = "vooi.lol";
+const DEFAULT_APP_NAME = "kepoin.me";
 
 async function fetchBranding(): Promise<SiteBranding> {
   const res = await fetch(`${API_BASE}/config`);

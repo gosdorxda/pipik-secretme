@@ -45,7 +45,7 @@ function getValues(appName: string) {
 export default function TentangPage() {
   const { data: branding } = useSiteBranding();
   const { data: stats, isError: statsError } = usePublicStats();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const VALUES = getValues(appName);
 
   function statValue(n: number | undefined): string {

@@ -203,7 +203,7 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
 
 export default function PublicProfilePage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const params = useParams<{ handle: string }>();
   const rawHandle = params.handle ?? "";
   const username = rawHandle.startsWith("@") ? rawHandle.slice(1) : rawHandle;
@@ -286,7 +286,7 @@ export default function PublicProfilePage() {
               href="/"
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
-              <SiteLogoImg alt="vooi" className="w-7 h-7" />
+              <SiteLogoImg alt="kepoin" className="w-7 h-7" />
               <BrandName name={appName} className="tracking-tight" />
             </Link>
           </div>
@@ -317,7 +317,7 @@ export default function PublicProfilePage() {
               href="/"
               className="flex items-center gap-2 font-bold text-sm text-foreground"
             >
-              <SiteLogoImg alt="vooi" className="w-7 h-7" />
+              <SiteLogoImg alt="kepoin" className="w-7 h-7" />
               <BrandName name={appName} className="tracking-tight" />
             </Link>
             <Link href="/">
@@ -382,7 +382,7 @@ export default function PublicProfilePage() {
             href="/"
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
-            <SiteLogoImg alt="vooi" className="w-7 h-7" />
+            <SiteLogoImg alt="kepoin" className="w-7 h-7" />
             <BrandName name={appName} className="tracking-tight" />
           </Link>
           <Link href="/">

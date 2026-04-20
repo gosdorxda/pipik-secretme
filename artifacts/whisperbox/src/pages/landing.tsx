@@ -325,7 +325,7 @@ const PREMIUM_EXTRAS = [
 
 export default function LandingPage() {
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "vooi.lol";
+  const appName = branding?.appName ?? "kepoin.me";
   const { isSignedIn } = useAuth();
 
   const profileRef = useReveal();

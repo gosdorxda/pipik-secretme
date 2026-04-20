@@ -35,11 +35,11 @@ export function buildProfileHtml(opts: {
 
   const profileUrl = `${siteBaseUrl}/@${username}`;
   const imageUrl = `${siteBaseUrl}/api/og/profile/${username}`;
-  const title = `${displayName} (@${username}) — vooi.lol`;
+  const title = `${displayName} (@${username}) — kepoin.me`;
   const description =
     bio && bio.trim()
       ? bio.trim()
-      : `Kirim pesan anonim ke ${displayName} di vooi.lol. ${messageCount} pesan sudah diterima — giliran kamu sekarang!`;
+      : `Kirim pesan anonim ke ${displayName} di kepoin.me. ${messageCount} pesan sudah diterima — giliran kamu sekarang!`;
 
   const html = readIndexHtml();
 
