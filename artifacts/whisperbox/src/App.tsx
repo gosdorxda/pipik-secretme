@@ -26,6 +26,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { SiteLogoImg } from "@/components/site-logo";
+import { BrandName } from "@/components/brand-name";
 
 import LandingPage from "@/pages/landing";
 import DashboardPage from "@/pages/dashboard";
@@ -140,9 +141,10 @@ function AuthLayout({
         <Link href={basePath || "/"}>
           <div className="flex items-center gap-2 cursor-pointer group">
             <SiteLogoImg className="w-7 h-7 transition-opacity group-hover:opacity-75" />
-            <span className="text-[#0f172a] text-base font-bold tracking-tight">
-              {appName}
-            </span>
+            <BrandName
+              name={appName}
+              className="text-[#0f172a] text-base font-bold tracking-tight"
+            />
           </div>
         </Link>
 
@@ -187,7 +189,7 @@ function AuthLayout({
             </h1>
             <p className="text-sm text-[#64748b]">
               {mode === "sign-in"
-                ? "Masuk ke akun vooi-mu"
+                ? `Masuk ke akun ${appName.split(".")[0]}-mu`
                 : "Mulai terima pesan anonim sekarang"}
             </p>
           </div>
@@ -209,7 +211,7 @@ function AuthLayout({
                 Kebijakan Privasi
               </span>
             </Link>{" "}
-            vooi.
+            <BrandName name={appName} />.
           </p>
         </div>
       </div>

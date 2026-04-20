@@ -1,0 +1,26 @@
+PANDUAN MENAMBAHKAN ICON BANK
+==============================
+
+Letakkan file gambar icon bank di folder ini dengan nama file sesuai daftar berikut.
+Format yang didukung: PNG atau SVG (lebih baik PNG ukuran minimal 48x48px).
+
+File yang dibutuhkan:
+  bca.png       → Bank BCA
+  mandiri.png   → Bank Mandiri
+  bni.png       → Bank BNI
+  bri.png       → Bank BRI
+  danamon.png   → Bank Danamon
+  cimb.png      → Bank CIMB Niaga
+  gopay.png     → GoPay
+  ovo.png       → OVO
+  dana.png      → DANA
+  shopeepay.png → ShopeePay
+  linkaja.png   → LinkAja
+  jenius.png    → Jenius (BTPN)
+
+Tips:
+- Cari logo resmi dari website masing-masing bank atau Google "BCA logo PNG transparent"
+- Pastikan latar belakang transparan (transparent background)
+- Ukuran file sebaiknya di bawah 50KB per icon
+- Setelah ditaruh di sini, icon langsung muncul di halaman Upgrade
+

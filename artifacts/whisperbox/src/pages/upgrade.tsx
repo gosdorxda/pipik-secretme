@@ -116,35 +116,35 @@ const PAYMENT_METHODS = [
   {
     name: "BCA Mobile",
     abbr: "BCA",
-    logo: "https://logo.clearbit.com/bca.co.id",
+    logo: "/banks/bca.png",
   },
   {
     name: "Mandiri",
     abbr: "MDR",
-    logo: "https://logo.clearbit.com/bankmandiri.co.id",
+    logo: "/banks/mandiri.png",
   },
-  { name: "BNI", abbr: "BNI", logo: "https://logo.clearbit.com/bni.co.id" },
-  { name: "BRI", abbr: "BRI", logo: "https://logo.clearbit.com/bri.co.id" },
+  { name: "BNI", abbr: "BNI", logo: "/banks/bni.png" },
+  { name: "BRI", abbr: "BRI", logo: "/banks/bri.png" },
   {
     name: "Danamon",
     abbr: "DAN",
-    logo: "https://logo.clearbit.com/danamon.co.id",
+    logo: "/banks/danamon.png",
   },
   {
     name: "CIMB Niaga",
     abbr: "CMB",
-    logo: "https://logo.clearbit.com/cimbniaga.co.id",
+    logo: "/banks/cimb.png",
   },
-  { name: "GoPay", abbr: "GO", logo: "https://logo.clearbit.com/gopay.co.id" },
-  { name: "OVO", abbr: "OVO", logo: "https://logo.clearbit.com/ovo.id" },
-  { name: "DANA", abbr: "DANA", logo: "https://logo.clearbit.com/dana.id" },
+  { name: "GoPay", abbr: "GO", logo: "/banks/gopay.png" },
+  { name: "OVO", abbr: "OVO", logo: "/banks/ovo.png" },
+  { name: "DANA", abbr: "DANA", logo: "/banks/dana.png" },
   {
     name: "ShopeePay",
     abbr: "SPY",
-    logo: "https://logo.clearbit.com/shopeepay.co.id",
+    logo: "/banks/shopeepay.png",
   },
-  { name: "LinkAja", abbr: "LA", logo: "https://logo.clearbit.com/linkaja.id" },
-  { name: "Jenius", abbr: "JNS", logo: "https://logo.clearbit.com/jenius.com" },
+  { name: "LinkAja", abbr: "LA", logo: "/banks/linkaja.png" },
+  { name: "Jenius", abbr: "JNS", logo: "/banks/jenius.png" },
 ];
 
 const TRUST_POINTS = [
@@ -373,9 +373,11 @@ export default function UpgradePage() {
             {/* QRIS info bar */}
             <div className="w-full flex items-center justify-between px-2 pb-3 border-b border-border">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 bg-[#e30613] flex items-center justify-center">
-                  <span className="text-white text-[9px] font-black">QRIS</span>
-                </div>
+                <img
+                  src="/qris.svg"
+                  alt="QRIS"
+                  className="h-6 w-auto shrink-0"
+                />
                 <span className="text-xs font-semibold text-foreground">
                   Pembayaran Universal
                 </span>
@@ -626,9 +628,7 @@ export default function UpgradePage() {
         {/* Payment methods */}
         <div className="border border-border rounded-md p-5 bg-white">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 bg-[#e30613] flex items-center justify-center">
-              <span className="text-white text-[8px] font-black">QRIS</span>
-            </div>
+            <img src="/qris.svg" alt="QRIS" className="h-7 w-auto shrink-0" />
             <div>
               <p className="text-sm font-semibold text-foreground">
                 Diterima oleh semua aplikasi QRIS Indonesia

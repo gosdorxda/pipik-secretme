@@ -560,9 +560,6 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <ActivityTicker />
-                <p className="text-xs text-muted-foreground text-center mt-3 opacity-50">
-                  Data ilustrasi — bukan data pengguna nyata
-                </p>
               </div>
             </div>
           </div>
