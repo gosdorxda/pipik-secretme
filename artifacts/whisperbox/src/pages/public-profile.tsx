@@ -48,6 +48,7 @@ import {
 } from "@workspace/api-client-react";
 import { resolveAvatarUrl } from "@/lib/avatar";
 import { SiteLogoImg } from "@/components/site-logo";
+import { Footer } from "@/components/footer";
 
 const CAMPAIGN_COLORS = [
   {
@@ -666,27 +667,7 @@ export default function PublicProfilePage() {
         )}
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-primary rounded-sm flex items-center justify-center shrink-0">
-              <span className="text-[9px] font-bold text-primary-foreground">
-                W
-              </span>
-            </div>
-            <span className="font-medium text-foreground">{appName}</span>
-            <span>— Terima pesan anonim dari siapa saja</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/" className="hover:text-foreground transition-colors">
-              Buat profilmu · Gratis
-            </Link>
-            <span>·</span>
-            <span>© 2025</span>
-          </div>
-        </div>
-      </footer>
+      <Footer maxWidth="max-w-4xl" />
 
       {/* Floating CTA bubble — only for guests */}
       {!isSignedIn && !bubbleDismissed && (
