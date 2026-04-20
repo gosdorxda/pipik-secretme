@@ -1204,6 +1204,22 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   };
 
   const save = async () => {
+    const appName = (settings.app_name ?? "").trim();
+    if (!appName) {
+      toast({
+        description: "Nama Aplikasi tidak boleh kosong.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (appName.length > 50) {
+      toast({
+        description: "Nama Aplikasi maksimal 50 karakter.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSaving(true);
     try {
       // Filter out runtime-only and special keys before saving
@@ -1212,10 +1228,13 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
           ([k]) => !k.startsWith("_") && k !== "banned_ips",
         ),
       );
+      // Normalize app_name to trimmed value
+      if ("app_name" in saveable) saveable.app_name = appName;
       await apiFetch("/admin/settings", secret, {
         method: "PUT",
         body: JSON.stringify(saveable),
       });
+      queryClient.invalidateQueries({ queryKey: ["site-branding"] });
       toast({ description: "Pengaturan berhasil disimpan." });
       setDirty(false);
     } catch (e: any) {

@@ -375,6 +375,19 @@ router.put("/settings", async (req, res) => {
     return;
   }
 
+  if ("app_name" in updates) {
+    const name = String(updates.app_name).trim();
+    if (!name) {
+      res.status(400).json({ error: "Nama Aplikasi tidak boleh kosong." });
+      return;
+    }
+    if (name.length > 50) {
+      res.status(400).json({ error: "Nama Aplikasi maksimal 50 karakter." });
+      return;
+    }
+    updates.app_name = name;
+  }
+
   try {
     const now = new Date();
     const rows = Object.entries(updates).map(([key, value]) => ({
