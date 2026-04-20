@@ -110,6 +110,7 @@ function formatDate(val: string) {
 type Tab =
   | "overview"
   | "users"
+  | "messages"
   | "transactions"
   | "settings"
   | "redeem"
@@ -202,6 +203,7 @@ export default function AdminPage() {
   const tabs: { id: Tab; label: string; icon: any }[] = [
     { id: "overview", label: "Ringkasan", icon: BarChart3 },
     { id: "users", label: "Pengguna", icon: Users },
+    { id: "messages", label: "Pesan", icon: MessageSquare },
     { id: "transactions", label: "Transaksi", icon: CreditCard },
     { id: "redeem", label: "Redeem", icon: Gift },
     { id: "logs", label: "Log Server", icon: ScrollText },
@@ -249,6 +251,7 @@ export default function AdminPage() {
 
         {tab === "overview" && <OverviewTab secret={secret} />}
         {tab === "users" && <UsersTab secret={secret} toast={toast} />}
+        {tab === "messages" && <MessagesTab secret={secret} />}
         {tab === "transactions" && <TransactionsTab secret={secret} />}
         {tab === "redeem" && <RedeemTab secret={secret} toast={toast} />}
         {tab === "logs" && <LogsTab secret={secret} />}
@@ -673,6 +676,205 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
             <Button
               size="sm"
               variant="outline"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MessagesTab({ secret }: { secret: string }) {
+  const [messages, setMessages] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      try {
+        const q = search ? `&search=${encodeURIComponent(search)}` : "";
+        const data = await apiFetch(
+          `/admin/messages?page=${page}&limit=25${q}`,
+          secret,
+        );
+        setMessages(data.messages);
+        setTotal(data.total);
+        setTotalPages(data.totalPages);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [secret, page, search]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    setSearch(searchInput.trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-xs text-muted-foreground">{total} pesan total</p>
+        <form onSubmit={handleSearch} className="flex gap-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+            <input
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Cari isi pesan / penerima…"
+              className="pl-8 pr-3 py-1.5 text-xs border border-input rounded-md bg-background w-52 focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
+          <Button type="submit" size="sm" variant="outline" className="text-xs">
+            Cari
+          </Button>
+          {search && (
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="text-xs"
+              onClick={() => {
+                setSearchInput("");
+                setSearch("");
+                setPage(1);
+              }}
+            >
+              <X className="w-3.5 h-3.5" />
+            </Button>
+          )}
+        </form>
+      </div>
+
+      <div className="border border-border rounded-sm overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-secondary/30 text-xs text-muted-foreground">
+              <tr>
+                <th className="text-left px-4 py-3 font-medium">Penerima</th>
+                <th className="text-left px-4 py-3 font-medium">Isi Pesan</th>
+                <th className="text-center px-4 py-3 font-medium">Status</th>
+                <th className="text-left px-4 py-3 font-medium">Waktu</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {loading ? (
+                [...Array(6)].map((_, i) => (
+                  <tr key={i}>
+                    <td colSpan={4} className="px-4 py-3">
+                      <Skeleton className="h-4 w-full" />
+                    </td>
+                  </tr>
+                ))
+              ) : messages.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-4 py-10 text-center text-xs text-muted-foreground"
+                  >
+                    Tidak ada pesan ditemukan.
+                  </td>
+                </tr>
+              ) : (
+                messages.map((m) => (
+                  <>
+                    <tr
+                      key={m.id}
+                      className="hover:bg-secondary/20 transition-colors cursor-pointer"
+                      onClick={() =>
+                        setExpanded(expanded === m.id ? null : m.id)
+                      }
+                    >
+                      <td className="px-4 py-3 min-w-[130px]">
+                        <p className="font-medium text-sm leading-tight">
+                          {m.recipientDisplayName ?? m.recipientUsername}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          @{m.recipientUsername}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3 max-w-xs">
+                        <p className="text-sm text-foreground/80 line-clamp-2 whitespace-pre-wrap">
+                          {m.content}
+                        </p>
+                        {m.senderEmail && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            ✉ {m.senderEmail}
+                          </p>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <div className="flex items-center justify-center gap-1 flex-wrap">
+                          <span
+                            className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md border ${m.isRead ? "text-emerald-700 bg-emerald-100 border-emerald-200" : "text-amber-700 bg-amber-100 border-amber-200"}`}
+                          >
+                            {m.isRead ? "Dibaca" : "Belum"}
+                          </span>
+                          {m.isPublic && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md border text-sky-700 bg-sky-100 border-sky-200">
+                              Publik
+                            </span>
+                          )}
+                          {m.ownerReply && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md border text-violet-700 bg-violet-100 border-violet-200">
+                              Dibalas
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDate(m.createdAt)}
+                      </td>
+                    </tr>
+                    {expanded === m.id && m.ownerReply && (
+                      <tr key={`${m.id}-reply`} className="bg-violet-50/50">
+                        <td
+                          colSpan={4}
+                          className="px-4 py-3 text-xs text-foreground/70 border-t border-violet-100"
+                        >
+                          <span className="font-semibold text-violet-700 mr-1">
+                            Balasan:
+                          </span>
+                          {m.ownerReply}
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-muted-foreground">
+            Halaman {page} dari {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
             >

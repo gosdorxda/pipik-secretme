@@ -577,4 +577,58 @@ router.post("/upload-url", async (req, res) => {
   }
 });
 
+router.get("/messages", async (req, res) => {
+  const page = Math.max(1, Number(req.query.page) || 1);
+  const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 25));
+  const search = (req.query.search as string | undefined)?.trim();
+  const offset = (page - 1) * limit;
+
+  try {
+    const whereClause = search
+      ? or(
+          ilike(messagesTable.content, `%${search}%`),
+          ilike(usersTable.username, `%${search}%`),
+          ilike(usersTable.displayName, `%${search}%`),
+        )
+      : undefined;
+
+    const [messages, totalResult] = await Promise.all([
+      db
+        .select({
+          id: messagesTable.id,
+          content: messagesTable.content,
+          isRead: messagesTable.isRead,
+          isPublic: messagesTable.isPublic,
+          ownerReply: messagesTable.ownerReply,
+          senderEmail: messagesTable.senderEmail,
+          createdAt: messagesTable.createdAt,
+          recipientUsername: usersTable.username,
+          recipientDisplayName: usersTable.displayName,
+        })
+        .from(messagesTable)
+        .innerJoin(usersTable, eq(messagesTable.recipientId, usersTable.id))
+        .where(whereClause)
+        .orderBy(desc(messagesTable.createdAt))
+        .limit(limit)
+        .offset(offset),
+      db
+        .select({ count: count() })
+        .from(messagesTable)
+        .innerJoin(usersTable, eq(messagesTable.recipientId, usersTable.id))
+        .where(whereClause),
+    ]);
+
+    res.json({
+      messages,
+      total: totalResult[0]?.count ?? 0,
+      page,
+      limit,
+      totalPages: Math.ceil((totalResult[0]?.count ?? 0) / limit),
+    });
+  } catch (err) {
+    req.log.error({ err }, "Error listing messages");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
