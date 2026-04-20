@@ -6,6 +6,7 @@ import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
+import { BrandName } from "@/components/brand-name";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -301,21 +302,23 @@ function ProfileMockup() {
 
 /* ─── Premium comparison data ─── */
 const FREE_FEATURES = [
-  "Profil anonim aktif",
-  "Pesan masuk tanpa batas",
+  "Foto avatar & bio profil kustom",
+  "Username & display name kustom",
+  "Terima pesan anonim tak terbatas",
   "Balas & publikasi pesan",
-  "Avatar & bio kustom",
-  "QR code profil",
-  "Share kartu pesan",
+  "QR code profil + share kartu pesan",
+  "Profil publik dengan link personal",
 ];
 
 const PREMIUM_EXTRAS = [
-  "Notifikasi email tiap pesan baru",
-  "Social media links di profil",
-  "Notifikasi balasan ke pengirim",
-  "Wrapped — recap statistik tahunan",
-  "Badge Premium di profil",
-  "Fitur eksklusif berikutnya",
+  "Social links (Instagram, TikTok, X, GitHub, dll.)",
+  "Notifikasi email otomatis tiap pesan masuk",
+  "Notifikasi balasan ke pengirim anonim",
+  "Badge ✓ Premium eksklusif di profil publik",
+  "Kampanye pesan: ajukan pertanyaan ke pengunjung",
+  "Akses Wrapped: ringkasan pesan tahunanmu",
+  "Poin referral bonus saat ajak teman upgrade",
+  "Prioritas dukungan & fitur baru lebih cepat",
 ];
 
 export default function LandingPage() {
@@ -335,9 +338,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <SiteLogoImg className="w-7 h-7" />
-            <span className="font-bold text-foreground tracking-tight">
-              {appName}
-            </span>
+            <BrandName name={appName} className="font-bold tracking-tight" />
           </div>
           <div className="flex items-center gap-2">
             {isSignedIn ? (

@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Twitter, Instagram, Github, Mail } from "lucide-react";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
+import { BrandName } from "@/components/brand-name";
 
 const CONTACT_EMAIL = "hello@whisperbox.id";
 
@@ -44,9 +45,10 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-3">
               <SiteLogoImg className="w-7 h-7" alt={appName} />
-              <span className="font-bold text-sm text-foreground tracking-tight">
-                {appName}
-              </span>
+              <BrandName
+                name={appName}
+                className="font-bold text-sm text-foreground tracking-tight"
+              />
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed mb-4">
               Platform pesan anonim yang aman dan personal. Terima jujur tanpa

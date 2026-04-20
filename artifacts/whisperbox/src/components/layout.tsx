@@ -9,6 +9,7 @@ import { AppBanner } from "./app-banner";
 import { SiteLogoImg } from "./site-logo";
 import { cn } from "@/lib/utils";
 import { useSiteBranding } from "@/hooks/use-branding";
+import { BrandName } from "./brand-name";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inbox", icon: Inbox },
@@ -29,12 +30,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <AppBanner />
         <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
           {/* Logo */}
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 font-bold text-sm text-foreground shrink-0"
-          >
+          <Link href="/dashboard" className="flex items-center gap-2 shrink-0">
             <SiteLogoImg className="w-7 h-7" />
-            <span className="hidden sm:inline tracking-tight">{appName}</span>
+            <BrandName
+              name={appName}
+              className="hidden sm:inline font-bold text-sm tracking-tight text-foreground"
+            />
           </Link>
 
           {/* Nav + Logout — all in one group */}

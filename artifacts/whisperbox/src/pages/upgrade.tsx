@@ -113,18 +113,38 @@ const PREMIUM_FEATURES = [
 ];
 
 const PAYMENT_METHODS = [
-  { name: "BCA Mobile", color: "#003d82", abbr: "BCA" },
-  { name: "Mandiri", color: "#003087", abbr: "MDR" },
-  { name: "BNI", color: "#f47920", abbr: "BNI" },
-  { name: "BRI", color: "#003d82", abbr: "BRI" },
-  { name: "Danamon", color: "#e30613", abbr: "DAN" },
-  { name: "CIMB Niaga", color: "#c41f1f", abbr: "CMB" },
-  { name: "GoPay", color: "#00aed6", abbr: "GO" },
-  { name: "OVO", color: "#4c3494", abbr: "OVO" },
-  { name: "DANA", color: "#118ee8", abbr: "DANA" },
-  { name: "ShopeePay", color: "#f2520c", abbr: "SPY" },
-  { name: "LinkAja", color: "#e8192c", abbr: "LA" },
-  { name: "Jenius", color: "#5fbeef", abbr: "JNS" },
+  {
+    name: "BCA Mobile",
+    abbr: "BCA",
+    logo: "https://logo.clearbit.com/bca.co.id",
+  },
+  {
+    name: "Mandiri",
+    abbr: "MDR",
+    logo: "https://logo.clearbit.com/bankmandiri.co.id",
+  },
+  { name: "BNI", abbr: "BNI", logo: "https://logo.clearbit.com/bni.co.id" },
+  { name: "BRI", abbr: "BRI", logo: "https://logo.clearbit.com/bri.co.id" },
+  {
+    name: "Danamon",
+    abbr: "DAN",
+    logo: "https://logo.clearbit.com/danamon.co.id",
+  },
+  {
+    name: "CIMB Niaga",
+    abbr: "CMB",
+    logo: "https://logo.clearbit.com/cimbniaga.co.id",
+  },
+  { name: "GoPay", abbr: "GO", logo: "https://logo.clearbit.com/gopay.co.id" },
+  { name: "OVO", abbr: "OVO", logo: "https://logo.clearbit.com/ovo.id" },
+  { name: "DANA", abbr: "DANA", logo: "https://logo.clearbit.com/dana.id" },
+  {
+    name: "ShopeePay",
+    abbr: "SPY",
+    logo: "https://logo.clearbit.com/shopeepay.co.id",
+  },
+  { name: "LinkAja", abbr: "LA", logo: "https://logo.clearbit.com/linkaja.id" },
+  { name: "Jenius", abbr: "JNS", logo: "https://logo.clearbit.com/jenius.com" },
 ];
 
 const TRUST_POINTS = [
@@ -449,20 +469,18 @@ export default function UpgradePage() {
               {PAYMENT_METHODS.map((m) => (
                 <div
                   key={m.name}
-                  className="flex items-center gap-1.5 px-2.5 py-1 border border-border bg-white"
+                  className="flex items-center gap-1.5 px-2.5 py-1 border border-border bg-white rounded-sm"
                   title={m.name}
                 >
-                  <div
-                    className="w-4 h-4 flex items-center justify-center shrink-0"
-                    style={{ background: m.color }}
-                  >
-                    <span
-                      className="text-white font-black"
-                      style={{ fontSize: 5 }}
-                    >
-                      {m.abbr.charAt(0)}
-                    </span>
-                  </div>
+                  <img
+                    src={m.logo}
+                    alt={m.name}
+                    className="w-4 h-4 object-contain shrink-0 rounded-sm"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display =
+                        "none";
+                    }}
+                  />
                   <span className="text-[11px] font-medium text-foreground">
                     {m.name}
                   </span>
@@ -573,7 +591,7 @@ export default function UpgradePage() {
                 Terbaik
               </span>
             </div>
-            <p className="text-xs font-semibold text-primary-foreground uppercase tracking-wider mb-1">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
               Premium
             </p>
             <div className="flex items-baseline gap-1 mb-1">
@@ -624,14 +642,22 @@ export default function UpgradePage() {
             {PAYMENT_METHODS.map((m) => (
               <div
                 key={m.name}
-                className="flex items-center gap-2 px-3 py-2 border border-border bg-secondary/30 hover:border-border/80 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 border border-border bg-secondary/30 hover:border-border/80 transition-colors rounded-sm"
               >
-                <div
-                  className="w-5 h-5 flex items-center justify-center shrink-0 text-white"
-                  style={{ background: m.color, fontSize: 7, fontWeight: 900 }}
-                >
+                <img
+                  src={m.logo}
+                  alt={m.name}
+                  className="w-5 h-5 object-contain shrink-0 rounded-sm"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    target.style.display = "none";
+                    const sib = target.nextElementSibling as HTMLElement | null;
+                    if (sib) sib.style.display = "flex";
+                  }}
+                />
+                <span className="w-5 h-5 text-white text-[7px] font-black items-center justify-center shrink-0 rounded-sm bg-muted-foreground hidden">
                   {m.abbr.slice(0, 2)}
-                </div>
+                </span>
                 <span className="text-xs font-medium text-foreground truncate">
                   {m.name}
                 </span>

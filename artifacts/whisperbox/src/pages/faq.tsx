@@ -1,8 +1,13 @@
-import { useState } from "react";
 import { Link } from "wouter";
-import { ChevronDown, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { StaticPageLayout } from "@/components/static-page-layout";
 import { useSiteBranding } from "@/hooks/use-branding";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const CONTACT_EMAIL = "hello@whisperbox.id";
 
@@ -72,7 +77,7 @@ function getFaqItems(appName: string) {
       items: [
         {
           q: "Apa saja fitur Premium?",
-          a: "Premium mencakup: notifikasi email pesan baru, notifikasi balasan untuk pengirim, menambah link sosial media di profil, dan fitur lanjutan lainnya yang terus kami kembangkan.",
+          a: "Premium mencakup: social links di profil (Instagram, TikTok, X, GitHub, dll.), notifikasi email otomatis tiap pesan masuk, notifikasi balasan ke pengirim anonim, badge ✓ Premium eksklusif, kampanye pesan, akses Wrapped, poin referral, dan prioritas dukungan.",
         },
         {
           q: "Bagaimana cara upgrade ke Premium?",
@@ -89,28 +94,6 @@ function getFaqItems(appName: string) {
       ],
     },
   ];
-}
-
-function FaqItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="border-b border-border last:border-0">
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between gap-4 py-4 text-left"
-      >
-        <span className="text-sm font-medium text-foreground">{q}</span>
-        <ChevronDown
-          className={`w-4 h-4 text-muted-foreground shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <p className="text-sm text-muted-foreground leading-relaxed pb-4">
-          {a}
-        </p>
-      )}
-    </div>
-  );
 }
 
 export default function FaqPage() {
@@ -147,13 +130,26 @@ export default function FaqPage() {
         <div className="max-w-4xl mx-auto px-5 py-14 space-y-10">
           {faqItems.map(({ category, items }) => (
             <div key={category}>
-              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+              <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
                 {category}
               </h2>
-              <div className="rounded-md border border-border bg-white divide-y-0">
-                {items.map(({ q, a }) => (
-                  <FaqItem key={q} q={q} a={a} />
-                ))}
+              <div className="rounded-md border border-border bg-white overflow-hidden divide-y divide-border">
+                <Accordion type="single" collapsible>
+                  {items.map(({ q, a }, idx) => (
+                    <AccordionItem
+                      key={q}
+                      value={`${category}-${idx}`}
+                      className="border-0 last:border-0"
+                    >
+                      <AccordionTrigger className="px-5 py-4 text-sm font-medium text-foreground hover:no-underline hover:bg-secondary/40 transition-colors text-left">
+                        {q}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-5 pb-4 pt-0 text-sm text-muted-foreground leading-relaxed">
+                        {a}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               </div>
             </div>
           ))}

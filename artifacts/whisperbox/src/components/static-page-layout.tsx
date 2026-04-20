@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { Footer } from "./footer";
 import { SiteLogoImg } from "./site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
+import { BrandName } from "./brand-name";
 
 interface StaticPageLayoutProps {
   children: React.ReactNode;
@@ -19,7 +20,7 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
             className="flex items-center gap-2 font-bold text-sm text-foreground"
           >
             <SiteLogoImg className="w-7 h-7" />
-            <span className="tracking-tight">{appName}</span>
+            <BrandName name={appName} className="tracking-tight" />
           </Link>
           <nav className="flex items-center gap-4">
             <Link
