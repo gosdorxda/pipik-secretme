@@ -9,28 +9,36 @@ import { useSiteBranding } from "@/hooks/use-branding";
 
 const PALETTES = [
   {
-    headerBg: "rgba(134,234,212,0.18)",
-    headerBorder: "rgba(134,234,212,0.35)",
+    accent: "#86ead4",
+    accentBorder: "rgba(134,234,212,0.45)",
+    stripBg: "rgba(134,234,212,0.12)",
     avatarBg: "#c6f6ed",
     avatarColor: "#0d4038",
+    ctaColor: "#0d7062",
   },
   {
-    headerBg: "rgba(165,180,252,0.18)",
-    headerBorder: "rgba(165,180,252,0.35)",
+    accent: "#a5b4fc",
+    accentBorder: "rgba(165,180,252,0.45)",
+    stripBg: "rgba(165,180,252,0.12)",
     avatarBg: "#ddd6fe",
     avatarColor: "#3730a3",
+    ctaColor: "#4338ca",
   },
   {
-    headerBg: "rgba(147,197,253,0.18)",
-    headerBorder: "rgba(147,197,253,0.35)",
+    accent: "#93c5fd",
+    accentBorder: "rgba(147,197,253,0.45)",
+    stripBg: "rgba(147,197,253,0.12)",
     avatarBg: "#bfdbfe",
     avatarColor: "#1e3a5f",
+    ctaColor: "#1d4ed8",
   },
   {
-    headerBg: "rgba(252,211,77,0.18)",
-    headerBorder: "rgba(252,211,77,0.35)",
+    accent: "#fcd34d",
+    accentBorder: "rgba(252,211,77,0.45)",
+    stripBg: "rgba(252,211,77,0.12)",
     avatarBg: "#fde68a",
     avatarColor: "#713f12",
+    ctaColor: "#92400e",
   },
 ];
 
@@ -93,15 +101,14 @@ export function ShareMessageCard({
     locale: idLocale,
   });
   const truncated =
-    content.length > 320 ? content.slice(0, 317) + "…" : content;
+    content.length > 280 ? content.slice(0, 277) + "…" : content;
 
   const generate = async (): Promise<string | null> => {
     if (!cardRef.current) return null;
     setIsGenerating(true);
     try {
       return await toPng(cardRef.current, { pixelRatio: 3, cacheBust: true });
-    } catch (e) {
-      console.error(e);
+    } catch {
       return null;
     } finally {
       setIsGenerating(false);
@@ -138,9 +145,7 @@ export function ShareMessageCard({
         a.download = `${slug}-message.png`;
         a.click();
       }
-    } catch (e) {
-      console.error(e);
-    }
+    } catch {}
   };
 
   return (
@@ -170,124 +175,277 @@ export function ShareMessageCard({
           ref={cardRef}
           style={{
             background: "#ffffff",
-            borderRadius: 8,
+            borderRadius: 14,
             overflow: "hidden",
             width: "100%",
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* ── Header ── */}
+          {/* ── Zone 1: Dark header label ── */}
           <div
             style={{
-              padding: "18px 22px",
-              background: p.headerBg,
-              borderBottom: `1px solid ${p.headerBorder}`,
+              background: "#0f172a",
+              padding: "11px 18px",
               display: "flex",
               alignItems: "center",
-              gap: 12,
+              justifyContent: "space-between",
             }}
           >
-            {/* Avatar */}
-            {avatarDataUrl ? (
-              <img
-                src={avatarDataUrl}
-                alt={displayName || username}
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {/* Lock icon */}
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke={p.accent}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <span
                 style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  flexShrink: 0,
-                  backgroundColor: "#e2e8f0",
-                }}
-              />
-            ) : (
-              <div
-                style={{
-                  width: 46,
-                  height: 46,
-                  borderRadius: "50%",
-                  background: p.avatarBg,
-                  color: p.avatarColor,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 17,
+                  fontSize: 10,
                   fontWeight: 800,
-                  flexShrink: 0,
+                  color: p.accent,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
                 }}
               >
-                {initials}
-              </div>
-            )}
+                Pesan Anonim
+              </span>
+            </div>
+            <span
+              style={{
+                fontSize: 10,
+                color: "#64748b",
+                fontWeight: 500,
+              }}
+            >
+              {timeAgo}
+            </span>
+          </div>
 
-            {/* Name + username */}
-            <div style={{ flex: 1, minWidth: 0 }}>
+          {/* ── Zone 2: Body ── */}
+          <div style={{ padding: "16px 16px 14px" }}>
+            {/* Anonymous sender bubble */}
+            <div
+              style={{
+                background: "#f8fafc",
+                border: `1.5px solid ${p.accentBorder}`,
+                borderRadius: 10,
+                padding: "13px 15px",
+              }}
+            >
+              {/* Sender label row */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 9,
+                  marginBottom: 11,
+                }}
+              >
+                {/* Anonymous silhouette avatar */}
+                <div
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: "50%",
+                    background: "#e2e8f0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#94a3b8"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                    <line x1="12" y1="15" x2="12" y2="15.01" />
+                  </svg>
+                </div>
+                <div>
+                  <p
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: "#64748b",
+                      margin: 0,
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    Seseorang anonim
+                  </p>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "#94a3b8",
+                      margin: "2px 0 0",
+                      lineHeight: 1,
+                    }}
+                  >
+                    identitas disembunyikan
+                  </p>
+                </div>
+              </div>
+
+              {/* Message text */}
               <p
                 style={{
                   fontSize: 15,
-                  fontWeight: 700,
-                  color: "#09090b",
+                  fontWeight: 450,
+                  lineHeight: 1.65,
+                  color: "#1e293b",
+                  whiteSpace: "pre-wrap",
+                  wordBreak: "break-word",
                   margin: 0,
-                  lineHeight: 1.3,
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
                 }}
               >
-                {displayName || username}
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#71717a",
-                  margin: "3px 0 0",
-                  lineHeight: 1,
-                }}
-              >
-                @{username}
+                {truncated}
               </p>
             </div>
 
-            {/* Timestamp */}
-            <div style={{ textAlign: "right", flexShrink: 0 }}>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#71717a",
-                  margin: 0,
-                  lineHeight: 1.4,
-                  fontWeight: 500,
-                }}
-              >
-                {timeAgo}
-              </p>
-            </div>
-          </div>
-
-          {/* ── Message body ── */}
-          <div style={{ padding: "22px 22px 24px" }}>
-            <p
+            {/* Arrow connector */}
+            <div
               style={{
-                fontSize: 17,
-                fontWeight: 450,
-                lineHeight: 1.7,
-                color: "#18181b",
-                whiteSpace: "pre-wrap",
-                wordBreak: "break-word",
-                margin: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "7px 0",
+                gap: 1,
               }}
             >
-              {truncated}
-            </p>
+              <div style={{ width: 1.5, height: 10, background: "#cbd5e1" }} />
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                <path
+                  d="M6 7L1 1.5M6 7L11 1.5"
+                  stroke="#cbd5e1"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            {/* Recipient strip */}
+            <div
+              style={{
+                background: p.stripBg,
+                border: `1.5px solid ${p.accentBorder}`,
+                borderRadius: 10,
+                padding: "12px 15px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              {/* Profile avatar */}
+              {avatarDataUrl ? (
+                <img
+                  src={avatarDataUrl}
+                  alt={displayName || username}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    flexShrink: 0,
+                    backgroundColor: "#e2e8f0",
+                    border: `2px solid ${p.accent}`,
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: "50%",
+                    background: p.avatarBg,
+                    color: p.avatarColor,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: 15,
+                    fontWeight: 800,
+                    flexShrink: 0,
+                    border: `2px solid ${p.accent}`,
+                  }}
+                >
+                  {initials}
+                </div>
+              )}
+
+              {/* Name + username */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#09090b",
+                    margin: 0,
+                    lineHeight: 1.3,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {displayName || username}
+                </p>
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "#71717a",
+                    margin: "2px 0 0",
+                    lineHeight: 1,
+                  }}
+                >
+                  @{username}
+                </p>
+              </div>
+
+              {/* CTA */}
+              <div
+                style={{
+                  flexShrink: 0,
+                  textAlign: "right",
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    color: p.ctaColor,
+                    margin: 0,
+                    lineHeight: 1.35,
+                  }}
+                >
+                  Kirimi aku
+                  <br />
+                  juga! →
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* ── Footer branding ── */}
+          {/* ── Zone 3: Footer branding ── */}
           <div
             style={{
-              padding: "11px 22px",
+              padding: "9px 16px",
               background: "#f9fafb",
-              borderTop: "1px solid #f4f4f5",
+              borderTop: "1px solid #f1f5f9",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -295,16 +453,17 @@ export function ShareMessageCard({
           >
             <p
               style={{
-                fontSize: 11,
-                color: "#a1a1aa",
+                fontSize: 10,
+                color: "#94a3b8",
                 margin: 0,
                 lineHeight: 1.4,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                maxWidth: "60%",
               }}
             >
-              Kirim pesan anonim di{" "}
-              <span style={{ fontWeight: 600, color: "#71717a" }}>
-                {publicUrl}
-              </span>
+              {publicUrl}
             </p>
             <div
               style={{
@@ -312,7 +471,6 @@ export function ShareMessageCard({
                 alignItems: "center",
                 gap: 5,
                 flexShrink: 0,
-                marginLeft: 12,
               }}
             >
               {logoDataUrl ? (
@@ -320,20 +478,20 @@ export function ShareMessageCard({
                   src={logoDataUrl}
                   alt={appName}
                   style={{
-                    width: 17,
-                    height: 17,
-                    borderRadius: 4,
+                    width: 15,
+                    height: 15,
+                    borderRadius: 3,
                     flexShrink: 0,
                   }}
                 />
               ) : (
                 <svg
-                  width="17"
-                  height="17"
+                  width="15"
+                  height="15"
                   viewBox="0 0 160 160"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
-                  style={{ borderRadius: 4, flexShrink: 0 }}
+                  style={{ borderRadius: 3, flexShrink: 0 }}
                 >
                   <rect width="160" height="160" rx="36" fill="#86ead4" />
                   <path
@@ -345,7 +503,7 @@ export function ShareMessageCard({
                   <circle cx="100" cy="68" r="7" fill="#86ead4" />
                 </svg>
               )}
-              <span style={{ fontSize: 11, fontWeight: 700, color: "#18181b" }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#334155" }}>
                 {appName}
               </span>
             </div>
