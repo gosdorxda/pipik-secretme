@@ -122,11 +122,9 @@ const CAMPAIGN_ICONS = [
 
 function maskEmail(email: string): string {
   const atIdx = email.indexOf("@");
-  if (atIdx < 0) return "***";
-  const local = email.slice(0, atIdx);
-  const domain = email.slice(atIdx);
-  const visible = local.length > 2 ? local.slice(0, 2) : local.slice(0, 1);
-  return `${visible}***${domain}`;
+  if (atIdx < 0) return "xxxxx";
+  const domain = email.slice(atIdx + 1);
+  return `xxxxx@${domain}`;
 }
 
 type StatAccent = "mint" | "blue" | "orange" | "amber";
