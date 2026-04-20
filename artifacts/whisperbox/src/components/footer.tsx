@@ -1,9 +1,8 @@
 import { Link } from "wouter";
-import { Twitter, Instagram, Github, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
-import { Badge } from "@/components/ui/badge";
 
 const CONTACT_EMAIL = "gosdorteam@gmail.com";
 
@@ -23,17 +22,6 @@ const FOOTER_LINKS = {
     { label: "Syarat & Ketentuan", href: "/ketentuan" },
   ],
 };
-
-const SOCIAL_LINKS = [
-  { label: "Twitter / X", href: "https://x.com/whisperboxid", icon: Twitter },
-  {
-    label: "Instagram",
-    href: "https://instagram.com/whisperboxid",
-    icon: Instagram,
-  },
-  { label: "GitHub", href: "https://github.com/whisperboxid", icon: Github },
-  { label: "Email", href: `mailto:${CONTACT_EMAIL}`, icon: Mail },
-];
 
 export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
   const { data: branding } = useSiteBranding();
@@ -55,20 +43,13 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
               Platform pesan anonim yang aman dan personal. Terima jujur tanpa
               rasa takut.
             </p>
-            <div className="flex items-center gap-2">
-              {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith("http") ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="w-7 h-7 rounded-md border border-border bg-secondary/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-                >
-                  <Icon className="w-3.5 h-3.5" />
-                </a>
-              ))}
-            </div>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              aria-label="Email"
+              className="w-7 h-7 rounded-md border border-border bg-secondary/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5" />
+            </a>
           </div>
 
           <div>
@@ -144,8 +125,9 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
             href="https://linktr.ee/maskripto"
             target="_blank"
             rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border bg-white text-xs font-medium text-foreground hover:border-foreground/30 hover:bg-secondary/30 transition-colors"
           >
-            <Badge variant="surface">@maskripto</Badge>
+            @maskripto
           </a>
         </div>
       </div>
