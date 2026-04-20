@@ -37,6 +37,8 @@ import {
   Sparkles,
   Mail,
   ChevronRight,
+  Share2,
+  Check,
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
@@ -207,6 +209,7 @@ export default function PublicProfilePage() {
   const [bubbleDismissed, setBubbleDismissed] = useState(false);
   const [visibleCount, setVisibleCount] = useState(5);
   const [emailSectionOpen, setEmailSectionOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
 
   const { data: profile, isLoading, isError } = useGetPublicProfile(username);
   const sendMessage = useSendMessage();
@@ -339,6 +342,29 @@ export default function PublicProfilePage() {
   const initials = displayName.charAt(0).toUpperCase();
   const publicMessages = profile.publicMessages ?? [];
   const avatarUrl = resolveAvatarUrl(profile.avatarUrl);
+  const publicUrl = `${window.location.origin}/@${profile.username}`;
+
+  const handleShareProfile = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${displayName} di ${appName}`,
+          text: `Kirimi ${displayName} pesan anonim!`,
+          url: publicUrl,
+        });
+        return;
+      } catch {
+        // user cancelled or share failed — fall through to clipboard
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch {
+      toast({ title: "Gagal menyalin link", variant: "destructive" });
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
@@ -394,6 +420,22 @@ export default function PublicProfilePage() {
               </p>
             )}
             <SocialLinkBar links={profile} />
+            <button
+              onClick={handleShareProfile}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-full border border-border hover:border-border/60 bg-white hover:bg-accent/30"
+            >
+              {shareCopied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-green-600" />
+                  <span className="text-green-600">Link tersalin!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5" />
+                  Bagikan
+                </>
+              )}
+            </button>
           </div>
         </div>
 
