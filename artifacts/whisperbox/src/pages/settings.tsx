@@ -486,7 +486,7 @@ export default function SettingsPage() {
             {/* Combined Profile Card */}
             <Card className="overflow-hidden gap-0 py-0">
               {/* Section: Identitas Publik */}
-              <div className="px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
+              <div className="px-4 sm:px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-md bg-primary/15 flex items-center justify-center shrink-0">
                   <User className="w-4 h-4 text-primary" />
                 </div>
@@ -617,7 +617,7 @@ export default function SettingsPage() {
               {/* Section divider: Social Links */}
               <div className="border-t border-border">
                 <div
-                  className="px-6 py-4 flex items-center justify-between gap-4"
+                  className="px-4 sm:px-6 py-4 flex items-center justify-between gap-4"
                   style={{
                     background: "rgba(237,233,254,0.35)",
                     borderBottom: "1px solid rgba(237,233,254,0.8)",
@@ -652,7 +652,7 @@ export default function SettingsPage() {
                 </div>
 
                 {!profile?.isPremium && (
-                  <div className="mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+                  <div className="mx-4 sm:mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                     <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                     <div className="min-w-0">
                       <p className="text-xs font-semibold text-amber-800">
@@ -668,7 +668,7 @@ export default function SettingsPage() {
                   </div>
                 )}
 
-                <div className="px-6 pt-6 pb-6 space-y-5">
+                <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-5 sm:pb-6 space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {socialFields.map(
                       ({ name, label, icon, iconColor, placeholder }) => (
@@ -732,7 +732,7 @@ export default function SettingsPage() {
         {profile?.username && (
           <Card className="overflow-hidden gap-0 py-0">
             <div
-              className="px-6 py-4 flex items-center gap-3"
+              className="px-4 sm:px-6 py-4 flex items-center gap-3"
               style={{
                 background: "rgba(204,251,241,0.35)",
                 borderBottom: "1px solid rgba(20,184,166,0.18)",
@@ -760,7 +760,7 @@ export default function SettingsPage() {
               </div>
             </div>
             {!profile?.isPremium && (
-              <div className="mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                 <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-amber-800">
@@ -814,7 +814,7 @@ export default function SettingsPage() {
         {profile?.username && (
           <Card className="overflow-hidden gap-0 py-0">
             <div
-              className="px-6 py-4 flex items-center justify-between gap-4"
+              className="px-4 sm:px-6 py-4 flex items-center justify-between gap-4"
               style={{
                 background: "rgba(254,243,199,0.55)",
                 borderBottom: "1px solid rgba(251,191,36,0.22)",
@@ -845,7 +845,7 @@ export default function SettingsPage() {
               )}
             </div>
             {!profile?.isPremium && (
-              <div className="mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
+              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
                 <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                 <div className="min-w-0">
                   <p className="text-xs font-semibold text-amber-800">

@@ -584,7 +584,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         {/* Profile + Link Combined Card */}
         <div className="border border-border bg-white rounded-md overflow-hidden shadow-sm">
-          <div className="bg-primary/10 border-b border-primary/20 px-6 py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="bg-primary/10 border-b border-primary/20 px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="shrink-0">
               {resolveAvatarUrl(profile.avatarUrl) ? (
                 <LazyAvatar
@@ -624,7 +624,7 @@ export default function DashboardPage() {
               </Button>
             </div>
           </div>
-          <div className="px-6 py-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+          <div className="px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
             <div className="flex items-center gap-2 flex-1 min-w-0 text-xs text-muted-foreground">
               <Link2 className="w-3.5 h-3.5 shrink-0 text-primary" />
               <span className="truncate font-mono text-xs">{publicUrl}</span>

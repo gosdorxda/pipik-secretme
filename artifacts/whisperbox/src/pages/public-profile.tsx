@@ -359,7 +359,7 @@ export default function PublicProfilePage() {
         </div>
       </header>
 
-      <div className="flex-1 max-w-4xl mx-auto px-6 py-8 w-full space-y-6">
+      <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
         {/* Profile Hero — no card, centered */}
         <div className="flex flex-col items-center gap-4 py-6 text-center">
           {/* Avatar */}
@@ -668,7 +668,7 @@ export default function PublicProfilePage() {
 
       {/* Footer */}
       <footer className="border-t border-border bg-white">
-        <div className="max-w-4xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 bg-primary rounded-sm flex items-center justify-center shrink-0">
               <span className="text-[9px] font-bold text-primary-foreground">

@@ -632,53 +632,49 @@ export default function LandingPage() {
               </div>
 
               {/* Premium */}
-              <div className="bg-foreground border border-foreground rounded-2xl p-7 relative overflow-hidden">
-                <div
-                  className="absolute top-0 right-0 w-48 h-48 rounded-full blur-3xl opacity-10"
-                  style={{ background: "#86ead4" }}
-                  aria-hidden
-                />
-                <div className="relative">
-                  <div className="flex items-center gap-2 mb-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-xs font-semibold text-white/50 uppercase tracking-widest">
-                          Premium
-                        </p>
-                        <Crown className="w-3 h-3 text-primary" />
-                      </div>
-                      <p className="text-3xl font-bold text-white">
-                        Sekali bayar
-                        <span className="text-base font-normal text-white/50">
-                          {" "}
-                          seumur hidup
-                        </span>
-                      </p>
-                      <p className="text-sm text-white/50 mt-1">
-                        Semua fitur, tanpa langganan bulanan
-                      </p>
-                    </div>
-                  </div>
-                  <ul className="space-y-3 mb-7">
-                    {FREE_FEATURES.map((f) => (
-                      <li key={f} className="flex items-center gap-2.5 text-sm">
-                        <Check className="w-4 h-4 text-primary shrink-0" />
-                        <span className="text-white/80">{f}</span>
-                      </li>
-                    ))}
-                    {PREMIUM_EXTRAS.map((f) => (
-                      <li key={f} className="flex items-center gap-2.5 text-sm">
-                        <Check className="w-4 h-4 text-primary shrink-0" />
-                        <span className="text-white">{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="/upgrade" className="block">
-                    <Button className="w-full font-semibold bg-primary text-primary-foreground hover:bg-primary/90">
-                      Upgrade Premium →
-                    </Button>
-                  </Link>
+              <div className="border-2 border-primary rounded-2xl p-7 bg-primary/5 relative overflow-hidden">
+                <div className="absolute top-3 right-3">
+                  <span className="bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md">
+                    Terbaik
+                  </span>
                 </div>
+                <div className="mb-6">
+                  <div className="flex items-center gap-2 mb-1">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
+                      Premium
+                    </p>
+                    <Crown className="w-3 h-3 text-primary" />
+                  </div>
+                  <p className="text-3xl font-bold text-foreground">
+                    Sekali bayar
+                    <span className="text-base font-normal text-muted-foreground">
+                      {" "}
+                      seumur hidup
+                    </span>
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Semua fitur, tanpa langganan bulanan
+                  </p>
+                </div>
+                <ul className="space-y-3 mb-7">
+                  {FREE_FEATURES.map((f) => (
+                    <li key={f} className="flex items-center gap-2.5 text-sm">
+                      <Check className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-foreground/70">{f}</span>
+                    </li>
+                  ))}
+                  {PREMIUM_EXTRAS.map((f) => (
+                    <li key={f} className="flex items-center gap-2.5 text-sm">
+                      <Check className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-foreground font-medium">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href="/upgrade" className="block">
+                  <Button className="w-full font-semibold">
+                    Upgrade Premium →
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
