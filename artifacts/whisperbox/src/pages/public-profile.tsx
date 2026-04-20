@@ -428,7 +428,7 @@ export default function PublicProfilePage() {
             <SocialLinkBar links={profile} />
             <button
               onClick={handleShareProfile}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-full border border-border hover:border-border/60 bg-white hover:bg-accent/30"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md border border-border hover:border-border/60 bg-white hover:bg-accent/30"
             >
               {shareCopied ? (
                 <>
@@ -701,7 +701,7 @@ export default function PublicProfilePage() {
                   <div className="px-5 pb-3 flex justify-end">
                     <button
                       onClick={() => setSharingMessage({ msg, idx })}
-                      className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-full border border-border/60 hover:border-border bg-white/60 hover:bg-white"
+                      className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-md border border-border/60 hover:border-border bg-white/60 hover:bg-white"
                     >
                       <Share2 className="w-3 h-3" />
                       Bagikan

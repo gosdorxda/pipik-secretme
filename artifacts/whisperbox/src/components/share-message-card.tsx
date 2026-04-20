@@ -178,7 +178,7 @@ export function ShareMessageCard({
           ref={cardRef}
           style={{
             background: "#ffffff",
-            borderRadius: 14,
+            borderRadius: 6,
             overflow: "hidden",
             width: "100%",
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
@@ -239,7 +239,7 @@ export function ShareMessageCard({
               style={{
                 background: "#f8fafc",
                 border: `1.5px solid ${p.accentBorder}`,
-                borderRadius: 10,
+                borderRadius: 6,
                 padding: "13px 15px",
               }}
             >
@@ -370,7 +370,7 @@ export function ShareMessageCard({
               style={{
                 background: p.stripBg,
                 border: `1.5px solid ${p.accentBorder}`,
-                borderRadius: 10,
+                borderRadius: 6,
                 padding: "12px 15px",
                 display: "flex",
                 alignItems: "center",

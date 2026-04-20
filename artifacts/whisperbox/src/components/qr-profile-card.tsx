@@ -180,7 +180,7 @@ export function QRProfileCard({
           ref={cardRef}
           style={{
             background: "#ffffff",
-            borderRadius: 12,
+            borderRadius: 6,
             overflow: "hidden",
             width: "100%",
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
@@ -350,7 +350,7 @@ export function QRProfileCard({
               style={{
                 background: "#ffffff",
                 padding: 12,
-                borderRadius: 12,
+                borderRadius: 6,
                 border: `1px solid ${p.accentBorder}`,
                 boxShadow: `0 0 0 5px ${p.qrRing}`,
               }}
@@ -400,7 +400,7 @@ export function QRProfileCard({
                 gap: 5,
                 background: p.stripBg,
                 border: `1px solid ${p.accentBorder}`,
-                borderRadius: 99,
+                borderRadius: 4,
                 padding: "5px 12px",
               }}
             >
