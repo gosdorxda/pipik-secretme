@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
+import { useAppConfig } from "@/hooks/use-app-config";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -323,10 +324,16 @@ const PREMIUM_EXTRAS = [
   "Prioritas dukungan & fitur baru",
 ];
 
+function formatRupiah(amount: number): string {
+  return "Rp " + amount.toLocaleString("id-ID");
+}
+
 export default function LandingPage() {
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "kepoin.me";
   const { isSignedIn } = useAuth();
+  const { data: appConfig } = useAppConfig();
+  const premiumPrice = appConfig?.premiumPrice ?? 49900;
 
   const profileRef = useReveal();
   const actRef = useReveal();
@@ -646,14 +653,14 @@ export default function LandingPage() {
                     <Crown className="w-3 h-3 text-primary" />
                   </div>
                   <p className="text-3xl font-bold text-foreground">
-                    Sekali bayar
+                    {formatRupiah(premiumPrice)}
                     <span className="text-base font-normal text-muted-foreground">
                       {" "}
-                      seumur hidup
+                      / seumur hidup
                     </span>
                   </p>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Semua fitur, tanpa langganan bulanan
+                    Sekali bayar, semua fitur tanpa langganan bulanan
                   </p>
                 </div>
                 <ul className="space-y-3 mb-7">

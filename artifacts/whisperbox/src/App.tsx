@@ -174,9 +174,9 @@ function AuthLayout({
       </div>
 
       {/* Centered card */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
+      <div className="flex-1 flex items-center justify-center px-4 py-8 overflow-y-auto">
         <div
-          className="w-full max-w-[400px] bg-white rounded-2xl p-8"
+          className="w-full max-w-[400px] bg-white rounded-2xl p-8 my-auto"
           style={{
             boxShadow:
               "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
