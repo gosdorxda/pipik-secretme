@@ -1,4 +1,4 @@
-import { Lock, ArrowUpFromLine, CornerDownLeft } from "lucide-react";
+import { Lock } from "lucide-react";
 
 export function CleanUI() {
   return (
@@ -26,41 +26,6 @@ export function CleanUI() {
             position: "relative",
           }}
         >
-          {/* "Pesan baru!" floating bubble */}
-          <div
-            style={{
-              position: "absolute",
-              top: 14,
-              right: 14,
-              background: "white",
-              borderRadius: 12,
-              padding: "6px 10px",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              maxWidth: 145,
-            }}
-          >
-            <div
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: "50%",
-                background: "#0e9f8e",
-                flexShrink: 0,
-              }}
-            />
-            <div>
-              <div style={{ fontSize: 10, fontWeight: 700, color: "#111", lineHeight: 1.2 }}>
-                Pesan baru!
-              </div>
-              <div style={{ fontSize: 9, color: "#888", lineHeight: 1.2 }}>
-                dari seseorang anonim
-              </div>
-            </div>
-          </div>
-
           {/* Recipient profile */}
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
             {/* Avatar */}
@@ -94,45 +59,15 @@ export function CleanUI() {
         </div>
 
         {/* BODY */}
-        <div style={{ padding: "0 16px 18px" }}>
-          {/* INBOX label */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "12px 0 10px",
-              borderBottom: "1px solid #f0f0f0",
-              marginBottom: 12,
-            }}
-          >
-            <span style={{ fontSize: 11, fontWeight: 700, color: "#555", letterSpacing: "0.08em" }}>
-              PESAN ANONIM UNTUKMU
-            </span>
-            <div
-              style={{
-                background: "#0e9f8e",
-                color: "white",
-                fontSize: 10,
-                fontWeight: 700,
-                borderRadius: 100,
-                padding: "2px 7px",
-                minWidth: 18,
-                textAlign: "center",
-              }}
-            >
-              1
-            </div>
-          </div>
-
+        <div style={{ padding: "16px 16px 18px" }}>
           {/* Message card */}
           <div
             style={{
               background: "#f8fafb",
               border: "1px solid #eef1f4",
               borderRadius: 16,
-              padding: "14px 14px 12px",
-              marginBottom: 10,
+              padding: "14px 14px 16px",
+              marginBottom: 16,
             }}
           >
             {/* Sender row */}
@@ -166,100 +101,14 @@ export function CleanUI() {
             {/* Message text */}
             <p
               style={{
-                fontSize: 14.5,
+                fontSize: 17,
                 color: "#1a2730",
                 lineHeight: 1.65,
-                margin: "0 0 13px",
+                margin: 0,
               }}
             >
               Kamu itu orangnya selalu bisa bikin semua orang di sekitar kamu ngerasa nyaman dan diterima. Beneran deh, itu salah satu hal paling keren yang bisa dimiliki seseorang 🌿
             </p>
-
-            {/* Action buttons */}
-            <div style={{ display: "flex", gap: 8 }}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                  background: "#eef9f7",
-                  border: "1px solid #c5eae5",
-                  borderRadius: 100,
-                  padding: "6px 13px",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "#0e9f8e",
-                  cursor: "default",
-                }}
-              >
-                <CornerDownLeft size={12} />
-                Balas
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 5,
-                  background: "#f4f5f7",
-                  border: "1px solid #e4e7eb",
-                  borderRadius: 100,
-                  padding: "6px 13px",
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: "#556070",
-                  cursor: "default",
-                }}
-              >
-                <ArrowUpFromLine size={12} />
-                Bagikan
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom teaser row */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              background: "#f4f7fa",
-              borderRadius: 12,
-              padding: "10px 14px",
-              marginBottom: 14,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              {/* Blurred mystery avatars */}
-              {["?", "?", "?"].map((_, i) => (
-                <div
-                  key={i}
-                  style={{
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    background: `hsl(${180 + i * 25},50%,65%)`,
-                    border: "1.5px solid white",
-                    marginLeft: i > 0 ? -6 : 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 10,
-                    color: "white",
-                    fontWeight: 700,
-                  }}
-                >
-                  ?
-                </div>
-              ))}
-              <span style={{ fontSize: 11.5, color: "#556070", marginLeft: 4 }}>
-                +2 pesan baru menunggumu
-              </span>
-            </div>
-            <span
-              style={{ fontSize: 11.5, fontWeight: 700, color: "#0e9f8e", whiteSpace: "nowrap" }}
-            >
-              Lihat →
-            </span>
           </div>
 
           {/* Branding footer */}
