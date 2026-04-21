@@ -972,6 +972,7 @@ type TemplateId = (typeof TEMPLATES)[number]["id"];
 type ShareMessageCardProps = {
   content: string;
   createdAt: string;
+  ownerReply?: string | null;
   paletteIdx: number;
   displayName: string;
   username: string;
