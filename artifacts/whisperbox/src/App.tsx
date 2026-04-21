@@ -175,7 +175,7 @@ function AuthLayout({
       {/* Card — scrolls naturally with the page, never clipped */}
       <div className="flex flex-col items-center px-4 pt-2 pb-12">
         <div
-          className="w-full max-w-[400px] bg-white rounded-2xl p-7"
+          className="w-full max-w-[400px] bg-white rounded-2xl p-7 overflow-hidden"
           style={{
             boxShadow:
               "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
