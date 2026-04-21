@@ -130,27 +130,28 @@ function CardCleanUI({ d }: { d: CardData }) {
     >
       <div
         style={{
-          background: "linear-gradient(135deg, #0e9f8e 0%, #0a7c6e 100%)",
+          background: "linear-gradient(135deg, #edfaf7 0%, #d8f3ed 100%)",
           padding: "13px 16px 15px",
           display: "flex",
           alignItems: "center",
           gap: 12,
+          borderBottom: "1px solid #c2e9e1",
         }}
       >
         <Avatar
           src={d.avatarDataUrl}
           initials={d.initials}
           size={44}
-          bg="rgba(255,255,255,0.25)"
-          color="white"
-          border="2px solid rgba(255,255,255,0.8)"
+          bg="#c2e9e1"
+          color="#0a7c6e"
+          border="2px solid #0e9f8e"
         />
         <div>
           <div
             style={{
               fontSize: 14,
               fontWeight: 700,
-              color: "white",
+              color: "#0a5c55",
               lineHeight: 1.2,
             }}
           >
@@ -159,7 +160,7 @@ function CardCleanUI({ d }: { d: CardData }) {
           <div
             style={{
               fontSize: 11,
-              color: "rgba(255,255,255,0.68)",
+              color: "#4aaa9a",
               marginTop: 2,
             }}
           >
@@ -1065,7 +1066,7 @@ export function ShareMessageCard({
                   justifyContent: "center",
                   gap: 5,
                   padding: "7px 0",
-                  borderRadius: 100,
+                  borderRadius: 8,
                   border: isActive
                     ? `2px solid ${tpl.dot}`
                     : "2px solid rgba(255,255,255,0.15)",
