@@ -131,24 +131,24 @@ function CardCleanUI({ d }: { d: CardData }) {
       <div
         style={{
           background: "linear-gradient(135deg, #0e9f8e 0%, #0a7c6e 100%)",
-          padding: "20px 20px 22px",
+          padding: "13px 16px 15px",
           display: "flex",
           alignItems: "center",
-          gap: 13,
+          gap: 12,
         }}
       >
         <Avatar
           src={d.avatarDataUrl}
           initials={d.initials}
-          size={54}
+          size={44}
           bg="rgba(255,255,255,0.25)"
           color="white"
-          border="2.5px solid rgba(255,255,255,0.85)"
+          border="2px solid rgba(255,255,255,0.8)"
         />
         <div>
           <div
             style={{
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: 700,
               color: "white",
               lineHeight: 1.2,
@@ -158,9 +158,9 @@ function CardCleanUI({ d }: { d: CardData }) {
           </div>
           <div
             style={{
-              fontSize: 11.5,
-              color: "rgba(255,255,255,0.72)",
-              marginTop: 3,
+              fontSize: 11,
+              color: "rgba(255,255,255,0.68)",
+              marginTop: 2,
             }}
           >
             @{d.username}
@@ -280,7 +280,7 @@ function CardVibrantGlow({ d }: { d: CardData }) {
         background:
           "linear-gradient(145deg, #6c3de8 0%, #c026d3 55%, #f97316 100%)",
         borderRadius: 6,
-        padding: "28px 22px 22px",
+        padding: "26px 22px 22px",
         fontFamily: "'DM Sans', system-ui, sans-serif",
         display: "flex",
         flexDirection: "column",
@@ -311,31 +311,6 @@ function CardVibrantGlow({ d }: { d: CardData }) {
           zIndex: 1,
         }}
       >
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            background: "rgba(255,255,255,0.15)",
-            border: "1px solid rgba(255,255,255,0.25)",
-            borderRadius: 100,
-            padding: "4px 12px",
-            marginBottom: 20,
-          }}
-        >
-          <Lock size={10} color="rgba(255,255,255,0.9)" />
-          <span
-            style={{
-              color: "rgba(255,255,255,0.9)",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.08em",
-            }}
-          >
-            PESAN ANONIM
-          </span>
-        </div>
-
         <div
           style={{
             position: "relative",
@@ -788,33 +763,33 @@ function CardGlassMorph({ d }: { d: CardData }) {
             @{d.username}
           </div>
         </div>
-        <div style={{ marginLeft: "auto", flexShrink: 0 }}>
-          <div
-            style={{
-              background: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.25)",
-              borderRadius: 8,
-              padding: "5px 9px",
-              textAlign: "center",
-            }}
-          >
-            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.65)" }}>
-              PESAN MASUK
-            </div>
+        {d.totalMessages > 0 && (
+          <div style={{ marginLeft: "auto", flexShrink: 0 }}>
             <div
               style={{
-                fontSize: 14,
-                fontWeight: 800,
-                color: "white",
-                lineHeight: 1.2,
+                background: "rgba(255,255,255,0.15)",
+                border: "1px solid rgba(255,255,255,0.25)",
+                borderRadius: 8,
+                padding: "5px 9px",
+                textAlign: "center",
               }}
             >
-              {d.totalMessages > 0
-                ? d.totalMessages.toLocaleString("id-ID")
-                : "—"}
+              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.65)" }}>
+                PESAN MASUK
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  fontWeight: 800,
+                  color: "white",
+                  lineHeight: 1.2,
+                }}
+              >
+                {d.totalMessages.toLocaleString("id-ID")}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div
@@ -888,6 +863,7 @@ function CardGlassMorph({ d }: { d: CardData }) {
         style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           gap: 6,
           position: "relative",
           zIndex: 1,
