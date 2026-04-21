@@ -114,8 +114,10 @@ const clerkAppearance = {
     alertText: { color: "#0f172a" },
     alert: "!border-[#fca5a5] !bg-[#fef2f2] !rounded-lg",
     alertIcon: "!text-[#ef4444]",
+    otpCodeField: "!w-full !flex !flex-col !gap-2",
+    otpCodeFieldInputs: "!flex !flex-row !gap-2 !justify-center !w-full",
     otpCodeFieldInput:
-      "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20",
+      "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20 !h-12 !w-12 !text-center !text-lg !rounded-lg !bg-[#f8fafc]",
   },
 };
 
@@ -174,7 +176,7 @@ function AuthLayout({
       {/* Centered card */}
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div
-          className="w-full max-w-[400px] bg-white rounded-2xl p-8 overflow-hidden"
+          className="w-full max-w-[400px] bg-white rounded-2xl p-8"
           style={{
             boxShadow:
               "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
