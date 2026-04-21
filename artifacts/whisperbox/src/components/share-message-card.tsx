@@ -221,36 +221,6 @@ function CardCleanUI({ d }: { d: CardData }) {
           >
             {d.content}
           </p>
-
-          {d.totalMessages > 0 && (
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                background: "#e6f4f2",
-                border: "1px solid #b8e2dc",
-                borderRadius: 100,
-                padding: "4px 10px",
-              }}
-            >
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#0e9f8e"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              <span style={{ fontSize: 11, fontWeight: 600, color: "#0a7c6e" }}>
-                {d.totalMessages.toLocaleString("id-ID")} pesan masuk
-              </span>
-            </div>
-          )}
         </div>
       </div>
 
@@ -425,48 +395,11 @@ function CardVibrantGlow({ d }: { d: CardData }) {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-end",
           position: "relative",
           zIndex: 1,
         }}
       >
-        {d.totalMessages > 0 ? (
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 5,
-              background: "rgba(255,255,255,0.15)",
-              border: "1px solid rgba(255,255,255,0.2)",
-              borderRadius: 100,
-              padding: "4px 10px",
-            }}
-          >
-            <svg
-              width="11"
-              height="11"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="rgba(255,255,255,0.85)"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 600,
-                color: "rgba(255,255,255,0.85)",
-              }}
-            >
-              {d.totalMessages.toLocaleString("id-ID")} pesan masuk
-            </span>
-          </div>
-        ) : (
-          <div />
-        )}
         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
           <AppLogo
             src={d.logoDataUrl}
@@ -625,40 +558,9 @@ function CardDarkSlate({ d }: { d: CardData }) {
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
           }}
         >
-          {d.totalMessages > 0 ? (
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                background: "#0e9f8e18",
-                border: "1px solid #0e9f8e30",
-                borderRadius: 100,
-                padding: "4px 10px",
-              }}
-            >
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#0e9f8e"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
-              <span style={{ fontSize: 11, fontWeight: 600, color: "#0e9f8e" }}>
-                {d.totalMessages.toLocaleString("id-ID")} pesan masuk
-              </span>
-            </div>
-          ) : (
-            <div />
-          )}
           <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
             <AppLogo
               src={d.logoDataUrl}
@@ -764,33 +666,6 @@ function CardGlassMorph({ d }: { d: CardData }) {
             @{d.username}
           </div>
         </div>
-        {d.totalMessages > 0 && (
-          <div style={{ marginLeft: "auto", flexShrink: 0 }}>
-            <div
-              style={{
-                background: "rgba(255,255,255,0.15)",
-                border: "1px solid rgba(255,255,255,0.25)",
-                borderRadius: 8,
-                padding: "5px 9px",
-                textAlign: "center",
-              }}
-            >
-              <div style={{ fontSize: 9, color: "rgba(255,255,255,0.65)" }}>
-                PESAN MASUK
-              </div>
-              <div
-                style={{
-                  fontSize: 14,
-                  fontWeight: 800,
-                  color: "white",
-                  lineHeight: 1.2,
-                }}
-              >
-                {d.totalMessages.toLocaleString("id-ID")}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       <div
