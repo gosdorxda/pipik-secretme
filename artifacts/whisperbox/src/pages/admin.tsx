@@ -1877,6 +1877,122 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
       </div>
 
       <div className="border border-border rounded-sm overflow-hidden">
+        <div className="px-5 py-3 bg-secondary/20 border-b border-border">
+          <h3 className="text-sm font-semibold">Google Analytics</h3>
+        </div>
+        <div className="px-5 py-4 space-y-4">
+          <p className="text-xs text-muted-foreground">
+            Masukkan Measurement ID Google Analytics 4 (format:{" "}
+            <code className="bg-secondary px-1 py-0.5 rounded text-xs">
+              G-XXXXXXXXXX
+            </code>
+            ). Kosongkan untuk menonaktifkan.
+          </p>
+          <div>
+            <label className="text-sm font-medium block mb-1.5">
+              Measurement ID
+            </label>
+            <input
+              value={settings.google_analytics_id ?? ""}
+              onChange={(e) => update("google_analytics_id", e.target.value)}
+              placeholder="G-XXXXXXXXXX"
+              className="w-full max-w-xs px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring font-mono"
+            />
+          </div>
+          {settings.google_analytics_id && (
+            <p className="text-xs text-green-600 font-medium">
+              ✓ GA akan aktif dengan ID:{" "}
+              <code className="bg-secondary px-1 py-0.5 rounded">
+                {settings.google_analytics_id}
+              </code>
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="border border-border rounded-sm overflow-hidden">
+        <div className="px-5 py-3 bg-secondary/20 border-b border-border">
+          <h3 className="text-sm font-semibold">Banner Iklan</h3>
+        </div>
+        <div className="px-5 py-4 space-y-4">
+          <p className="text-xs text-muted-foreground">
+            Banner gambar yang tampil di halaman dashboard (di atas Wrapped) dan
+            di halaman profil publik (di antara pesan-pesan).
+          </p>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() =>
+                update(
+                  "banner_ad_active",
+                  settings.banner_ad_active === "true" ? "false" : "true",
+                )
+              }
+              className={`w-11 h-6 rounded-full transition-colors relative inline-flex items-center ${settings.banner_ad_active === "true" ? "bg-primary" : "bg-secondary"}`}
+            >
+              <span
+                className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${settings.banner_ad_active === "true" ? "left-6" : "left-1"}`}
+              />
+            </button>
+            <span className="text-sm">Tampilkan banner iklan</span>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium block mb-1.5">
+              URL Gambar Banner
+            </label>
+            <input
+              value={settings.banner_ad_image_url ?? ""}
+              onChange={(e) => update("banner_ad_image_url", e.target.value)}
+              placeholder="https://example.com/banner.jpg"
+              className="w-full px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium block mb-1.5">
+              URL Tujuan (klik banner)
+            </label>
+            <input
+              value={settings.banner_ad_link_url ?? ""}
+              onChange={(e) => update("banner_ad_link_url", e.target.value)}
+              placeholder="https://example.com/produk"
+              className="w-full px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-medium block mb-1.5">
+              Alt Text / Keterangan
+            </label>
+            <input
+              value={settings.banner_ad_alt ?? ""}
+              onChange={(e) => update("banner_ad_alt", e.target.value)}
+              placeholder="Contoh: Promo spesial bulan ini"
+              className="w-full px-3 py-2 text-sm border border-border rounded-sm bg-background focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+          </div>
+
+          {settings.banner_ad_image_url && (
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1.5">
+                Preview Banner
+              </label>
+              <img
+                src={settings.banner_ad_image_url}
+                alt={settings.banner_ad_alt || "Banner preview"}
+                className="w-full rounded-md object-cover border border-border"
+                style={{ maxHeight: 100 }}
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                }}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="border border-border rounded-sm overflow-hidden">
         <div className="px-5 py-3 bg-secondary/20 border-b border-border flex items-center justify-between">
           <h3 className="text-sm font-semibold">IP Ban</h3>
           <span className="text-xs text-muted-foreground">

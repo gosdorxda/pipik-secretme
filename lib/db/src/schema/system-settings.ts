@@ -27,4 +27,9 @@ export const SETTING_KEYS = {
   SITE_LOGO_URL: "site_logo_url",
   SITE_FAVICON_URL: "site_favicon_url",
   FREE_PREMIUM_MODE: "free_premium_mode",
+  GOOGLE_ANALYTICS_ID: "google_analytics_id",
+  BANNER_AD_ACTIVE: "banner_ad_active",
+  BANNER_AD_IMAGE_URL: "banner_ad_image_url",
+  BANNER_AD_LINK_URL: "banner_ad_link_url",
+  BANNER_AD_ALT: "banner_ad_alt",
 } as const;

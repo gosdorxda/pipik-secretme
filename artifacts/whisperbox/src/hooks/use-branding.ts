@@ -2,11 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 
+interface BannerAd {
+  imageUrl: string;
+  linkUrl: string | null;
+  alt: string;
+}
+
 interface SiteBranding {
   logoUrl: string | null;
   faviconUrl: string | null;
   appName: string;
   contactEmail: string | null;
+  googleAnalyticsId: string | null;
+  bannerAd: BannerAd | null;
 }
 
 function resolveStorageUrl(path: string | null | undefined): string | null {
@@ -25,6 +33,8 @@ async function fetchBranding(): Promise<SiteBranding> {
       faviconUrl: null,
       appName: DEFAULT_APP_NAME,
       contactEmail: null,
+      googleAnalyticsId: null,
+      bannerAd: null,
     };
   const data = await res.json();
   return {
@@ -32,6 +42,8 @@ async function fetchBranding(): Promise<SiteBranding> {
     faviconUrl: resolveStorageUrl(data.faviconUrl as string | null) || null,
     appName: (data.appName as string) || DEFAULT_APP_NAME,
     contactEmail: (data.contactEmail as string | null) || null,
+    googleAnalyticsId: (data.googleAnalyticsId as string | null) || null,
+    bannerAd: data.bannerAd ?? null,
   };
 }
 

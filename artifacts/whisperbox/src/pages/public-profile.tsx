@@ -1,4 +1,5 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, Fragment } from "react";
+import { BannerAd } from "@/components/banner-ad";
 import { useParams, Link } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -654,75 +655,80 @@ export default function PublicProfilePage() {
               ];
               const { stripe, bg, border } = palette[idx % palette.length];
               return (
-                <div
-                  key={msg.id}
-                  className="rounded-md shadow-sm overflow-hidden"
-                  style={{ background: bg, border: `1px solid ${border}` }}
-                >
-                  {/* Stripe */}
-                  <div style={{ height: 3, background: stripe }} />
+                <Fragment key={msg.id}>
+                  <div
+                    className="rounded-md shadow-sm overflow-hidden"
+                    style={{ background: bg, border: `1px solid ${border}` }}
+                  >
+                    {/* Stripe */}
+                    <div style={{ height: 3, background: stripe }} />
 
-                  {/* Header: icon + Anonim + timestamp */}
-                  <div className="px-5 pt-3 pb-2 flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-white/70 border border-white/60 flex items-center justify-center shrink-0">
-                      <User className="w-3 h-3 text-muted-foreground" />
-                    </div>
-                    <span className="text-xs font-semibold text-foreground/70">
-                      Anonim
-                    </span>
-                    <span className="text-[10px] text-muted-foreground ml-auto">
-                      {formatDistanceToNow(new Date(msg.createdAt), {
-                        addSuffix: true,
-                        locale: idLocale,
-                      })}
-                    </span>
-                  </div>
-
-                  {/* Message body */}
-                  <div className="px-5 pb-3">
-                    <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
-                      {msg.content}
-                    </p>
-                  </div>
-
-                  {msg.ownerReply && (
-                    <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-md p-3">
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
-                          <span className="text-[9px] font-bold text-primary-foreground">
-                            {initials}
-                          </span>
-                        </div>
-                        <span className="text-xs font-semibold text-accent-foreground">
-                          {displayName}
-                        </span>
-                        <CornerDownRight className="w-3 h-3 text-muted-foreground" />
-                        {msg.ownerRepliedAt && (
-                          <span className="text-[10px] text-muted-foreground ml-auto">
-                            {formatDistanceToNow(new Date(msg.ownerRepliedAt), {
-                              addSuffix: true,
-                              locale: idLocale,
-                            })}
-                          </span>
-                        )}
+                    {/* Header: icon + Anonim + timestamp */}
+                    <div className="px-5 pt-3 pb-2 flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-white/70 border border-white/60 flex items-center justify-center shrink-0">
+                        <User className="w-3 h-3 text-muted-foreground" />
                       </div>
-                      <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
-                        {msg.ownerReply}
+                      <span className="text-xs font-semibold text-foreground/70">
+                        Anonim
+                      </span>
+                      <span className="text-[10px] text-muted-foreground ml-auto">
+                        {formatDistanceToNow(new Date(msg.createdAt), {
+                          addSuffix: true,
+                          locale: idLocale,
+                        })}
+                      </span>
+                    </div>
+
+                    {/* Message body */}
+                    <div className="px-5 pb-3">
+                      <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
+                        {msg.content}
                       </p>
                     </div>
-                  )}
 
-                  {/* Share button */}
-                  <div className="px-5 pb-3 flex justify-end">
-                    <button
-                      onClick={() => setSharingMessage({ msg, idx })}
-                      className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-md border border-border/60 hover:border-border bg-white/60 hover:bg-white"
-                    >
-                      <Share2 className="w-3 h-3" />
-                      Bagikan
-                    </button>
+                    {msg.ownerReply && (
+                      <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-md p-3">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
+                            <span className="text-[9px] font-bold text-primary-foreground">
+                              {initials}
+                            </span>
+                          </div>
+                          <span className="text-xs font-semibold text-accent-foreground">
+                            {displayName}
+                          </span>
+                          <CornerDownRight className="w-3 h-3 text-muted-foreground" />
+                          {msg.ownerRepliedAt && (
+                            <span className="text-[10px] text-muted-foreground ml-auto">
+                              {formatDistanceToNow(
+                                new Date(msg.ownerRepliedAt),
+                                {
+                                  addSuffix: true,
+                                  locale: idLocale,
+                                },
+                              )}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm leading-relaxed text-foreground/80 whitespace-pre-wrap">
+                          {msg.ownerReply}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Share button */}
+                    <div className="px-5 pb-3 flex justify-end">
+                      <button
+                        onClick={() => setSharingMessage({ msg, idx })}
+                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-md border border-border/60 hover:border-border bg-white/60 hover:bg-white"
+                      >
+                        <Share2 className="w-3 h-3" />
+                        Bagikan
+                      </button>
+                    </div>
                   </div>
-                </div>
+                  {(idx + 1) % 3 === 0 && <BannerAd className="my-1" />}
+                </Fragment>
               );
             })}
 

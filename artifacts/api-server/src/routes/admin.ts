@@ -357,6 +357,11 @@ router.get("/settings", async (req, res) => {
       notification_type: "info",
       [SETTING_KEYS.SITE_LOGO_URL]: "",
       [SETTING_KEYS.SITE_FAVICON_URL]: "",
+      [SETTING_KEYS.GOOGLE_ANALYTICS_ID]: "",
+      [SETTING_KEYS.BANNER_AD_ACTIVE]: "false",
+      [SETTING_KEYS.BANNER_AD_IMAGE_URL]: "",
+      [SETTING_KEYS.BANNER_AD_LINK_URL]: "",
+      [SETTING_KEYS.BANNER_AD_ALT]: "",
     };
 
     for (const [key, val] of Object.entries(defaults)) {

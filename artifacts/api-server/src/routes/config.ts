@@ -38,6 +38,11 @@ router.get("/config", async (req, res) => {
     const siteFaviconUrl = await getSetting("site_favicon_url", "");
     const appName = await getSetting("app_name", "kepoin.me");
     const contactEmail = await getSetting("contact_email", "");
+    const googleAnalyticsId = await getSetting("google_analytics_id", "");
+    const bannerAdActive = await getSetting("banner_ad_active", "false");
+    const bannerAdImageUrl = await getSetting("banner_ad_image_url", "");
+    const bannerAdLinkUrl = await getSetting("banner_ad_link_url", "");
+    const bannerAdAlt = await getSetting("banner_ad_alt", "");
 
     res.json({
       premiumPrice,
@@ -53,6 +58,15 @@ router.get("/config", async (req, res) => {
         notificationActive === "true" && notificationMessage
           ? { message: notificationMessage, type: notificationType }
           : null,
+      googleAnalyticsId: googleAnalyticsId || null,
+      bannerAd:
+        bannerAdActive === "true" && bannerAdImageUrl
+          ? {
+              imageUrl: bannerAdImageUrl,
+              linkUrl: bannerAdLinkUrl || null,
+              alt: bannerAdAlt || "Iklan",
+            }
+          : null,
     });
   } catch {
     res.json({
@@ -66,6 +80,8 @@ router.get("/config", async (req, res) => {
       appName: "kepoin.me",
       contactEmail: null,
       notification: null,
+      googleAnalyticsId: null,
+      bannerAd: null,
     });
   }
 });

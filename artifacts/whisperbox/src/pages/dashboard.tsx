@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BannerAd } from "@/components/banner-ad";
 import confetti from "canvas-confetti";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout";
@@ -694,6 +695,9 @@ export default function DashboardPage() {
             loading={statsLoading}
           />
         </div>
+
+        {/* Banner Iklan */}
+        <BannerAd className="mb-1" />
 
         {/* Wrapped + Kampanye QnA — merged collapsible card */}
         <div

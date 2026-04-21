@@ -364,6 +364,25 @@ function FaviconUpdater() {
   return null;
 }
 
+function GoogleAnalyticsInjector() {
+  const { data } = useSiteBranding();
+  const gaId = data?.googleAnalyticsId;
+  useEffect(() => {
+    if (!gaId) return;
+    if (document.getElementById("ga-script")) return;
+    const script1 = document.createElement("script");
+    script1.id = "ga-script";
+    script1.async = true;
+    script1.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+    document.head.appendChild(script1);
+    const script2 = document.createElement("script");
+    script2.id = "ga-init";
+    script2.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${gaId}');`;
+    document.head.appendChild(script2);
+  }, [gaId]);
+  return null;
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
@@ -443,6 +462,7 @@ function ClerkProviderWithRoutes() {
         <TooltipProvider>
           <ClerkReadySignal />
           <FaviconUpdater />
+          <GoogleAnalyticsInjector />
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />
