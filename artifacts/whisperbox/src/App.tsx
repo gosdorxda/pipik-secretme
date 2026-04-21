@@ -105,8 +105,7 @@ const clerkAppearance = {
       "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20 !bg-[#f8fafc] !h-10 !rounded-lg !text-[0.875rem]",
     formButtonPrimary:
       "!bg-[#0f2e28] hover:!bg-[#1a443c] !text-white !font-semibold !transition-all !duration-150 !shadow-none !h-10 !rounded-lg",
-    footerAction:
-      "!bg-transparent !border-t !border-[#f0f0f0] !pt-3 !mt-1 !shadow-none",
+    footerAction: "!hidden",
     footerActionLink: { color: "#1a443c", fontWeight: "600" },
     footerActionText: { color: "#94a3b8", fontSize: "0.8125rem" },
     identityPreviewEditButton: { color: "#1a443c" },
@@ -132,7 +131,7 @@ function AuthLayout({
   const appName = branding?.appName ?? "kepoin.me";
   return (
     <div
-      className="min-h-screen flex flex-col"
+      className="min-h-screen"
       style={{
         background:
           "linear-gradient(135deg, #f0fdf9 0%, #fafafa 50%, #f5f3ff 100%)",
@@ -150,13 +149,13 @@ function AuthLayout({
           </div>
         </Link>
 
-        <div className="flex items-center gap-1 text-sm text-[#64748b]">
+        <div className="flex items-center gap-1 text-sm text-[#64748b] whitespace-nowrap">
           {mode === "sign-in" ? (
             <>
               Belum punya akun?{" "}
               <Link href={`${basePath}/sign-up`}>
                 <span className="text-[#1a443c] font-semibold hover:underline cursor-pointer ml-1">
-                  Daftar gratis
+                  Daftar
                 </span>
               </Link>
             </>
@@ -173,17 +172,17 @@ function AuthLayout({
         </div>
       </div>
 
-      {/* Centered card */}
-      <div className="flex-1 flex items-center justify-center px-4 py-8 overflow-y-auto">
+      {/* Card — scrolls naturally with the page, never clipped */}
+      <div className="flex flex-col items-center px-4 pt-2 pb-12">
         <div
-          className="w-full max-w-[400px] bg-white rounded-2xl p-8 my-auto"
+          className="w-full max-w-[400px] bg-white rounded-2xl p-7"
           style={{
             boxShadow:
               "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
           }}
         >
           {/* Custom header */}
-          <div className="mb-6">
+          <div className="mb-5">
             <h1 className="text-xl font-bold text-[#0f172a] mb-1">
               {mode === "sign-in"
                 ? "Selamat datang kembali"
