@@ -12,7 +12,8 @@ export function CleanUI() {
           background: "#ffffff",
           borderRadius: 24,
           overflow: "hidden",
-          boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
+          boxShadow:
+            "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
           fontFamily: "'Inter', system-ui, sans-serif",
           display: "flex",
           flexDirection: "column",
@@ -27,7 +28,14 @@ export function CleanUI() {
           }}
         >
           {/* Recipient profile */}
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginTop: 6,
+            }}
+          >
             {/* Avatar */}
             <div
               style={{
@@ -48,10 +56,23 @@ export function CleanUI() {
               AR
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: "white", lineHeight: 1.2 }}>
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 700,
+                  color: "white",
+                  lineHeight: 1.2,
+                }}
+              >
                 Anisa Rahmawati
               </div>
-              <div style={{ fontSize: 11.5, color: "rgba(255,255,255,0.75)", marginTop: 2 }}>
+              <div
+                style={{
+                  fontSize: 11.5,
+                  color: "rgba(255,255,255,0.75)",
+                  marginTop: 2,
+                }}
+              >
                 @anisa_r · 23 pesan diterima
               </div>
             </div>
@@ -93,7 +114,9 @@ export function CleanUI() {
                 >
                   <Lock size={12} color="#9aabb8" />
                 </div>
-                <span style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>Anonim</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>
+                  Anonim
+                </span>
               </div>
               <span style={{ fontSize: 11, color: "#aab5be" }}>2 jam lalu</span>
             </div>
@@ -107,7 +130,9 @@ export function CleanUI() {
                 margin: 0,
               }}
             >
-              Kamu itu orangnya selalu bisa bikin semua orang di sekitar kamu ngerasa nyaman dan diterima. Beneran deh, itu salah satu hal paling keren yang bisa dimiliki seseorang 🌿
+              Kamu itu orangnya selalu bisa bikin semua orang di sekitar kamu
+              ngerasa nyaman dan diterima. Beneran deh, itu salah satu hal
+              paling keren yang bisa dimiliki seseorang 🌿
             </p>
           </div>
 
@@ -121,8 +146,12 @@ export function CleanUI() {
               paddingTop: 4,
             }}
           >
-            <span style={{ fontSize: 11, color: "#aab5be" }}>dibagikan via</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}>kepoin.me</span>
+            <span style={{ fontSize: 11, color: "#aab5be" }}>
+              dibagikan via
+            </span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}>
+              kepoin.me
+            </span>
             <span style={{ fontSize: 11, color: "#aab5be" }}>·</span>
             <span
               style={{

@@ -19,9 +19,6 @@ type CardData = {
   publicUrl: string;
 };
 
-/* ─────────────────────────────────────────────
-   TEMPLATE A — Sage Garden (dark forest + gold)
-───────────────────────────────────────────── */
 function CardSageGarden({ d }: { d: CardData }) {
   return (
     <div
@@ -265,9 +262,6 @@ function CardSageGarden({ d }: { d: CardData }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   TEMPLATE B — Warm Ivory (cream + terracotta)
-───────────────────────────────────────────── */
 function CardWarmIvory({ d }: { d: CardData }) {
   return (
     <div
@@ -512,9 +506,6 @@ function CardWarmIvory({ d }: { d: CardData }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   TEMPLATE C — Deep Navy (dark navy + teal glow)
-───────────────────────────────────────────── */
 function CardDeepNavy({ d }: { d: CardData }) {
   return (
     <div
@@ -770,9 +761,6 @@ function CardDeepNavy({ d }: { d: CardData }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   TEMPLATE D — Clean UI (white + teal header)
-───────────────────────────────────────────── */
 function CardCleanUI({ d }: { d: CardData }) {
   return (
     <div
@@ -952,9 +940,6 @@ function CardCleanUI({ d }: { d: CardData }) {
   );
 }
 
-/* ─────────────────────────────────────────────
-   Template definitions
-───────────────────────────────────────────── */
 const TEMPLATES = [
   {
     id: "sage-garden",
@@ -984,13 +969,9 @@ const TEMPLATES = [
 
 type TemplateId = (typeof TEMPLATES)[number]["id"];
 
-/* ─────────────────────────────────────────────
-   Main ShareMessageCard component
-───────────────────────────────────────────── */
 type ShareMessageCardProps = {
   content: string;
   createdAt: string;
-  ownerReply?: string | null;
   paletteIdx: number;
   displayName: string;
   username: string;

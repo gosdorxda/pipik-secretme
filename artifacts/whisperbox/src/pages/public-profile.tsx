@@ -586,7 +586,8 @@ export default function PublicProfilePage() {
                           )}
                         />
                         <p className="text-[10px] text-muted-foreground/70">
-                          Email hanya dipakai untuk notifikasi balasan, tidak ditampilkan ke siapapun.
+                          Email hanya dipakai untuk notifikasi balasan, tidak
+                          ditampilkan ke siapapun.
                         </p>
                       </div>
                     )}
@@ -609,7 +610,8 @@ export default function PublicProfilePage() {
                 </Button>
                 <p className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1">
                   <Lock className="w-3 h-3 shrink-0" />
-                  Pesanmu anonim sepenuhnya — identitasmu tidak akan pernah diketahui penerima
+                  Pesanmu anonim sepenuhnya — identitasmu tidak akan pernah
+                  diketahui penerima
                 </p>
               </form>
             </Form>

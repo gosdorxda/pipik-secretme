@@ -319,7 +319,9 @@ export default function DashboardPage() {
             queryKey: getGetMyMessagesQueryKey(),
           });
           toast({
-            title: next ? "Pesan ditampilkan di profil" : "Pesan disembunyikan dari profil",
+            title: next
+              ? "Pesan ditampilkan di profil"
+              : "Pesan disembunyikan dari profil",
             description: next
               ? "Semua pesan sekarang terlihat di profil publikmu."
               : "Semua pesan sekarang disembunyikan dari profil publikmu.",
