@@ -117,6 +117,8 @@ const clerkAppearance = {
     otpCodeFieldInputs: "!flex !flex-row !gap-2 !justify-center !w-full",
     otpCodeFieldInput:
       "!border-[#e2e8f0] focus:!border-[#86ead4] focus:!ring-2 focus:!ring-[#86ead4]/20 !h-12 !w-12 !text-center !text-lg !rounded-lg !bg-[#f8fafc]",
+    backLink: { color: "#1a443c", fontWeight: "500" },
+    backLinkArrow: { color: "#1a443c" },
   },
 };
 
@@ -131,14 +133,14 @@ function AuthLayout({
   const appName = branding?.appName ?? "kepoin.me";
   return (
     <div
-      className="min-h-screen"
+      className="min-h-screen flex flex-col"
       style={{
         background:
           "linear-gradient(135deg, #f0fdf9 0%, #fafafa 50%, #f5f3ff 100%)",
       }}
     >
       {/* Top navigation */}
-      <div className="flex items-center justify-between px-6 py-4">
+      <div className="flex items-center justify-between px-6 py-4 shrink-0">
         <Link href={basePath || "/"}>
           <div className="flex items-center gap-2 cursor-pointer group">
             <SiteLogoImg className="w-7 h-7 transition-opacity group-hover:opacity-75" />
@@ -172,34 +174,46 @@ function AuthLayout({
         </div>
       </div>
 
-      {/* Card — scrolls naturally with the page, never clipped */}
-      <div className="flex flex-col items-center px-4 pt-2 pb-12">
-        <div
-          className="w-full max-w-[400px] bg-white rounded-2xl p-7 overflow-hidden"
-          style={{
-            boxShadow:
-              "0 4px 6px -1px rgba(0,0,0,0.06), 0 10px 40px -8px rgba(0,0,0,0.1)",
-          }}
-        >
-          {/* Custom header */}
-          <div className="mb-5">
-            <h1 className="text-xl font-bold text-[#0f172a] mb-1">
+      {/* Page body — scrollable, never clips */}
+      <div className="flex flex-col items-center px-4 pt-3 pb-16">
+        <div className="w-full max-w-[420px]">
+          {/* Brand header — above the card, outside any overflow container */}
+          <div className="text-center mb-6">
+            <div
+              className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, #86ead4 0%, #60c4ae 100%)",
+                boxShadow: "0 4px 12px rgba(134,234,212,0.45)",
+              }}
+            >
+              <SiteLogoImg className="w-7 h-7" />
+            </div>
+            <h1 className="text-2xl font-bold text-[#0f172a] tracking-tight">
               {mode === "sign-in"
                 ? "Selamat datang kembali"
                 : "Buat akun gratis"}
             </h1>
-            <p className="text-sm text-[#64748b]">
+            <p className="text-sm text-[#64748b] mt-1.5">
               {mode === "sign-in"
                 ? `Masuk ke akun ${appName.split(".")[0]}-mu`
                 : "Mulai terima pesan anonim sekarang"}
             </p>
           </div>
 
-          {/* Clerk form */}
-          {children}
+          {/* Card — no overflow-hidden so Clerk can grow freely */}
+          <div
+            className="w-full bg-white rounded-2xl px-6 py-6"
+            style={{
+              boxShadow:
+                "0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
+              border: "1px solid rgba(134,234,212,0.25)",
+            }}
+          >
+            {children}
+          </div>
 
-          {/* ToS */}
-          <p className="mt-5 text-center text-[11px] text-[#94a3b8]">
+          {/* ToS — below the card */}
+          <p className="mt-5 text-center text-[11px] text-[#94a3b8] leading-relaxed">
             Dengan {mode === "sign-in" ? "masuk" : "mendaftar"}, kamu menyetujui{" "}
             <Link href="/ketentuan">
               <span className="underline hover:text-[#64748b] cursor-pointer transition-colors">
