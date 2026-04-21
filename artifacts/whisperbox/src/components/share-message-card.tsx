@@ -773,8 +773,201 @@ function CardGlassMorph({ d }: { d: CardData }) {
   );
 }
 
+function CardStory({ d }: { d: CardData }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        background: "white",
+        borderRadius: 20,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        overflow: "hidden",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.1)",
+      }}
+    >
+      <div
+        style={{
+          background: "linear-gradient(135deg, #0e9f8e 0%, #2dd4bf 100%)",
+          padding: "18px 20px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 10,
+        }}
+      >
+        <div
+          style={{
+            background: "rgba(255,255,255,0.18)",
+            border: "1px solid rgba(255,255,255,0.32)",
+            borderRadius: 100,
+            padding: "5px 12px 5px 8px",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.28)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Lock size={9} color="white" />
+          </div>
+          <span style={{ color: "white", fontSize: 12, fontWeight: 700 }}>
+            Anonim
+          </span>
+        </div>
+
+        <svg
+          width="22"
+          height="12"
+          viewBox="0 0 22 12"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 6h17M13 1l7 5-7 5"
+            stroke="rgba(255,255,255,0.75)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+
+        <div
+          style={{
+            background: "rgba(255,255,255,0.18)",
+            border: "1px solid rgba(255,255,255,0.32)",
+            borderRadius: 100,
+            padding: "5px 12px 5px 8px",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            maxWidth: 140,
+          }}
+        >
+          {d.avatarDataUrl ? (
+            <img
+              src={d.avatarDataUrl}
+              alt={d.initials}
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                objectFit: "cover",
+                flexShrink: 0,
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "rgba(255,255,255,0.3)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 7,
+                fontWeight: 800,
+                color: "white",
+                flexShrink: 0,
+              }}
+            >
+              {d.initials}
+            </div>
+          )}
+          <span
+            style={{
+              color: "white",
+              fontSize: 12,
+              fontWeight: 700,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            @{d.username}
+          </span>
+        </div>
+      </div>
+
+      <div style={{ padding: "26px 22px 22px", background: "white" }}>
+        <p
+          style={{
+            fontSize: 18,
+            fontWeight: 600,
+            color: "#111827",
+            lineHeight: 1.65,
+            textAlign: "center",
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+          }}
+        >
+          {d.content}
+        </p>
+      </div>
+
+      <div
+        style={{
+          margin: "0 16px 16px",
+          background: "#f3f6f7",
+          border: "1.5px dashed #cdd5da",
+          borderRadius: 12,
+          padding: "22px 16px",
+          textAlign: "center",
+          minHeight: 64,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span style={{ fontSize: 11, color: "#b0bfc8", fontStyle: "italic" }}>
+          tambah teks di sini…
+        </span>
+      </div>
+
+      <div
+        style={{
+          padding: "12px 20px 24px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 5,
+        }}
+      >
+        <AppLogo
+          src={d.logoDataUrl}
+          appName={d.appName}
+          size={36}
+          color="#0e9f8e"
+        />
+        <div
+          style={{
+            fontSize: 17,
+            fontWeight: 900,
+            color: "#0a1a20",
+            letterSpacing: "-0.02em",
+            lineHeight: 1,
+          }}
+        >
+          {d.appName}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const TEMPLATES = [
   { id: "clean-ui", label: "Bersih", dot: "#0e9f8e", bg: "#f6fbfa" },
+  { id: "story", label: "Story", dot: "#0e9f8e", bg: "#e8faf7" },
   { id: "vibrant-glow", label: "Glow", dot: "#c026d3", bg: "#6c3de8" },
   { id: "dark-slate", label: "Gelap", dot: "#374151", bg: "#111827" },
   { id: "glass-morph", label: "Glass", dot: "#7c3aed", bg: "#0ea5e9" },
@@ -912,7 +1105,7 @@ export function ShareMessageCard({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm flex flex-col gap-3 p-4 pb-6 sm:pb-4"
+        className="w-full flex flex-col gap-3 px-2 pt-4 pb-6 sm:max-w-md sm:px-4 sm:pb-4 sm:mx-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between text-white px-1">
@@ -975,6 +1168,7 @@ export function ShareMessageCard({
 
         <div ref={cardRef}>
           {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
+          {selectedTemplate === "story" && <CardStory d={cardData} />}
           {selectedTemplate === "vibrant-glow" && (
             <CardVibrantGlow d={cardData} />
           )}

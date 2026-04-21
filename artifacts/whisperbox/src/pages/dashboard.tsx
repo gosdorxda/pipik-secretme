@@ -1102,16 +1102,10 @@ export default function DashboardPage() {
                   [
                     { key: "all", label: "Semua", count: counts.all },
                     {
-                      key: "unread",
-                      label: "Belum Dibaca",
-                      count: counts.unread,
-                    },
-                    {
                       key: "unreplied",
                       label: "Belum Dibalas",
                       count: counts.unreplied,
                     },
-                    { key: "public", label: "Publik", count: counts.public },
                   ] as const
                 ).map((tab) => (
                   <button
