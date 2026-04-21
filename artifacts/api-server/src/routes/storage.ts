@@ -137,36 +137,6 @@ router.get("/storage/objects/*path", async (req: Request, res: Response) => {
 
     const response = await objectStorageService.downloadObject(objectFile);
 
-    // If the storage backend returns a redirect (e.g. to a public R2/S3 URL),
-    // proxy the content server-side instead of forwarding the redirect to the
-    // browser. This prevents CORS failures when JavaScript fetch() follows a
-    // cross-origin redirect (e.g. kepoin.me → assets.kepoin.me).
-    if (
-      (response.status === 301 || response.status === 302) &&
-      response.headers.get("location")
-    ) {
-      const redirectUrl = response.headers.get("location")!;
-      const upstream = await fetch(redirectUrl);
-      res.status(200);
-      res.setHeader(
-        "Content-Type",
-        upstream.headers.get("content-type") || "application/octet-stream",
-      );
-      res.setHeader(
-        "Cache-Control",
-        upstream.headers.get("cache-control") || "public, max-age=31536000",
-      );
-      if (upstream.body) {
-        const nodeStream = Readable.fromWeb(
-          upstream.body as ReadableStream<Uint8Array>,
-        );
-        nodeStream.pipe(res);
-      } else {
-        res.end();
-      }
-      return;
-    }
-
     res.status(response.status);
     response.headers.forEach((value, key) => res.setHeader(key, value));
 

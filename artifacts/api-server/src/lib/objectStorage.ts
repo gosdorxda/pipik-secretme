@@ -186,19 +186,20 @@ export class ObjectStorageService {
     const publicUrl = process.env.STORAGE_PUBLIC_URL;
 
     if (publicUrl) {
-      // Preferred: redirect browser directly to public R2/S3 URL.
-      // This avoids proxying large files through the API server.
-      const redirectUrl = `${publicUrl.replace(/\/$/, "")}/${ref.key}`;
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: redirectUrl,
-          "Cache-Control": "public, max-age=31536000",
-        },
+      // Proxy content server-side from the public R2/S3 URL.
+      // We intentionally avoid returning a redirect to the browser because
+      // JavaScript fetch() (used by fetchAsDataUrl for share/QR cards) will
+      // follow cross-origin redirects and get blocked by CORS — R2 does not
+      // set Access-Control-Allow-Origin on assets.kepoin.me.
+      const fileUrl = `${publicUrl.replace(/\/$/, "")}/${ref.key}`;
+      const upstream = await fetch(fileUrl, {
+        signal: AbortSignal.timeout(15_000),
       });
+      if (!upstream.ok) throw new ObjectNotFoundError();
+      return upstream;
     }
 
-    // Fallback: proxy the file through the API server (uses more bandwidth).
+    // Fallback: proxy the file through the API server via S3 SDK.
     const result = await getS3Client().send(
       new GetObjectCommand({
         Bucket: getS3Bucket(),
