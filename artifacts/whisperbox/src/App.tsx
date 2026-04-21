@@ -200,10 +200,14 @@ function AuthLayout({
             </p>
           </div>
 
-          {/* Card — no overflow-hidden so Clerk can grow freely */}
+          {/* Card — overflow:hidden here clips at our 16px radius;
+               internal Clerk overflow is overridden to visible in index.css
+               so only OUR card's corners clip, not internal step containers.
+               No fixed height → card grows freely with Clerk content. */}
           <div
-            className="w-full bg-white rounded-2xl px-6 py-6"
+            className="w-full bg-white px-6 py-6 overflow-hidden"
             style={{
+              borderRadius: 16,
               boxShadow:
                 "0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.08)",
               border: "1px solid rgba(134,234,212,0.25)",

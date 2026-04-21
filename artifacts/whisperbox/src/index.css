@@ -262,6 +262,15 @@ body {
   box-sizing: border-box !important;
 }
 
+/* Remove overflow:hidden from Clerk's auto-generated internal elements.
+   These elements have border-radius + overflow:hidden for step transitions,
+   which clips form content (e.g. the "P" in "Password" label).
+   Our outer card wrapper handles the visual border-radius clipping instead. */
+.cl-signIn-root [class*="cl-internal"],
+.cl-signUp-root [class*="cl-internal"] {
+  overflow: visible !important;
+}
+
 .cl-socialButtonsBlockButton,
 .cl-formButtonPrimary,
 .cl-formFieldInput {
