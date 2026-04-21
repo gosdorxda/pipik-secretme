@@ -23,6 +23,7 @@ function CardSageGarden({ d }: { d: CardData }) {
   return (
     <div
       style={{
+        flex: 1,
         width: "100%",
         background:
           "linear-gradient(160deg, #0b2218 0%, #163824 55%, #0d2e1c 100%)",
@@ -266,6 +267,7 @@ function CardWarmIvory({ d }: { d: CardData }) {
   return (
     <div
       style={{
+        flex: 1,
         width: "100%",
         background: "#f7f0e6",
         borderRadius: 6,
@@ -510,6 +512,7 @@ function CardDeepNavy({ d }: { d: CardData }) {
   return (
     <div
       style={{
+        flex: 1,
         width: "100%",
         background: "#080e1c",
         borderRadius: 6,
@@ -765,6 +768,7 @@ function CardCleanUI({ d }: { d: CardData }) {
   return (
     <div
       style={{
+        flex: 1,
         width: "100%",
         background: "#ffffff",
         borderRadius: 6,
@@ -1166,14 +1170,21 @@ export function ShareMessageCard({
             borderRadius: 6,
             overflow: "hidden",
             width: "100%",
+            minHeight: 460,
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          {selectedTemplate === "sage-garden" && (
-            <CardSageGarden d={cardData} />
-          )}
-          {selectedTemplate === "warm-ivory" && <CardWarmIvory d={cardData} />}
-          {selectedTemplate === "deep-navy" && <CardDeepNavy d={cardData} />}
-          {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
+          <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
+            {selectedTemplate === "sage-garden" && (
+              <CardSageGarden d={cardData} />
+            )}
+            {selectedTemplate === "warm-ivory" && (
+              <CardWarmIvory d={cardData} />
+            )}
+            {selectedTemplate === "deep-navy" && <CardDeepNavy d={cardData} />}
+            {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
+          </div>
         </div>
 
         {/* Action buttons */}
