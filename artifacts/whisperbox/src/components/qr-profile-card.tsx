@@ -2,9 +2,52 @@ import { useRef, useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
-import { Download, Share, X, Lock } from "lucide-react";
+import { Download, Share, X } from "lucide-react";
 import { resolveAvatarUrl, fetchAsDataUrl } from "@/lib/avatar";
 import { useSiteBranding } from "@/hooks/use-branding";
+
+const PALETTES = [
+  {
+    accent: "#86ead4",
+    accentBorder: "rgba(134,234,212,0.45)",
+    stripBg: "rgba(134,234,212,0.12)",
+    avatarBg: "#c6f6ed",
+    avatarColor: "#0d4038",
+    ctaColor: "#0d7062",
+    qrFg: "#0f2e28",
+    qrRing: "rgba(134,234,212,0.30)",
+  },
+  {
+    accent: "#a5b4fc",
+    accentBorder: "rgba(165,180,252,0.45)",
+    stripBg: "rgba(165,180,252,0.12)",
+    avatarBg: "#ddd6fe",
+    avatarColor: "#3730a3",
+    ctaColor: "#4338ca",
+    qrFg: "#1e1b4b",
+    qrRing: "rgba(165,180,252,0.30)",
+  },
+  {
+    accent: "#93c5fd",
+    accentBorder: "rgba(147,197,253,0.45)",
+    stripBg: "rgba(147,197,253,0.12)",
+    avatarBg: "#bfdbfe",
+    avatarColor: "#1e3a5f",
+    ctaColor: "#1d4ed8",
+    qrFg: "#1e3a5f",
+    qrRing: "rgba(147,197,253,0.30)",
+  },
+  {
+    accent: "#fcd34d",
+    accentBorder: "rgba(252,211,77,0.45)",
+    stripBg: "rgba(252,211,77,0.12)",
+    avatarBg: "#fde68a",
+    avatarColor: "#713f12",
+    ctaColor: "#92400e",
+    qrFg: "#451a03",
+    qrRing: "rgba(252,211,77,0.30)",
+  },
+];
 
 type QRProfileCardProps = {
   displayName: string;
@@ -22,15 +65,18 @@ export function QRProfileCard({
   bio,
   avatarUrl,
   totalMessages,
+  paletteIdx = 0,
   onClose,
 }: QRProfileCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const { data: branding } = useSiteBranding();
-  const appName = branding?.appName ?? "kepoin.me";
+  const appName = branding?.appName ?? "vooi.lol";
 
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
+
+  const p = PALETTES[paletteIdx % PALETTES.length];
 
   useEffect(() => {
     const resolved = resolveAvatarUrl(avatarUrl);
@@ -109,11 +155,11 @@ export function QRProfileCard({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xs flex flex-col gap-3 p-4 pb-6 sm:pb-4"
+        className="w-full max-w-xs space-y-3"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
@@ -143,200 +189,295 @@ export function QRProfileCard({
           {/* Teal gradient header */}
           <div
             style={{
-              background: "linear-gradient(135deg, #0e9f8e 0%, #0b8a7a 100%)",
-              padding: "20px 20px 24px",
+              background: "#0f172a",
+              padding: "11px 18px",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            {/* Avatar */}
-            <div
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              {/* Lock icon */}
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke={p.accent}
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 800,
+                  color: p.accent,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.1em",
+                }}
+              >
+                Pesan Anonim
+              </span>
+            </div>
+            <span
               style={{
-                position: "relative",
-                marginBottom: 12,
+                fontSize: 10,
+                color: "rgba(255,255,255,0.40)",
+                fontWeight: 500,
               }}
             >
+              {appName}
+            </span>
+          </div>
+
+          {/* ── Zone 2: Body ── */}
+          <div style={{ padding: "16px 16px 14px" }}>
+            {/* Profile strip — palette-colored, like recipient strip in share-message-card */}
+            <div
+              style={{
+                background: p.stripBg,
+                border: `1.5px solid ${p.accentBorder}`,
+                borderRadius: 6,
+                padding: "12px 15px",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
+            >
+              {/* Avatar */}
               {avatarDataUrl ? (
                 <img
                   src={avatarDataUrl}
                   alt={displayName || username}
                   style={{
-                    width: 72,
-                    height: 72,
+                    width: 44,
+                    height: 44,
                     borderRadius: "50%",
                     objectFit: "cover",
-                    border: "3px solid rgba(255,255,255,0.9)",
-                    display: "block",
+                    flexShrink: 0,
+                    backgroundColor: "#e2e8f0",
+                    border: `2px solid ${p.accent}`,
                   }}
                 />
               ) : (
                 <div
                   style={{
-                    width: 72,
-                    height: 72,
+                    width: 44,
+                    height: 44,
                     borderRadius: "50%",
-                    background: "rgba(255,255,255,0.25)",
-                    border: "3px solid rgba(255,255,255,0.9)",
+                    background: p.avatarBg,
+                    color: p.avatarColor,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 24,
+                    fontSize: 16,
                     fontWeight: 800,
-                    color: "white",
+                    flexShrink: 0,
+                    border: `2px solid ${p.accent}`,
                   }}
                 >
                   {initials}
                 </div>
               )}
-            </div>
 
-            {/* Name + username */}
-            <div style={{ textAlign: "center" }}>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 800,
-                  color: "white",
-                  margin: 0,
-                  lineHeight: 1.3,
-                }}
-              >
-                {displayName || username}
-              </p>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "rgba(255,255,255,0.75)",
-                  margin: "3px 0 0",
-                  fontWeight: 500,
-                }}
-              >
-                @{username}
-              </p>
-              {totalMessages > 0 && (
+              {/* Name + username + bio */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: "#09090b",
+                    margin: 0,
+                    lineHeight: 1.3,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {displayName || username}
+                </p>
                 <p
                   style={{
                     fontSize: 11,
-                    color: "rgba(255,255,255,0.6)",
-                    margin: "4px 0 0",
+                    color: p.ctaColor,
+                    margin: "2px 0 0",
+                    fontWeight: 600,
+                    lineHeight: 1,
                   }}
                 >
-                  {totalMessages.toLocaleString("id-ID")} pesan diterima
+                  @{username}
                 </p>
-              )}
+                {bio && (
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "#71717a",
+                      margin: "4px 0 0",
+                      lineHeight: 1.4,
+                      overflow: "hidden",
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    {bio}
+                  </p>
+                )}
+                {totalMessages > 0 && (
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "#a1a1aa",
+                      margin: "4px 0 0",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {totalMessages.toLocaleString("id-ID")} pesan masuk
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
 
-          {/* White body — QR + CTA */}
-          <div
-            style={{
-              padding: "20px 20px 16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 14,
-            }}
-          >
-            {bio && (
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#556070",
-                  margin: 0,
-                  lineHeight: 1.5,
-                  textAlign: "center",
-                  overflow: "hidden",
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  maxWidth: 220,
-                }}
-              >
-                {bio}
-              </p>
-            )}
-
-            {/* QR Code */}
+            {/* Arrow connector */}
             <div
               style={{
-                background: "#ffffff",
-                padding: 12,
-                borderRadius: 12,
-                border: "1px solid #eef1f4",
-                boxShadow: "0 4px 16px rgba(14,159,142,0.12)",
-              }}
-            >
-              <QRCodeSVG
-                value={publicUrl}
-                size={136}
-                bgColor="#ffffff"
-                fgColor="#0b2e2a"
-                level="M"
-              />
-            </div>
-
-            {/* CTA text */}
-            <div style={{ textAlign: "center" }}>
-              <p
-                style={{
-                  fontSize: 13,
-                  fontWeight: 800,
-                  color: "#0e9f8e",
-                  margin: 0,
-                  lineHeight: 1.3,
-                }}
-              >
-                Kirimi aku pesan anonim!
-              </p>
-              <p style={{ fontSize: 11, color: "#9aabb8", margin: "4px 0 0" }}>
-                Scan QR atau kunjungi
-              </p>
-              <p
-                style={{
-                  fontSize: 11,
-                  color: "#9aabb8",
-                  fontWeight: 600,
-                  margin: "2px 0 0",
-                }}
-              >
-                {publicUrlShort}
-              </p>
-            </div>
-
-            {/* Anonymity badge */}
-            <div
-              style={{
-                display: "inline-flex",
+                display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: 5,
-                background: "#eef9f7",
-                border: "1px solid #c5eae5",
-                borderRadius: 100,
-                padding: "5px 14px",
+                padding: "7px 0",
+                gap: 1,
               }}
             >
-              <Lock size={10} color="#0e9f8e" />
-              <span
+              <div style={{ width: 1.5, height: 10, background: "#cbd5e1" }} />
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none">
+                <path
+                  d="M6 7L1 1.5M6 7L11 1.5"
+                  stroke="#cbd5e1"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            {/* QR + CTA block */}
+            <div
+              style={{
+                background: "#f8fafc",
+                border: `1.5px solid ${p.accentBorder}`,
+                borderRadius: 6,
+                padding: "16px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              {/* QR Code */}
+              <div
                 style={{
-                  fontSize: 10,
-                  fontWeight: 700,
-                  color: "#0e9f8e",
-                  letterSpacing: "0.07em",
-                  textTransform: "uppercase",
+                  background: "#ffffff",
+                  padding: 10,
+                  borderRadius: 6,
+                  border: `1px solid ${p.accentBorder}`,
+                  boxShadow: `0 0 0 4px ${p.qrRing}`,
                 }}
               >
-                100% Anonim
-              </span>
+                <QRCodeSVG
+                  value={publicUrl}
+                  size={128}
+                  bgColor="#ffffff"
+                  fgColor={p.qrFg}
+                  level="M"
+                />
+              </div>
+
+              {/* CTA prominent text */}
+              <div style={{ textAlign: "center" }}>
+                <p
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 800,
+                    color: p.ctaColor,
+                    margin: 0,
+                    lineHeight: 1.3,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  Kirimi aku pesan anonim!
+                </p>
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "#64748b",
+                    margin: "4px 0 0",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  Scan QR atau kunjungi
+                </p>
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "#94a3b8",
+                    fontWeight: 600,
+                    margin: "2px 0 0",
+                  }}
+                >
+                  {publicUrlShort}
+                </p>
+              </div>
+
+              {/* 100% Anonim pill */}
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 5,
+                  background: p.stripBg,
+                  border: `1px solid ${p.accentBorder}`,
+                  borderRadius: 4,
+                  padding: "5px 12px",
+                }}
+              >
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={p.ctaColor}
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: p.ctaColor,
+                    letterSpacing: "0.07em",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  100% Anonim
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Branding footer */}
+          {/* ── Zone 3: Footer branding (light, matching share-message-card) ── */}
           <div
             style={{
-              padding: "10px 18px",
-              background: "#f8fafb",
-              borderTop: "1px solid #eef1f4",
+              padding: "9px 16px",
+              background: "#f9fafb",
+              borderTop: "1px solid #f1f5f9",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
@@ -345,17 +486,24 @@ export function QRProfileCard({
             <p
               style={{
                 fontSize: 10,
-                color: "#aab5be",
+                color: "#94a3b8",
                 margin: 0,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                maxWidth: "55%",
+                maxWidth: "60%",
               }}
             >
               {publicUrlShort}
             </p>
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 5,
+                flexShrink: 0,
+              }}
+            >
               {logoDataUrl ? (
                 <img
                   src={logoDataUrl}
@@ -371,23 +519,17 @@ export function QRProfileCard({
                   xmlns="http://www.w3.org/2000/svg"
                   style={{ borderRadius: 3, flexShrink: 0 }}
                 >
-                  <rect width="160" height="160" rx="36" fill="#0e9f8e" />
+                  <rect width="160" height="160" rx="36" fill="#86ead4" />
                   <path
                     d="M32 44C32 37.373 37.373 32 44 32H116C122.627 32 128 37.373 128 44V92C128 98.627 122.627 104 116 104H90L80 124L70 104H44C37.373 104 32 98.627 32 92V44Z"
-                    fill="white"
+                    fill="#1a443c"
                   />
-                  <circle cx="60" cy="68" r="7" fill="#0e9f8e" />
-                  <circle cx="80" cy="68" r="7" fill="#0e9f8e" />
-                  <circle cx="100" cy="68" r="7" fill="#0e9f8e" />
+                  <circle cx="60" cy="68" r="7" fill="#86ead4" />
+                  <circle cx="80" cy="68" r="7" fill="#86ead4" />
+                  <circle cx="100" cy="68" r="7" fill="#86ead4" />
                 </svg>
               )}
-              <span
-                style={{
-                  fontSize: 11,
-                  fontWeight: 800,
-                  color: "#0e9f8e",
-                }}
-              >
+              <span style={{ fontSize: 10, fontWeight: 700, color: "#334155" }}>
                 {appName}
               </span>
             </div>
