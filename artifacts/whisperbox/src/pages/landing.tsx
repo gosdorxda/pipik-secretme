@@ -159,8 +159,8 @@ function HeroMockup() {
         }}
       >
         <div className="px-5 pt-4 pb-3 border-b border-border flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0">
-            B
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0 overflow-hidden">
+            <img src="/banks/budi.jpg" alt="Budi" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-foreground leading-none">
@@ -268,8 +268,8 @@ function ProfileMockup() {
       }}
     >
       <div className="px-6 pt-7 pb-5 text-center border-b border-border">
-        <div className="w-14 h-14 rounded-full bg-primary mx-auto flex items-center justify-center text-primary-foreground text-lg font-bold mb-3">
-          A
+        <div className="w-14 h-14 rounded-full bg-primary mx-auto flex items-center justify-center text-primary-foreground text-lg font-bold mb-3 overflow-hidden">
+          <img src="/banks/anisa.jpg" alt="Anisa" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display='none'; }} />
         </div>
         <p className="font-bold text-foreground text-sm leading-tight">
           Anisa Rahmawati
