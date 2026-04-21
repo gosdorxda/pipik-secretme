@@ -270,3 +270,19 @@ body {
   width: 100% !important;
   box-sizing: border-box !important;
 }
+
+/* Floating CTA shake animation */
+@keyframes cta-shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  2%   { transform: translateX(-5px) rotate(-2deg); }
+  4%   { transform: translateX(5px) rotate(2deg); }
+  6%   { transform: translateX(-5px) rotate(-2deg); }
+  8%   { transform: translateX(5px) rotate(2deg); }
+  10%  { transform: translateX(-3px) rotate(-1deg); }
+  12%  { transform: translateX(3px) rotate(1deg); }
+  14%  { transform: translateX(0) rotate(0deg); }
+}
+.cta-shake {
+  animation: cta-shake 6s ease-in-out 1.5s infinite;
+  transform-origin: center bottom;
+}

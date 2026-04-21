@@ -746,12 +746,10 @@ export default function PublicProfilePage() {
       {/* Floating CTA bubble — only for guests */}
       {!isSignedIn && !bubbleDismissed && (
         <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm pointer-events-none">
-          <div className="pointer-events-auto flex items-center gap-3 bg-white border border-border rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
+          <div className="cta-shake pointer-events-auto flex items-center gap-3 bg-white border border-border rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
             {/* Logo */}
-            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shrink-0">
-              <span className="text-xs font-extrabold text-primary-foreground">
-                W
-              </span>
+            <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+              <SiteLogoImg className="w-8 h-8" />
             </div>
             {/* Text */}
             <div className="flex-1 min-w-0">
