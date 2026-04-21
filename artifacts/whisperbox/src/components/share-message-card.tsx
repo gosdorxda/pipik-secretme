@@ -17,750 +17,101 @@ type CardData = {
   content: string;
   timeAgo: string;
   publicUrl: string;
+  totalMessages: number;
 };
 
-function CardSageGarden({ d }: { d: CardData }) {
+function Avatar({
+  src,
+  initials,
+  size,
+  bg,
+  color,
+  border,
+}: {
+  src: string | null;
+  initials: string;
+  size: number;
+  bg: string;
+  color: string;
+  border?: string;
+}) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={initials}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          objectFit: "cover",
+          display: "block",
+          border: border ?? "none",
+          flexShrink: 0,
+        }}
+      />
+    );
+  }
   return (
     <div
       style={{
-        flex: 1,
-        width: "100%",
-        background:
-          "linear-gradient(160deg, #0b2218 0%, #163824 55%, #0d2e1c 100%)",
-        borderRadius: 6,
-        padding: "28px 24px 22px",
+        width: size,
+        height: size,
+        borderRadius: "50%",
+        background: bg,
+        color,
         display: "flex",
-        flexDirection: "column",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        position: "relative",
-        overflow: "hidden",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: size * 0.33,
+        fontWeight: 800,
+        flexShrink: 0,
+        border: border ?? "none",
       }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 6,
-          pointerEvents: "none",
-          background:
-            "radial-gradient(ellipse at 50% 0%, rgba(160,210,130,0.09) 0%, transparent 60%)",
-        }}
-      />
-      {/* ZONE 1 — Recipient */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            background: "rgba(255,255,255,0.07)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 100,
-            padding: "4px 12px",
-            marginBottom: 22,
-          }}
-        >
-          <Lock size={10} color="#8aba7e" />
-          <span
-            style={{
-              color: "#8aba7e",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-            }}
-          >
-            PESAN ANONIM
-          </span>
-        </div>
-
-        {/* Avatar */}
-        <div
-          style={{
-            position: "relative",
-            marginBottom: 14,
-            width: 88,
-            height: 88,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: -4,
-              borderRadius: "50%",
-              background:
-                "conic-gradient(#c9a84c 0%, #f0d878 40%, #c9a84c 70%, #a8862e 100%)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: -1,
-              borderRadius: "50%",
-              background: "#0d2e1c",
-            }}
-          />
-          {d.avatarDataUrl ? (
-            <img
-              src={d.avatarDataUrl}
-              alt={d.displayName}
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #2a5438 0%, #1c3d28 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 800,
-                color: "#c9a84c",
-              }}
-            >
-              {d.initials}
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            color: "rgba(165,200,154,0.6)",
-            fontSize: 11,
-            fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            marginBottom: 4,
-          }}
-        >
-          untuk
-        </div>
-        <div
-          style={{
-            color: "#f5e6c4",
-            fontSize: 20,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
-            textAlign: "center",
-            marginBottom: 4,
-          }}
-        >
-          {d.displayName || d.username}
-        </div>
-        <div
-          style={{
-            color: "#6da562",
-            fontSize: 12,
-            fontWeight: 500,
-            marginBottom: 24,
-          }}
-        >
-          @{d.username}
-        </div>
-      </div>
-
-      {/* ZONE 2 — Message */}
-      <div
-        style={{
-          background: "rgba(255,255,255,0.055)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 14,
-          padding: "20px 16px 14px",
-          position: "relative",
-          marginBottom: 20,
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: -20,
-            left: 12,
-            fontSize: 80,
-            lineHeight: 1,
-            color: "#c9a84c",
-            fontFamily: "Georgia, 'Times New Roman', serif",
-            opacity: 0.95,
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
-          "
-        </div>
-        <p
-          style={{
-            color: "#ddd4c0",
-            fontSize: 14,
-            lineHeight: 1.75,
-            margin: "8px 0 0",
-            textAlign: "left",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-          }}
-        >
-          {d.content}
-        </p>
-      </div>
-
-      {/* ZONE 3 — Branding */}
-      <div
-        style={{
-          borderTop: "1px solid rgba(201,168,76,0.2)",
-          paddingTop: 14,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          zIndex: 1,
-          position: "relative",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {d.logoDataUrl ? (
-            <img
-              src={d.logoDataUrl}
-              alt={d.appName}
-              style={{ width: 16, height: 16, borderRadius: 3 }}
-            />
-          ) : null}
-          <span style={{ color: "#c9a84c", fontSize: 13, fontWeight: 800 }}>
-            {d.appName}
-          </span>
-        </div>
-        <span
-          style={{
-            color: "#8aba7e",
-            fontSize: 11,
-            fontWeight: 600,
-            background: "rgba(138,186,126,0.12)",
-            border: "1px solid rgba(138,186,126,0.2)",
-            borderRadius: 100,
-            padding: "4px 11px",
-          }}
-        >
-          Kirimi aku juga ↗
-        </span>
-      </div>
+      {initials}
     </div>
   );
 }
 
-function CardWarmIvory({ d }: { d: CardData }) {
+function AppLogo({
+  src,
+  appName,
+  size = 14,
+  color = "#0e9f8e",
+}: {
+  src: string | null;
+  appName: string;
+  size?: number;
+  color?: string;
+}) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={appName}
+        style={{ width: size, height: size, borderRadius: 3, flexShrink: 0 }}
+      />
+    );
+  }
   return (
-    <div
-      style={{
-        flex: 1,
-        width: "100%",
-        background: "#f7f0e6",
-        borderRadius: 6,
-        padding: "28px 24px 22px",
-        display: "flex",
-        flexDirection: "column",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        position: "relative",
-      }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 160 160"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ borderRadius: 3, flexShrink: 0 }}
     >
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 6,
-          pointerEvents: "none",
-          boxShadow:
-            "inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(180,140,100,0.12)",
-        }}
+      <rect width="160" height="160" rx="36" fill={color} />
+      <path
+        d="M32 44C32 37.373 37.373 32 44 32H116C122.627 32 128 37.373 128 44V92C128 98.627 122.627 104 116 104H90L80 124L70 104H44C37.373 104 32 98.627 32 92V44Z"
+        fill="white"
       />
-      {/* ZONE 1 — Recipient */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            background: "rgba(168,92,58,0.08)",
-            border: "1px solid rgba(168,92,58,0.18)",
-            borderRadius: 100,
-            padding: "4px 12px",
-            marginBottom: 22,
-          }}
-        >
-          <Lock size={10} color="#a85c3a" />
-          <span
-            style={{
-              color: "#a85c3a",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-            }}
-          >
-            PESAN ANONIM
-          </span>
-        </div>
-
-        {/* Avatar */}
-        <div
-          style={{
-            position: "relative",
-            marginBottom: 14,
-            width: 88,
-            height: 88,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: -4,
-              borderRadius: "50%",
-              background: "#c4754f",
-              opacity: 0.9,
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: -1.5,
-              borderRadius: "50%",
-              background: "#f7f0e6",
-            }}
-          />
-          {d.avatarDataUrl ? (
-            <img
-              src={d.avatarDataUrl}
-              alt={d.displayName}
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                objectFit: "cover",
-                display: "block",
-                boxShadow: "0 4px 16px rgba(168,92,58,0.35)",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #c4754f 0%, #a85c3a 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 800,
-                color: "#f7f0e6",
-                boxShadow: "0 4px 16px rgba(168,92,58,0.35)",
-              }}
-            >
-              {d.initials}
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            color: "#b89880",
-            fontSize: 11,
-            fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            marginBottom: 4,
-          }}
-        >
-          untuk
-        </div>
-        <div
-          style={{
-            color: "#1c0e06",
-            fontSize: 20,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
-            textAlign: "center",
-            marginBottom: 4,
-          }}
-        >
-          {d.displayName || d.username}
-        </div>
-        <div
-          style={{
-            color: "#a85c3a",
-            fontSize: 12,
-            fontWeight: 500,
-            marginBottom: 24,
-          }}
-        >
-          @{d.username}
-        </div>
-      </div>
-
-      {/* ZONE 2 — Message */}
-      <div
-        style={{
-          position: "relative",
-          marginBottom: 22,
-          paddingTop: 10,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: -22,
-            left: -6,
-            fontSize: 88,
-            lineHeight: 1,
-            color: "#c4754f",
-            fontFamily: "Georgia, 'Times New Roman', serif",
-            opacity: 0.3,
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
-          "
-        </div>
-        <p
-          style={{
-            color: "#2a1508",
-            fontSize: 14.5,
-            lineHeight: 1.7,
-            margin: 0,
-            position: "relative",
-            zIndex: 1,
-            textAlign: "left",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-          }}
-        >
-          {d.content}
-        </p>
-      </div>
-
-      <div
-        style={{
-          height: 1,
-          background:
-            "linear-gradient(to right, transparent, #c4754f55, transparent)",
-          marginBottom: 14,
-        }}
-      />
-
-      {/* ZONE 3 — Branding */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {d.logoDataUrl ? (
-            <img
-              src={d.logoDataUrl}
-              alt={d.appName}
-              style={{ width: 16, height: 16, borderRadius: 3 }}
-            />
-          ) : null}
-          <span style={{ color: "#a85c3a", fontSize: 13, fontWeight: 800 }}>
-            {d.appName}
-          </span>
-        </div>
-        <span
-          style={{
-            color: "#a85c3a",
-            fontSize: 11,
-            fontWeight: 600,
-            background: "rgba(168,92,58,0.1)",
-            border: "1px solid rgba(168,92,58,0.2)",
-            borderRadius: 100,
-            padding: "4px 11px",
-          }}
-        >
-          Kirimi aku juga ↗
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function CardDeepNavy({ d }: { d: CardData }) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        width: "100%",
-        background: "#080e1c",
-        borderRadius: 6,
-        padding: "28px 24px 22px",
-        display: "flex",
-        flexDirection: "column",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: -60,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 300,
-          height: 300,
-          background:
-            "radial-gradient(circle, rgba(64,220,200,0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }}
-      />
-      {/* ZONE 1 — Recipient */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 5,
-            background: "rgba(64,220,200,0.08)",
-            border: "1px solid rgba(64,220,200,0.2)",
-            borderRadius: 100,
-            padding: "4px 12px",
-            marginBottom: 22,
-          }}
-        >
-          <Lock size={10} color="#40dcc8" />
-          <span
-            style={{
-              color: "#40dcc8",
-              fontSize: 10,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-            }}
-          >
-            PESAN ANONIM
-          </span>
-        </div>
-
-        {/* Avatar */}
-        <div
-          style={{
-            position: "relative",
-            marginBottom: 14,
-            width: 88,
-            height: 88,
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: -6,
-              borderRadius: "50%",
-              background: "rgba(64,220,200,0.2)",
-              filter: "blur(8px)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: -4,
-              borderRadius: "50%",
-              background:
-                "conic-gradient(#40dcc8 0%, #00bfaa 30%, #40dcc8 60%, #7aeee2 90%, #40dcc8 100%)",
-            }}
-          />
-          <div
-            style={{
-              position: "absolute",
-              inset: -1,
-              borderRadius: "50%",
-              background: "#080e1c",
-            }}
-          />
-          {d.avatarDataUrl ? (
-            <img
-              src={d.avatarDataUrl}
-              alt={d.displayName}
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                objectFit: "cover",
-                display: "block",
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                borderRadius: "50%",
-                background: "linear-gradient(135deg, #0d2030 0%, #0a1828 100%)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 28,
-                fontWeight: 800,
-                color: "#40dcc8",
-                border: "1px solid rgba(64,220,200,0.15)",
-              }}
-            >
-              {d.initials}
-            </div>
-          )}
-        </div>
-
-        <div
-          style={{
-            color: "rgba(64,220,200,0.5)",
-            fontSize: 11,
-            fontWeight: 500,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            marginBottom: 4,
-          }}
-        >
-          untuk
-        </div>
-        <div
-          style={{
-            color: "#e8f4f8",
-            fontSize: 20,
-            fontWeight: 700,
-            lineHeight: 1.15,
-            letterSpacing: "-0.02em",
-            textAlign: "center",
-            marginBottom: 4,
-          }}
-        >
-          {d.displayName || d.username}
-        </div>
-        <div
-          style={{
-            color: "#5a9db5",
-            fontSize: 12,
-            fontWeight: 500,
-            marginBottom: 24,
-          }}
-        >
-          @{d.username}
-        </div>
-      </div>
-
-      {/* ZONE 2 — Message */}
-      <div
-        style={{
-          background: "rgba(255,255,255,0.04)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          borderRadius: 14,
-          padding: "20px 16px 14px",
-          position: "relative",
-          marginBottom: 20,
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: -22,
-            left: 12,
-            fontSize: 80,
-            lineHeight: 1,
-            color: "#40dcc8",
-            fontFamily: "Georgia, 'Times New Roman', serif",
-            opacity: 0.7,
-            userSelect: "none",
-            pointerEvents: "none",
-          }}
-        >
-          "
-        </div>
-        <p
-          style={{
-            color: "#b8d8e8",
-            fontSize: 14,
-            lineHeight: 1.75,
-            margin: "8px 0 0",
-            textAlign: "left",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-          }}
-        >
-          {d.content}
-        </p>
-      </div>
-
-      {/* ZONE 3 — Branding */}
-      <div
-        style={{
-          borderTop: "1px solid rgba(64,220,200,0.15)",
-          paddingTop: 14,
-          zIndex: 1,
-          position: "relative",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          {d.logoDataUrl ? (
-            <img
-              src={d.logoDataUrl}
-              alt={d.appName}
-              style={{ width: 16, height: 16, borderRadius: 3 }}
-            />
-          ) : null}
-          <span style={{ color: "#40dcc8", fontSize: 13, fontWeight: 800 }}>
-            {d.appName}
-          </span>
-        </div>
-        <span
-          style={{
-            color: "#40dcc8",
-            fontSize: 11,
-            fontWeight: 600,
-            background: "rgba(64,220,200,0.1)",
-            border: "1px solid rgba(64,220,200,0.2)",
-            borderRadius: 100,
-            padding: "4px 11px",
-          }}
-        >
-          Kirimi aku juga ↗
-        </span>
-      </div>
-    </div>
+      <circle cx="60" cy="68" r="7" fill={color} />
+      <circle cx="80" cy="68" r="7" fill={color} />
+      <circle cx="100" cy="68" r="7" fill={color} />
+    </svg>
   );
 }
 
@@ -768,133 +119,523 @@ function CardCleanUI({ d }: { d: CardData }) {
   return (
     <div
       style={{
-        flex: 1,
         width: "100%",
         background: "#ffffff",
         borderRadius: 6,
-        overflow: "hidden",
         fontFamily: "'DM Sans', system-ui, sans-serif",
         display: "flex",
         flexDirection: "column",
+        overflow: "hidden",
       }}
     >
-      {/* Header */}
       <div
         style={{
-          background: "linear-gradient(135deg, #0e9f8e 0%, #0b8a7a 100%)",
-          padding: "20px 20px 24px",
+          background: "linear-gradient(135deg, #0e9f8e 0%, #0a7c6e 100%)",
+          padding: "20px 20px 22px",
+          display: "flex",
+          alignItems: "center",
+          gap: 13,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-          }}
-        >
-          {d.avatarDataUrl ? (
-            <img
-              src={d.avatarDataUrl}
-              alt={d.displayName}
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "2.5px solid rgba(255,255,255,0.8)",
-                flexShrink: 0,
-              }}
-            />
-          ) : (
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: "50%",
-                background: "rgba(255,255,255,0.25)",
-                border: "2.5px solid rgba(255,255,255,0.8)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 18,
-                fontWeight: 800,
-                color: "white",
-                flexShrink: 0,
-              }}
-            >
-              {d.initials}
-            </div>
-          )}
-          <div>
-            <div
-              style={{
-                fontSize: 15,
-                fontWeight: 700,
-                color: "white",
-                lineHeight: 1.2,
-              }}
-            >
-              {d.displayName || d.username}
-            </div>
-            <div
-              style={{
-                fontSize: 11.5,
-                color: "rgba(255,255,255,0.75)",
-                marginTop: 2,
-              }}
-            >
-              @{d.username}
-            </div>
+        <Avatar
+          src={d.avatarDataUrl}
+          initials={d.initials}
+          size={54}
+          bg="rgba(255,255,255,0.25)"
+          color="white"
+          border="2.5px solid rgba(255,255,255,0.85)"
+        />
+        <div>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: "white",
+              lineHeight: 1.2,
+            }}
+          >
+            {d.displayName || d.username}
+          </div>
+          <div
+            style={{
+              fontSize: 11.5,
+              color: "rgba(255,255,255,0.72)",
+              marginTop: 3,
+            }}
+          >
+            @{d.username}
           </div>
         </div>
       </div>
 
-      {/* Body */}
-      <div style={{ padding: "16px 16px 18px" }}>
-        {/* Message card */}
+      <div style={{ padding: "16px 16px 14px" }}>
         <div
           style={{
-            background: "#f8fafb",
-            border: "1px solid #eef1f4",
+            background: "#f6fbfa",
+            border: "1px solid #d4ede9",
             borderRadius: 12,
-            padding: "14px 14px 16px",
-            marginBottom: 16,
+            padding: "14px 14px 14px",
           }}
         >
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              gap: 7,
               marginBottom: 10,
             }}
           >
-            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-              <div
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: "50%",
-                  background: "#eef1f4",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Lock size={12} color="#9aabb8" />
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>
-                Anonim
-              </span>
+            <div
+              style={{
+                width: 26,
+                height: 26,
+                borderRadius: "50%",
+                background: "#e6f4f2",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Lock size={11} color="#0e9f8e" />
             </div>
-            <span style={{ fontSize: 11, color: "#aab5be" }}>{d.timeAgo}</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#0e9f8e" }}>
+              Anonim
+            </span>
+            <span
+              style={{ fontSize: 11, color: "#aab5be", marginLeft: "auto" }}
+            >
+              {d.timeAgo}
+            </span>
           </div>
 
           <p
             style={{
-              fontSize: 17,
+              fontSize: 16,
               color: "#1a2730",
               lineHeight: 1.65,
+              margin: "0 0 12px",
+              whiteSpace: "pre-wrap",
+              wordBreak: "break-word",
+            }}
+          >
+            {d.content}
+          </p>
+
+          {d.totalMessages > 0 && (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                background: "#e6f4f2",
+                border: "1px solid #b8e2dc",
+                borderRadius: 100,
+                padding: "4px 10px",
+              }}
+            >
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0e9f8e"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "#0a7c6e" }}>
+                {d.totalMessages.toLocaleString("id-ID")} pesan masuk
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: "10px 16px 14px",
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          borderTop: "1px solid #eef1f4",
+        }}
+      >
+        <AppLogo src={d.logoDataUrl} appName={d.appName} size={15} />
+        <span style={{ fontSize: 11, color: "#9aabb8" }}>dibagikan via</span>
+        <span style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}>
+          {d.appName}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function CardVibrantGlow({ d }: { d: CardData }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        background:
+          "linear-gradient(145deg, #6c3de8 0%, #c026d3 55%, #f97316 100%)",
+        borderRadius: 6,
+        padding: "28px 22px 22px",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: -80,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 260,
+          height: 260,
+          background:
+            "radial-gradient(circle, rgba(255,255,255,0.13) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 5,
+            background: "rgba(255,255,255,0.15)",
+            border: "1px solid rgba(255,255,255,0.25)",
+            borderRadius: 100,
+            padding: "4px 12px",
+            marginBottom: 20,
+          }}
+        >
+          <Lock size={10} color="rgba(255,255,255,0.9)" />
+          <span
+            style={{
+              color: "rgba(255,255,255,0.9)",
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+            }}
+          >
+            PESAN ANONIM
+          </span>
+        </div>
+
+        <div
+          style={{
+            position: "relative",
+            width: 80,
+            height: 80,
+            marginBottom: 14,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: -5,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.25)",
+              filter: "blur(6px)",
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: -3,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.4)",
+            }}
+          />
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: "100%",
+              borderRadius: "50%",
+              overflow: "hidden",
+              border: "2px solid white",
+            }}
+          >
+            <Avatar
+              src={d.avatarDataUrl}
+              initials={d.initials}
+              size={80}
+              bg="rgba(255,255,255,0.3)"
+              color="white"
+            />
+          </div>
+        </div>
+
+        <div
+          style={{
+            color: "rgba(255,255,255,0.65)",
+            fontSize: 11,
+            fontWeight: 500,
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            marginBottom: 3,
+          }}
+        >
+          pesan untuk
+        </div>
+        <div
+          style={{
+            color: "white",
+            fontSize: 18,
+            fontWeight: 800,
+            textAlign: "center",
+            lineHeight: 1.2,
+            marginBottom: 3,
+            textShadow: "0 1px 8px rgba(0,0,0,0.2)",
+          }}
+        >
+          {d.displayName || d.username}
+        </div>
+        <div
+          style={{
+            color: "rgba(255,255,255,0.6)",
+            fontSize: 12,
+            fontWeight: 500,
+            marginBottom: 20,
+          }}
+        >
+          @{d.username}
+        </div>
+      </div>
+
+      <div
+        style={{
+          background: "rgba(255,255,255,0.14)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderRadius: 16,
+          padding: "16px 16px 14px",
+          backdropFilter: "blur(8px)",
+          position: "relative",
+          zIndex: 1,
+          marginBottom: 16,
+        }}
+      >
+        <p
+          style={{
+            color: "white",
+            fontSize: 15,
+            lineHeight: 1.7,
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            textShadow: "0 1px 4px rgba(0,0,0,0.15)",
+          }}
+        >
+          {d.content}
+        </p>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {d.totalMessages > 0 ? (
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              background: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: 100,
+              padding: "4px 10px",
+            }}
+          >
+            <svg
+              width="11"
+              height="11"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(255,255,255,0.85)"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.85)",
+              }}
+            >
+              {d.totalMessages.toLocaleString("id-ID")} pesan masuk
+            </span>
+          </div>
+        ) : (
+          <div />
+        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+          <AppLogo
+            src={d.logoDataUrl}
+            appName={d.appName}
+            size={14}
+            color="rgba(255,255,255,0.7)"
+          />
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 800,
+              color: "rgba(255,255,255,0.85)",
+            }}
+          >
+            {d.appName}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CardDarkSlate({ d }: { d: CardData }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        background: "#111827",
+        borderRadius: 6,
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          height: 4,
+          background:
+            "linear-gradient(90deg, #0e9f8e 0%, #06b6d4 50%, #6c3de8 100%)",
+        }}
+      />
+
+      <div style={{ padding: "20px 20px 18px" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 18,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              flexShrink: 0,
+            }}
+          >
+            <Avatar
+              src={d.avatarDataUrl}
+              initials={d.initials}
+              size={46}
+              bg="#1f2937"
+              color="#0e9f8e"
+              border="2px solid #0e9f8e"
+            />
+            <div
+              style={{
+                position: "absolute",
+                bottom: -1,
+                right: -1,
+                width: 14,
+                height: 14,
+                borderRadius: "50%",
+                background: "#111827",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Lock size={8} color="#6b7280" />
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#f9fafb",
+                lineHeight: 1.2,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {d.displayName || d.username}
+            </div>
+            <div style={{ fontSize: 11.5, color: "#6b7280", marginTop: 2 }}>
+              @{d.username}
+            </div>
+          </div>
+          <div
+            style={{
+              flexShrink: 0,
+              background: "#1f2937",
+              border: "1px solid #374151",
+              borderRadius: 6,
+              padding: "4px 9px",
+            }}
+          >
+            <div style={{ fontSize: 9, color: "#6b7280", marginBottom: 1 }}>
+              ANONIM
+            </div>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#0e9f8e" }}>
+              🔒 tersembunyi
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            background: "#1f2937",
+            border: "1px solid #374151",
+            borderRadius: 12,
+            padding: "16px",
+            marginBottom: 14,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 32,
+              color: "#0e9f8e",
+              lineHeight: 0.8,
+              marginBottom: 8,
+              opacity: 0.7,
+              fontFamily: "Georgia, serif",
+            }}
+          >
+            "
+          </div>
+          <p
+            style={{
+              fontSize: 15,
+              color: "#e5e7eb",
+              lineHeight: 1.7,
               margin: 0,
               whiteSpace: "pre-wrap",
               wordBreak: "break-word",
@@ -904,71 +645,287 @@ function CardCleanUI({ d }: { d: CardData }) {
           </p>
         </div>
 
-        {/* Branding footer */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            gap: 6,
-            paddingTop: 4,
+            justifyContent: "space-between",
           }}
         >
-          {d.logoDataUrl ? (
-            <img
+          {d.totalMessages > 0 ? (
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 5,
+                background: "#0e9f8e18",
+                border: "1px solid #0e9f8e30",
+                borderRadius: 100,
+                padding: "4px 10px",
+              }}
+            >
+              <svg
+                width="11"
+                height="11"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#0e9f8e"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span style={{ fontSize: 11, fontWeight: 600, color: "#0e9f8e" }}>
+                {d.totalMessages.toLocaleString("id-ID")} pesan masuk
+              </span>
+            </div>
+          ) : (
+            <div />
+          )}
+          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <AppLogo
               src={d.logoDataUrl}
-              alt={d.appName}
-              style={{ width: 14, height: 14, borderRadius: 3 }}
+              appName={d.appName}
+              size={14}
+              color="#0e9f8e"
             />
-          ) : null}
-          <span style={{ fontSize: 11, color: "#aab5be" }}>dibagikan via</span>
-          <span style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}>
-            {d.appName}
-          </span>
-          <span style={{ fontSize: 11, color: "#aab5be" }}>·</span>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              color: "#0e9f8e",
-              background: "#eef9f7",
-              borderRadius: 100,
-              padding: "2px 8px",
-            }}
-          >
-            Kirimi aku juga ↗
-          </span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: "#6b7280" }}>
+              {d.appName}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
+function CardGlassMorph({ d }: { d: CardData }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        background:
+          "linear-gradient(135deg, #0ea5e9 0%, #7c3aed 50%, #db2777 100%)",
+        borderRadius: 6,
+        padding: "26px 20px 20px",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          bottom: -60,
+          right: -60,
+          width: 220,
+          height: 220,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.07)",
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: -40,
+          left: -40,
+          width: 180,
+          height: 180,
+          borderRadius: "50%",
+          background: "rgba(255,255,255,0.05)",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 18,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            padding: 3,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.3)",
+          }}
+        >
+          <Avatar
+            src={d.avatarDataUrl}
+            initials={d.initials}
+            size={52}
+            bg="rgba(255,255,255,0.25)"
+            color="white"
+          />
+        </div>
+        <div>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: "white",
+              lineHeight: 1.2,
+              textShadow: "0 1px 6px rgba(0,0,0,0.15)",
+            }}
+          >
+            {d.displayName || d.username}
+          </div>
+          <div
+            style={{
+              fontSize: 11.5,
+              color: "rgba(255,255,255,0.68)",
+              marginTop: 2,
+            }}
+          >
+            @{d.username}
+          </div>
+        </div>
+        <div style={{ marginLeft: "auto", flexShrink: 0 }}>
+          <div
+            style={{
+              background: "rgba(255,255,255,0.15)",
+              border: "1px solid rgba(255,255,255,0.25)",
+              borderRadius: 8,
+              padding: "5px 9px",
+              textAlign: "center",
+            }}
+          >
+            <div style={{ fontSize: 9, color: "rgba(255,255,255,0.65)" }}>
+              PESAN MASUK
+            </div>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 800,
+                color: "white",
+                lineHeight: 1.2,
+              }}
+            >
+              {d.totalMessages > 0
+                ? d.totalMessages.toLocaleString("id-ID")
+                : "—"}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          background: "rgba(255,255,255,0.18)",
+          border: "1px solid rgba(255,255,255,0.28)",
+          borderRadius: 16,
+          padding: "16px 16px 14px",
+          backdropFilter: "blur(12px)",
+          position: "relative",
+          zIndex: 1,
+          marginBottom: 16,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            marginBottom: 10,
+          }}
+        >
+          <div
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Lock size={10} color="rgba(255,255,255,0.85)" />
+          </div>
+          <span
+            style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              color: "rgba(255,255,255,0.85)",
+            }}
+          >
+            Seseorang anonim
+          </span>
+          <span
+            style={{
+              fontSize: 10.5,
+              color: "rgba(255,255,255,0.5)",
+              marginLeft: "auto",
+            }}
+          >
+            {d.timeAgo}
+          </span>
+        </div>
+        <p
+          style={{
+            color: "white",
+            fontSize: 15,
+            lineHeight: 1.7,
+            margin: 0,
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            textShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          }}
+        >
+          {d.content}
+        </p>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <AppLogo
+          src={d.logoDataUrl}
+          appName={d.appName}
+          size={14}
+          color="rgba(255,255,255,0.7)"
+        />
+        <span
+          style={{
+            fontSize: 11,
+            color: "rgba(255,255,255,0.65)",
+          }}
+        >
+          dibagikan via
+        </span>
+        <span
+          style={{
+            fontSize: 12,
+            fontWeight: 800,
+            color: "rgba(255,255,255,0.9)",
+          }}
+        >
+          {d.appName}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 const TEMPLATES = [
-  {
-    id: "sage-garden",
-    label: "Hutan",
-    dot: "#8aba7e",
-    bg: "#163824",
-  },
-  {
-    id: "warm-ivory",
-    label: "Krem",
-    dot: "#c4754f",
-    bg: "#f7f0e6",
-  },
-  {
-    id: "deep-navy",
-    label: "Malam",
-    dot: "#40dcc8",
-    bg: "#080e1c",
-  },
-  {
-    id: "clean-ui",
-    label: "Bersih",
-    dot: "#0e9f8e",
-    bg: "#ffffff",
-  },
+  { id: "clean-ui", label: "Bersih", dot: "#0e9f8e", bg: "#f6fbfa" },
+  { id: "vibrant-glow", label: "Glow", dot: "#c026d3", bg: "#6c3de8" },
+  { id: "dark-slate", label: "Gelap", dot: "#374151", bg: "#111827" },
+  { id: "glass-morph", label: "Glass", dot: "#7c3aed", bg: "#0ea5e9" },
 ] as const;
 
 type TemplateId = (typeof TEMPLATES)[number]["id"];
@@ -981,6 +938,7 @@ type ShareMessageCardProps = {
   displayName: string;
   username: string;
   avatarUrl?: string | null;
+  totalMessages?: number;
   onClose: () => void;
 };
 
@@ -990,12 +948,13 @@ export function ShareMessageCard({
   displayName,
   username,
   avatarUrl,
+  totalMessages = 0,
   onClose,
 }: ShareMessageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTemplate, setSelectedTemplate] =
-    useState<TemplateId>("sage-garden");
+    useState<TemplateId>("clean-ui");
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "kepoin.me";
 
@@ -1044,6 +1003,7 @@ export function ShareMessageCard({
     content: truncated,
     timeAgo,
     publicUrl,
+    totalMessages,
   };
 
   const generate = async (): Promise<string | null> => {
@@ -1103,7 +1063,6 @@ export function ShareMessageCard({
         className="w-full max-w-sm flex flex-col gap-3 p-4 pb-6 sm:pb-4"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between text-white px-1">
           <span className="text-sm font-semibold opacity-80">
             Pilih template
@@ -1116,7 +1075,6 @@ export function ShareMessageCard({
           </button>
         </div>
 
-        {/* Template selector pills */}
         <div className="flex gap-2 px-1">
           {TEMPLATES.map((tpl) => {
             const isActive = selectedTemplate === tpl.id;
@@ -1129,7 +1087,7 @@ export function ShareMessageCard({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 6,
+                  gap: 5,
                   padding: "7px 0",
                   borderRadius: 100,
                   border: isActive
@@ -1142,8 +1100,8 @@ export function ShareMessageCard({
               >
                 <span
                   style={{
-                    width: 8,
-                    height: 8,
+                    width: 7,
+                    height: 7,
                     borderRadius: "50%",
                     background: tpl.dot,
                     flexShrink: 0,
@@ -1163,31 +1121,17 @@ export function ShareMessageCard({
           })}
         </div>
 
-        {/* Card preview — this gets captured */}
-        <div
-          ref={cardRef}
-          style={{
-            borderRadius: 6,
-            overflow: "hidden",
-            width: "100%",
-            minHeight: 460,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-            {selectedTemplate === "sage-garden" && (
-              <CardSageGarden d={cardData} />
-            )}
-            {selectedTemplate === "warm-ivory" && (
-              <CardWarmIvory d={cardData} />
-            )}
-            {selectedTemplate === "deep-navy" && <CardDeepNavy d={cardData} />}
-            {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
-          </div>
+        <div ref={cardRef}>
+          {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
+          {selectedTemplate === "vibrant-glow" && (
+            <CardVibrantGlow d={cardData} />
+          )}
+          {selectedTemplate === "dark-slate" && <CardDarkSlate d={cardData} />}
+          {selectedTemplate === "glass-morph" && (
+            <CardGlassMorph d={cardData} />
+          )}
         </div>
 
-        {/* Action buttons */}
         <div className="flex gap-2 px-1">
           <Button
             className="flex-1 gap-2"

@@ -1441,6 +1441,7 @@ export default function DashboardPage() {
               displayName={displayName}
               username={profile.username!}
               avatarUrl={profile.avatarUrl}
+              totalMessages={stats?.totalMessages ?? 0}
               onClose={() => setSharingMessage(null)}
             />
           );
