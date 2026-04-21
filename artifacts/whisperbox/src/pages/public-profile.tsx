@@ -530,24 +530,30 @@ export default function PublicProfilePage() {
                       <button
                         type="button"
                         onClick={() => setEmailSectionOpen(true)}
-                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors group"
+                        className="w-full flex items-center gap-2 text-xs border border-border rounded-md px-3 py-2.5 bg-secondary/40 hover:bg-secondary/70 hover:border-primary/40 transition-all group"
                       >
-                        <Mail className="w-3 h-3 shrink-0" />
-                        <span>
+                        <span className="relative flex items-center shrink-0">
+                          <Mail className="w-3.5 h-3.5 text-primary" />
+                          <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                        </span>
+                        <span className="flex-1 text-left text-muted-foreground">
                           Mau dapat notifikasi jika{" "}
-                          <span className="font-medium">
+                          <span className="font-semibold text-foreground">
                             {profile.displayName || `@${profile.username}`}
                           </span>{" "}
-                          membalas?
+                          membalas pesanmu?
                         </span>
-                        <ChevronRight className="w-3 h-3 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+                        <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0 group-hover:translate-x-0.5 transition-transform" />
                       </button>
                     ) : (
-                      <div className="space-y-2 rounded-md border border-border bg-secondary/30 p-3 animate-in fade-in slide-in-from-top-1 duration-150">
+                      <div className="space-y-2 rounded-md border border-primary/30 bg-primary/5 p-3 animate-in fade-in slide-in-from-top-1 duration-150">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Mail className="w-3 h-3 shrink-0" />
-                            Masukkan emailmu — kami kirim notif saat dibalas
+                          <p className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                            <span className="relative flex items-center shrink-0">
+                              <Mail className="w-3.5 h-3.5 text-primary" />
+                              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                            </span>
+                            Masukkan email untuk notifikasi balasan
                           </p>
                           <button
                             type="button"
@@ -564,21 +570,23 @@ export default function PublicProfilePage() {
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <input
-                                  type="email"
-                                  placeholder="emailkamu@contoh.com"
-                                  autoFocus
-                                  className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-0"
-                                  {...field}
-                                />
+                                <div className="relative">
+                                  <input
+                                    type="email"
+                                    placeholder="emailkamu@contoh.com"
+                                    autoFocus
+                                    className="w-full pl-8 pr-3 py-2 text-sm border border-input rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 focus:ring-offset-0"
+                                    {...field}
+                                  />
+                                  <Mail className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                                </div>
                               </FormControl>
                               <FormMessage className="text-[11px]" />
                             </FormItem>
                           )}
                         />
                         <p className="text-[10px] text-muted-foreground/70">
-                          Email hanya dipakai untuk notifikasi balasan, tidak
-                          ditampilkan ke siapapun.
+                          Email hanya dipakai untuk notifikasi balasan, tidak ditampilkan ke siapapun.
                         </p>
                       </div>
                     )}
@@ -595,10 +603,14 @@ export default function PublicProfilePage() {
                     "Mengirim..."
                   ) : (
                     <>
-                      <Send className="w-3.5 h-3.5" /> Kirim Anonim
+                      <Send className="w-3.5 h-3.5" /> Kirim Pesan
                     </>
                   )}
                 </Button>
+                <p className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1">
+                  <Lock className="w-3 h-3 shrink-0" />
+                  Pesanmu anonim sepenuhnya — identitasmu tidak akan pernah diketahui penerima
+                </p>
               </form>
             </Form>
           </div>
@@ -609,7 +621,7 @@ export default function PublicProfilePage() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                Public Messages
+                Pesan Publik
               </h3>
               <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-md">
                 {publicMessages.length}

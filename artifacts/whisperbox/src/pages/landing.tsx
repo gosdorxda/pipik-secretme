@@ -376,7 +376,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════
             HERO
         ══════════════════════════════════════ */}
-        <section className="relative overflow-hidden bg-white pt-24 pb-28">
+        <section className="relative overflow-hidden bg-white pt-12 pb-16 md:pt-24 md:pb-28">
           <div
             className="absolute inset-0 pointer-events-none overflow-hidden"
             aria-hidden
@@ -405,11 +405,6 @@ export default function LandingPage() {
 
           <div className="relative max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-8 items-center">
             <div className="flex flex-col items-start">
-              <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 bg-secondary border border-border text-muted-foreground">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                12.400+ pengguna aktif di Indonesia
-              </div>
-
               <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-[1.05] text-foreground">
                 Pesan jujur,
                 <br />
@@ -432,20 +427,20 @@ export default function LandingPage() {
                 real-time.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Link href="/sign-up">
+              <div className="flex flex-row gap-3 w-full sm:w-auto">
+                <Link href="/sign-up" className="flex-1 sm:flex-none">
                   <Button
                     size="lg"
-                    className="px-8 text-base font-semibold gap-2"
+                    className="w-full sm:w-auto px-6 text-base font-semibold gap-2"
                   >
                     Buat Link-mu <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <Link href="/sign-in">
+                <Link href="/sign-in" className="flex-1 sm:flex-none">
                   <Button
                     size="lg"
                     variant="outline"
-                    className="px-8 text-base"
+                    className="w-full sm:w-auto px-6 text-base"
                   >
                     Sudah punya akun
                   </Button>

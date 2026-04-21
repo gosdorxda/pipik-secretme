@@ -262,8 +262,8 @@ export default function DashboardPage() {
     navigator.clipboard.writeText(publicUrl);
     setCopied(true);
     toast({
-      title: "Link Copied!",
-      description: "Your public profile link is ready to share.",
+      title: "Link disalin!",
+      description: "Link profil publikmu siap dibagikan.",
     });
     setTimeout(() => setCopied(false), 2000);
   };
@@ -319,10 +319,10 @@ export default function DashboardPage() {
             queryKey: getGetMyMessagesQueryKey(),
           });
           toast({
-            title: next ? "Messages set to public" : "Messages set to private",
+            title: next ? "Pesan ditampilkan di profil" : "Pesan disembunyikan dari profil",
             description: next
-              ? "All messages are now visible on your public profile."
-              : "All messages are now hidden from your public profile.",
+              ? "Semua pesan sekarang terlihat di profil publikmu."
+              : "Semua pesan sekarang disembunyikan dari profil publikmu.",
           });
         },
         onError: () => {
@@ -1065,8 +1065,8 @@ export default function DashboardPage() {
                 aria-checked={isPublic}
                 title={
                   isPublic
-                    ? "Click to make messages private"
-                    : "Click to make messages public"
+                    ? "Klik untuk sembunyikan pesan dari profil"
+                    : "Klik untuk tampilkan pesan di profil"
                 }
               >
                 <span
@@ -1080,11 +1080,11 @@ export default function DashboardPage() {
               >
                 {isPublic ? (
                   <>
-                    <Globe className="w-3 h-3" /> Public
+                    <Globe className="w-3 h-3" /> Publik
                   </>
                 ) : (
                   <>
-                    <Lock className="w-3 h-3" /> Private
+                    <Lock className="w-3 h-3" /> Privat
                   </>
                 )}
               </span>
