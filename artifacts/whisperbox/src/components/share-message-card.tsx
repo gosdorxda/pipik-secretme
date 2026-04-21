@@ -27,7 +27,8 @@ function CardSageGarden({ d }: { d: CardData }) {
     <div
       style={{
         width: "100%",
-        background: "linear-gradient(160deg, #0b2218 0%, #163824 55%, #0d2e1c 100%)",
+        background:
+          "linear-gradient(160deg, #0b2218 0%, #163824 55%, #0d2e1c 100%)",
         borderRadius: 6,
         padding: "28px 24px 22px",
         display: "flex",
@@ -242,9 +243,7 @@ function CardSageGarden({ d }: { d: CardData }) {
               style={{ width: 16, height: 16, borderRadius: 3 }}
             />
           ) : null}
-          <span
-            style={{ color: "#c9a84c", fontSize: 13, fontWeight: 800 }}
-          >
+          <span style={{ color: "#c9a84c", fontSize: 13, fontWeight: 800 }}>
             {d.appName}
           </span>
         </div>
@@ -491,9 +490,7 @@ function CardWarmIvory({ d }: { d: CardData }) {
               style={{ width: 16, height: 16, borderRadius: 3 }}
             />
           ) : null}
-          <span
-            style={{ color: "#a85c3a", fontSize: 13, fontWeight: 800 }}
-          >
+          <span style={{ color: "#a85c3a", fontSize: 13, fontWeight: 800 }}>
             {d.appName}
           </span>
         </div>
@@ -751,9 +748,7 @@ function CardDeepNavy({ d }: { d: CardData }) {
               style={{ width: 16, height: 16, borderRadius: 3 }}
             />
           ) : null}
-          <span
-            style={{ color: "#40dcc8", fontSize: 13, fontWeight: 800 }}
-          >
+          <span style={{ color: "#40dcc8", fontSize: 13, fontWeight: 800 }}>
             {d.appName}
           </span>
         </div>
@@ -882,9 +877,7 @@ function CardCleanUI({ d }: { d: CardData }) {
               marginBottom: 10,
             }}
           >
-            <div
-              style={{ display: "flex", alignItems: "center", gap: 7 }}
-            >
+            <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
               <div
                 style={{
                   width: 26,
@@ -898,15 +891,11 @@ function CardCleanUI({ d }: { d: CardData }) {
               >
                 <Lock size={12} color="#9aabb8" />
               </div>
-              <span
-                style={{ fontSize: 12, fontWeight: 600, color: "#444" }}
-              >
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>
                 Anonim
               </span>
             </div>
-            <span style={{ fontSize: 11, color: "#aab5be" }}>
-              {d.timeAgo}
-            </span>
+            <span style={{ fontSize: 11, color: "#aab5be" }}>{d.timeAgo}</span>
           </div>
 
           <p
@@ -940,12 +929,8 @@ function CardCleanUI({ d }: { d: CardData }) {
               style={{ width: 14, height: 14, borderRadius: 3 }}
             />
           ) : null}
-          <span style={{ fontSize: 11, color: "#aab5be" }}>
-            dibagikan via
-          </span>
-          <span
-            style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}
-          >
+          <span style={{ fontSize: 11, color: "#aab5be" }}>dibagikan via</span>
+          <span style={{ fontSize: 12, fontWeight: 800, color: "#0e9f8e" }}>
             {d.appName}
           </span>
           <span style={{ fontSize: 11, color: "#aab5be" }}>·</span>
@@ -1164,9 +1149,7 @@ export function ShareMessageCard({
                   border: isActive
                     ? `2px solid ${tpl.dot}`
                     : "2px solid rgba(255,255,255,0.15)",
-                  background: isActive
-                    ? tpl.bg
-                    : "rgba(255,255,255,0.08)",
+                  background: isActive ? tpl.bg : "rgba(255,255,255,0.08)",
                   cursor: "pointer",
                   transition: "all 0.15s ease",
                 }}
@@ -1206,15 +1189,9 @@ export function ShareMessageCard({
           {selectedTemplate === "sage-garden" && (
             <CardSageGarden d={cardData} />
           )}
-          {selectedTemplate === "warm-ivory" && (
-            <CardWarmIvory d={cardData} />
-          )}
-          {selectedTemplate === "deep-navy" && (
-            <CardDeepNavy d={cardData} />
-          )}
-          {selectedTemplate === "clean-ui" && (
-            <CardCleanUI d={cardData} />
-          )}
+          {selectedTemplate === "warm-ivory" && <CardWarmIvory d={cardData} />}
+          {selectedTemplate === "deep-navy" && <CardDeepNavy d={cardData} />}
+          {selectedTemplate === "clean-ui" && <CardCleanUI d={cardData} />}
         </div>
 
         {/* Action buttons */}

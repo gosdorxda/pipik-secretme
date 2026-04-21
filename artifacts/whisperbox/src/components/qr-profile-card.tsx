@@ -2,52 +2,9 @@ import { useRef, useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
-import { Download, Share, X } from "lucide-react";
+import { Download, Share, X, Lock } from "lucide-react";
 import { resolveAvatarUrl, fetchAsDataUrl } from "@/lib/avatar";
 import { useSiteBranding } from "@/hooks/use-branding";
-
-const PALETTES = [
-  {
-    accent: "#86ead4",
-    accentBorder: "rgba(134,234,212,0.45)",
-    stripBg: "rgba(134,234,212,0.12)",
-    avatarBg: "#c6f6ed",
-    avatarColor: "#0d4038",
-    ctaColor: "#0d7062",
-    qrFg: "#0f2e28",
-    qrRing: "rgba(134,234,212,0.30)",
-  },
-  {
-    accent: "#a5b4fc",
-    accentBorder: "rgba(165,180,252,0.45)",
-    stripBg: "rgba(165,180,252,0.12)",
-    avatarBg: "#ddd6fe",
-    avatarColor: "#3730a3",
-    ctaColor: "#4338ca",
-    qrFg: "#1e1b4b",
-    qrRing: "rgba(165,180,252,0.30)",
-  },
-  {
-    accent: "#93c5fd",
-    accentBorder: "rgba(147,197,253,0.45)",
-    stripBg: "rgba(147,197,253,0.12)",
-    avatarBg: "#bfdbfe",
-    avatarColor: "#1e3a5f",
-    ctaColor: "#1d4ed8",
-    qrFg: "#1e3a5f",
-    qrRing: "rgba(147,197,253,0.30)",
-  },
-  {
-    accent: "#fcd34d",
-    accentBorder: "rgba(252,211,77,0.45)",
-    stripBg: "rgba(252,211,77,0.12)",
-    avatarBg: "#fde68a",
-    avatarColor: "#713f12",
-    ctaColor: "#92400e",
-    qrFg: "#451a03",
-    qrRing: "rgba(252,211,77,0.30)",
-  },
-];
 
 type QRProfileCardProps = {
   displayName: string;
@@ -65,7 +22,6 @@ export function QRProfileCard({
   bio,
   avatarUrl,
   totalMessages,
-  paletteIdx = 0,
   onClose,
 }: QRProfileCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -75,8 +31,6 @@ export function QRProfileCard({
 
   const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null);
-
-  const p = PALETTES[paletteIdx % PALETTES.length];
 
   useEffect(() => {
     const resolved = resolveAvatarUrl(avatarUrl);
@@ -155,11 +109,11 @@ export function QRProfileCard({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-xs space-y-3"
+        className="w-full max-w-xs flex flex-col gap-3 p-4 pb-6 sm:pb-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal header */}
@@ -175,7 +129,7 @@ export function QRProfileCard({
           </button>
         </div>
 
-        {/* ═══ Card that gets captured ═══ */}
+        {/* Card that gets captured */}
         <div
           ref={cardRef}
           style={{
@@ -186,118 +140,64 @@ export function QRProfileCard({
             fontFamily: "'DM Sans', system-ui, -apple-system, sans-serif",
           }}
         >
-          {/* ── Zone 1: Dark header ── */}
+          {/* Teal gradient header */}
           <div
             style={{
-              background: "#0f172a",
-              padding: "11px 18px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              {/* Lock icon */}
-              <svg
-                width="11"
-                height="11"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={p.accent}
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: p.accent,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                }}
-              >
-                Profil Anonim
-              </span>
-            </div>
-            <span
-              style={{
-                fontSize: 10,
-                color: "rgba(255,255,255,0.40)",
-                fontWeight: 500,
-              }}
-            >
-              {appName}
-            </span>
-          </div>
-
-          {/* ── Zone 2: Profile + QR body ── */}
-          <div
-            style={{
-              background: "#ffffff",
-              padding: "22px 20px 18px",
+              background: "linear-gradient(135deg, #0e9f8e 0%, #0b8a7a 100%)",
+              padding: "20px 20px 24px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: 14,
             }}
           >
             {/* Avatar */}
-            <div style={{ position: "relative", flexShrink: 0 }}>
+            <div
+              style={{
+                position: "relative",
+                marginBottom: 12,
+              }}
+            >
               {avatarDataUrl ? (
                 <img
                   src={avatarDataUrl}
                   alt={displayName || username}
                   style={{
-                    width: 56,
-                    height: 56,
+                    width: 72,
+                    height: 72,
                     borderRadius: "50%",
                     objectFit: "cover",
-                    border: `3px solid ${p.accent}`,
+                    border: "3px solid rgba(255,255,255,0.9)",
                     display: "block",
                   }}
                 />
               ) : (
                 <div
                   style={{
-                    width: 56,
-                    height: 56,
+                    width: 72,
+                    height: 72,
                     borderRadius: "50%",
-                    background: p.avatarBg,
-                    color: p.avatarColor,
+                    background: "rgba(255,255,255,0.25)",
+                    border: "3px solid rgba(255,255,255,0.9)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: 20,
+                    fontSize: 24,
                     fontWeight: 800,
-                    border: `3px solid ${p.accent}`,
+                    color: "white",
                   }}
                 >
                   {initials}
                 </div>
               )}
-              {/* Online / "scan me" pulse ring */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: -4,
-                  borderRadius: "50%",
-                  border: `2px solid ${p.accentBorder}`,
-                  pointerEvents: "none",
-                }}
-              />
             </div>
 
             {/* Name + username */}
             <div style={{ textAlign: "center" }}>
               <p
                 style={{
-                  fontSize: 15,
+                  fontSize: 16,
                   fontWeight: 800,
-                  color: "#09090b",
+                  color: "white",
                   margin: 0,
                   lineHeight: 1.3,
                 }}
@@ -307,59 +207,71 @@ export function QRProfileCard({
               <p
                 style={{
                   fontSize: 12,
-                  color: p.ctaColor,
+                  color: "rgba(255,255,255,0.75)",
                   margin: "3px 0 0",
-                  fontWeight: 600,
+                  fontWeight: 500,
                 }}
               >
                 @{username}
               </p>
-              {bio && (
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "#71717a",
-                    margin: "6px 0 0",
-                    lineHeight: 1.5,
-                    overflow: "hidden",
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    maxWidth: 220,
-                  }}
-                >
-                  {bio}
-                </p>
-              )}
               {totalMessages > 0 && (
                 <p
                   style={{
                     fontSize: 11,
-                    color: "#a1a1aa",
-                    margin: "5px 0 0",
-                    fontWeight: 500,
+                    color: "rgba(255,255,255,0.6)",
+                    margin: "4px 0 0",
                   }}
                 >
-                  {totalMessages.toLocaleString("id-ID")} pesan masuk
+                  {totalMessages.toLocaleString("id-ID")} pesan diterima
                 </p>
               )}
             </div>
+          </div>
+
+          {/* White body — QR + CTA */}
+          <div
+            style={{
+              padding: "20px 20px 16px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 14,
+            }}
+          >
+            {bio && (
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "#556070",
+                  margin: 0,
+                  lineHeight: 1.5,
+                  textAlign: "center",
+                  overflow: "hidden",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  maxWidth: 220,
+                }}
+              >
+                {bio}
+              </p>
+            )}
 
             {/* QR Code */}
             <div
               style={{
                 background: "#ffffff",
                 padding: 12,
-                borderRadius: 6,
-                border: `1px solid ${p.accentBorder}`,
-                boxShadow: `0 0 0 5px ${p.qrRing}`,
+                borderRadius: 12,
+                border: "1px solid #eef1f4",
+                boxShadow: "0 4px 16px rgba(14,159,142,0.12)",
               }}
             >
               <QRCodeSVG
                 value={publicUrl}
                 size={136}
                 bgColor="#ffffff"
-                fgColor={p.qrFg}
+                fgColor="#0b2e2a"
                 level="M"
               />
             </div>
@@ -370,20 +282,20 @@ export function QRProfileCard({
                 style={{
                   fontSize: 13,
                   fontWeight: 800,
-                  color: p.ctaColor,
+                  color: "#0e9f8e",
                   margin: 0,
                   lineHeight: 1.3,
                 }}
               >
                 Kirimi aku pesan anonim!
               </p>
-              <p style={{ fontSize: 11, color: "#71717a", margin: "4px 0 0" }}>
+              <p style={{ fontSize: 11, color: "#9aabb8", margin: "4px 0 0" }}>
                 Scan QR atau kunjungi
               </p>
               <p
                 style={{
                   fontSize: 11,
-                  color: "#94a3b8",
+                  color: "#9aabb8",
                   fontWeight: 600,
                   margin: "2px 0 0",
                 }}
@@ -392,36 +304,24 @@ export function QRProfileCard({
               </p>
             </div>
 
-            {/* 100% Anonim pill */}
+            {/* Anonymity badge */}
             <div
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 5,
-                background: p.stripBg,
-                border: `1px solid ${p.accentBorder}`,
-                borderRadius: 4,
-                padding: "5px 12px",
+                background: "#eef9f7",
+                border: "1px solid #c5eae5",
+                borderRadius: 100,
+                padding: "5px 14px",
               }}
             >
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke={p.ctaColor}
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
+              <Lock size={10} color="#0e9f8e" />
               <span
                 style={{
                   fontSize: 10,
                   fontWeight: 700,
-                  color: p.ctaColor,
+                  color: "#0e9f8e",
                   letterSpacing: "0.07em",
                   textTransform: "uppercase",
                 }}
@@ -431,40 +331,36 @@ export function QRProfileCard({
             </div>
           </div>
 
-          {/* ── Zone 3: Footer branding ── */}
+          {/* Branding footer */}
           <div
             style={{
-              padding: "9px 18px",
-              background: "#0f172a",
+              padding: "10px 18px",
+              background: "#f8fafb",
+              borderTop: "1px solid #eef1f4",
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
             }}
           >
-            <span
+            <p
               style={{
                 fontSize: 10,
-                color: "rgba(255,255,255,0.35)",
-                fontWeight: 500,
+                color: "#aab5be",
+                margin: 0,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
-                maxWidth: 130,
+                maxWidth: "55%",
               }}
             >
               {publicUrlShort}
-            </span>
+            </p>
             <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
               {logoDataUrl ? (
                 <img
                   src={logoDataUrl}
                   alt={appName}
-                  style={{
-                    width: 15,
-                    height: 15,
-                    borderRadius: 3,
-                    flexShrink: 0,
-                  }}
+                  style={{ width: 15, height: 15, borderRadius: 3 }}
                 />
               ) : (
                 <svg
@@ -475,21 +371,21 @@ export function QRProfileCard({
                   xmlns="http://www.w3.org/2000/svg"
                   style={{ borderRadius: 3, flexShrink: 0 }}
                 >
-                  <rect width="160" height="160" rx="36" fill="#86ead4" />
+                  <rect width="160" height="160" rx="36" fill="#0e9f8e" />
                   <path
                     d="M32 44C32 37.373 37.373 32 44 32H116C122.627 32 128 37.373 128 44V92C128 98.627 122.627 104 116 104H90L80 124L70 104H44C37.373 104 32 98.627 32 92V44Z"
-                    fill="#1a443c"
+                    fill="white"
                   />
-                  <circle cx="60" cy="68" r="7" fill="#86ead4" />
-                  <circle cx="80" cy="68" r="7" fill="#86ead4" />
-                  <circle cx="100" cy="68" r="7" fill="#86ead4" />
+                  <circle cx="60" cy="68" r="7" fill="#0e9f8e" />
+                  <circle cx="80" cy="68" r="7" fill="#0e9f8e" />
+                  <circle cx="100" cy="68" r="7" fill="#0e9f8e" />
                 </svg>
               )}
               <span
                 style={{
                   fontSize: 11,
-                  fontWeight: 700,
-                  color: "rgba(255,255,255,0.75)",
+                  fontWeight: 800,
+                  color: "#0e9f8e",
                 }}
               >
                 {appName}
@@ -499,7 +395,7 @@ export function QRProfileCard({
         </div>
 
         {/* Action buttons */}
-        <div className="flex gap-2">
+        <div className="flex gap-2 px-1">
           <Button
             className="flex-1 gap-2"
             variant="secondary"
