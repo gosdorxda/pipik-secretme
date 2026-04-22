@@ -191,15 +191,15 @@ function CardCleanUI({ d }: { d: CardData }) {
                 width: 26,
                 height: 26,
                 borderRadius: "50%",
-                background: "#e6f4f2",
+                background: "#e4e4e7",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              <Lock size={11} color="#0e9f8e" />
+              <Lock size={11} color="#52525b" />
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: "#0e9f8e" }}>
+            <span style={{ fontSize: 12, fontWeight: 600, color: "#52525b" }}>
               Anonim
             </span>
             <span

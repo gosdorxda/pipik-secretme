@@ -609,10 +609,8 @@ export default function PublicProfilePage() {
                     </>
                   )}
                 </Button>
-                <p className="text-center text-[11px] text-muted-foreground/60 flex items-center justify-center gap-1">
-                  <Lock className="w-3 h-3 shrink-0" />
-                  Pesanmu anonim sepenuhnya — identitasmu tidak akan pernah
-                  diketahui penerima
+                <p className="text-center text-[11px] text-muted-foreground/60">
+                  identitasmu tidak akan pernah diketahui penerima
                 </p>
               </form>
             </Form>
