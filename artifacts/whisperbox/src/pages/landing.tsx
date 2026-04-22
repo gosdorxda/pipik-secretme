@@ -159,7 +159,7 @@ function HeroMockup() {
         }}
       >
         <div className="px-5 pt-4 pb-3 border-b border-border flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0 overflow-hidden">
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold shrink-0 overflow-hidden ring-1 ring-border">
             <img
               src="/banks/budi.jpg"
               alt="Budi"
@@ -219,7 +219,7 @@ function HeroMockup() {
               senyum 😊
             </p>
           </div>
-          <div className="px-4 pb-3 pt-1 border-t border-border flex items-center gap-2">
+          <div className="px-4 py-2.5 border-t border-border flex items-center gap-2">
             <button className="flex items-center gap-1.5 text-[11px] font-semibold text-primary bg-primary/8 px-2.5 py-1.5 rounded-lg">
               ↩ Balas
             </button>
@@ -275,7 +275,7 @@ function ProfileMockup() {
       }}
     >
       <div className="px-6 pt-7 pb-5 text-center border-b border-border">
-        <div className="w-14 h-14 rounded-full bg-primary mx-auto flex items-center justify-center text-primary-foreground text-lg font-bold mb-3 overflow-hidden">
+        <div className="w-14 h-14 rounded-full bg-primary mx-auto flex items-center justify-center text-primary-foreground text-lg font-bold mb-3 overflow-hidden ring-1 ring-border">
           <img
             src="/banks/anisa.jpg"
             alt="Anisa"
@@ -538,10 +538,9 @@ export default function LandingPage() {
             <div className="grid md:grid-cols-2 gap-14 items-center">
               {/* Left: copy */}
               <div>
-                <div className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full mb-5 bg-secondary border border-border text-muted-foreground">
-                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
                   Aktivitas Live
-                </div>
+                </p>
                 <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 leading-tight">
                   Ribuan orang sudah
                   <br />
