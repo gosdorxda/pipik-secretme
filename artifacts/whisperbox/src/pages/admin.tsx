@@ -561,10 +561,10 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
             <thead className="bg-secondary/30 text-xs text-muted-foreground">
               <tr>
                 <th className="text-left px-4 py-3 font-medium">Pengguna</th>
+                <th className="text-left px-4 py-3 font-medium">Email</th>
                 <th className="text-left px-4 py-3 font-medium">Poin</th>
                 <th className="text-left px-4 py-3 font-medium">Bergabung</th>
                 <th className="text-center px-4 py-3 font-medium">Premium</th>
-                <th className="text-center px-4 py-3 font-medium">Admin</th>
                 <th className="text-center px-4 py-3 font-medium">Hapus</th>
               </tr>
             </thead>
@@ -605,6 +605,13 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
                           )}
                         </div>
                       </td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground max-w-[200px] truncate">
+                        {u.email ?? (
+                          <span className="italic text-muted-foreground/60">
+                            —
+                          </span>
+                        )}
+                      </td>
                       <td className="px-4 py-3 text-xs font-mono">
                         {u.points}
                       </td>
@@ -621,19 +628,6 @@ function UsersTab({ secret, toast }: { secret: string; toast: any }) {
                         >
                           <span
                             className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isPremium ? "left-[22px]" : "left-[2px]"}`}
-                          />
-                        </button>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <button
-                          onClick={() =>
-                            updateUser(u.id, { isAdmin: !u.isAdmin })
-                          }
-                          disabled={updatingId === u.id}
-                          className={`w-10 h-5 rounded-full transition-colors relative inline-flex items-center ${u.isAdmin ? "bg-blue-500" : "bg-secondary"}`}
-                        >
-                          <span
-                            className={`absolute w-4 h-4 rounded-full bg-white shadow transition-all duration-200 ${u.isAdmin ? "left-[22px]" : "left-[2px]"}`}
                           />
                         </button>
                       </td>

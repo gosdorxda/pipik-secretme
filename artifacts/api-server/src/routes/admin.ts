@@ -113,8 +113,33 @@ router.get("/users", async (req, res) => {
       db.select({ count: count() }).from(usersTable).where(whereClause),
     ]);
 
+    // Fetch emails from Clerk in batch
+    const emailMap = new Map<string, string>();
+    const clerkIds = users.map((u) => u.clerkId).filter(Boolean) as string[];
+    if (clerkIds.length > 0) {
+      try {
+        const clerkRes = await clerkClient.users.getUserList({
+          userId: clerkIds,
+          limit: clerkIds.length,
+        });
+        for (const cu of clerkRes.data) {
+          const primary =
+            cu.emailAddresses.find((e) => e.id === cu.primaryEmailAddressId)
+              ?.emailAddress ?? cu.emailAddresses[0]?.emailAddress;
+          if (primary) emailMap.set(cu.id, primary);
+        }
+      } catch (clerkErr) {
+        req.log.warn({ clerkErr }, "Failed to fetch user emails from Clerk");
+      }
+    }
+
+    const usersWithEmail = users.map((u) => ({
+      ...u,
+      email: u.clerkId ? (emailMap.get(u.clerkId) ?? null) : null,
+    }));
+
     res.json({
-      users,
+      users: usersWithEmail,
       total: totalResult[0]?.count ?? 0,
       page,
       limit,
