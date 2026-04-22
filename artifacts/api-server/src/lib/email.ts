@@ -17,6 +17,30 @@ function interpolate(template: string, vars: Record<string, string>): string {
   );
 }
 
+async function getLogoUrl(): Promise<string> {
+  const stored = await getSetting("site_logo_url", "");
+  if (stored && stored.trim().length > 0) {
+    if (/^https?:\/\//i.test(stored)) return stored;
+    return `${appUrl.replace(/\/$/, "")}${stored.startsWith("/") ? "" : "/"}${stored}`;
+  }
+  return `${appUrl.replace(/\/$/, "")}/logo.svg`;
+}
+
+function renderEmailBrand(logoUrl: string, appName: string): string {
+  return `
+    <table cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="background:#ffffff;border-radius:8px;width:36px;height:36px;text-align:center;vertical-align:middle;box-shadow:0 1px 3px rgba(15,23,42,0.06);">
+          <img src="${logoUrl}" alt="${appName}" width="22" height="22" style="display:inline-block;vertical-align:middle;border:0;outline:none;text-decoration:none;" />
+        </td>
+        <td style="padding-left:10px;vertical-align:middle;">
+          <span style="font-size:15px;font-weight:700;color:#0a2520;letter-spacing:-0.01em;">${appName}</span>
+        </td>
+      </tr>
+    </table>
+  `.trim();
+}
+
 export async function sendNewMessageNotification({
   toEmail,
   toName,
@@ -30,6 +54,8 @@ export async function sendNewMessageNotification({
 
   const dashboardUrl = `${appUrl}/dashboard`;
   const fromName = await getSetting("app_name", "WhisperBox");
+  const logoUrl = await getLogoUrl();
+  const brandHtml = renderEmailBrand(logoUrl, fromName);
 
   const subject = interpolate(
     await getSetting(
@@ -63,23 +89,8 @@ export async function sendNewMessageNotification({
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#86ead4,#5ecfb7);padding:28px 32px;">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td>
-                    <table cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="background:rgba(255,255,255,0.25);border-radius:6px;width:28px;height:28px;text-align:center;vertical-align:middle;">
-                          <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">${fromName.charAt(0).toUpperCase()}</span>
-                        </td>
-                        <td style="padding-left:8px;">
-                          <span style="font-size:15px;font-weight:700;color:#0a2520;">${fromName}</span>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
+            <td style="background:#f4f4f5;border-bottom:1px solid #e5e7eb;padding:22px 32px;">
+              ${brandHtml}
             </td>
           </tr>
 
@@ -158,6 +169,8 @@ export async function sendReplyNotification({
 
   const profileUrl = `${appUrl}/@${ownerUsername}`;
   const fromName = await getSetting("app_name", "WhisperBox");
+  const logoUrl = await getLogoUrl();
+  const brandHtml = renderEmailBrand(logoUrl, fromName);
 
   const subject = interpolate(
     await getSetting(
@@ -191,17 +204,8 @@ export async function sendReplyNotification({
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#86ead4,#5ecfb7);padding:28px 32px;">
-              <table cellpadding="0" cellspacing="0">
-                <tr>
-                  <td style="background:rgba(255,255,255,0.25);border-radius:6px;width:28px;height:28px;text-align:center;vertical-align:middle;">
-                    <span style="font-size:14px;font-weight:800;color:#0a2520;line-height:28px;">${fromName.charAt(0).toUpperCase()}</span>
-                  </td>
-                  <td style="padding-left:8px;">
-                    <span style="font-size:15px;font-weight:700;color:#0a2520;">${fromName}</span>
-                  </td>
-                </tr>
-              </table>
+            <td style="background:#f4f4f5;border-bottom:1px solid #e5e7eb;padding:22px 32px;">
+              ${brandHtml}
             </td>
           </tr>
 
