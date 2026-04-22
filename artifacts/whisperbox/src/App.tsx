@@ -180,10 +180,9 @@ function AuthLayout({
           {/* Brand header — above the card, outside any overflow container */}
           <div className="text-center mb-6">
             <div
-              className="w-12 h-12 rounded-2xl mx-auto mb-3 flex items-center justify-center"
+              className="w-12 h-12 bg-primary/10 rounded-2xl mx-auto mb-3 flex items-center justify-center"
               style={{
-                background: "linear-gradient(135deg, #86ead4 0%, #60c4ae 100%)",
-                boxShadow: "0 4px 12px rgba(134,234,212,0.45)",
+                boxShadow: "0 1px 3px rgba(15,23,42,0.06)",
               }}
             >
               <SiteLogoImg className="w-7 h-7" />

@@ -172,8 +172,8 @@ function CardCleanUI({ d }: { d: CardData }) {
       <div style={{ padding: "16px 16px 14px" }}>
         <div
           style={{
-            background: "#f6fbfa",
-            border: "1px solid #d4ede9",
+            background: "#f4f4f5",
+            border: "1px solid #e4e4e7",
             borderRadius: 12,
             padding: "14px 14px 14px",
           }}
@@ -799,17 +799,17 @@ function CardStory({ d }: { d: CardData }) {
           style={{
             background: "rgba(255,255,255,0.18)",
             border: "1px solid rgba(255,255,255,0.32)",
-            borderRadius: 100,
-            padding: "5px 12px 5px 8px",
+            borderRadius: 12,
+            padding: "7px 14px 7px 10px",
             display: "flex",
             alignItems: "center",
-            gap: 6,
+            gap: 7,
           }}
         >
           <div
             style={{
-              width: 20,
-              height: 20,
+              width: 22,
+              height: 22,
               borderRadius: "50%",
               background: "rgba(255,255,255,0.28)",
               display: "flex",
@@ -817,9 +817,9 @@ function CardStory({ d }: { d: CardData }) {
               justifyContent: "center",
             }}
           >
-            <Lock size={9} color="white" />
+            <Lock size={10} color="white" />
           </div>
-          <span style={{ color: "white", fontSize: 12, fontWeight: 700 }}>
+          <span style={{ color: "white", fontSize: 13, fontWeight: 700 }}>
             Anonim
           </span>
         </div>
@@ -844,12 +844,12 @@ function CardStory({ d }: { d: CardData }) {
           style={{
             background: "rgba(255,255,255,0.18)",
             border: "1px solid rgba(255,255,255,0.32)",
-            borderRadius: 100,
-            padding: "5px 12px 5px 8px",
+            borderRadius: 12,
+            padding: "7px 14px 7px 10px",
             display: "flex",
             alignItems: "center",
-            gap: 6,
-            maxWidth: 140,
+            gap: 7,
+            maxWidth: 150,
           }}
         >
           {d.avatarDataUrl ? (
@@ -857,8 +857,8 @@ function CardStory({ d }: { d: CardData }) {
               src={d.avatarDataUrl}
               alt={d.initials}
               style={{
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 borderRadius: "50%",
                 objectFit: "cover",
                 flexShrink: 0,
@@ -867,14 +867,14 @@ function CardStory({ d }: { d: CardData }) {
           ) : (
             <div
               style={{
-                width: 20,
-                height: 20,
+                width: 22,
+                height: 22,
                 borderRadius: "50%",
                 background: "rgba(255,255,255,0.3)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                fontSize: 7,
+                fontSize: 8,
                 fontWeight: 800,
                 color: "white",
                 flexShrink: 0,
@@ -886,7 +886,7 @@ function CardStory({ d }: { d: CardData }) {
           <span
             style={{
               color: "white",
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: 700,
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -917,44 +917,25 @@ function CardStory({ d }: { d: CardData }) {
 
       <div
         style={{
-          margin: "0 16px 16px",
-          background: "#f3f6f7",
-          border: "1.5px dashed #cdd5da",
-          borderRadius: 12,
-          padding: "22px 16px",
-          textAlign: "center",
-          minHeight: 64,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <span style={{ fontSize: 11, color: "#b0bfc8", fontStyle: "italic" }}>
-          tambah teks di sini…
-        </span>
-      </div>
-
-      <div
-        style={{
-          padding: "12px 20px 24px",
+          padding: "8px 20px 18px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 5,
+          gap: 4,
         }}
       >
         <AppLogo
           src={d.logoDataUrl}
           appName={d.appName}
-          size={36}
+          size={20}
           color="#0e9f8e"
         />
         <div
           style={{
-            fontSize: 17,
-            fontWeight: 900,
+            fontSize: 11,
+            fontWeight: 700,
             color: "#0a1a20",
-            letterSpacing: "-0.02em",
+            letterSpacing: "-0.01em",
             lineHeight: 1,
           }}
         >
