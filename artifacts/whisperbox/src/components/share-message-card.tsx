@@ -1082,11 +1082,11 @@ export function ShareMessageCard({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end sm:items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm overflow-y-auto flex items-start justify-center py-6 sm:py-10"
       onClick={onClose}
     >
       <div
-        className="w-full flex flex-col gap-3 px-2 pt-4 pb-6 sm:max-w-md sm:px-4 sm:pb-4 sm:mx-auto"
+        className="w-full flex flex-col gap-3 px-2 sm:max-w-md sm:px-4 sm:mx-auto my-auto"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between text-white px-1">
