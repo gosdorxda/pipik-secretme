@@ -175,6 +175,70 @@ function StatCard({
   );
 }
 
+function ProfileCompletionAlert({ profile }: { profile: any }) {
+  const dismissKey = `wb_profile_alert_dismissed_${profile?.id ?? "anon"}`;
+  const [dismissed, setDismissed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem(dismissKey) === "1";
+    } catch {
+      return false;
+    }
+  });
+
+  const hasAvatar = !!profile?.avatarUrl;
+  const hasBio = !!profile?.bio && profile.bio.trim().length > 0;
+  const hasSocial = !!(
+    profile?.socialInstagram ||
+    profile?.socialTiktok ||
+    profile?.socialX ||
+    profile?.socialFacebook ||
+    profile?.socialGithub ||
+    profile?.socialLinkedin
+  );
+
+  // Auto-hide jika user sudah pasang foto profil
+  if (hasAvatar) return null;
+  if (dismissed) return null;
+  if (hasAvatar && hasBio && hasSocial) return null;
+
+  const handleDismiss = () => {
+    try {
+      localStorage.setItem(dismissKey, "1");
+    } catch {}
+    setDismissed(true);
+  };
+
+  return (
+    <div className="relative bg-primary/5 border border-primary/20 rounded-md px-4 py-3 sm:px-5 sm:py-4 flex items-start gap-3">
+      <div className="shrink-0 w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center">
+        <Sparkles className="w-4 h-4 text-primary" />
+      </div>
+      <div className="flex-1 min-w-0 pr-6">
+        <p className="text-sm font-semibold text-foreground leading-snug">
+          Buruan lengkapi profilmu biar lebih menarik!
+        </p>
+        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+          Tambah foto, bio, dan link sosial media supaya pengirim makin yakin
+          mengirim pesan untukmu.{" "}
+          <Link href="/settings">
+            <span className="font-semibold text-primary hover:underline cursor-pointer">
+              Lengkapi sekarang →
+            </span>
+          </Link>
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={handleDismiss}
+        aria-label="Tutup"
+        className="absolute top-2.5 right-2.5 w-6 h-6 rounded-md flex items-center justify-center text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-colors"
+      >
+        <X className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+}
+
 export default function DashboardPage() {
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "kepoin.me";
@@ -583,6 +647,8 @@ export default function DashboardPage() {
       </Dialog>
 
       <div className="space-y-6">
+        <ProfileCompletionAlert profile={profile} />
+
         {/* Profile + Link Combined Card */}
         <div className="border border-border bg-white rounded-md overflow-hidden shadow-sm">
           <div className="bg-primary/10 border-b border-primary/20 px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4">
