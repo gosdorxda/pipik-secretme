@@ -610,7 +610,7 @@ export default function PublicProfilePage() {
                   )}
                 </Button>
                 <p className="text-center text-[11px] text-muted-foreground/60">
-                  identitasmu tidak akan pernah diketahui penerima
+                  Identitasmu tidak akan pernah diketahui penerima
                 </p>
               </form>
             </Form>
