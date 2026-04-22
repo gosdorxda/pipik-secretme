@@ -118,8 +118,7 @@ export function Footer({ maxWidth = "max-w-5xl" }: { maxWidth?: string }) {
 
         <div className="border-t border-border mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} {appName}. Dibuat dengan ❤️ di
-            Indonesia.
+            &copy; {new Date().getFullYear()} {appName}.
           </p>
           <a
             href="https://linktr.ee/maskripto"
