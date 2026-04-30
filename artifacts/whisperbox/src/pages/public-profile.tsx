@@ -494,16 +494,6 @@ export default function PublicProfilePage() {
           className="bg-white border border-border rounded-md overflow-hidden"
         >
           <div className="px-6 py-5">
-            <div className="mb-4">
-              <h2 className="text-base font-semibold text-foreground">
-                Kirim pesan ke {profile.displayName || `@${profile.username}`}
-              </h2>
-              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1.5">
-                <Lock className="w-3 h-3 shrink-0" />
-                {profile.displayName || `@${profile.username}`} tidak akan tahu
-                siapa pengirimnya
-              </p>
-            </div>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
