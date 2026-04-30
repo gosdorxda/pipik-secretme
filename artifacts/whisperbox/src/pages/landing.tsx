@@ -248,7 +248,7 @@ function HeroMockup() {
           </span>
         </div>
       </div>
-      <div className="absolute -top-3 -right-3 md:-right-6 bg-white border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1 rounded-xl">
+      <div className="absolute -top-3 right-1 sm:-right-3 md:-right-6 bg-white border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1 rounded-xl">
         <div className="w-5 h-5 bg-primary/10 flex items-center justify-center shrink-0 text-[10px] rounded-md">
           💬
         </div>
@@ -418,8 +418,8 @@ export default function LandingPage() {
           </div>
 
           <div className="relative max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-12 md:gap-8 items-center">
-            <div className="flex flex-col items-start">
-              <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-[1.05] text-foreground">
+            <div className="flex flex-col items-start min-w-0 w-full">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-[1.05] text-foreground">
                 Pesan jujur,
                 <br />
                 <span
@@ -441,8 +441,8 @@ export default function LandingPage() {
                 real-time.
               </p>
 
-              <div className="flex flex-row gap-3 w-full sm:w-auto">
-                <Link href="/sign-up" className="flex-1 sm:flex-none">
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <Link href="/sign-up" className="w-full sm:w-auto">
                   <Button
                     size="lg"
                     className="w-full sm:w-auto px-6 text-base font-semibold gap-2"
@@ -450,7 +450,7 @@ export default function LandingPage() {
                     Buat Link-mu <ArrowRight className="w-4 h-4" />
                   </Button>
                 </Link>
-                <Link href="/sign-in" className="flex-1 sm:flex-none">
+                <Link href="/sign-in" className="w-full sm:w-auto">
                   <Button
                     size="lg"
                     variant="outline"
@@ -467,7 +467,7 @@ export default function LandingPage() {
               </p>
             </div>
 
-            <div className="relative pt-6 pb-6 flex justify-center">
+            <div className="relative pt-6 pb-6 flex justify-center min-w-0 w-full">
               <HeroMockup />
             </div>
           </div>
