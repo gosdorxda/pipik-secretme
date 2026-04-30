@@ -43,6 +43,35 @@ export function buildProfileHtml(opts: {
 
   const html = readIndexHtml();
 
+  const profileJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: profileUrl,
+    name: title,
+    description: description,
+    inLanguage: "id-ID",
+    isPartOf: { "@type": "WebSite", "@id": `${siteBaseUrl}/#website` },
+    mainEntity: {
+      "@type": "Person",
+      name: displayName,
+      alternateName: `@${username}`,
+      url: profileUrl,
+      image: imageUrl,
+      description: bio?.trim() || undefined,
+      interactionStatistic: {
+        "@type": "InteractionCounter",
+        interactionType: { "@type": "WriteAction" },
+        userInteractionCount: messageCount,
+      },
+    },
+  };
+
+  const jsonLdScript = `<script type="application/ld+json">${JSON.stringify(
+    profileJsonLd,
+  )
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")}</script>`;
+
   return html
     .replace(/<title>[^<]*<\/title>/, `<title>${esc(title)}</title>`)
     .replace(
@@ -77,5 +106,10 @@ export function buildProfileHtml(opts: {
     .replace(
       /(<meta\s+name="twitter:image"\s+content=")[^"]*(")/,
       `$1${esc(imageUrl)}$2`,
-    );
+    )
+    .replace(
+      /<link\s+rel="canonical"\s+href="[^"]*"\s*\/>/,
+      `<link rel="canonical" href="${esc(profileUrl)}" />`,
+    )
+    .replace("</head>", `    ${jsonLdScript}\n  </head>`);
 }

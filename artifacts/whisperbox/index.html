@@ -39,6 +39,52 @@
     />
     <meta name="twitter:image" content="https://kepoin.me/opengraph.jpg" />
 
+    <!-- Canonical -->
+    <link rel="canonical" href="https://kepoin.me/" />
+
+    <!-- Sitemap reference -->
+    <link
+      rel="sitemap"
+      type="application/xml"
+      title="Sitemap"
+      href="/sitemap.xml"
+    />
+
+    <!-- Schema.org: WebSite + Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://kepoin.me/#website",
+            "url": "https://kepoin.me/",
+            "name": "kepoin.me",
+            "description": "Platform pesan anonim #1 di Indonesia.",
+            "inLanguage": "id-ID",
+            "publisher": { "@id": "https://kepoin.me/#org" },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://kepoin.me/@{search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://kepoin.me/#org",
+            "name": "kepoin.me",
+            "alternateName": "WhisperBox",
+            "url": "https://kepoin.me/",
+            "logo": "https://kepoin.me/logo.svg",
+            "description": "Platform pesan anonim asal Indonesia. Terima pesan jujur dari siapa saja, balas, dan bagikan."
+          }
+        ]
+      }
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

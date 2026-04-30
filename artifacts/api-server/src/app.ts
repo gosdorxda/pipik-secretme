@@ -8,6 +8,7 @@ import {
 } from "./middlewares/clerkProxyMiddleware";
 import { ipBanMiddleware } from "./middlewares/ipBan";
 import router from "./routes";
+import seoRouter from "./routes/seo";
 import { logger } from "./lib/logger";
 import { pushLog } from "./lib/logBuffer";
 import { db, usersTable, messagesTable } from "@workspace/db";
@@ -71,6 +72,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api", router);
+app.use(seoRouter);
 
 app.get(/^\/@([a-zA-Z0-9_]{3,32})$/, async (req, res) => {
   const username = (req.params as Record<string, string>)[0];
@@ -92,13 +94,18 @@ app.get(/^\/@([a-zA-Z0-9_]{3,32})$/, async (req, res) => {
       .from(messagesTable)
       .where(eq(messagesTable.recipientId, user.id));
 
-    const proto =
-      (req.headers["x-forwarded-proto"] as string | undefined) ?? req.protocol;
-    const host =
-      (req.headers["x-forwarded-host"] as string | undefined) ??
-      (req.headers["host"] as string | undefined) ??
-      "kepoin.me";
-    const siteBaseUrl = `${proto}://${host}`;
+    const siteBaseUrl = process.env.APP_URL
+      ? process.env.APP_URL.replace(/\/+$/, "")
+      : (() => {
+          const proto =
+            (req.headers["x-forwarded-proto"] as string | undefined) ??
+            req.protocol;
+          const host =
+            (req.headers["x-forwarded-host"] as string | undefined) ??
+            (req.headers["host"] as string | undefined) ??
+            "kepoin.me";
+          return `${proto}://${host}`;
+        })();
 
     const html = buildProfileHtml({
       username: user.username,
