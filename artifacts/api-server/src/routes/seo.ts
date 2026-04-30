@@ -40,31 +40,6 @@ const STATIC_PAGES: Array<{
   { path: "/sign-up", changefreq: "yearly", priority: "0.5" },
 ];
 
-router.get("/robots.txt", (req, res) => {
-  const base = getSiteBaseUrl(req);
-  const body = [
-    "User-agent: *",
-    "Allow: /",
-    "",
-    "# Halaman privat / area login",
-    "Disallow: /dashboard",
-    "Disallow: /settings",
-    "Disallow: /upgrade",
-    "Disallow: /referral",
-    "Disallow: /wrapped",
-    "Disallow: /admin",
-    "Disallow: /api/",
-    "Disallow: /sign-in",
-    "Disallow: /sign-up",
-    "",
-    `Sitemap: ${base}/sitemap.xml`,
-    "",
-  ].join("\n");
-  res.set("Content-Type", "text/plain; charset=utf-8");
-  res.set("Cache-Control", "public, max-age=3600");
-  res.send(body);
-});
-
 router.get("/sitemap.xml", async (req, res) => {
   const base = getSiteBaseUrl(req);
   try {

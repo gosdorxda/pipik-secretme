@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Halaman privat / area login
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /upgrade
+Disallow: /referral
+Disallow: /wrapped
+Disallow: /admin
+Disallow: /api/
+Disallow: /sign-in
+Disallow: /sign-up
+
+Sitemap: https://kepoin.me/api/sitemap.xml

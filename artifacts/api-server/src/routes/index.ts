@@ -11,6 +11,7 @@ import configRouter from "./config";
 import redeemRouter from "./redeem";
 import statsRouter from "./stats";
 import ogRouter from "./og";
+import seoRouter from "./seo";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use("/redeem", redeemRouter);
 router.use("/admin", adminRouter);
 router.use(storageRouter);
 router.use("/og", ogRouter);
+router.use(seoRouter);
 
 export default router;
