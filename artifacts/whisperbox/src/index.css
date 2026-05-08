@@ -381,6 +381,7 @@ body {
 
 .page-enter {
   animation: page-enter 0.2s ease-out both;
+  overflow: clip;
 }
 
 /* Page-transition loader dots */
