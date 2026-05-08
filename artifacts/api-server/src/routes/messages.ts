@@ -571,14 +571,20 @@ router.post("/:id/react", async (req, res) => {
   const messageId = req.params.id;
   const { emoji } = req.body as { emoji: unknown };
 
-  if (typeof emoji !== "string" || !(REACTION_EMOJIS as readonly string[]).includes(emoji)) {
+  if (
+    typeof emoji !== "string" ||
+    !(REACTION_EMOJIS as readonly string[]).includes(emoji)
+  ) {
     res.status(400).json({ error: "Invalid emoji" });
     return;
   }
 
   try {
     const message = await db.query.messagesTable.findFirst({
-      where: and(eq(messagesTable.id, messageId), eq(messagesTable.isPublic, true)),
+      where: and(
+        eq(messagesTable.id, messageId),
+        eq(messagesTable.isPublic, true),
+      ),
     });
     if (!message) {
       res.status(404).json({ error: "Message not found" });
@@ -588,21 +594,27 @@ router.post("/:id/react", async (req, res) => {
     const senderIp = getSenderIp(req);
     const ipHash = hashIp(senderIp);
 
-    const existing = await db.query.messageReactionsTable.findFirst({
-      where: and(
-        eq(messageReactionsTable.messageId, messageId),
-        eq(messageReactionsTable.emoji, emoji),
-        eq(messageReactionsTable.ipHash, ipHash),
-      ),
-    });
+    // Atomic toggle: try insert first; if conflict (already reacted), delete instead.
+    const inserted = await db
+      .insert(messageReactionsTable)
+      .values({ messageId, emoji, ipHash })
+      .onConflictDoNothing()
+      .returning({ id: messageReactionsTable.id });
 
     let toggled: "added" | "removed";
-    if (existing) {
-      await db.delete(messageReactionsTable).where(eq(messageReactionsTable.id, existing.id));
-      toggled = "removed";
-    } else {
-      await db.insert(messageReactionsTable).values({ messageId, emoji, ipHash });
+    if (inserted.length > 0) {
       toggled = "added";
+    } else {
+      await db
+        .delete(messageReactionsTable)
+        .where(
+          and(
+            eq(messageReactionsTable.messageId, messageId),
+            eq(messageReactionsTable.emoji, emoji),
+            eq(messageReactionsTable.ipHash, ipHash),
+          ),
+        );
+      toggled = "removed";
     }
 
     const rows = await db
