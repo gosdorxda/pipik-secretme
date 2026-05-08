@@ -164,11 +164,7 @@ function StatCard({
           {label}
         </p>
         <p className="text-xl font-bold leading-none text-foreground">
-          {loading ? (
-            <span className="text-muted-foreground/40">—</span>
-          ) : (
-            value
-          )}
+          {loading ? <Skeleton className="h-5 w-14 mt-0.5" /> : value}
         </p>
       </div>
     </div>
@@ -468,13 +464,74 @@ export default function DashboardPage() {
     return (
       <AppLayout>
         <div className="space-y-6">
-          <Skeleton className="h-36 w-full" />
+          {/* Profile + link card skeleton */}
+          <div className="border border-border bg-white rounded-md overflow-hidden shadow-sm">
+            <div className="bg-primary/10 border-b border-primary/20 px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4">
+              <Skeleton className="w-16 h-16 rounded-full shrink-0" />
+              <div className="flex-1 min-w-0 space-y-2 text-center sm:text-left">
+                <Skeleton className="h-5 w-32 mx-auto sm:mx-0" />
+                <Skeleton className="h-3.5 w-24 mx-auto sm:mx-0" />
+              </div>
+              <div className="flex gap-2 shrink-0">
+                <Skeleton className="h-8 w-20 rounded-md" />
+                <Skeleton className="h-8 w-20 rounded-md" />
+              </div>
+            </div>
+            <div className="px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              <Skeleton className="h-4 w-48 flex-1" />
+              <div className="flex gap-2 w-full sm:w-auto shrink-0">
+                <Skeleton className="h-8 w-24 rounded-md" />
+                <Skeleton className="h-8 w-24 rounded-md" />
+              </div>
+            </div>
+          </div>
+
+          {/* Stat cards skeleton */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} className="h-20 w-full" />
+              <div
+                key={i}
+                className="bg-white border border-border rounded-md px-4 py-3 flex items-center gap-3"
+              >
+                <Skeleton className="w-9 h-9 rounded-md shrink-0" />
+                <div className="flex-1 min-w-0 space-y-2">
+                  <Skeleton className="h-2.5 w-16" />
+                  <Skeleton className="h-5 w-12" />
+                </div>
+              </div>
             ))}
           </div>
-          <Skeleton className="h-[400px] w-full" />
+
+          {/* Inbox skeleton */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Skeleton className="w-4 h-4 rounded" />
+              <Skeleton className="h-4 w-12" />
+            </div>
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="rounded-md border border-border overflow-hidden"
+                >
+                  <div style={{ height: 3 }} className="bg-muted" />
+                  <div className="px-5 pt-3 pb-2 flex items-center gap-2">
+                    <Skeleton className="w-6 h-6 rounded-full" />
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-3 w-20 ml-auto" />
+                  </div>
+                  <div className="px-5 pb-4 space-y-1.5">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-4/5" />
+                  </div>
+                  <div className="border-t border-border px-4 py-2.5 flex gap-2 bg-muted/20">
+                    <Skeleton className="h-7 w-16 rounded-md" />
+                    <Skeleton className="h-7 w-20 rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </AppLayout>
     );

@@ -423,8 +423,99 @@ export default function SettingsPage() {
     return (
       <AppLayout>
         <div className="space-y-6">
-          <Skeleton className="h-10 w-48" />
-          <Skeleton className="h-[400px] w-full" />
+          {/* Profile card skeleton */}
+          <div className="border border-border rounded-xl overflow-hidden">
+            {/* Card header */}
+            <div className="px-4 sm:px-6 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
+              <Skeleton className="w-8 h-8 rounded-md" />
+              <div className="space-y-1.5">
+                <Skeleton className="h-3.5 w-28" />
+                <Skeleton className="h-3 w-44" />
+              </div>
+            </div>
+            <div className="px-4 sm:px-6 pt-6 pb-6 space-y-6">
+              {/* Avatar uploader skeleton */}
+              <div className="flex items-center gap-5">
+                <Skeleton className="w-20 h-20 rounded-full shrink-0" />
+                <div className="space-y-2">
+                  <Skeleton className="h-3.5 w-20" />
+                  <Skeleton className="h-3 w-40" />
+                  <Skeleton className="h-8 w-24 rounded-md" />
+                </div>
+              </div>
+              <div className="border-t border-border" />
+              {/* Username + Display name */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Skeleton className="h-3.5 w-20" />
+                  <Skeleton className="h-9 w-full rounded-md" />
+                  <Skeleton className="h-3 w-48" />
+                </div>
+                <div className="space-y-2">
+                  <Skeleton className="h-3.5 w-28" />
+                  <Skeleton className="h-9 w-full rounded-md" />
+                  <Skeleton className="h-3 w-40" />
+                </div>
+              </div>
+              {/* Bio */}
+              <div className="space-y-2">
+                <Skeleton className="h-3.5 w-8" />
+                <Skeleton className="h-24 w-full rounded-md" />
+                <Skeleton className="h-3 w-52" />
+              </div>
+              <div className="pt-2 border-t border-border">
+                <Skeleton className="h-9 w-32 rounded-md" />
+              </div>
+            </div>
+            {/* Social links section skeleton */}
+            <div className="border-t border-border">
+              <div
+                className="px-4 sm:px-6 py-4 flex items-center gap-3"
+                style={{
+                  background: "rgba(237,233,254,0.35)",
+                  borderBottom: "1px solid rgba(237,233,254,0.8)",
+                }}
+              >
+                <Skeleton className="w-8 h-8 rounded-md" />
+                <div className="space-y-1.5">
+                  <Skeleton className="h-3.5 w-24" />
+                  <Skeleton className="h-3 w-40" />
+                </div>
+              </div>
+              <div className="px-4 sm:px-6 pt-5 pb-6 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="space-y-1.5">
+                      <Skeleton className="h-3 w-20" />
+                      <Skeleton className="h-9 w-full rounded-md" />
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-2 border-t border-border">
+                  <Skeleton className="h-9 w-36 rounded-md" />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Notification cards skeleton */}
+          <div className="border border-border rounded-xl overflow-hidden">
+            <div className="px-4 sm:px-6 py-4 border-b border-border flex items-center gap-3">
+              <Skeleton className="w-8 h-8 rounded-md" />
+              <div className="space-y-1.5">
+                <Skeleton className="h-3.5 w-32" />
+                <Skeleton className="h-3 w-48" />
+              </div>
+            </div>
+            <div className="px-4 sm:px-6 py-5">
+              <div className="flex items-center justify-between gap-6">
+                <div className="space-y-1.5">
+                  <Skeleton className="h-3.5 w-36" />
+                  <Skeleton className="h-3 w-52" />
+                </div>
+                <Skeleton className="h-6 w-11 rounded-full shrink-0" />
+              </div>
+            </div>
+          </div>
         </div>
       </AppLayout>
     );
