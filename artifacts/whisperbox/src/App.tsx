@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import { removeLoader } from "@/lib/loader";
 import {
   ClerkProvider,
@@ -29,19 +29,20 @@ import { SiteLogoImg } from "@/components/site-logo";
 import { BrandName } from "@/components/brand-name";
 
 import LandingPage from "@/pages/landing";
-import DashboardPage from "@/pages/dashboard";
-import SettingsPage from "@/pages/settings";
-import UpgradePage from "@/pages/upgrade";
-import WrappedPage from "@/pages/wrapped";
-import ReferralPage from "@/pages/referral";
-import AdminPage from "@/pages/admin";
 import PublicProfilePage from "@/pages/public-profile";
-import NotFound from "@/pages/not-found";
-import TentangPage from "@/pages/tentang";
-import CaraPakaiPage from "@/pages/cara-pakai";
-import FaqPage from "@/pages/faq";
-import PrivasiPage from "@/pages/privasi";
-import KetentuanPage from "@/pages/ketentuan";
+
+const DashboardPage = lazy(() => import("@/pages/dashboard"));
+const SettingsPage = lazy(() => import("@/pages/settings"));
+const UpgradePage = lazy(() => import("@/pages/upgrade"));
+const WrappedPage = lazy(() => import("@/pages/wrapped"));
+const ReferralPage = lazy(() => import("@/pages/referral"));
+const AdminPage = lazy(() => import("@/pages/admin"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+const TentangPage = lazy(() => import("@/pages/tentang"));
+const CaraPakaiPage = lazy(() => import("@/pages/cara-pakai"));
+const FaqPage = lazy(() => import("@/pages/faq"));
+const PrivasiPage = lazy(() => import("@/pages/privasi"));
+const KetentuanPage = lazy(() => import("@/pages/ketentuan"));
 
 const clerkPubKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 const clerkProxyUrl = import.meta.env.VITE_CLERK_PROXY_URL;
@@ -472,7 +473,7 @@ function ClerkProviderWithRoutes() {
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />
-          <div>
+          <Suspense fallback={null}>
             <Switch>
               <Route path="/" component={HomeRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />
@@ -523,7 +524,7 @@ function ClerkProviderWithRoutes() {
 
               <Route component={NotFound} />
             </Switch>
-          </div>
+          </Suspense>
           <Toaster />
         </TooltipProvider>
       </QueryClientProvider>

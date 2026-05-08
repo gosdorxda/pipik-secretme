@@ -85,12 +85,20 @@
       }
     </script>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts: self-hosted DM Sans (no Google Fonts round-trip) -->
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      href="/fonts/dm-sans-normal-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/dm-sans-normal-latin-ext.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
     />
 
     <!-- App loading screen -->
