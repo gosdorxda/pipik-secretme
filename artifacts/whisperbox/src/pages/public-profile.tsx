@@ -564,17 +564,58 @@ export default function PublicProfilePage() {
             </Link>
           </div>
         </header>
-        <div className="flex-1 flex flex-col items-center p-6 py-10">
-          <div className="w-full max-w-4xl space-y-6">
-            <div className="flex flex-col items-center gap-4 py-6 text-center">
-              <Skeleton className="w-24 h-24 rounded-full shrink-0" />
-              <div className="space-y-2 flex flex-col items-center">
-                <Skeleton className="h-7 w-48" />
-                <Skeleton className="h-4 w-28" />
-                <Skeleton className="h-4 w-64" />
+        <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+          {/* Profile hero skeleton */}
+          <div className="flex flex-col items-center gap-4 py-6 text-center">
+            <Skeleton className="w-24 h-24 rounded-full shrink-0" />
+            <div className="space-y-2 flex flex-col items-center">
+              <Skeleton className="h-7 w-48" />
+              <Skeleton className="h-4 w-28" />
+              <Skeleton className="h-4 w-64" />
+              {/* Social link icons */}
+              <div className="flex items-center justify-center gap-2 pt-1">
+                {[...Array(3)].map((_, i) => (
+                  <Skeleton key={i} className="w-9 h-9 rounded-md" />
+                ))}
               </div>
+              {/* Share button */}
+              <Skeleton className="h-7 w-24 rounded-md" />
             </div>
-            <Skeleton className="h-[220px] w-full" />
+          </div>
+
+          {/* Divider */}
+          <div className="h-px bg-border" />
+
+          {/* Send-message form skeleton */}
+          <div className="bg-white border border-border rounded-md overflow-hidden">
+            <div className="px-6 py-5 space-y-3">
+              <Skeleton className="h-5 w-52" />
+              <Skeleton className="h-[120px] w-full rounded-md" />
+              <Skeleton className="h-9 w-full rounded-md" />
+            </div>
+          </div>
+
+          {/* Public messages skeleton */}
+          <div className="space-y-3">
+            <Skeleton className="h-5 w-36" />
+            {[...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="rounded-md border border-border/50 overflow-hidden"
+              >
+                <div className="h-[3px] bg-muted" />
+                <div className="px-5 pt-3 pb-2 flex items-center gap-2">
+                  <Skeleton className="w-6 h-6 rounded-full shrink-0" />
+                  <Skeleton className="h-3 w-12" />
+                  <Skeleton className="h-3 w-16 ml-auto" />
+                </div>
+                <div className="px-5 pb-4 space-y-1.5">
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                  {i === 0 && <Skeleton className="h-4 w-3/4" />}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
