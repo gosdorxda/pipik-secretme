@@ -1,4 +1,4 @@
-import { useState, useCallback, Fragment, useEffect } from "react";
+import { useState, useCallback, Fragment, useEffect, useRef } from "react";
 import { BannerAd } from "@/components/banner-ad";
 import { useParams, Link } from "wouter";
 import { useForm } from "react-hook-form";
@@ -129,10 +129,23 @@ function MessageCard({
     const stored = loadLocalReacted();
     return stored[msg.id] ?? null;
   });
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setReactions((msg.reactions as Record<string, number>) ?? {});
   }, [msg.reactions]);
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setPickerOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [pickerOpen]);
 
   const handleReact = (emoji: string) => {
     if (reactMutation.isPending) return;
@@ -239,31 +252,67 @@ function MessageCard({
 
       {/* Footer: reactions kiri, share kanan */}
       <div className="px-4 pb-3 flex items-center justify-between gap-2">
-        {/* Reaction bar — kecil & semi-samar */}
-        <div className="flex items-center gap-0.5">
-          {REACTION_EMOJIS.map((emoji) => {
-            const cnt = reactions[emoji] ?? 0;
-            const active = reacted === emoji;
-            return (
+        {/* Reaction area */}
+        <div className="flex items-center gap-1 min-w-0">
+          {/* Emoji pills yang sudah ada reaksinya */}
+          {REACTION_EMOJIS.filter((e) => (reactions[e] ?? 0) > 0).map(
+            (emoji) => (
               <button
                 key={emoji}
                 onClick={() => handleReact(emoji)}
                 className={[
-                  "inline-flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full transition-all duration-150 select-none",
-                  active
-                    ? "bg-primary/15 opacity-100 scale-110"
-                    : "opacity-40 hover:opacity-80 hover:bg-black/5",
+                  "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-sm transition-all duration-150 select-none",
+                  reacted === emoji
+                    ? "bg-primary/15 opacity-100"
+                    : "bg-black/5 opacity-60 hover:opacity-90 hover:bg-black/10",
                 ].join(" ")}
               >
-                <span className="text-sm leading-none">{emoji}</span>
-                {cnt > 0 && (
-                  <span className="text-[10px] font-medium text-foreground/60">
-                    {cnt}
-                  </span>
-                )}
+                <span className="leading-none">{emoji}</span>
+                <span className="text-[10px] font-medium text-foreground/60">
+                  {reactions[emoji]}
+                </span>
               </button>
-            );
-          })}
+            ),
+          )}
+
+          {/* Trigger tombol untuk buka picker */}
+          <div className="relative" ref={pickerRef}>
+            <button
+              onClick={() => setPickerOpen((p) => !p)}
+              title="Tambah reaksi"
+              className={[
+                "text-base leading-none px-1 py-0.5 rounded-full transition-all duration-150 select-none",
+                pickerOpen
+                  ? "opacity-100 bg-black/8"
+                  : "opacity-25 hover:opacity-60",
+              ].join(" ")}
+            >
+              {reacted ?? "☺"}
+            </button>
+
+            {/* Tooltip picker */}
+            {pickerOpen && (
+              <div className="absolute bottom-full left-0 mb-2 bg-white border border-border/50 rounded-2xl shadow-xl px-1.5 py-1 flex items-center gap-0.5 z-20 whitespace-nowrap">
+                {/* Panah kecil */}
+                <span className="absolute -bottom-1.5 left-3 w-3 h-3 bg-white border-b border-r border-border/50 rotate-45" />
+                {REACTION_EMOJIS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => {
+                      handleReact(emoji);
+                      setPickerOpen(false);
+                    }}
+                    className={[
+                      "text-xl px-2 py-1 rounded-xl transition-all duration-100 hover:scale-125 hover:bg-black/5 select-none",
+                      reacted === emoji ? "bg-primary/10 scale-110" : "",
+                    ].join(" ")}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Share button */}
