@@ -73,6 +73,9 @@ export default function ReferralPage() {
   const referralUpgradePoints = appConfig?.referralUpgradePoints ?? 100;
   const linkOpensPointsPer1000 = appConfig?.linkOpensPointsPer1000 ?? 1;
 
+  const [showAllFriends, setShowAllFriends] = useState(false);
+  const [showAllRedeem, setShowAllRedeem] = useState(false);
+
   const { data: referral, isLoading } = useGetMyReferralStats();
   const { data: profile } = useGetMyProfile();
   const { data: redeemData, isLoading: loadingRequests } =
@@ -565,49 +568,74 @@ export default function ReferralPage() {
               ))}
             </div>
           ) : referral?.referrals && referral.referrals.length > 0 ? (
-            <div className="divide-y divide-border">
-              {referral.referrals.map((r: any, i: number) => (
-                <div key={i} className="px-5 py-3.5 flex items-center gap-3">
-                  <div className="relative shrink-0">
-                    <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
-                      {(r.displayName ?? r.username).charAt(0).toUpperCase()}
-                    </div>
-                    {r.isPremium && (
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white">
-                        <Crown className="w-2 h-2 text-white" />
+            (() => {
+              const allFriends = referral.referrals as any[];
+              const visibleFriends = showAllFriends
+                ? allFriends
+                : allFriends.slice(0, 5);
+              return (
+                <div className="divide-y divide-border">
+                  {visibleFriends.map((r: any, i: number) => (
+                    <div
+                      key={i}
+                      className="px-5 py-3.5 flex items-center gap-3"
+                    >
+                      <div className="relative shrink-0">
+                        <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold">
+                          {(r.displayName ?? r.username)
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                        {r.isPremium && (
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white">
+                            <Crown className="w-2 h-2 text-white" />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold leading-none">
-                      {r.displayName ?? `@${r.username}`}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-0.5">
-                      @{r.username} · bergabung{" "}
-                      {formatDistanceToNow(new Date(r.joinedAt), {
-                        addSuffix: true,
-                        locale: idLocale,
-                      })}
-                    </p>
-                  </div>
-                  <div className="shrink-0 flex flex-col items-end gap-1">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md">
-                      <Star className="w-2.5 h-2.5" /> +{r.points}
-                    </span>
-                    {r.upgradeBonusAwarded && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
-                        <Crown className="w-2.5 h-2.5" /> +100
-                      </span>
-                    )}
-                    {r.isPremium && !r.upgradeBonusAwarded && (
-                      <span className="text-[10px] text-muted-foreground">
-                        +100 segera
-                      </span>
-                    )}
-                  </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold leading-none">
+                          {r.displayName ?? `@${r.username}`}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          @{r.username} · bergabung{" "}
+                          {formatDistanceToNow(new Date(r.joinedAt), {
+                            addSuffix: true,
+                            locale: idLocale,
+                          })}
+                        </p>
+                      </div>
+                      <div className="shrink-0 flex flex-col items-end gap-1">
+                        <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md">
+                          <Star className="w-2.5 h-2.5" /> +{r.points}
+                        </span>
+                        {r.upgradeBonusAwarded && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
+                            <Crown className="w-2.5 h-2.5" /> +100
+                          </span>
+                        )}
+                        {r.isPremium && !r.upgradeBonusAwarded && (
+                          <span className="text-[10px] text-muted-foreground">
+                            +100 segera
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  {allFriends.length > 5 && (
+                    <div className="px-5 py-3 flex justify-center">
+                      <button
+                        onClick={() => setShowAllFriends((v) => !v)}
+                        className="text-xs font-semibold text-primary hover:underline"
+                      >
+                        {showAllFriends
+                          ? "Sembunyikan"
+                          : `Lihat semua ${allFriends.length} teman`}
+                      </button>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
+              );
+            })()
           ) : (
             <div className="px-5 py-10 text-center">
               <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
@@ -749,7 +777,10 @@ export default function ReferralPage() {
               </div>
             ) : (
               <div className="divide-y divide-border">
-                {redeemRequests.map((r: any) => {
+                {(showAllRedeem
+                  ? redeemRequests
+                  : redeemRequests.slice(0, 5)
+                ).map((r: any) => {
                   const s = STATUS_LABEL[r.status] ?? STATUS_LABEL.pending;
                   return (
                     <div
@@ -788,6 +819,18 @@ export default function ReferralPage() {
                     </div>
                   );
                 })}
+                {redeemRequests.length > 5 && (
+                  <div className="px-5 py-3 flex justify-center">
+                    <button
+                      onClick={() => setShowAllRedeem((v) => !v)}
+                      className="text-xs font-semibold text-primary hover:underline"
+                    >
+                      {showAllRedeem
+                        ? "Sembunyikan"
+                        : `Lihat semua ${redeemRequests.length} riwayat`}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

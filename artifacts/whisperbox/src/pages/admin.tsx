@@ -1392,6 +1392,8 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
   const [dirty, setDirty] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
   const [faviconUploading, setFaviconUploading] = useState(false);
+  const [logoTs, setLogoTs] = useState(0);
+  const [faviconTs, setFaviconTs] = useState(0);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -1512,8 +1514,14 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
     try {
       const storedPath = await adminUploadBrandingImage(file, secret, endpoint);
       if (!storedPath) throw new Error("Upload gagal");
+      const ts = Date.now();
+      if (endpoint === "upload-logo") setLogoTs(ts);
+      else setFaviconTs(ts);
       setSettings((prev) => ({ ...prev, [settingKey]: storedPath }));
-      queryClient.invalidateQueries({ queryKey: ["site-branding"] });
+      queryClient.invalidateQueries({
+        queryKey: ["site-branding"],
+        refetchType: "all",
+      });
       toast({ description: `${label} berhasil diupload.` });
     } catch (e: any) {
       toast({ description: e.message, variant: "destructive" });
@@ -1543,7 +1551,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
               <div className="w-14 h-14 rounded-md border border-border bg-secondary/20 flex items-center justify-center shrink-0 overflow-hidden">
                 {resolveSettingUrl(settings.site_logo_url) ? (
                   <img
-                    src={resolveSettingUrl(settings.site_logo_url)}
+                    src={`${resolveSettingUrl(settings.site_logo_url)}${logoTs ? `?t=${logoTs}` : ""}`}
                     alt="Logo"
                     className="w-full h-full object-contain"
                   />
@@ -1596,7 +1604,7 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
               <div className="w-14 h-14 rounded-md border border-border bg-secondary/20 flex items-center justify-center shrink-0 overflow-hidden">
                 {resolveSettingUrl(settings.site_favicon_url) ? (
                   <img
-                    src={resolveSettingUrl(settings.site_favicon_url)}
+                    src={`${resolveSettingUrl(settings.site_favicon_url)}${faviconTs ? `?t=${faviconTs}` : ""}`}
                     alt="Favicon"
                     className="w-full h-full object-contain"
                   />
