@@ -1,13 +1,14 @@
 import { Link } from "wouter";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, X, Crown } from "lucide-react";
+import { ArrowRight, Check, X, Crown, Moon, Sun } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
 import { useAppConfig } from "@/hooks/use-app-config";
+import { useTheme } from "@/hooks/use-theme";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -348,6 +349,7 @@ export default function LandingPage() {
   const { isSignedIn } = useAuth();
   const { data: appConfig } = useAppConfig();
   const premiumPrice = appConfig?.premiumPrice ?? 49900;
+  const { theme, toggleTheme } = useTheme();
 
   const profileRef = useReveal();
   const actRef = useReveal();
@@ -364,6 +366,19 @@ export default function LandingPage() {
             <BrandName name={appName} className="font-bold tracking-tight" />
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Mode terang" : "Mode malam"}
+            >
+              {theme === "dark" ? (
+                <Sun className="w-3.5 h-3.5" />
+              ) : (
+                <Moon className="w-3.5 h-3.5" />
+              )}
+            </Button>
             {isSignedIn ? (
               <Link href="/dashboard">
                 <Button size="sm">Buka Dashboard</Button>
