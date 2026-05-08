@@ -300,8 +300,8 @@ export default function UpgradePage() {
     return (
       <AppLayout>
         <div className="max-w-md mx-auto py-12 flex flex-col items-center text-center gap-6">
-          <div className="w-20 h-20 rounded-full bg-amber-100 dark:bg-amber-950/40 border-2 border-amber-200 dark:border-amber-800/50 flex items-center justify-center">
-            <Crown className="w-9 h-9 text-amber-500 dark:text-amber-400" />
+          <div className="w-20 h-20 rounded-full bg-amber-100 border-2 border-amber-200 flex items-center justify-center">
+            <Crown className="w-9 h-9 text-amber-500" />
           </div>
           <div>
             <h1 className="text-2xl font-bold mb-2">
@@ -343,13 +343,13 @@ export default function UpgradePage() {
           </div>
 
           {timeLeft === "expired" && (
-            <div className="flex items-start gap-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/50 rounded-md px-4 py-3">
+            <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-md px-4 py-3">
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-red-700 dark:text-red-400">
+                <p className="text-sm font-medium text-red-700">
                   QR Code sudah kadaluarsa
                 </p>
-                <p className="text-xs text-red-600 dark:text-red-400 mt-0.5">
+                <p className="text-xs text-red-600 mt-0.5">
                   Buat QR baru untuk melanjutkan pembayaran.
                 </p>
               </div>
@@ -369,7 +369,7 @@ export default function UpgradePage() {
             </div>
           )}
 
-          <div className="border border-border bg-white dark:bg-card rounded-md p-6 flex flex-col items-center gap-4 shadow-sm">
+          <div className="border border-border bg-white rounded-md p-6 flex flex-col items-center gap-4 shadow-sm">
             {/* QRIS info bar */}
             <div className="w-full flex items-center justify-between px-2 pb-3 border-b border-border">
               <div className="flex items-center gap-2">
@@ -471,7 +471,7 @@ export default function UpgradePage() {
               {PAYMENT_METHODS.map((m) => (
                 <div
                   key={m.name}
-                  className="flex items-center gap-1.5 px-2.5 py-1 border border-border bg-white dark:bg-secondary rounded-sm"
+                  className="flex items-center gap-1.5 px-2.5 py-1 border border-border bg-white rounded-sm"
                   title={m.name}
                 >
                   <img

@@ -46,17 +46,17 @@ const STATUS_LABEL: Record<
 > = {
   pending: {
     label: "Diproses",
-    cls: "bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800/50",
+    cls: "bg-amber-100 text-amber-700 border-amber-200",
     icon: <Clock className="w-3 h-3" />,
   },
   success: {
     label: "Sukses",
-    cls: "bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800/50",
+    cls: "bg-green-100 text-green-700 border-green-200",
     icon: <CheckCircle2 className="w-3 h-3" />,
   },
   rejected: {
     label: "Ditolak",
-    cls: "bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800/50",
+    cls: "bg-red-100 text-red-700 border-red-200",
     icon: <Trophy className="w-3 h-3" />,
   },
 };
@@ -389,7 +389,7 @@ export default function ReferralPage() {
         })()}
 
         {/* ── Referral Link Card ── */}
-        <div className="bg-white dark:bg-card border border-border rounded-md overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-4 border-b border-border bg-primary/5 flex items-center gap-3">
             <div className="w-8 h-8 rounded-md bg-primary/15 flex items-center justify-center">
               <Link2 className="w-4 h-4 text-primary" />
@@ -429,7 +429,7 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Cara Mendapatkan Poin ── */}
-        <div className="bg-white dark:bg-card border border-border rounded-md overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border bg-secondary/30">
             <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Cara Mendapatkan Poin
@@ -437,8 +437,8 @@ export default function ReferralPage() {
           </div>
           <div className="divide-y divide-border">
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-md bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center shrink-0">
-                <UserPlus className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="w-11 h-11 rounded-md bg-emerald-100 flex items-center justify-center shrink-0">
+                <UserPlus className="w-5 h-5 text-emerald-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold mb-0.5">Undang Teman</p>
@@ -460,8 +460,8 @@ export default function ReferralPage() {
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-md bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center shrink-0">
-                <Crown className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              <div className="w-11 h-11 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
+                <Crown className="w-5 h-5 text-amber-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold mb-0.5">
@@ -482,8 +482,8 @@ export default function ReferralPage() {
               </div>
             </div>
             <div className="px-5 py-4 flex items-center gap-4">
-              <div className="w-11 h-11 rounded-md bg-sky-100 dark:bg-sky-950/40 flex items-center justify-center shrink-0">
-                <Link2 className="w-5 h-5 text-sky-600 dark:text-sky-400" />
+              <div className="w-11 h-11 rounded-md bg-sky-100 flex items-center justify-center shrink-0">
+                <Link2 className="w-5 h-5 text-sky-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold mb-0.5">
@@ -536,7 +536,7 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Riwayat Referral ── */}
-        <div className="bg-white dark:bg-card border border-border rounded-md overflow-hidden">
+        <div className="bg-white border border-border rounded-md overflow-hidden">
           <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
@@ -573,7 +573,7 @@ export default function ReferralPage() {
                       {(r.displayName ?? r.username).charAt(0).toUpperCase()}
                     </div>
                     {r.isPremium && (
-                      <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white dark:border-card">
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center border-2 border-white">
                         <Crown className="w-2 h-2 text-white" />
                       </div>
                     )}
@@ -591,11 +591,11 @@ export default function ReferralPage() {
                     </p>
                   </div>
                   <div className="shrink-0 flex flex-col items-end gap-1">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-2 py-0.5 rounded-md">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-2 py-0.5 rounded-md">
                       <Star className="w-2.5 h-2.5" /> +{r.points}
                     </span>
                     {r.upgradeBonusAwarded && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/50 px-2 py-0.5 rounded-md">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-700 bg-amber-100 border border-amber-200 px-2 py-0.5 rounded-md">
                         <Crown className="w-2.5 h-2.5" /> +100
                       </span>
                     )}
@@ -629,10 +629,10 @@ export default function ReferralPage() {
         </div>
 
         {/* ── Penukaran Poin ── */}
-        <div className="bg-white dark:bg-card border border-border rounded-md overflow-hidden">
-          <div className="px-5 py-4 border-b border-border bg-amber-50 dark:bg-amber-950/30 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-md bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
-              <Trophy className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+        <div className="bg-white border border-border rounded-md overflow-hidden">
+          <div className="px-5 py-4 border-b border-border bg-amber-50 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center">
+              <Trophy className="w-4 h-4 text-amber-600" />
             </div>
             <div className="flex-1">
               <p className="text-sm font-semibold">Penukaran Poin</p>
@@ -644,7 +644,7 @@ export default function ReferralPage() {
               <p className="text-[10px] text-muted-foreground uppercase tracking-wide font-semibold">
                 Rate saat ini
               </p>
-              <p className="text-sm font-black text-amber-700 dark:text-amber-400">
+              <p className="text-sm font-black text-amber-700">
                 {formatRupiah(redeemRate)}{" "}
                 <span className="font-normal text-xs text-muted-foreground">
                   / 1.000 poin
@@ -693,7 +693,7 @@ export default function ReferralPage() {
                       </span>
                     </p>
                     {estimatedValue > 0 && (
-                      <p className="text-xs font-bold text-amber-700 dark:text-amber-400">
+                      <p className="text-xs font-bold text-amber-700">
                         ≈ {formatRupiah(estimatedValue)}
                       </p>
                     )}
@@ -734,10 +734,10 @@ export default function ReferralPage() {
 
         {/* ── Riwayat Penukaran ── */}
         {(loadingRequests || redeemRequests.length > 0) && (
-          <div className="bg-white dark:bg-card border border-border rounded-md overflow-hidden">
+          <div className="bg-white border border-border rounded-md overflow-hidden">
             <div className="px-5 py-3.5 border-b border-border flex items-center gap-2">
-              <div className="w-7 h-7 rounded-md bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
-                <Trophy className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+              <div className="w-7 h-7 rounded-md bg-amber-100 flex items-center justify-center">
+                <Trophy className="w-3.5 h-3.5 text-amber-600" />
               </div>
               <p className="text-sm font-semibold">Riwayat Penukaran</p>
             </div>
@@ -764,7 +764,7 @@ export default function ReferralPage() {
                           <span className="text-xs text-muted-foreground">
                             ·
                           </span>
-                          <span className="text-xs text-amber-700 dark:text-amber-400 font-semibold">
+                          <span className="text-xs text-amber-700 font-semibold">
                             {formatRupiah(
                               Math.floor(r.points / 1000) * redeemRate,
                             )}

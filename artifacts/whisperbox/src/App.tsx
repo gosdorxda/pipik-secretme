@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
-import { ThemeProvider } from "@/context/theme-context";
 import { removeLoader } from "@/lib/loader";
 import {
   ClerkProvider,
@@ -534,12 +533,14 @@ function ClerkProviderWithRoutes() {
 }
 
 function App() {
+  useEffect(() => {
+    document.documentElement.classList.remove("dark");
+  }, []);
+
   return (
-    <ThemeProvider>
-      <WouterRouter base={basePath}>
-        <ClerkProviderWithRoutes />
-      </WouterRouter>
-    </ThemeProvider>
+    <WouterRouter base={basePath}>
+      <ClerkProviderWithRoutes />
+    </WouterRouter>
   );
 }
 

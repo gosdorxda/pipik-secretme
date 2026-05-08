@@ -316,25 +316,25 @@ function OverviewTab({ secret }: { secret: string }) {
           label="Total Pengguna"
           value={stats?.totalUsers ?? 0}
           icon={Users}
-          color="bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400"
+          color="bg-blue-100 text-blue-600"
         />
         <StatCard
           label="Pengguna Premium"
           value={stats?.premiumUsers ?? 0}
           icon={Crown}
-          color="bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400"
+          color="bg-amber-100 text-amber-600"
         />
         <StatCard
           label="Total Pesan"
           value={stats?.totalMessages ?? 0}
           icon={MessageSquare}
-          color="bg-purple-100 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400"
+          color="bg-purple-100 text-purple-600"
         />
         <StatCard
           label="Transaksi Sukses"
           value={stats?.totalTransactions ?? 0}
           icon={TrendingUp}
-          color="bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400"
+          color="bg-emerald-100 text-emerald-600"
         />
       </div>
       <div className="bg-card border border-border rounded-sm p-5">

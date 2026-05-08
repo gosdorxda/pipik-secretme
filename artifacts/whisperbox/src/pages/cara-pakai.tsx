@@ -134,14 +134,14 @@ export default function CaraPakaiPage() {
       {/* Premium */}
       <section className="border-b border-border">
         <div className="max-w-4xl mx-auto px-5 py-14">
-          <div className="rounded-md border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-950/30 p-6">
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              <h2 className="text-sm font-bold text-amber-800 dark:text-amber-300">
+              <Crown className="w-4 h-4 text-amber-600" />
+              <h2 className="text-sm font-bold text-amber-800">
                 Lebih banyak dengan Premium
               </h2>
             </div>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-4 leading-relaxed">
+            <p className="text-xs text-amber-700 mb-4 leading-relaxed">
               Upgrade ke Premium untuk membuka fitur-fitur eksklusif yang
               membuat profilmu makin lengkap dan interaktif.
             </p>
@@ -149,9 +149,9 @@ export default function CaraPakaiPage() {
               {PREMIUM_FEATURES.map((f) => (
                 <li
                   key={f}
-                  className="flex items-center gap-2 text-xs text-amber-800 dark:text-amber-300"
+                  className="flex items-center gap-2 text-xs text-amber-800"
                 >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-500 shrink-0" />
                   {f}
                 </li>
               ))}
@@ -185,7 +185,7 @@ export default function CaraPakaiPage() {
             </Link>
             <Link
               href="/faq"
-              className="inline-flex items-center gap-2 border border-border bg-white dark:bg-secondary text-foreground px-5 py-2.5 rounded-md text-sm font-medium hover:bg-secondary/50 transition-colors"
+              className="inline-flex items-center gap-2 border border-border bg-white text-foreground px-5 py-2.5 rounded-md text-sm font-medium hover:bg-secondary/50 transition-colors"
             >
               Lihat FAQ
             </Link>

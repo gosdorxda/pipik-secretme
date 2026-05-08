@@ -1,14 +1,13 @@
 import { Link } from "wouter";
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, X, Crown, Moon, Sun } from "lucide-react";
+import { ArrowRight, Check, X, Crown } from "lucide-react";
 import { useAuth } from "@clerk/react";
 import { Footer } from "@/components/footer";
 import { SiteLogoImg } from "@/components/site-logo";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "@/components/brand-name";
 import { useAppConfig } from "@/hooks/use-app-config";
-import { useTheme } from "@/hooks/use-theme";
 
 /* ─── Scroll reveal hook ─── */
 function useReveal() {
@@ -124,7 +123,7 @@ function ActivityTicker() {
           <div
             key={i}
             style={{ height: ITEM_H, minHeight: ITEM_H }}
-            className="flex items-center gap-3 px-4 bg-white dark:bg-card border border-border rounded-xl shrink-0"
+            className="flex items-center gap-3 px-4 bg-white border border-border rounded-xl shrink-0"
           >
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
@@ -154,7 +153,7 @@ function HeroMockup() {
   return (
     <div className="relative flex justify-center items-center">
       <div
-        className="hero-card-float relative w-full max-w-[340px] bg-white dark:bg-card border border-border overflow-hidden rounded-2xl"
+        className="hero-card-float relative w-full max-w-[340px] bg-white border border-border overflow-hidden rounded-2xl"
         style={{
           boxShadow: "0 20px 60px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04)",
         }}
@@ -249,7 +248,7 @@ function HeroMockup() {
           </span>
         </div>
       </div>
-      <div className="absolute -top-3 right-1 sm:-right-3 md:-right-6 bg-white dark:bg-card border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1 rounded-xl">
+      <div className="absolute -top-3 right-1 sm:-right-3 md:-right-6 bg-white border border-border shadow-lg px-3 py-1.5 flex items-center gap-2 msg-bubble-1 rounded-xl">
         <div className="w-5 h-5 bg-primary/10 flex items-center justify-center shrink-0 text-[10px] rounded-md">
           💬
         </div>
@@ -270,7 +269,7 @@ function HeroMockup() {
 function ProfileMockup() {
   return (
     <div
-      className="w-full max-w-xs bg-white dark:bg-card border border-border rounded-2xl overflow-hidden mx-auto"
+      className="w-full max-w-xs bg-white border border-border rounded-2xl overflow-hidden mx-auto"
       style={{
         boxShadow: "0 16px 48px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.03)",
       }}
@@ -349,7 +348,6 @@ export default function LandingPage() {
   const { isSignedIn } = useAuth();
   const { data: appConfig } = useAppConfig();
   const premiumPrice = appConfig?.premiumPrice ?? 49900;
-  const { theme, toggleTheme } = useTheme();
 
   const profileRef = useReveal();
   const actRef = useReveal();
@@ -357,28 +355,15 @@ export default function LandingPage() {
   const ctaRef = useReveal();
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-white dark:bg-background text-foreground overflow-x-hidden">
+    <div className="min-h-[100dvh] flex flex-col bg-white text-foreground overflow-x-hidden">
       {/* ── NAVBAR ── */}
-      <header className="border-b border-border bg-white/90 dark:bg-background/90 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border bg-white/90 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <SiteLogoImg className="w-7 h-7" />
             <BrandName name={appName} className="font-bold tracking-tight" />
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-muted-foreground"
-              onClick={toggleTheme}
-              title={theme === "dark" ? "Mode terang" : "Mode malam"}
-            >
-              {theme === "dark" ? (
-                <Sun className="w-3.5 h-3.5" />
-              ) : (
-                <Moon className="w-3.5 h-3.5" />
-              )}
-            </Button>
             {isSignedIn ? (
               <Link href="/dashboard">
                 <Button size="sm">Buka Dashboard</Button>
@@ -548,7 +533,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════
             AKTIVITAS LIVE
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white dark:bg-background">
+        <section className="py-24 bg-white">
           <div ref={actRef} className="reveal-section max-w-5xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-14 items-center">
               {/* Left: copy */}
@@ -619,7 +604,7 @@ export default function LandingPage() {
 
             <div className="grid md:grid-cols-2 gap-5">
               {/* Free */}
-              <div className="bg-white dark:bg-card border border-border rounded-2xl p-7">
+              <div className="bg-white border border-border rounded-2xl p-7">
                 <div className="mb-6">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">
                     Gratis
@@ -713,7 +698,7 @@ export default function LandingPage() {
         {/* ══════════════════════════════════════
             CTA FINAL
         ══════════════════════════════════════ */}
-        <section className="py-24 bg-white dark:bg-background">
+        <section className="py-24 bg-white">
           <div
             ref={ctaRef}
             className="reveal-section max-w-xl mx-auto px-6 text-center"
