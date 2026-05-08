@@ -61,15 +61,24 @@ const REACTION_EMOJIS = ["❤️", "😂", "🔥", "😮", "👏"] as const;
 
 const LS_KEY = "wb_reactions";
 
-function loadLocalReacted(): Record<string, string[]> {
+function loadLocalReacted(): Record<string, string> {
   try {
-    return JSON.parse(localStorage.getItem(LS_KEY) ?? "{}");
+    const raw = JSON.parse(localStorage.getItem(LS_KEY) ?? "{}") as Record<
+      string,
+      string | string[]
+    >;
+    // Migrate old format (array) to new format (single string)
+    const out: Record<string, string> = {};
+    for (const [k, v] of Object.entries(raw)) {
+      out[k] = Array.isArray(v) ? (v[0] ?? "") : v;
+    }
+    return out;
   } catch {
     return {};
   }
 }
 
-function saveLocalReacted(data: Record<string, string[]>) {
+function saveLocalReacted(data: Record<string, string>) {
   localStorage.setItem(LS_KEY, JSON.stringify(data));
 }
 
@@ -115,9 +124,10 @@ function MessageCard({
   const [reactions, setReactions] = useState<Record<string, number>>(
     () => (msg.reactions as Record<string, number>) ?? {},
   );
-  const [reacted, setReacted] = useState<Set<string>>(() => {
+  // Single emoji per user per message (string | null)
+  const [reacted, setReacted] = useState<string | null>(() => {
     const stored = loadLocalReacted();
-    return new Set(stored[msg.id] ?? []);
+    return stored[msg.id] ?? null;
   });
 
   useEffect(() => {
@@ -127,25 +137,34 @@ function MessageCard({
   const handleReact = (emoji: string) => {
     if (reactMutation.isPending) return;
 
-    const wasReacted = reacted.has(emoji);
-    const newReacted = new Set(reacted);
+    const prevReacted = reacted;
     const newReactions = { ...reactions };
 
-    if (wasReacted) {
-      newReacted.delete(emoji);
+    if (prevReacted === emoji) {
+      // Toggle off
       newReactions[emoji] = Math.max(0, (newReactions[emoji] ?? 1) - 1);
       if (newReactions[emoji] === 0) delete newReactions[emoji];
+      setReacted(null);
+      const stored = loadLocalReacted();
+      delete stored[msg.id];
+      saveLocalReacted(stored);
     } else {
-      newReacted.add(emoji);
+      // Switch from old emoji (if any) to new
+      if (prevReacted) {
+        newReactions[prevReacted] = Math.max(
+          0,
+          (newReactions[prevReacted] ?? 1) - 1,
+        );
+        if (newReactions[prevReacted] === 0) delete newReactions[prevReacted];
+      }
       newReactions[emoji] = (newReactions[emoji] ?? 0) + 1;
+      setReacted(emoji);
+      const stored = loadLocalReacted();
+      stored[msg.id] = emoji;
+      saveLocalReacted(stored);
     }
 
-    setReacted(newReacted);
     setReactions(newReactions);
-
-    const stored = loadLocalReacted();
-    stored[msg.id] = Array.from(newReacted);
-    saveLocalReacted(stored);
 
     reactMutation.mutate(
       { id: msg.id, data: { emoji } },
@@ -154,17 +173,16 @@ function MessageCard({
           setReactions(data.reactions as Record<string, number>);
         },
         onError: () => {
-          setReacted(reacted);
+          setReacted(prevReacted);
           setReactions(reactions);
           const stored = loadLocalReacted();
-          stored[msg.id] = Array.from(reacted);
+          if (prevReacted) stored[msg.id] = prevReacted;
+          else delete stored[msg.id];
           saveLocalReacted(stored);
         },
       },
     );
   };
-
-  const totalReactions = Object.values(reactions).reduce((s, n) => s + n, 0);
 
   return (
     <div
@@ -219,43 +237,39 @@ function MessageCard({
         </div>
       )}
 
-      {/* Reaction bar */}
-      <div className="px-5 pb-2 flex items-center gap-1 flex-wrap">
-        {REACTION_EMOJIS.map((emoji) => {
-          const cnt = reactions[emoji] ?? 0;
-          const active = reacted.has(emoji);
-          return (
-            <button
-              key={emoji}
-              onClick={() => handleReact(emoji)}
-              className={[
-                "inline-flex items-center gap-1 text-sm px-2 py-0.5 rounded-full border transition-all duration-150 select-none",
-                active
-                  ? "bg-primary/10 border-primary/30 scale-105"
-                  : "bg-white/60 border-border/50 hover:bg-white hover:border-border",
-              ].join(" ")}
-            >
-              <span>{emoji}</span>
-              {cnt > 0 && (
-                <span className="text-[11px] font-semibold text-foreground/70 min-w-[14px]">
-                  {cnt}
-                </span>
-              )}
-            </button>
-          );
-        })}
-        {totalReactions > 0 && (
-          <span className="text-[10px] text-muted-foreground ml-1">
-            {totalReactions} reaksi
-          </span>
-        )}
-      </div>
+      {/* Footer: reactions kiri, share kanan */}
+      <div className="px-4 pb-3 flex items-center justify-between gap-2">
+        {/* Reaction bar — kecil & semi-samar */}
+        <div className="flex items-center gap-0.5">
+          {REACTION_EMOJIS.map((emoji) => {
+            const cnt = reactions[emoji] ?? 0;
+            const active = reacted === emoji;
+            return (
+              <button
+                key={emoji}
+                onClick={() => handleReact(emoji)}
+                className={[
+                  "inline-flex items-center gap-0.5 text-xs px-1.5 py-0.5 rounded-full transition-all duration-150 select-none",
+                  active
+                    ? "bg-primary/15 opacity-100 scale-110"
+                    : "opacity-40 hover:opacity-80 hover:bg-black/5",
+                ].join(" ")}
+              >
+                <span className="text-sm leading-none">{emoji}</span>
+                {cnt > 0 && (
+                  <span className="text-[10px] font-medium text-foreground/60">
+                    {cnt}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
 
-      {/* Share button */}
-      <div className="px-5 pb-3 flex justify-end">
+        {/* Share button */}
         <button
           onClick={onShare}
-          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-md border border-border/60 hover:border-border bg-white/60 hover:bg-white"
+          className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors px-2.5 py-1 rounded-md border border-border/60 hover:border-border bg-white/60 hover:bg-white shrink-0"
         >
           <Share2 className="w-3 h-3" />
           Bagikan

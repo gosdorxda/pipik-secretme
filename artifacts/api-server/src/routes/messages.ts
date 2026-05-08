@@ -594,27 +594,38 @@ router.post("/:id/react", async (req, res) => {
     const senderIp = getSenderIp(req);
     const ipHash = hashIp(senderIp);
 
-    // Atomic toggle: try insert first; if conflict (already reacted), delete instead.
-    const inserted = await db
-      .insert(messageReactionsTable)
-      .values({ messageId, emoji, ipHash })
-      .onConflictDoNothing()
-      .returning({ id: messageReactionsTable.id });
+    // 1 reaction per IP per message total (any emoji).
+    // If same emoji → toggle off. If different emoji → switch. If none → add.
+    const existing = await db.query.messageReactionsTable.findFirst({
+      where: and(
+        eq(messageReactionsTable.messageId, messageId),
+        eq(messageReactionsTable.ipHash, ipHash),
+      ),
+    });
 
-    let toggled: "added" | "removed";
-    if (inserted.length > 0) {
-      toggled = "added";
+    let toggled: "added" | "removed" | "switched";
+    if (existing) {
+      if (existing.emoji === emoji) {
+        // Same emoji → remove
+        await db
+          .delete(messageReactionsTable)
+          .where(eq(messageReactionsTable.id, existing.id));
+        toggled = "removed";
+      } else {
+        // Different emoji → switch
+        await db
+          .delete(messageReactionsTable)
+          .where(eq(messageReactionsTable.id, existing.id));
+        await db
+          .insert(messageReactionsTable)
+          .values({ messageId, emoji, ipHash });
+        toggled = "switched";
+      }
     } else {
       await db
-        .delete(messageReactionsTable)
-        .where(
-          and(
-            eq(messageReactionsTable.messageId, messageId),
-            eq(messageReactionsTable.emoji, emoji),
-            eq(messageReactionsTable.ipHash, ipHash),
-          ),
-        );
-      toggled = "removed";
+        .insert(messageReactionsTable)
+        .values({ messageId, emoji, ipHash });
+      toggled = "added";
     }
 
     const rows = await db
