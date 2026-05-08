@@ -367,19 +367,9 @@ function ClerkReadySignal() {
   return null;
 }
 
-function FaviconUpdater() {
-  const { data } = useSiteBranding();
-  useEffect(() => {
-    if (!data?.faviconUrl) return;
-    const link =
-      (document.querySelector("link[rel~='icon']") as HTMLLinkElement) ||
-      document.createElement("link");
-    link.rel = "icon";
-    link.href = data.faviconUrl;
-    document.head.appendChild(link);
-  }, [data?.faviconUrl]);
-  return null;
-}
+// FaviconUpdater removed — favicon is now served directly via /api/favicon.ico
+// which reads from the settings cache, so the correct favicon is shown from the
+// very first browser request without waiting for React to load.
 
 function GoogleAnalyticsInjector() {
   const { data } = useSiteBranding();
@@ -478,7 +468,6 @@ function ClerkProviderWithRoutes() {
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
           <ClerkReadySignal />
-          <FaviconUpdater />
           <GoogleAnalyticsInjector />
           <RefCapture />
           <ReferralClaimHandler />

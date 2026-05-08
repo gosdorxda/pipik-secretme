@@ -4,6 +4,23 @@ import { resolveStorageUrl } from "../lib/storageUrl";
 
 const router = Router();
 
+// Favicon endpoint — browser reads this before JS loads, so it must always
+// return the correct favicon immediately from the settings cache.
+router.get("/favicon.ico", async (req, res) => {
+  try {
+    const raw = await getSetting("site_favicon_url", "");
+    const faviconUrl = resolveStorageUrl(raw);
+    if (faviconUrl) {
+      res.redirect(302, faviconUrl);
+    } else {
+      // Fallback: redirect to the static file served by the frontend
+      res.redirect(302, "/favicon.svg");
+    }
+  } catch {
+    res.redirect(302, "/favicon.svg");
+  }
+});
+
 router.get("/config", async (req, res) => {
   try {
     const premiumPriceRaw = await getSetting("premium_price", "49900");
