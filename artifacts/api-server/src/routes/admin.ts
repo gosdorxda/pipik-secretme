@@ -643,7 +643,18 @@ async function saveBrandingFile(
   const ext = BRANDING_EXT_MAP[mimeType];
   if (!ext) throw new Error("Tipe file tidak didukung");
   fs.mkdirSync(BRANDING_DIR, { recursive: true });
-  const fileName = `${baseName}.${ext}`;
+  const newFileName = `${baseName}.${ext}`;
+  const existing = fs.readdirSync(BRANDING_DIR);
+  for (const entry of existing) {
+    if (entry === newFileName) continue;
+    const entryBase = entry.includes(".")
+      ? entry.slice(0, entry.lastIndexOf("."))
+      : entry;
+    if (entryBase === baseName) {
+      fs.unlinkSync(path.join(BRANDING_DIR, entry));
+    }
+  }
+  const fileName = newFileName;
   const filePath = path.join(BRANDING_DIR, fileName);
   fs.writeFileSync(filePath, fileBuffer);
   const storedPath = `/branding/${fileName}`;
