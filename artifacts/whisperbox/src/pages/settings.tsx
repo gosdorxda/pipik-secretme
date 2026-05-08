@@ -644,7 +644,7 @@ export default function SettingsPage() {
                   </div>
                   {!profile?.isPremium && (
                     <Link href="/upgrade" className="shrink-0">
-                      <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
+                      <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 dark:hover:bg-amber-950/60 transition-colors">
                         <Lock className="w-3 h-3" /> Premium
                       </span>
                     </Link>
@@ -652,13 +652,13 @@ export default function SettingsPage() {
                 </div>
 
                 {!profile?.isPremium && (
-                  <div className="mx-4 sm:mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
-                    <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+                  <div className="mx-4 sm:mx-6 mt-5 mb-4 flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-md px-4 py-3">
+                    <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-xs font-semibold text-amber-800">
+                      <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
                         Fitur Premium
                       </p>
-                      <p className="text-xs text-amber-700 mt-0.5">
+                      <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
                         Tambahkan social links ke profil publikmu.{" "}
                         <Link href="/upgrade" className="underline font-medium">
                           Upgrade sekarang →
@@ -749,7 +749,7 @@ export default function SettingsPage() {
                   <h2 className="text-sm font-semibold text-foreground">
                     Notifikasi Balasan
                   </h2>
-                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-700 border border-amber-200">
+                  <span className="inline-flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50">
                     <Crown className="w-2.5 h-2.5" /> Premium
                   </span>
                 </div>
@@ -760,13 +760,13 @@ export default function SettingsPage() {
               </div>
             </div>
             {!profile?.isPremium && (
-              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
-                <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-md px-4 py-3">
+                <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-amber-800">
+                  <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
                     Fitur Premium
                   </p>
-                  <p className="text-xs text-amber-700 mt-0.5">
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
                     Izinkan pengirim anonim meninggalkan email agar dapat
                     notifikasi saat pesannya dibalas.{" "}
                     <Link href="/upgrade" className="underline font-medium">
@@ -838,20 +838,20 @@ export default function SettingsPage() {
               </div>
               {!profile?.isPremium && (
                 <Link href="/upgrade" className="shrink-0">
-                  <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 transition-colors">
+                  <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-amber-100 dark:hover:bg-amber-950/60 transition-colors">
                     <Lock className="w-3 h-3" /> Premium
                   </span>
                 </Link>
               )}
             </div>
             {!profile?.isPremium && (
-              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-md px-4 py-3">
-                <Crown className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
+              <div className="mx-4 sm:mx-6 mt-5 mb-1 flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-md px-4 py-3">
+                <Crown className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-amber-800">
+                  <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
                     Fitur Premium
                   </p>
-                  <p className="text-xs text-amber-700 mt-0.5">
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
                     Terima notifikasi email setiap ada pesan anonim baru.{" "}
                     <Link href="/upgrade" className="underline font-medium">
                       Upgrade sekarang →

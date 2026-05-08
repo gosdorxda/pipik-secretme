@@ -133,9 +133,18 @@ type StatAccent = "mint" | "blue" | "orange" | "amber";
 const ACCENT_ICON: Record<StatAccent, { iconWrap: string; iconColor: string }> =
   {
     mint: { iconWrap: "bg-primary/15", iconColor: "text-primary" },
-    blue: { iconWrap: "bg-sky-100", iconColor: "text-sky-600" },
-    orange: { iconWrap: "bg-orange-100", iconColor: "text-orange-600" },
-    amber: { iconWrap: "bg-amber-100", iconColor: "text-amber-600" },
+    blue: {
+      iconWrap: "bg-sky-100 dark:bg-sky-950/40",
+      iconColor: "text-sky-600 dark:text-sky-400",
+    },
+    orange: {
+      iconWrap: "bg-orange-100 dark:bg-orange-950/40",
+      iconColor: "text-orange-600 dark:text-orange-400",
+    },
+    amber: {
+      iconWrap: "bg-amber-100 dark:bg-amber-950/40",
+      iconColor: "text-amber-600 dark:text-amber-400",
+    },
   };
 
 function StatCard({
@@ -153,7 +162,7 @@ function StatCard({
 }) {
   const s = ACCENT_ICON[accent];
   return (
-    <div className="bg-white border border-border rounded-md px-4 py-3 flex items-center gap-3">
+    <div className="bg-white dark:bg-card border border-border rounded-md px-4 py-3 flex items-center gap-3">
       <div
         className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 ${s.iconWrap}`}
       >
@@ -650,7 +659,7 @@ export default function DashboardPage() {
         <ProfileCompletionAlert profile={profile} />
 
         {/* Profile + Link Combined Card */}
-        <div className="border border-border bg-white rounded-md overflow-hidden shadow-sm">
+        <div className="border border-border bg-white dark:bg-card rounded-md overflow-hidden shadow-sm">
           <div className="bg-primary/10 border-b border-primary/20 px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row items-center gap-4">
             <div className="shrink-0">
               {resolveAvatarUrl(profile.avatarUrl) ? (
@@ -852,7 +861,7 @@ export default function DashboardPage() {
           )}
 
           {/* ── Kampanye QnA section (collapsible) ── */}
-          <div className="bg-white">
+          <div className="bg-white dark:bg-[#1a1a1c]">
             {/* Toggle row */}
             <button
               type="button"
@@ -868,7 +877,7 @@ export default function DashboardPage() {
                   Kampanye QnA
                 </span>
                 {campaign != null && (
-                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 border border-emerald-200 px-1.5 py-0.5 rounded-md">
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 px-1.5 py-0.5 rounded-md">
                     <Radio className="w-2.5 h-2.5" /> LIVE
                   </span>
                 )}
@@ -883,8 +892,8 @@ export default function DashboardPage() {
               <div className="border-t border-border">
                 {!profile?.isPremium ? (
                   <div className="px-5 py-5 flex items-start gap-4">
-                    <div className="w-9 h-9 rounded-md bg-amber-100 flex items-center justify-center shrink-0">
-                      <Crown className="w-4.5 h-4.5 text-amber-600" />
+                    <div className="w-9 h-9 rounded-md bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center shrink-0">
+                      <Crown className="w-4.5 h-4.5 text-amber-600 dark:text-amber-400" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-sm font-semibold mb-1">

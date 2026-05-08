@@ -534,7 +534,23 @@ function ClerkProviderWithRoutes() {
 
 function App() {
   useEffect(() => {
-    document.documentElement.classList.remove("dark");
+    const STORAGE_KEY = "wb_theme";
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored === "dark") {
+        document.documentElement.classList.add("dark");
+        return;
+      }
+      if (stored === "light") {
+        document.documentElement.classList.remove("dark");
+        return;
+      }
+    } catch {}
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, []);
 
   return (

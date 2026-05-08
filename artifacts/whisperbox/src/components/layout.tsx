@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation } from "wouter";
 import { useClerk } from "@clerk/react";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings, Inbox, Star } from "lucide-react";
+import { LogOut, Settings, Inbox, Star, Moon, Sun } from "lucide-react";
 import { useGetMyProfile } from "@workspace/api-client-react";
 import { Footer } from "./footer";
 import { AppBanner } from "./app-banner";
@@ -10,6 +10,7 @@ import { SiteLogoImg } from "./site-logo";
 import { cn } from "@/lib/utils";
 import { useSiteBranding } from "@/hooks/use-branding";
 import { BrandName } from "./brand-name";
+import { useTheme } from "@/hooks/use-theme";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Inbox", icon: Inbox },
@@ -22,11 +23,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const { signOut } = useClerk();
   const { data: branding } = useSiteBranding();
   const appName = branding?.appName ?? "kepoin.me";
+  const { theme, toggleTheme } = useTheme();
   useGetMyProfile();
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background text-foreground">
-      <header className="border-b border-border bg-white sticky top-0 z-50">
+      <header className="border-b border-border bg-white dark:bg-[#111111] sticky top-0 z-50">
         <AppBanner />
         <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
           {/* Logo */}
@@ -59,6 +61,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             ))}
 
             <div className="w-px h-4 bg-border mx-1.5" />
+
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground"
+              onClick={toggleTheme}
+              title={theme === "dark" ? "Mode terang" : "Mode malam"}
+            >
+              {theme === "dark" ? (
+                <Sun className="w-3.5 h-3.5" />
+              ) : (
+                <Moon className="w-3.5 h-3.5" />
+              )}
+            </Button>
 
             <Button
               variant="ghost"
