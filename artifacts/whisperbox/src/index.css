@@ -367,36 +367,14 @@ body {
   transform-origin: center bottom;
 }
 
-/* Page enter animation */
-@keyframes page-enter {
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
   from {
-    opacity: 0;
-    transform: translateY(6px);
+    background-position: 200% 0;
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    background-position: -200% 0;
   }
-}
-
-.page-enter {
-  animation: page-enter 0.2s ease-out both;
-}
-
-@keyframes page-exit {
-  from {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-
-.page-exit {
-  animation: page-exit 0.12s ease-in both;
-  pointer-events: none;
 }
 
 /* Page-transition loader dots */
