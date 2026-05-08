@@ -18,6 +18,7 @@ import {
   ImageDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toPng } from "html-to-image";
 
 const MONTHS_ID = [
@@ -1157,17 +1158,90 @@ export default function WrappedPage() {
 
   if (isLoading) {
     return (
-      <div
-        className="min-h-screen flex flex-col items-center justify-center gap-4"
-        style={{ background: W_BG }}
-      >
-        <div
-          className="w-10 h-10 rounded-full border-4 animate-spin"
-          style={{ borderColor: `${W_MINT}40`, borderTopColor: W_MINT }}
-        />
-        <p className="text-sm" style={{ color: W_MUTED }}>
-          Menyiapkan Wrapped-mu…
-        </p>
+      <div className="min-h-screen flex flex-col" style={{ background: W_BG }}>
+        {/* Top bar skeleton */}
+        <div className="flex items-center justify-between px-6 py-4 shrink-0">
+          <Skeleton
+            className="h-4 w-28"
+            style={{ background: `${W_MINT}18` }}
+          />
+          <Skeleton
+            className="h-4 w-16"
+            style={{ background: `${W_MINT}18` }}
+          />
+          <Skeleton
+            className="h-4 w-10"
+            style={{ background: `${W_MINT}18` }}
+          />
+        </div>
+
+        {/* Progress bar skeleton */}
+        <div className="flex gap-1 px-6 shrink-0">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className="h-0.5 flex-1 rounded-full"
+              style={{ background: `${W_MINT}${i === 0 ? "60" : "20"}` }}
+            />
+          ))}
+        </div>
+
+        {/* Slide content skeleton */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-6 px-8">
+          <Skeleton
+            className="h-5 w-32 rounded-full"
+            style={{ background: `${W_MINT}18` }}
+          />
+          <Skeleton
+            className="rounded-none"
+            style={{
+              width: "clamp(5rem, 20vw, 9rem)",
+              height: "clamp(5rem, 20vw, 9rem)",
+              background: `${W_MINT}15`,
+            }}
+          />
+          <Skeleton
+            className="h-4 w-40"
+            style={{ background: `${W_MINT}18` }}
+          />
+          <div className="w-full max-w-sm flex items-end gap-2 h-24 mt-2">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="flex-1 rounded-md"
+                style={{
+                  height: `${30 + Math.sin(i * 1.2) * 25 + 20}%`,
+                  background: `${W_MINT}${i === 3 ? "30" : "15"}`,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Navigation skeleton */}
+        <div className="flex items-center justify-between px-6 py-5 shrink-0">
+          <Skeleton
+            className="w-10 h-10 rounded-full"
+            style={{ background: `${W_MINT}18` }}
+          />
+          <div className="flex gap-1.5">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="rounded-full"
+                style={{
+                  width: i === 0 ? 20 : 6,
+                  height: 6,
+                  background: `${W_MINT}${i === 0 ? "50" : "20"}`,
+                }}
+              />
+            ))}
+          </div>
+          <Skeleton
+            className="w-10 h-10 rounded-full"
+            style={{ background: `${W_MINT}35` }}
+          />
+        </div>
       </div>
     );
   }
