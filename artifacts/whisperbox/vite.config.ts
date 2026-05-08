@@ -4,12 +4,42 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 import http from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 
 const port = Number(process.env.PORT ?? "3000");
 const basePath = process.env.BASE_PATH ?? "/";
 
 const API_PORT = 8080;
 const USERNAME_RE = /^\/@[a-zA-Z0-9_]{3,32}([?#].*)?$/;
+
+const IMMUTABLE_CACHE = "public, max-age=31536000, immutable";
+const FONT_RE = /^\/fonts\/[^/]+\.woff2(\?.*)?$/;
+const HASHED_ASSET_RE = /^\/assets\/[^/]+-[a-zA-Z0-9]{8,}\.(js|css)(\?.*)?$/;
+
+function applyCacheHeaders(
+  req: IncomingMessage,
+  res: ServerResponse,
+  next: () => void,
+) {
+  const url = req.url ?? "";
+  const pathname = url.split("?")[0];
+  if (FONT_RE.test(pathname) || HASHED_ASSET_RE.test(pathname)) {
+    res.setHeader("Cache-Control", IMMUTABLE_CACHE);
+  }
+  next();
+}
+
+function staticCacheHeaders() {
+  return {
+    name: "static-cache-headers",
+    configureServer(server: import("vite").ViteDevServer) {
+      server.middlewares.use(applyCacheHeaders);
+    },
+    configurePreviewServer(server: import("vite").PreviewServer) {
+      server.middlewares.use(applyCacheHeaders);
+    },
+  };
+}
 
 function ogProfileProxy() {
   return {
@@ -53,6 +83,7 @@ export default defineConfig({
     ),
   },
   plugins: [
+    staticCacheHeaders(),
     ogProfileProxy(),
     react(),
     tailwindcss(),

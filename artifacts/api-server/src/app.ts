@@ -1,6 +1,9 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "node:path";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { clerkMiddleware } from "@clerk/express";
 import {
   CLERK_PROXY_PATH,
@@ -13,6 +16,23 @@ import { pushLog } from "./lib/logBuffer";
 import { db, usersTable, messagesTable } from "@workspace/db";
 import { eq, count } from "drizzle-orm";
 import { buildProfileHtml } from "./lib/profileHtml";
+
+const IMMUTABLE_CACHE = "public, max-age=31536000, immutable";
+const WORKSPACE_ROOT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../..",
+);
+const WHISPERBOX_ASSETS_DIR = path.join(
+  WORKSPACE_ROOT,
+  "artifacts/whisperbox/dist/public/assets",
+);
+
+if (!existsSync(WHISPERBOX_ASSETS_DIR)) {
+  logger.warn(
+    { dir: WHISPERBOX_ASSETS_DIR },
+    "Whisperbox dist/assets not found — build whisperbox before starting API to enable /assets static serving",
+  );
+}
 
 const app: Express = express();
 
@@ -33,6 +53,32 @@ app.use(
         };
       },
     },
+  }),
+);
+
+app.use(
+  "/fonts",
+  express.static(
+    path.join(WORKSPACE_ROOT, "artifacts/whisperbox/public/fonts"),
+    {
+      maxAge: 31536000000,
+      immutable: true,
+      setHeaders(res) {
+        res.setHeader("Cache-Control", IMMUTABLE_CACHE);
+      },
+    },
+  ),
+);
+
+app.use(
+  "/assets",
+  express.static(WHISPERBOX_ASSETS_DIR, {
+    maxAge: 31536000000,
+    immutable: true,
+    setHeaders(res) {
+      res.setHeader("Cache-Control", IMMUTABLE_CACHE);
+    },
+    fallthrough: true,
   }),
 );
 
