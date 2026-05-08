@@ -835,10 +835,10 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2.5 min-w-0">
                 <Crown className="w-4 h-4 text-amber-500 shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold text-amber-900 leading-none mb-0.5">
+                  <p className="text-xs font-semibold text-amber-900 dark:text-amber-300 leading-none mb-0.5">
                     Upgrade ke Premium
                   </p>
-                  <p className="text-[10px] text-amber-700/70 truncate">
+                  <p className="text-[10px] text-amber-700/70 dark:text-amber-400/70 truncate">
                     Buka social links, kampanye QnA, notifikasi email, dan lebih
                     banyak lagi.
                   </p>
@@ -1193,7 +1193,7 @@ export default function DashboardPage() {
                     onClick={() => setActiveFilter(tab.key)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded whitespace-nowrap transition-all shrink-0 ${
                       activeFilter === tab.key
-                        ? "bg-white text-foreground shadow-sm"
+                        ? "bg-white dark:bg-card text-foreground shadow-sm"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
@@ -1211,7 +1211,7 @@ export default function DashboardPage() {
                 ))}
               </div>
               {/* Search bar */}
-              <div className="bg-white border border-border rounded-md px-3 py-2.5 flex items-center gap-2">
+              <div className="bg-white dark:bg-card border border-border rounded-md px-3 py-2.5 flex items-center gap-2">
                 <Search className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <input
                   type="text"
@@ -1320,7 +1320,7 @@ export default function DashboardPage() {
 
                     {/* Message Header: icon + Anonymous + unread dot + timestamp */}
                     <div className="px-5 pt-3 pb-2 flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-white/70 border border-white/60 flex items-center justify-center shrink-0">
+                      <div className="w-6 h-6 rounded-full bg-white/70 dark:bg-white/10 border border-white/60 dark:border-white/20 flex items-center justify-center shrink-0">
                         <User className="w-3 h-3 text-muted-foreground" />
                       </div>
                       <span className="text-xs font-semibold text-foreground/70">
@@ -1357,7 +1357,7 @@ export default function DashboardPage() {
 
                     {/* Owner Reply (if exists) */}
                     {message.ownerReply && (
-                      <div className="mx-5 mb-3 border border-primary/20 bg-white/60 rounded-md p-3">
+                      <div className="mx-5 mb-3 border border-primary/20 bg-white/60 dark:bg-white/5 rounded-md p-3">
                         <div className="flex items-center gap-2 mb-1.5">
                           <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shrink-0">
                             <span className="text-[9px] font-bold text-primary-foreground">
@@ -1387,9 +1387,9 @@ export default function DashboardPage() {
                       <div className="mx-5 mb-3 space-y-2">
                         {message.senderEmail && (
                           <div className="flex flex-col gap-1">
-                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-teal-50 border border-teal-200 w-fit">
-                              <Mail className="w-3 h-3 text-teal-600 shrink-0" />
-                              <span className="text-xs font-medium text-teal-700">
+                            <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800/50 w-fit">
+                              <Mail className="w-3 h-3 text-teal-600 dark:text-teal-400 shrink-0" />
+                              <span className="text-xs font-medium text-teal-700 dark:text-teal-300">
                                 Email: {maskEmail(message.senderEmail!)}
                               </span>
                             </div>
@@ -1403,14 +1403,14 @@ export default function DashboardPage() {
                           value={replyText}
                           onChange={(e) => setReplyText(e.target.value)}
                           placeholder="Tulis balasanmu..."
-                          className="text-sm resize-none min-h-[80px] bg-white/80"
+                          className="text-sm resize-none min-h-[80px] bg-white/80 dark:bg-white/5"
                           autoFocus
                         />
                         <div className="flex gap-2 justify-end">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="text-xs bg-white/60"
+                            className="text-xs bg-white/60 dark:bg-white/5"
                             onClick={() => {
                               setReplyingTo(null);
                               setReplyText("");
@@ -1437,13 +1437,13 @@ export default function DashboardPage() {
 
                     {/* Action Bar */}
                     <div
-                      className="border-t px-4 py-2.5 flex items-center gap-2 bg-white/30"
+                      className="border-t px-4 py-2.5 flex items-center gap-2 bg-white/30 dark:bg-white/5"
                       style={{ borderColor: border }}
                     >
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground shadow-none"
+                        className="text-xs gap-1.5 h-7 px-3 bg-white/70 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border-border/50 text-foreground/70 hover:text-foreground shadow-none"
                         onClick={() => {
                           if (replyingTo === message.id) {
                             setReplyingTo(null);
@@ -1460,7 +1460,7 @@ export default function DashboardPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-xs gap-1.5 h-7 px-3 bg-white/70 hover:bg-white border-border/50 text-foreground/70 hover:text-foreground shadow-none"
+                        className="text-xs gap-1.5 h-7 px-3 bg-white/70 dark:bg-white/10 hover:bg-white dark:hover:bg-white/20 border-border/50 text-foreground/70 hover:text-foreground shadow-none"
                         onClick={() =>
                           setSharingMessage({ id: message.id, idx })
                         }
@@ -1472,7 +1472,7 @@ export default function DashboardPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-white/50"
+                        className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive hover:bg-white/50 dark:hover:bg-white/10"
                         onClick={() => handleDelete(message.id)}
                         disabled={deleteMessage.isPending}
                       >

@@ -16,7 +16,7 @@ export function StaticPageLayout({ children }: StaticPageLayoutProps) {
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">
-      <header className="border-b border-border bg-white sticky top-0 z-50">
+      <header className="border-b border-border bg-white dark:bg-card sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-5 h-14 flex items-center justify-between">
           <Link
             href="/"
