@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { PageLoader } from "@/components/page-loader";
 import { removeLoader } from "@/lib/loader";
 import {
   ClerkProvider,
@@ -473,7 +474,7 @@ function ClerkProviderWithRoutes() {
           <RefCapture />
           <ReferralClaimHandler />
           <ClerkQueryClientCacheInvalidator />
-          <Suspense fallback={null}>
+          <Suspense fallback={<PageLoader />}>
             <Switch>
               <Route path="/" component={HomeRedirect} />
               <Route path="/sign-in/*?" component={SignInPage} />

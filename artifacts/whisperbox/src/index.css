@@ -366,3 +366,15 @@ body {
   animation: cta-shake 6s ease-in-out 1.5s infinite;
   transform-origin: center bottom;
 }
+
+/* Page-transition loader dots */
+@keyframes dot-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-8px);
+  }
+}
