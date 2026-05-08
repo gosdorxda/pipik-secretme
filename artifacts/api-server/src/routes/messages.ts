@@ -1,6 +1,13 @@
 import { Router } from "express";
 import { createHash } from "crypto";
-import { db, usersTable, messagesTable, campaignsTable } from "@workspace/db";
+import {
+  db,
+  usersTable,
+  messagesTable,
+  campaignsTable,
+  messageReactionsTable,
+  REACTION_EMOJIS,
+} from "@workspace/db";
 import { eq, desc, count, and, isNull, gte, lt, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { createClerkClient } from "@clerk/express";
@@ -556,6 +563,62 @@ router.patch("/:id/visibility", requireAuth, async (req, res) => {
     res.json(updated);
   } catch (err) {
     req.log.error({ err }, "Error updating visibility");
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.post("/:id/react", async (req, res) => {
+  const messageId = req.params.id;
+  const { emoji } = req.body as { emoji: unknown };
+
+  if (typeof emoji !== "string" || !(REACTION_EMOJIS as readonly string[]).includes(emoji)) {
+    res.status(400).json({ error: "Invalid emoji" });
+    return;
+  }
+
+  try {
+    const message = await db.query.messagesTable.findFirst({
+      where: and(eq(messagesTable.id, messageId), eq(messagesTable.isPublic, true)),
+    });
+    if (!message) {
+      res.status(404).json({ error: "Message not found" });
+      return;
+    }
+
+    const senderIp = getSenderIp(req);
+    const ipHash = hashIp(senderIp);
+
+    const existing = await db.query.messageReactionsTable.findFirst({
+      where: and(
+        eq(messageReactionsTable.messageId, messageId),
+        eq(messageReactionsTable.emoji, emoji),
+        eq(messageReactionsTable.ipHash, ipHash),
+      ),
+    });
+
+    let toggled: "added" | "removed";
+    if (existing) {
+      await db.delete(messageReactionsTable).where(eq(messageReactionsTable.id, existing.id));
+      toggled = "removed";
+    } else {
+      await db.insert(messageReactionsTable).values({ messageId, emoji, ipHash });
+      toggled = "added";
+    }
+
+    const rows = await db
+      .select({ emoji: messageReactionsTable.emoji, cnt: count() })
+      .from(messageReactionsTable)
+      .where(eq(messageReactionsTable.messageId, messageId))
+      .groupBy(messageReactionsTable.emoji);
+
+    const reactions: Record<string, number> = {};
+    for (const r of rows) {
+      reactions[r.emoji] = Number(r.cnt);
+    }
+
+    res.json({ reactions, toggled });
+  } catch (err) {
+    req.log.error({ err }, "Error reacting to message");
     res.status(500).json({ error: "Internal server error" });
   }
 });

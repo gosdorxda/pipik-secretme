@@ -35,6 +35,8 @@ import type {
   MessagesResponse,
   PaymentStatusResponse,
   PublicProfile,
+  ReactToMessageBody,
+  ReactToMessageResponse,
   RedeemRequestsResponse,
   ReferralStats,
   ReplyMessageBody,
@@ -1841,6 +1843,93 @@ export function useGetPublicCampaign<
 
   return { ...query, queryKey: queryOptions.queryKey };
 }
+
+/**
+ * @summary Toggle an emoji reaction on a public message (anonymous, by IP)
+ */
+export const getReactToMessageUrl = (id: string) => {
+  return `/api/messages/${id}/react`;
+};
+
+export const reactToMessage = async (
+  id: string,
+  reactToMessageBody: ReactToMessageBody,
+  options?: RequestInit,
+): Promise<ReactToMessageResponse> => {
+  return customFetch<ReactToMessageResponse>(getReactToMessageUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(reactToMessageBody),
+  });
+};
+
+export const getReactToMessageMutationOptions = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reactToMessage>>,
+    TError,
+    { id: string; data: BodyType<ReactToMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof reactToMessage>>,
+  TError,
+  { id: string; data: BodyType<ReactToMessageBody> },
+  TContext
+> => {
+  const mutationKey = ["reactToMessage"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof reactToMessage>>,
+    { id: string; data: BodyType<ReactToMessageBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return reactToMessage(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type ReactToMessageMutationResult = NonNullable<
+  Awaited<ReturnType<typeof reactToMessage>>
+>;
+export type ReactToMessageMutationBody = BodyType<ReactToMessageBody>;
+export type ReactToMessageMutationError = ErrorType<void>;
+
+/**
+ * @summary Toggle an emoji reaction on a public message (anonymous, by IP)
+ */
+export const useReactToMessage = <
+  TError = ErrorType<void>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof reactToMessage>>,
+    TError,
+    { id: string; data: BodyType<ReactToMessageBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof reactToMessage>>,
+  TError,
+  { id: string; data: BodyType<ReactToMessageBody> },
+  TContext
+> => {
+  return useMutation(getReactToMessageMutationOptions(options));
+};
 
 /**
  * @summary Toggle message public/private visibility

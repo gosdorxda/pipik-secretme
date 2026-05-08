@@ -65,12 +65,15 @@ export interface UserProfile {
   createdAt: string;
 }
 
+export type PublicMessageReactions = { [key: string]: number };
+
 export interface PublicMessage {
   id: string;
   content: string;
   createdAt: string;
   ownerReply?: string | null;
   ownerRepliedAt?: string | null;
+  reactions: PublicMessageReactions;
 }
 
 export interface PublicProfile {
@@ -87,6 +90,18 @@ export interface PublicProfile {
   isPremium: boolean;
   allowReplyNotif: boolean;
   publicMessages: PublicMessage[];
+}
+
+export interface ReactToMessageBody {
+  emoji: string;
+}
+
+export type ReactToMessageResponseReactions = { [key: string]: number };
+
+export interface ReactToMessageResponse {
+  reactions: ReactToMessageResponseReactions;
+  /** added or removed */
+  toggled: string;
 }
 
 export interface UpdateProfileBody {

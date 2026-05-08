@@ -3,10 +3,11 @@ import {
   db,
   usersTable,
   messagesTable,
+  messageReactionsTable,
   SETTING_KEYS,
   type InsertUser,
 } from "@workspace/db";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, desc, sql, count, inArray } from "drizzle-orm";
 import { requireAuth } from "../middlewares/requireAuth";
 import { getSetting } from "../lib/settingsCache";
 import {
@@ -195,6 +196,28 @@ router.get("/:username", async (req, res) => {
       ),
       orderBy: [desc(messagesTable.createdAt)],
     });
+
+    // Batch-fetch reaction counts for all public messages
+    const messageIds = publicMessages.map((m) => m.id);
+    const reactionCountMap = new Map<string, Record<string, number>>();
+    if (messageIds.length > 0) {
+      const reactionRows = await db
+        .select({
+          messageId: messageReactionsTable.messageId,
+          emoji: messageReactionsTable.emoji,
+          cnt: count(),
+        })
+        .from(messageReactionsTable)
+        .where(inArray(messageReactionsTable.messageId, messageIds))
+        .groupBy(messageReactionsTable.messageId, messageReactionsTable.emoji);
+
+      for (const r of reactionRows) {
+        const map = reactionCountMap.get(r.messageId) ?? {};
+        map[r.emoji] = Number(r.cnt);
+        reactionCountMap.set(r.messageId, map);
+      }
+    }
+
     res.json({
       username: user.username,
       displayName: user.displayName,
@@ -214,6 +237,7 @@ router.get("/:username", async (req, res) => {
         createdAt: m.createdAt,
         ownerReply: m.ownerReply,
         ownerRepliedAt: m.ownerRepliedAt,
+        reactions: reactionCountMap.get(m.id) ?? {},
       })),
     });
   } catch (err) {

@@ -132,6 +132,7 @@ export const GetPublicProfileResponse = zod.object({
       createdAt: zod.coerce.date(),
       ownerReply: zod.string().nullish(),
       ownerRepliedAt: zod.coerce.date().nullish(),
+      reactions: zod.record(zod.string(), zod.number()),
     }),
   ),
 });
@@ -393,6 +394,22 @@ export const GetPublicCampaignResponse = zod.object({
   createdAt: zod.coerce.date(),
   endedAt: zod.coerce.date().nullish(),
   responseCount: zod.number(),
+});
+
+/**
+ * @summary Toggle an emoji reaction on a public message (anonymous, by IP)
+ */
+export const ReactToMessageParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const ReactToMessageBody = zod.object({
+  emoji: zod.string(),
+});
+
+export const ReactToMessageResponse = zod.object({
+  reactions: zod.record(zod.string(), zod.number()),
+  toggled: zod.string().describe("added or removed"),
 });
 
 /**

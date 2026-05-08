@@ -1,4 +1,10 @@
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  text,
+  timestamp,
+  boolean,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 import { usersTable } from "./users";
@@ -33,3 +39,28 @@ export const insertMessageSchema = createInsertSchema(messagesTable).omit({
 });
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Message = typeof messagesTable.$inferSelect;
+
+export const REACTION_EMOJIS = ["❤️", "😂", "🔥", "😮", "👏"] as const;
+export type ReactionEmoji = (typeof REACTION_EMOJIS)[number];
+
+export const messageReactionsTable = pgTable(
+  "message_reactions",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    messageId: text("message_id")
+      .notNull()
+      .references(() => messagesTable.id, { onDelete: "cascade" }),
+    emoji: text("emoji").notNull(),
+    ipHash: text("ip_hash").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (t) => [
+    uniqueIndex("message_reactions_unique").on(t.messageId, t.emoji, t.ipHash),
+  ],
+);
+
+export type MessageReaction = typeof messageReactionsTable.$inferSelect;
