@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { ThemeProvider } from "@/context/theme-context";
 import { removeLoader } from "@/lib/loader";
 import {
   ClerkProvider,
@@ -533,30 +534,12 @@ function ClerkProviderWithRoutes() {
 }
 
 function App() {
-  useEffect(() => {
-    const STORAGE_KEY = "wb_theme";
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored === "dark") {
-        document.documentElement.classList.add("dark");
-        return;
-      }
-      if (stored === "light") {
-        document.documentElement.classList.remove("dark");
-        return;
-      }
-    } catch {}
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
   return (
-    <WouterRouter base={basePath}>
-      <ClerkProviderWithRoutes />
-    </WouterRouter>
+    <ThemeProvider>
+      <WouterRouter base={basePath}>
+        <ClerkProviderWithRoutes />
+      </WouterRouter>
+    </ThemeProvider>
   );
 }
 
