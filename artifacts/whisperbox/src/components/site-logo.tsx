@@ -1,6 +1,9 @@
-import { useSiteBranding } from "@/hooks/use-branding";
+// Logo is served via /api/logo which proxies the admin-configured logo URL
+// (or falls back to the inline teal SVG if none is set or the external URL
+// is unreachable). This means the correct logo renders on first paint without
+// waiting for the branding API call to complete.
 
-const FALLBACK_LOGO = "/logo.svg";
+const STATIC_FALLBACK = "/logo.svg";
 
 interface SiteLogoProps {
   className?: string;
@@ -8,18 +11,15 @@ interface SiteLogoProps {
 }
 
 export function SiteLogoImg({ className, alt = "kepoin" }: SiteLogoProps) {
-  const { data } = useSiteBranding();
-  const src = data?.logoUrl ?? FALLBACK_LOGO;
-
   return (
     <img
-      src={src}
+      src="/api/logo"
       alt={alt}
       className={className}
       onError={(e) => {
         const img = e.currentTarget as HTMLImageElement;
-        if (img.getAttribute("src") !== FALLBACK_LOGO) {
-          img.src = FALLBACK_LOGO;
+        if (img.getAttribute("src") !== STATIC_FALLBACK) {
+          img.src = STATIC_FALLBACK;
         }
       }}
     />
