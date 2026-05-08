@@ -8,5 +8,8 @@ export function resolveStorageUrl(path: string | null | undefined): string {
   if (path.startsWith("/objects/")) {
     return `/api/storage${path}`;
   }
+  if (path.startsWith("/branding/")) {
+    return `/api${path}`;
+  }
   return path;
 }

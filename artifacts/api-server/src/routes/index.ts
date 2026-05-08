@@ -12,12 +12,14 @@ import redeemRouter from "./redeem";
 import statsRouter from "./stats";
 import ogRouter from "./og";
 import seoRouter from "./seo";
+import brandingRouter from "./branding";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
 router.use(configRouter);
 router.use(statsRouter);
+router.use(brandingRouter);
 router.use("/users", usersRouter);
 router.use("/messages", messagesRouter);
 router.use("/campaigns", campaignsRouter);

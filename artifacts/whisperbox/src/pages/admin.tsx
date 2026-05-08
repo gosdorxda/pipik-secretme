@@ -1352,34 +1352,30 @@ function RedeemTab({ secret, toast }: { secret: string; toast: any }) {
 function resolveSettingUrl(val: string): string {
   if (!val) return "";
   if (val.startsWith("/objects/")) return `/api/storage${val}`;
+  if (val.startsWith("/branding/")) return `/api${val}`;
   return val;
 }
 
-async function adminUploadImage(
+async function adminUploadBrandingImage(
   file: File,
   secret: string,
+  endpoint: "upload-logo" | "upload-favicon",
 ): Promise<string | null> {
   try {
-    const res = await fetch(`${API_BASE}/admin/upload-url`, {
+    const res = await fetch(`${API_BASE}/admin/${endpoint}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": file.type,
         "x-admin-secret": secret,
       },
-      body: JSON.stringify({ contentType: file.type, size: file.size }),
+      body: file,
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || `HTTP ${res.status}`);
     }
-    const { uploadURL, objectPath } = await res.json();
-    const putRes = await fetch(uploadURL, {
-      method: "PUT",
-      headers: { "Content-Type": file.type },
-      body: file,
-    });
-    if (!putRes.ok) throw new Error("Gagal mengupload file ke storage");
-    return objectPath as string;
+    const data = await res.json();
+    return data.path as string;
   } catch {
     return null;
   }
@@ -1506,21 +1502,18 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
       </div>
     );
 
-  const handleImageUpload = async (
+  const handleBrandingUpload = async (
     file: File,
     settingKey: string,
+    endpoint: "upload-logo" | "upload-favicon",
     setUploading: (v: boolean) => void,
     label: string,
   ) => {
     setUploading(true);
     try {
-      const objectPath = await adminUploadImage(file, secret);
-      if (!objectPath) throw new Error("Upload gagal");
-      await apiFetch("/admin/settings", secret, {
-        method: "PUT",
-        body: JSON.stringify({ [settingKey]: objectPath }),
-      });
-      setSettings((prev) => ({ ...prev, [settingKey]: objectPath }));
+      const storedPath = await adminUploadBrandingImage(file, secret, endpoint);
+      if (!storedPath) throw new Error("Upload gagal");
+      setSettings((prev) => ({ ...prev, [settingKey]: storedPath }));
       queryClient.invalidateQueries({ queryKey: ["site-branding"] });
       toast({ description: `${label} berhasil diupload.` });
     } catch (e: any) {
@@ -1568,9 +1561,10 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-                    handleImageUpload(
+                    handleBrandingUpload(
                       file,
                       "site_logo_url",
+                      "upload-logo",
                       setLogoUploading,
                       "Logo",
                     );
@@ -1620,9 +1614,10 @@ function SettingsTab({ secret, toast }: { secret: string; toast: any }) {
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
-                    handleImageUpload(
+                    handleBrandingUpload(
                       file,
                       "site_favicon_url",
+                      "upload-favicon",
                       setFaviconUploading,
                       "Favicon",
                     );

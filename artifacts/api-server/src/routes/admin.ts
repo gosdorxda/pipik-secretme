@@ -1,4 +1,6 @@
 import { Router } from "express";
+import path from "path";
+import fs from "fs";
 import {
   db,
   usersTable,
@@ -15,6 +17,7 @@ import { IS_SANDBOX } from "../lib/tripay";
 import { getLogs } from "../lib/logBuffer";
 import { createClerkClient, getAuth } from "@clerk/express";
 import { ObjectStorageService } from "../lib/objectStorage";
+import { BRANDING_DIR } from "./branding";
 
 const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
@@ -606,6 +609,114 @@ router.post("/upload-url", async (req, res) => {
     res.status(500).json({ error: "Gagal membuat URL upload" });
   }
 });
+
+const BRANDING_EXT_MAP: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/jpg": "jpg",
+  "image/webp": "webp",
+  "image/svg+xml": "svg",
+  "image/x-icon": "ico",
+  "image/vnd.microsoft.icon": "ico",
+  "image/gif": "gif",
+};
+
+async function saveBrandingFile(
+  fileBuffer: Buffer,
+  contentType: string,
+  baseName: string,
+  settingKey: string,
+): Promise<string> {
+  const ext = BRANDING_EXT_MAP[contentType];
+  if (!ext) throw new Error("Tipe file tidak didukung");
+  fs.mkdirSync(BRANDING_DIR, { recursive: true });
+  const fileName = `${baseName}.${ext}`;
+  const filePath = path.join(BRANDING_DIR, fileName);
+  fs.writeFileSync(filePath, fileBuffer);
+  const storedPath = `/branding/${fileName}`;
+  const now = new Date();
+  await db
+    .insert(systemSettingsTable)
+    .values({ key: settingKey, value: storedPath, updatedAt: now })
+    .onConflictDoUpdate({
+      target: systemSettingsTable.key,
+      set: { value: storedPath, updatedAt: now },
+    });
+  invalidateCache();
+  return storedPath;
+}
+
+router.post(
+  "/upload-logo",
+  (req, res, next) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: Buffer) => chunks.push(chunk));
+    req.on("end", () => {
+      (req as any).rawFileBuffer = Buffer.concat(chunks);
+      next();
+    });
+    req.on("error", next);
+  },
+  async (req, res) => {
+    const contentType = (req.headers["content-type"] ?? "").split(";")[0].trim();
+    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+      res.status(400).json({ error: "Hanya file gambar yang diizinkan" });
+      return;
+    }
+    const buf: Buffer = (req as any).rawFileBuffer ?? Buffer.alloc(0);
+    if (buf.length > MAX_UPLOAD_SIZE_BYTES) {
+      res.status(400).json({ error: "Ukuran file melebihi batas 5 MB" });
+      return;
+    }
+    if (buf.length === 0) {
+      res.status(400).json({ error: "File kosong" });
+      return;
+    }
+    try {
+      const storedPath = await saveBrandingFile(buf, contentType, "logo", "site_logo_url");
+      res.json({ path: storedPath });
+    } catch (err: any) {
+      req.log.error({ err }, "Error uploading logo");
+      res.status(500).json({ error: err.message ?? "Gagal menyimpan logo" });
+    }
+  },
+);
+
+router.post(
+  "/upload-favicon",
+  (req, res, next) => {
+    const chunks: Buffer[] = [];
+    req.on("data", (chunk: Buffer) => chunks.push(chunk));
+    req.on("end", () => {
+      (req as any).rawFileBuffer = Buffer.concat(chunks);
+      next();
+    });
+    req.on("error", next);
+  },
+  async (req, res) => {
+    const contentType = (req.headers["content-type"] ?? "").split(";")[0].trim();
+    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+      res.status(400).json({ error: "Hanya file gambar yang diizinkan" });
+      return;
+    }
+    const buf: Buffer = (req as any).rawFileBuffer ?? Buffer.alloc(0);
+    if (buf.length > MAX_UPLOAD_SIZE_BYTES) {
+      res.status(400).json({ error: "Ukuran file melebihi batas 5 MB" });
+      return;
+    }
+    if (buf.length === 0) {
+      res.status(400).json({ error: "File kosong" });
+      return;
+    }
+    try {
+      const storedPath = await saveBrandingFile(buf, contentType, "favicon", "site_favicon_url");
+      res.json({ path: storedPath });
+    } catch (err: any) {
+      req.log.error({ err }, "Error uploading favicon");
+      res.status(500).json({ error: err.message ?? "Gagal menyimpan favicon" });
+    }
+  },
+);
 
 router.get("/messages", async (req, res) => {
   const page = Math.max(1, Number(req.query.page) || 1);
