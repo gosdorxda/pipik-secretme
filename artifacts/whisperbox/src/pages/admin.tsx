@@ -1362,13 +1362,12 @@ async function adminUploadBrandingImage(
   endpoint: "upload-logo" | "upload-favicon",
 ): Promise<string | null> {
   try {
+    const formData = new FormData();
+    formData.append("file", file);
     const res = await fetch(`${API_BASE}/admin/${endpoint}`, {
       method: "POST",
-      headers: {
-        "Content-Type": file.type,
-        "x-admin-secret": secret,
-      },
-      body: file,
+      headers: { "x-admin-secret": secret },
+      body: formData,
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));

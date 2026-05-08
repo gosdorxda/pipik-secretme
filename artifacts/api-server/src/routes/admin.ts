@@ -1,6 +1,7 @@
 import { Router } from "express";
 import path from "path";
 import fs from "fs";
+import multer from "multer";
 import {
   db,
   usersTable,
@@ -621,13 +622,25 @@ const BRANDING_EXT_MAP: Record<string, string> = {
   "image/gif": "gif",
 };
 
+const brandingUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_UPLOAD_SIZE_BYTES },
+  fileFilter(_req, file, cb) {
+    if (ALLOWED_IMAGE_TYPES.has(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error("Hanya file gambar yang diizinkan"));
+    }
+  },
+}).single("file");
+
 async function saveBrandingFile(
   fileBuffer: Buffer,
-  contentType: string,
+  mimeType: string,
   baseName: string,
   settingKey: string,
 ): Promise<string> {
-  const ext = BRANDING_EXT_MAP[contentType];
+  const ext = BRANDING_EXT_MAP[mimeType];
   if (!ext) throw new Error("Tipe file tidak didukung");
   fs.mkdirSync(BRANDING_DIR, { recursive: true });
   const fileName = `${baseName}.${ext}`;
@@ -646,77 +659,61 @@ async function saveBrandingFile(
   return storedPath;
 }
 
-router.post(
-  "/upload-logo",
-  (req, res, next) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      (req as any).rawFileBuffer = Buffer.concat(chunks);
-      next();
-    });
-    req.on("error", next);
-  },
-  async (req, res) => {
-    const contentType = (req.headers["content-type"] ?? "").split(";")[0].trim();
-    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
-      res.status(400).json({ error: "Hanya file gambar yang diizinkan" });
+router.post("/upload-logo", (req, res) => {
+  brandingUpload(req, res, async (err) => {
+    if (err) {
+      res.status(400).json({ error: err.message ?? "Upload gagal" });
       return;
     }
-    const buf: Buffer = (req as any).rawFileBuffer ?? Buffer.alloc(0);
-    if (buf.length > MAX_UPLOAD_SIZE_BYTES) {
-      res.status(400).json({ error: "Ukuran file melebihi batas 5 MB" });
-      return;
-    }
-    if (buf.length === 0) {
-      res.status(400).json({ error: "File kosong" });
+    const file = req.file;
+    if (!file) {
+      res.status(400).json({ error: "File tidak ditemukan dalam request" });
       return;
     }
     try {
-      const storedPath = await saveBrandingFile(buf, contentType, "logo", "site_logo_url");
+      const storedPath = await saveBrandingFile(
+        file.buffer,
+        file.mimetype,
+        "logo",
+        "site_logo_url",
+      );
       res.json({ path: storedPath });
-    } catch (err: any) {
-      req.log.error({ err }, "Error uploading logo");
-      res.status(500).json({ error: err.message ?? "Gagal menyimpan logo" });
+    } catch (saveErr) {
+      const message =
+        saveErr instanceof Error ? saveErr.message : "Gagal menyimpan logo";
+      req.log.error({ err: saveErr }, "Error uploading logo");
+      res.status(500).json({ error: message });
     }
-  },
-);
+  });
+});
 
-router.post(
-  "/upload-favicon",
-  (req, res, next) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk: Buffer) => chunks.push(chunk));
-    req.on("end", () => {
-      (req as any).rawFileBuffer = Buffer.concat(chunks);
-      next();
-    });
-    req.on("error", next);
-  },
-  async (req, res) => {
-    const contentType = (req.headers["content-type"] ?? "").split(";")[0].trim();
-    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
-      res.status(400).json({ error: "Hanya file gambar yang diizinkan" });
+router.post("/upload-favicon", (req, res) => {
+  brandingUpload(req, res, async (err) => {
+    if (err) {
+      res.status(400).json({ error: err.message ?? "Upload gagal" });
       return;
     }
-    const buf: Buffer = (req as any).rawFileBuffer ?? Buffer.alloc(0);
-    if (buf.length > MAX_UPLOAD_SIZE_BYTES) {
-      res.status(400).json({ error: "Ukuran file melebihi batas 5 MB" });
-      return;
-    }
-    if (buf.length === 0) {
-      res.status(400).json({ error: "File kosong" });
+    const file = req.file;
+    if (!file) {
+      res.status(400).json({ error: "File tidak ditemukan dalam request" });
       return;
     }
     try {
-      const storedPath = await saveBrandingFile(buf, contentType, "favicon", "site_favicon_url");
+      const storedPath = await saveBrandingFile(
+        file.buffer,
+        file.mimetype,
+        "favicon",
+        "site_favicon_url",
+      );
       res.json({ path: storedPath });
-    } catch (err: any) {
-      req.log.error({ err }, "Error uploading favicon");
-      res.status(500).json({ error: err.message ?? "Gagal menyimpan favicon" });
+    } catch (saveErr) {
+      const message =
+        saveErr instanceof Error ? saveErr.message : "Gagal menyimpan favicon";
+      req.log.error({ err: saveErr }, "Error uploading favicon");
+      res.status(500).json({ error: message });
     }
-  },
-);
+  });
+});
 
 router.get("/messages", async (req, res) => {
   const page = Math.max(1, Number(req.query.page) || 1);
