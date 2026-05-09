@@ -103,6 +103,15 @@ source .env
 set +a
 log_ok "Environment variables ter-load."
 
+# ── 3b. Pastikan folder branding ada ─────────────────────────
+BRANDING_DIR="artifacts/api-server/data/branding"
+if [ ! -d "$BRANDING_DIR" ]; then
+  mkdir -p "$BRANDING_DIR"
+  log_ok "Folder branding dibuat: $BRANDING_DIR"
+else
+  log_ok "Folder branding sudah ada: $BRANDING_DIR"
+fi
+
 # ── 4. Build ──────────────────────────────────────────────────
 log_section "4. Build aplikasi"
 

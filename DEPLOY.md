@@ -380,6 +380,44 @@ pm2 save
 
 ---
 
+## 6c. Folder Branding (Logo & Favicon Admin)
+
+Logo dan favicon yang diupload melalui Admin Panel (`/admin` → tab Pengaturan → Branding Situs) disimpan di:
+
+```
+artifacts/api-server/data/branding/
+```
+
+**Sifatnya:**
+
+- Folder ini **tidak ada di git** (di-`.gitignore`) — aman dari `git pull` dan tidak akan tertimpa saat update kode
+- Isi folder ini **persisten di VPS** selama tidak dihapus manual
+- Jika folder belum ada, API server akan membuatnya otomatis saat pertama kali upload
+
+**Backup jika pindah VPS:**
+
+```bash
+# Di VPS lama — backup folder branding
+tar -czf branding-backup.tar.gz /var/www/vooi/artifacts/api-server/data/branding/
+
+# Transfer ke VPS baru
+scp branding-backup.tar.gz deploy@ip-vps-baru:/var/www/vooi/
+
+# Di VPS baru — restore
+tar -xzf branding-backup.tar.gz -C /
+```
+
+**Verifikasi folder ada:**
+
+```bash
+ls /var/www/vooi/artifacts/api-server/data/branding/
+# Contoh output: favicon.png  logo.svg
+```
+
+> **Catatan:** Jika folder kosong atau belum ada, Admin Panel akan menampilkan placeholder kosong untuk logo/favicon — aplikasi tetap berjalan normal.
+
+---
+
 ## 7. Setup Clerk untuk Domain vooi.lol
 
 1. Masuk ke [Clerk Dashboard](https://dashboard.clerk.com)
@@ -543,6 +581,20 @@ server {
         proxy_read_timeout 30s;
     }
 
+    # Hashed JS/CSS chunks — cache 1 tahun (immutable karena nama file berubah tiap build)
+    location ~* ^/assets/.*\.(js|css)$ {
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        access_log off;
+    }
+
+    # Font files — cache 1 tahun
+    location ~* \.(woff2|woff|ttf|otf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+        access_log off;
+    }
+
     # SPA fallback — semua route dikembalikan ke index.html
     location / {
         try_files $uri $uri/ /index.html;
@@ -562,6 +614,16 @@ sudo ln -s /etc/nginx/sites-available/vooi /etc/nginx/sites-enabled/
 sudo nginx -t        # harus: "syntax is ok" dan "test is successful"
 sudo systemctl reload nginx
 ```
+
+**Catatan jika pakai Cloudflare (penting!):**
+
+Secara default, Cloudflare mengatur "Browser Cache TTL" sendiri (biasanya 4 jam) dan bisa meng-override header yang dikirim nginx. Agar header nginx diteruskan apa adanya ke browser:
+
+1. Buka **Cloudflare Dashboard** → pilih domain → **Speed** → **Optimization**
+2. Gulir ke bagian **Browser Cache TTL**
+3. Ubah dari default ke **"Respect Existing Headers"**
+
+Setelah itu, browser akan menerima `max-age=31536000` dari nginx, bukan override 4 jam dari Cloudflare.
 
 ---
 
