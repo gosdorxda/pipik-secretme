@@ -388,21 +388,14 @@ Logo dan favicon yang diupload melalui Admin Panel (`/admin` → tab Pengaturan 
 artifacts/api-server/data/branding/
 ```
 
-**Penting — lakukan ini satu kali setelah clone pertama:**
+**Status di git dan perlindungan otomatis:**
 
-Repo menyertakan file placeholder `logo.png` dan `favicon.png` di folder ini agar Admin Panel tidak kosong saat pertama kali dibuka. Setelah kamu upload branding sendiri lewat Admin Panel, hentikan tracking git pada file-file ini agar `git pull` tidak menimpa upload kamu:
+Repo menyertakan file placeholder `logo.png` dan `favicon.png` agar Admin Panel tidak kosong saat pertama kali dibuka. File-file ini tetap ter-track di git sebagai placeholder, tapi **upload branding kamu tidak akan tertimpa** karena dua lapisan perlindungan:
 
-```bash
-cd /var/www/vooi
-git rm --cached artifacts/api-server/data/branding/logo.png \
-                artifacts/api-server/data/branding/favicon.png 2>/dev/null || true
-```
+1. **`update.sh` backup/restore** — setiap kali `update.sh` dijalankan, isi folder branding di-backup ke direktori sementara sebelum `git pull`, lalu di-restore sesudahnya. Artinya file yang kamu upload lewat Admin Panel selalu dikembalikan, apapun yang terjadi di git.
+2. **`.gitignore`** — file baru yang ditambahkan ke folder ini (misalnya format berbeda) tidak akan muncul di `git status` dan tidak akan ter-commit secara tidak sengaja.
 
-> Setelah perintah ini, folder sudah di-`.gitignore` — `git pull` berikutnya tidak akan menyentuh file branding sama sekali.
-
-**Perlindungan otomatis di `update.sh`:**
-
-Script `update.sh` sudah dilengkapi proteksi: sebelum `git pull`, isi folder branding di-backup ke direktori sementara, lalu di-restore setelah pull selesai. Jadi bahkan sebelum kamu menjalankan `git rm --cached` di atas, upload branding kamu tetap aman saat update.
+> Tidak diperlukan perintah git tambahan di VPS — perlindungan sudah berjalan otomatis via `update.sh`.
 
 **Backup jika pindah VPS:**
 
