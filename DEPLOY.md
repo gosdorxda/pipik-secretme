@@ -388,30 +388,40 @@ Logo dan favicon yang diupload melalui Admin Panel (`/admin` → tab Pengaturan 
 artifacts/api-server/data/branding/
 ```
 
-**Sifatnya:**
+**Penting — lakukan ini satu kali setelah clone pertama:**
 
-- Folder ini **tidak ada di git** (di-`.gitignore`) — aman dari `git pull` dan tidak akan tertimpa saat update kode
-- Isi folder ini **persisten di VPS** selama tidak dihapus manual
-- Jika folder belum ada, API server akan membuatnya otomatis saat pertama kali upload
+Repo menyertakan file placeholder `logo.png` dan `favicon.png` di folder ini agar Admin Panel tidak kosong saat pertama kali dibuka. Setelah kamu upload branding sendiri lewat Admin Panel, hentikan tracking git pada file-file ini agar `git pull` tidak menimpa upload kamu:
+
+```bash
+cd /var/www/vooi
+git rm --cached artifacts/api-server/data/branding/logo.png \
+                artifacts/api-server/data/branding/favicon.png 2>/dev/null || true
+```
+
+> Setelah perintah ini, folder sudah di-`.gitignore` — `git pull` berikutnya tidak akan menyentuh file branding sama sekali.
+
+**Perlindungan otomatis di `update.sh`:**
+
+Script `update.sh` sudah dilengkapi proteksi: sebelum `git pull`, isi folder branding di-backup ke direktori sementara, lalu di-restore setelah pull selesai. Jadi bahkan sebelum kamu menjalankan `git rm --cached` di atas, upload branding kamu tetap aman saat update.
 
 **Backup jika pindah VPS:**
 
 ```bash
 # Di VPS lama — backup folder branding
-tar -czf branding-backup.tar.gz /var/www/vooi/artifacts/api-server/data/branding/
+tar -czf branding-backup.tar.gz -C /var/www/vooi artifacts/api-server/data/branding/
 
 # Transfer ke VPS baru
 scp branding-backup.tar.gz deploy@ip-vps-baru:/var/www/vooi/
 
 # Di VPS baru — restore
-tar -xzf branding-backup.tar.gz -C /
+tar -xzf branding-backup.tar.gz
 ```
 
 **Verifikasi folder ada:**
 
 ```bash
 ls /var/www/vooi/artifacts/api-server/data/branding/
-# Contoh output: favicon.png  logo.svg
+# Contoh output: favicon.png  logo.png
 ```
 
 > **Catatan:** Jika folder kosong atau belum ada, Admin Panel akan menampilkan placeholder kosong untuk logo/favicon — aplikasi tetap berjalan normal.

@@ -73,12 +73,38 @@ echo "  Skip install  : $SKIP_INSTALL"
 echo "  Migrasi DB    : $RUN_MIGRATE"
 echo ""
 
-# ── 1. Git pull ───────────────────────────────────────────────
+# ── 1. Git pull (dengan proteksi folder branding) ─────────────
 log_section "1. Ambil kode terbaru"
+
+# Backup folder branding sebelum git pull agar file yang diupload lewat
+# Admin Panel tidak tertimpa jika masih ter-track di git.
+BRANDING_SRC="artifacts/api-server/data/branding"
+BRANDING_TMP=""
+if [ -d "$BRANDING_SRC" ] && [ -n "$(ls -A "$BRANDING_SRC" 2>/dev/null)" ]; then
+  BRANDING_TMP=$(mktemp -d)
+  cp -a "$BRANDING_SRC/." "$BRANDING_TMP/"
+  log_info "Folder branding di-backup sebelum pull."
+fi
+
 if ! git pull; then
   log_error "git pull gagal. Cek koneksi atau ada konflik merge."
+  # Restore backup jika pull gagal
+  if [ -n "$BRANDING_TMP" ] && [ -d "$BRANDING_TMP" ]; then
+    mkdir -p "$BRANDING_SRC"
+    cp -a "$BRANDING_TMP/." "$BRANDING_SRC/"
+    rm -rf "$BRANDING_TMP"
+  fi
   exit 1
 fi
+
+# Restore branding setelah pull (mencegah tertimpa file dari repo)
+if [ -n "$BRANDING_TMP" ] && [ -d "$BRANDING_TMP" ]; then
+  mkdir -p "$BRANDING_SRC"
+  cp -a "$BRANDING_TMP/." "$BRANDING_SRC/"
+  rm -rf "$BRANDING_TMP"
+  log_ok "Folder branding berhasil di-restore."
+fi
+
 log_ok "Kode berhasil diperbarui."
 
 # ── 2. Install dependensi ─────────────────────────────────────

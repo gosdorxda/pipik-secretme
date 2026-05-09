@@ -476,55 +476,55 @@ function ClerkProviderWithRoutes() {
           <ClerkQueryClientCacheInvalidator />
           <Suspense fallback={<PageLoader />}>
             <Switch>
-                <Route path="/" component={HomeRedirect} />
-                <Route path="/sign-in/*?" component={SignInPage} />
-                <Route path="/sign-up/*?" component={SignUpPage} />
+              <Route path="/" component={HomeRedirect} />
+              <Route path="/sign-in/*?" component={SignInPage} />
+              <Route path="/sign-up/*?" component={SignUpPage} />
 
-                <Route path="/dashboard">
-                  {() => <ProtectedRoute component={DashboardPage} />}
-                </Route>
-                <Route path="/settings">
-                  {() => <ProtectedRoute component={SettingsPage} />}
-                </Route>
-                <Route path="/upgrade">
-                  {() => <ProtectedRoute component={UpgradePage} />}
-                </Route>
-                <Route path="/wrapped">
-                  {() => <ProtectedRoute component={WrappedPage} />}
-                </Route>
-                <Route path="/referral">
-                  {() => <ProtectedRoute component={ReferralPage} />}
-                </Route>
-                <Route path="/admin" component={AdminPage} />
+              <Route path="/dashboard">
+                {() => <ProtectedRoute component={DashboardPage} />}
+              </Route>
+              <Route path="/settings">
+                {() => <ProtectedRoute component={SettingsPage} />}
+              </Route>
+              <Route path="/upgrade">
+                {() => <ProtectedRoute component={UpgradePage} />}
+              </Route>
+              <Route path="/wrapped">
+                {() => <ProtectedRoute component={WrappedPage} />}
+              </Route>
+              <Route path="/referral">
+                {() => <ProtectedRoute component={ReferralPage} />}
+              </Route>
+              <Route path="/admin" component={AdminPage} />
 
-                <Route path="/tentang" component={TentangPage} />
-                <Route path="/cara-pakai" component={CaraPakaiPage} />
-                <Route path="/faq" component={FaqPage} />
-                <Route path="/privasi" component={PrivasiPage} />
-                <Route path="/ketentuan" component={KetentuanPage} />
+              <Route path="/tentang" component={TentangPage} />
+              <Route path="/cara-pakai" component={CaraPakaiPage} />
+              <Route path="/faq" component={FaqPage} />
+              <Route path="/privasi" component={PrivasiPage} />
+              <Route path="/ketentuan" component={KetentuanPage} />
 
-                {/* Legacy redirect: /u/username → /@username */}
-                <Route path="/u/:username">
-                  {(params: { username?: string }) => {
-                    const [, setLocation] = useLocation();
-                    useEffect(() => {
-                      if (params.username)
-                        setLocation(`/@${params.username}`, { replace: true });
-                    }, [params.username]);
-                    return null;
-                  }}
-                </Route>
+              {/* Legacy redirect: /u/username → /@username */}
+              <Route path="/u/:username">
+                {(params: { username?: string }) => {
+                  const [, setLocation] = useLocation();
+                  useEffect(() => {
+                    if (params.username)
+                      setLocation(`/@${params.username}`, { replace: true });
+                  }, [params.username]);
+                  return null;
+                }}
+              </Route>
 
-                <Route path="/:handle">
-                  {(params: { handle?: string }) => {
-                    const handle = params.handle ?? "";
-                    if (!handle.startsWith("@")) return <NotFound />;
-                    return <PublicProfilePage />;
-                  }}
-                </Route>
+              <Route path="/:handle">
+                {(params: { handle?: string }) => {
+                  const handle = params.handle ?? "";
+                  if (!handle.startsWith("@")) return <NotFound />;
+                  return <PublicProfilePage />;
+                }}
+              </Route>
 
-                <Route component={NotFound} />
-              </Switch>
+              <Route component={NotFound} />
+            </Switch>
           </Suspense>
           <Toaster />
         </TooltipProvider>

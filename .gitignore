@@ -50,3 +50,6 @@ Thumbs.db
 
 # Replit chat attachments — never commit (may contain sensitive data)
 attached_assets/
+
+# Admin-uploaded branding assets (logo/favicon) — persisted on VPS, not versioned
+artifacts/api-server/data/branding/
