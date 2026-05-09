@@ -392,7 +392,7 @@ artifacts/api-server/data/branding/
 
 Repo menyertakan file placeholder `logo.png` dan `favicon.png` agar Admin Panel tidak kosong saat pertama kali dibuka. File-file ini tetap ter-track di git sebagai placeholder, tapi **upload branding kamu tidak akan tertimpa** karena dua lapisan perlindungan:
 
-1. **`update.sh` backup/restore** — setiap kali `update.sh` dijalankan, isi folder branding di-backup ke direktori sementara sebelum `git pull`, lalu di-restore sesudahnya. Artinya file yang kamu upload lewat Admin Panel selalu dikembalikan, apapun yang terjadi di git.
+1. **`update.sh` backup/restore** — setiap kali `update.sh` dijalankan, isi folder branding di-backup ke direktori sementara sebelum `git pull`, lalu di-restore sesudahnya. Artinya file yang kamu upload lewat Admin Panel dikembalikan pada alur update normal. Jika terjadi merge conflict pada file placeholder di git, selesaikan conflict terlebih dahulu lalu jalankan kembali `update.sh`.
 2. **`.gitignore`** — file baru yang ditambahkan ke folder ini (misalnya format berbeda) tidak akan muncul di `git status` dan tidak akan ter-commit secara tidak sengaja.
 
 > Tidak diperlukan perintah git tambahan di VPS — perlindungan sudah berjalan otomatis via `update.sh`.
