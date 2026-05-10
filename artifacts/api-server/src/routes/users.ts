@@ -84,7 +84,10 @@ router.put("/me", requireAuth, async (req, res) => {
     const hasPremiumField = premiumFields.some(
       (f) => parsed.data[f] !== undefined,
     );
-    if (hasPremiumField && !user.isPremium) {
+    const wantsPremiumTemplate =
+      parsed.data.profileTemplate !== undefined &&
+      parsed.data.profileTemplate !== "classic";
+    if ((hasPremiumField || wantsPremiumTemplate) && !user.isPremium) {
       res.status(403).json({ error: "upgrade_required" });
       return;
     }

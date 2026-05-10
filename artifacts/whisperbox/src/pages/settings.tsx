@@ -44,6 +44,7 @@ import {
   useGetMyProfile,
   useUpdateMyProfile,
   getGetMyProfileQueryKey,
+  type UpdateProfileBodyProfileTemplate,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -296,7 +297,7 @@ export default function SettingsPage() {
     }
   }, [profile, form]);
 
-  const handleSelectTemplate = (tpl: string) => {
+  const handleSelectTemplate = (tpl: UpdateProfileBodyProfileTemplate) => {
     if (tpl === profileTemplate || savingTemplate) return;
     setProfileTemplate(tpl);
     setSavingTemplate(true);
@@ -947,7 +948,13 @@ export default function SettingsPage() {
                 {/* Minimal */}
                 <button
                   type="button"
-                  onClick={() => handleSelectTemplate("minimal")}
+                  onClick={() => {
+                    if (!profile?.isPremium) {
+                      window.location.href = "/upgrade";
+                      return;
+                    }
+                    handleSelectTemplate("minimal");
+                  }}
                   disabled={savingTemplate}
                   className={[
                     "relative rounded-xl border-2 overflow-hidden text-left transition-all duration-150 disabled:opacity-60",
@@ -956,6 +963,15 @@ export default function SettingsPage() {
                       : "border-border hover:border-border/60 hover:shadow-sm",
                   ].join(" ")}
                 >
+                  {/* Premium badge — only for non-premium */}
+                  {!profile?.isPremium && (
+                    <div className="absolute top-2 right-2 z-10 flex items-center gap-0.5 bg-amber-400 text-white rounded-full px-1.5 py-0.5">
+                      <Crown className="w-2.5 h-2.5" />
+                      <span className="text-[9px] font-bold leading-none">
+                        Premium
+                      </span>
+                    </div>
+                  )}
                   {/* Mini preview */}
                   <div className="bg-white p-2 space-y-1.5">
                     <div className="flex flex-col items-center gap-1 py-1">
@@ -989,8 +1005,12 @@ export default function SettingsPage() {
                     <span className="text-xs font-semibold text-foreground">
                       Minimal
                     </span>
-                    {profileTemplate === "minimal" && (
-                      <Check className="w-3.5 h-3.5 text-primary" />
+                    {profile?.isPremium ? (
+                      profileTemplate === "minimal" ? (
+                        <Check className="w-3.5 h-3.5 text-primary" />
+                      ) : null
+                    ) : (
+                      <Lock className="w-3 h-3 text-muted-foreground/50" />
                     )}
                   </div>
                 </button>
