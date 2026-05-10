@@ -48,7 +48,7 @@ export type UserProfileProfileTemplate =
 
 export const UserProfileProfileTemplate = {
   classic: "classic",
-  minimal: "minimal",
+  dark: "dark",
 } as const;
 
 export interface UserProfile {
@@ -79,7 +79,7 @@ export type PublicProfileProfileTemplate =
 
 export const PublicProfileProfileTemplate = {
   classic: "classic",
-  minimal: "minimal",
+  dark: "dark",
 } as const;
 
 export type PublicMessageReactions = { [key: string]: number };
@@ -127,7 +127,7 @@ export type UpdateProfileBodyProfileTemplate =
 
 export const UpdateProfileBodyProfileTemplate = {
   classic: "classic",
-  minimal: "minimal",
+  dark: "dark",
 } as const;
 
 export interface UpdateProfileBody {

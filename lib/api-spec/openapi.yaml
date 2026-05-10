@@ -799,7 +799,7 @@ components:
           type: boolean
         profileTemplate:
           type: string
-          enum: [classic, minimal]
+          enum: [classic, dark]
         createdAt:
           type: string
           format: date-time
@@ -854,7 +854,7 @@ components:
           type: boolean
         profileTemplate:
           type: string
-          enum: [classic, minimal]
+          enum: [classic, dark]
         publicMessages:
           type: array
           items:
@@ -960,7 +960,7 @@ components:
           nullable: true
         profileTemplate:
           type: string
-          enum: [classic, minimal]
+          enum: [classic, dark]
 
     Message:
       type: object

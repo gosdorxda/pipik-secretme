@@ -59,7 +59,7 @@ import { ShareMessageCard } from "@/components/share-message-card";
 
 const REACTION_EMOJIS = ["❤️", "😂", "🔥", "😮", "👏"] as const;
 
-function MinimalMessageCard({
+function DarkMessageCard({
   msg,
   idx,
   initials,
@@ -72,7 +72,8 @@ function MinimalMessageCard({
   displayName: string;
   onShare: () => void;
 }) {
-  void idx;
+  void initials;
+  const { stripe } = MESSAGE_PALETTE[idx % MESSAGE_PALETTE.length];
   const reactMutation = useReactToMessage();
 
   const [reactions, setReactions] = useState<Record<string, number>>(
@@ -145,21 +146,22 @@ function MinimalMessageCard({
   };
 
   return (
-    <div className="rounded-xl border border-border bg-white overflow-hidden">
+    <div className="rounded-xl border border-white/[0.07] bg-gray-900 overflow-hidden">
+      <div className="h-[3px]" style={{ background: stripe }} />
       <div className="px-5 pt-4 pb-3">
-        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+        <p className="text-sm leading-relaxed text-gray-100 whitespace-pre-wrap">
           {msg.content}
         </p>
       </div>
 
       {msg.ownerReply && (
-        <div className="mx-5 mb-3 border-l-2 border-foreground/20 pl-3">
+        <div className="mx-5 mb-3 border-l-2 border-gray-600 pl-3">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-semibold text-foreground/70">
+            <span className="text-xs font-semibold text-gray-300">
               {displayName}
             </span>
             {msg.ownerRepliedAt && (
-              <span className="text-[10px] text-muted-foreground ml-auto">
+              <span className="text-[10px] text-gray-500 ml-auto">
                 {formatDistanceToNow(new Date(msg.ownerRepliedAt), {
                   addSuffix: true,
                   locale: idLocale,
@@ -167,13 +169,13 @@ function MinimalMessageCard({
               </span>
             )}
           </div>
-          <p className="text-sm leading-relaxed text-foreground/70 whitespace-pre-wrap">
+          <p className="text-sm leading-relaxed text-gray-400 whitespace-pre-wrap">
             {msg.ownerReply}
           </p>
         </div>
       )}
 
-      <div className="px-4 py-1.5 flex items-center justify-between gap-2 border-t border-border/50">
+      <div className="px-4 py-1.5 flex items-center justify-between gap-2 border-t border-gray-700/60">
         <div className="flex items-center gap-0.5 min-w-0">
           {REACTION_EMOJIS.filter((e) => (reactions[e] ?? 0) > 0).map(
             (emoji) => (
@@ -183,12 +185,12 @@ function MinimalMessageCard({
                 className={[
                   "inline-flex items-center gap-0.5 px-1 py-0.5 rounded-full text-xs transition-all duration-150 select-none",
                   reacted === emoji
-                    ? "bg-foreground/10 opacity-100"
-                    : "bg-black/5 opacity-60 hover:opacity-90",
+                    ? "bg-white/15 opacity-100"
+                    : "bg-white/8 opacity-60 hover:opacity-90",
                 ].join(" ")}
               >
                 <span className="leading-none">{emoji}</span>
-                <span className="text-[10px] font-medium text-foreground/60">
+                <span className="text-[10px] font-medium text-gray-400">
                   {reactions[emoji]}
                 </span>
               </button>
@@ -201,15 +203,15 @@ function MinimalMessageCard({
               className={[
                 "text-sm leading-none px-1 py-0.5 rounded-full transition-all duration-150 select-none",
                 pickerOpen
-                  ? "opacity-100 bg-black/8"
+                  ? "opacity-100 bg-white/10"
                   : "opacity-25 hover:opacity-60",
               ].join(" ")}
             >
               {reacted ?? "☺"}
             </button>
             {pickerOpen && (
-              <div className="absolute bottom-full left-0 mb-2 bg-white border border-border/50 rounded-2xl shadow-xl px-1.5 py-1 flex items-center gap-0.5 z-20 whitespace-nowrap">
-                <span className="absolute -bottom-1.5 left-3 w-3 h-3 bg-white border-b border-r border-border/50 rotate-45" />
+              <div className="absolute bottom-full left-0 mb-2 bg-gray-900 border border-gray-700 rounded-2xl shadow-xl px-1.5 py-1 flex items-center gap-0.5 z-20 whitespace-nowrap">
+                <span className="absolute -bottom-1.5 left-3 w-3 h-3 bg-gray-900 border-b border-r border-gray-700 rotate-45" />
                 {REACTION_EMOJIS.map((emoji) => (
                   <button
                     key={emoji}
@@ -218,8 +220,8 @@ function MinimalMessageCard({
                       setPickerOpen(false);
                     }}
                     className={[
-                      "text-xl px-2 py-1 rounded-xl transition-all duration-100 hover:scale-125 hover:bg-black/5 select-none",
-                      reacted === emoji ? "bg-foreground/10 scale-110" : "",
+                      "text-xl px-2 py-1 rounded-xl transition-all duration-100 hover:scale-125 hover:bg-white/10 select-none",
+                      reacted === emoji ? "bg-white/15 scale-110" : "",
                     ].join(" ")}
                   >
                     {emoji}
@@ -229,7 +231,7 @@ function MinimalMessageCard({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1 text-[10px] text-muted-foreground/70">
+        <div className="flex items-center gap-1 text-[10px] text-gray-500">
           <span>
             {formatDistanceToNow(new Date(msg.createdAt), {
               addSuffix: true,
@@ -239,7 +241,7 @@ function MinimalMessageCard({
           <span>·</span>
           <button
             onClick={onShare}
-            className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/70 hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-0.5 text-[10px] text-gray-500 hover:text-gray-300 transition-colors"
           >
             <Share2 className="w-2.5 h-2.5" />
             Bagikan
@@ -592,7 +594,7 @@ type SocialLinks = {
   socialLinkedin?: string | null;
 };
 
-function SocialLinkBar({ links }: { links: SocialLinks }) {
+function SocialLinkBar({ links, dark }: { links: SocialLinks; dark?: boolean }) {
   const items = [
     {
       key: "socialInstagram",
@@ -655,7 +657,7 @@ function SocialLinkBar({ links }: { links: SocialLinks }) {
             rel="noopener noreferrer"
             title={item.label}
             style={{ color: item.color }}
-            className="w-9 h-9 rounded-md bg-white border border-border hover:border-border/60 flex items-center justify-center transition-all duration-150 hover:shadow-sm"
+            className={`w-9 h-9 rounded-md flex items-center justify-center transition-all duration-150 hover:shadow-sm ${dark ? "bg-gray-800 border border-gray-600 hover:border-gray-500" : "bg-white border border-border hover:border-border/60"}`}
           >
             {item.icon}
           </a>
@@ -880,15 +882,15 @@ export default function PublicProfilePage() {
 
   const template = profile.profileTemplate ?? "classic";
 
-  if (template === "minimal") {
+  if (template === "dark") {
     return (
-      <div className="min-h-[100dvh] bg-white text-foreground flex flex-col">
+      <div className="min-h-[100dvh] bg-gray-950 text-gray-100 flex flex-col">
         {/* Nav */}
-        <header className="border-b border-border/60 bg-white sticky top-0 z-50">
+        <header className="border-b border-gray-700/60 bg-gray-900 sticky top-0 z-50">
           <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
             <Link
               href="/"
-              className="flex items-center gap-2 font-bold text-sm text-foreground"
+              className="flex items-center gap-2 font-bold text-sm text-gray-100"
             >
               <SiteLogoImg alt="kepoin" className="w-7 h-7" />
               <BrandName name={appName} className="tracking-tight" />
@@ -902,41 +904,41 @@ export default function PublicProfilePage() {
         </header>
 
         <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full space-y-8">
-          {/* Profile Hero — minimal centered */}
+          {/* Profile Hero — dark centered */}
           <div className="flex flex-col items-center gap-3 text-center">
             {avatarUrl ? (
               <LazyAvatar
                 src={avatarUrl}
                 alt={displayName}
-                className="w-20 h-20 border border-border/50 shadow-sm"
+                className="w-20 h-20 border border-gray-700 shadow-sm"
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-foreground/8 border border-border/50 flex items-center justify-center text-2xl font-semibold text-foreground/60">
+              <div className="w-20 h-20 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-2xl font-semibold text-gray-300">
                 {initials}
               </div>
             )}
             <div>
-              <h1 className="text-xl font-semibold text-foreground">
+              <h1 className="text-xl font-semibold text-gray-100">
                 {displayName}
               </h1>
-              <p className="text-sm text-muted-foreground mt-0.5">
+              <p className="text-sm text-gray-400 mt-0.5">
                 @{profile.username}
               </p>
             </div>
             {profile.bio && (
-              <p className="text-sm text-foreground/60 leading-relaxed max-w-xs mx-auto">
+              <p className="text-sm text-gray-300 leading-relaxed max-w-xs mx-auto">
                 {profile.bio}
               </p>
             )}
-            <SocialLinkBar links={profile} />
+            <SocialLinkBar links={profile} dark />
             <button
               onClick={handleShareProfile}
-              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md border border-border/50 hover:border-border bg-white"
+              className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-200 transition-colors px-3 py-1.5 rounded-md border border-gray-700 hover:border-gray-600 bg-gray-900"
             >
               {shareCopied ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-green-600" />
-                  <span className="text-green-600">Link tersalin!</span>
+                  <Check className="w-3.5 h-3.5 text-green-400" />
+                  <span className="text-green-400">Link tersalin!</span>
                 </>
               ) : (
                 <>
@@ -947,14 +949,14 @@ export default function PublicProfilePage() {
             </button>
           </div>
 
-          <div className="h-px bg-border/40" />
+          <div className="h-px bg-gray-700/40" />
 
           {/* Campaign banner */}
           {activeCampaign != null && (
             <button
               type="button"
               onClick={() => {
-                const el = document.getElementById("send-form-minimal");
+                const el = document.getElementById("send-form-dark");
                 el?.scrollIntoView({ behavior: "smooth" });
                 (el?.querySelector("textarea") as HTMLElement | null)?.focus();
               }}
@@ -984,11 +986,11 @@ export default function PublicProfilePage() {
 
           {/* Send Message Card */}
           <div
-            id="send-form-minimal"
-            className="border border-border/60 rounded-xl overflow-hidden"
+            id="send-form-dark"
+            className="border border-gray-700/60 rounded-xl overflow-hidden bg-gray-900"
           >
             <div className="px-5 py-5">
-              <h2 className="text-sm font-semibold text-foreground mb-4">
+              <h2 className="text-sm font-semibold text-gray-100 mb-4">
                 Kirim pesan ke {profile.displayName || `@${profile.username}`}
               </h2>
               <Form {...form}>
@@ -1004,7 +1006,7 @@ export default function PublicProfilePage() {
                         <FormControl>
                           <Textarea
                             placeholder="Tulis pesan anonimmu di sini..."
-                            className="resize-none min-h-[120px] text-sm border-border/60"
+                            className="resize-none min-h-[120px] text-sm border-gray-700 bg-gray-950 text-gray-100 placeholder:text-gray-500 focus-visible:ring-gray-600"
                             {...field}
                           />
                         </FormControl>
@@ -1018,29 +1020,29 @@ export default function PublicProfilePage() {
                         <button
                           type="button"
                           onClick={() => setEmailSectionOpen(true)}
-                          className="w-full flex items-center gap-2 text-xs border border-border/50 rounded-md px-3 py-2.5 bg-secondary/30 hover:bg-secondary/60 transition-all group"
+                          className="w-full flex items-center gap-2 text-xs border border-gray-700 rounded-md px-3 py-2.5 bg-gray-800/60 hover:bg-gray-800 transition-all group"
                         >
-                          <Mail className="w-3.5 h-3.5 text-muted-foreground" />
-                          <span className="flex-1 text-left text-muted-foreground">
+                          <Mail className="w-3.5 h-3.5 text-gray-400" />
+                          <span className="flex-1 text-left text-gray-400">
                             Mau dapat notifikasi jika{" "}
-                            <span className="font-semibold text-foreground">
+                            <span className="font-semibold text-gray-200">
                               {profile.displayName || `@${profile.username}`}
                             </span>{" "}
                             membalas pesanmu?
                           </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                          <ChevronRight className="w-3.5 h-3.5 text-gray-500" />
                         </button>
                       ) : (
-                        <div className="space-y-2 rounded-md border border-border/50 bg-secondary/20 p-3">
+                        <div className="space-y-2 rounded-md border border-gray-600 bg-gray-800/50 p-3">
                           <div className="flex items-center justify-between gap-2">
-                            <p className="text-xs font-medium text-foreground flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5 text-muted-foreground" />
+                            <p className="text-xs font-medium text-gray-300 flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5 text-gray-400" />
                               Masukkan email untuk notifikasi balasan
                             </p>
                             <button
                               type="button"
                               onClick={closeEmailSection}
-                              className="text-muted-foreground hover:text-foreground"
+                              className="text-gray-500 hover:text-gray-300"
                               aria-label="Tutup"
                             >
                               <X className="w-3.5 h-3.5" />
@@ -1056,7 +1058,7 @@ export default function PublicProfilePage() {
                                     type="email"
                                     placeholder="emailkamu@contoh.com"
                                     autoFocus
-                                    className="w-full px-3 py-2 text-sm border border-border/50 rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                                    className="w-full px-3 py-2 text-sm border border-gray-600 rounded-md bg-gray-950 text-gray-100 placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                     {...field}
                                   />
                                 </FormControl>
@@ -1083,7 +1085,7 @@ export default function PublicProfilePage() {
                       </>
                     )}
                   </Button>
-                  <p className="text-center text-[11px] text-muted-foreground/50">
+                  <p className="text-center text-[11px] text-gray-600">
                     Identitasmu tidak akan pernah diketahui penerima
                   </p>
                 </form>
@@ -1094,12 +1096,12 @@ export default function PublicProfilePage() {
           {/* Public Messages */}
           {publicMessages.length > 0 && (
             <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
                 Pesan Publik · {publicMessages.length}
               </p>
               {publicMessages.slice(0, visibleCount).map((msg, idx) => (
                 <Fragment key={msg.id}>
-                  <MinimalMessageCard
+                  <DarkMessageCard
                     msg={msg}
                     idx={idx}
                     initials={initials}
@@ -1113,7 +1115,7 @@ export default function PublicProfilePage() {
                 <button
                   type="button"
                   onClick={() => setVisibleCount((v) => v + 5)}
-                  className="w-full py-2.5 text-sm text-muted-foreground hover:text-foreground border border-dashed border-border/50 hover:border-border rounded-xl transition-colors"
+                  className="w-full py-2.5 text-sm text-gray-500 hover:text-gray-300 border border-dashed border-gray-700 hover:border-gray-600 rounded-xl transition-colors"
                 >
                   Muat lebih · {publicMessages.length - visibleCount} pesan
                   tersisa
@@ -1123,7 +1125,9 @@ export default function PublicProfilePage() {
           )}
         </div>
 
-        <Footer maxWidth="max-w-4xl" />
+        <div className="border-t border-gray-800 bg-gray-950">
+          <Footer maxWidth="max-w-4xl" />
+        </div>
 
         {sharingMessage && profile && (
           <ShareMessageCard
@@ -1140,15 +1144,15 @@ export default function PublicProfilePage() {
 
         {!isSignedIn && !bubbleDismissed && (
           <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm pointer-events-none">
-            <div className="cta-shake pointer-events-auto flex items-center gap-3 bg-white border border-border rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
+            <div className="cta-shake pointer-events-auto flex items-center gap-3 bg-gray-900 border border-gray-700 rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
               <div className="w-8 h-8 shrink-0 flex items-center justify-center">
                 <SiteLogoImg className="w-8 h-8" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground leading-tight truncate">
+                <p className="text-sm font-semibold text-gray-100 leading-tight truncate">
                   Dapatkan link kamu sekarang
                 </p>
-                <p className="text-[11px] text-muted-foreground leading-none mt-0.5">
+                <p className="text-[11px] text-gray-400 leading-none mt-0.5">
                   Gratis · Tanpa kartu kredit
                 </p>
               </div>
@@ -1162,9 +1166,9 @@ export default function PublicProfilePage() {
               </Link>
               <button
                 onClick={() => setBubbleDismissed(true)}
-                className="shrink-0 w-6 h-6 rounded-full bg-secondary hover:bg-secondary/80 flex items-center justify-center transition-colors"
+                className="shrink-0 w-6 h-6 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors"
               >
-                <X className="w-3 h-3 text-muted-foreground" />
+                <X className="w-3 h-3 text-gray-400" />
               </button>
             </div>
           </div>
