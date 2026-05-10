@@ -377,6 +377,49 @@ export function QRProfileCard({
                 gap: 12,
               }}
             >
+              {/* Highlight above QR */}
+              <div
+                style={{
+                  width: "100%",
+                  background: p.stripBg,
+                  border: `1.5px solid ${p.accentBorder}`,
+                  borderRadius: 6,
+                  padding: "9px 14px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}
+              >
+                {/* Sparkle / question icon */}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke={p.ctaColor}
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ flexShrink: 0 }}
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                  <line x1="12" y1="17" x2="12.01" y2="17" />
+                </svg>
+                <p
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color: p.ctaColor,
+                    margin: 0,
+                    lineHeight: 1.35,
+                    letterSpacing: "-0.01em",
+                  }}
+                >
+                  Tanyakan apa saja ke aku secara anonim
+                </p>
+              </div>
+
               {/* QR Code */}
               <div
                 style={{
@@ -396,79 +439,20 @@ export function QRProfileCard({
                 />
               </div>
 
-              {/* CTA prominent text */}
-              <div style={{ textAlign: "center" }}>
-                <p
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 800,
-                    color: p.ctaColor,
-                    margin: 0,
-                    lineHeight: 1.3,
-                    letterSpacing: "-0.01em",
-                  }}
-                >
-                  Kirimi aku pesan anonim!
-                </p>
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "#64748b",
-                    margin: "4px 0 0",
-                    lineHeight: 1.4,
-                  }}
-                >
-                  Scan QR atau kunjungi
-                </p>
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: "#94a3b8",
-                    fontWeight: 600,
-                    margin: "2px 0 0",
-                  }}
-                >
-                  {publicUrlShort}
-                </p>
-              </div>
-
-              {/* 100% Anonim pill */}
-              <div
+              {/* CTA text below QR */}
+              <p
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  background: p.stripBg,
-                  border: `1px solid ${p.accentBorder}`,
-                  borderRadius: 4,
-                  padding: "5px 12px",
+                  fontSize: 14,
+                  fontWeight: 800,
+                  color: p.ctaColor,
+                  margin: 0,
+                  lineHeight: 1.3,
+                  letterSpacing: "-0.01em",
+                  textAlign: "center",
                 }}
               >
-                <svg
-                  width="10"
-                  height="10"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke={p.ctaColor}
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-                </svg>
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    color: p.ctaColor,
-                    letterSpacing: "0.07em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  100% Anonim
-                </span>
-              </div>
+                Kirimi aku pesan anonim!
+              </p>
             </div>
           </div>
 
