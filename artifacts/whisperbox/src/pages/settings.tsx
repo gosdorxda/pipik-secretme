@@ -973,30 +973,30 @@ export default function SettingsPage() {
                     </div>
                   )}
                   {/* Mini preview */}
-                  <div className="bg-gray-950 p-2 space-y-1.5">
+                  <div className="bg-[#181A20] p-2 space-y-1.5">
                     <div className="flex flex-col items-center gap-1 py-1">
-                      <div className="w-6 h-6 rounded-full bg-gray-700 border border-gray-600 shrink-0" />
+                      <div className="w-6 h-6 rounded-full bg-[#2B2F36] border border-[#454E5C] shrink-0" />
                       <div className="space-y-0.5 flex items-center flex-col">
-                        <div className="h-1.5 bg-gray-400/40 rounded w-12" />
-                        <div className="h-1 bg-gray-500/30 rounded w-8" />
+                        <div className="h-1.5 bg-[#EAECEF]/50 rounded w-12" />
+                        <div className="h-1 bg-[#848E9C]/50 rounded w-8" />
                       </div>
                     </div>
-                    <div className="rounded-lg border border-gray-700 bg-gray-900">
+                    <div className="rounded-md border border-[#363A45] bg-[#1E2026]">
                       <div className="p-1.5 space-y-0.5">
-                        <div className="h-1.5 bg-gray-400/30 rounded w-full" />
-                        <div className="h-1.5 bg-gray-500/20 rounded w-4/5" />
+                        <div className="h-1.5 bg-[#EAECEF]/40 rounded w-full" />
+                        <div className="h-1.5 bg-[#848E9C]/30 rounded w-4/5" />
                       </div>
-                      <div className="border-t border-gray-700/60 px-1.5 py-1">
-                        <div className="h-1 bg-gray-600/40 rounded w-10" />
+                      <div className="border-t border-[#363A45] px-1.5 py-1">
+                        <div className="h-1 bg-[#454E5C]/60 rounded w-10" />
                       </div>
                     </div>
-                    <div className="rounded-lg border border-gray-700 bg-gray-900">
+                    <div className="rounded-md border border-[#363A45] bg-[#1E2026]">
                       <div className="p-1.5 space-y-0.5">
-                        <div className="h-1.5 bg-gray-400/30 rounded w-full" />
-                        <div className="h-1.5 bg-gray-500/20 rounded w-3/5" />
+                        <div className="h-1.5 bg-[#EAECEF]/40 rounded w-full" />
+                        <div className="h-1.5 bg-[#848E9C]/30 rounded w-3/5" />
                       </div>
-                      <div className="border-t border-gray-700/60 px-1.5 py-1">
-                        <div className="h-1 bg-gray-600/40 rounded w-8" />
+                      <div className="border-t border-[#363A45] px-1.5 py-1">
+                        <div className="h-1 bg-[#454E5C]/60 rounded w-8" />
                       </div>
                     </div>
                   </div>
