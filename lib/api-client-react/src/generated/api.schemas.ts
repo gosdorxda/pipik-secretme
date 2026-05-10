@@ -43,6 +43,14 @@ export interface UsernameAvailability {
   available: boolean;
 }
 
+export type UserProfileProfileTemplate =
+  (typeof UserProfileProfileTemplate)[keyof typeof UserProfileProfileTemplate];
+
+export const UserProfileProfileTemplate = {
+  classic: "classic",
+  minimal: "minimal",
+} as const;
+
 export interface UserProfile {
   id: string;
   clerkId: string;
@@ -62,9 +70,17 @@ export interface UserProfile {
   socialGithub?: string | null;
   socialLinkedin?: string | null;
   hasSetUsername: boolean;
-  profileTemplate: string;
+  profileTemplate: UserProfileProfileTemplate;
   createdAt: string;
 }
+
+export type PublicProfileProfileTemplate =
+  (typeof PublicProfileProfileTemplate)[keyof typeof PublicProfileProfileTemplate];
+
+export const PublicProfileProfileTemplate = {
+  classic: "classic",
+  minimal: "minimal",
+} as const;
 
 export type PublicMessageReactions = { [key: string]: number };
 
@@ -90,7 +106,7 @@ export interface PublicProfile {
   socialLinkedin?: string | null;
   isPremium: boolean;
   allowReplyNotif: boolean;
-  profileTemplate: string;
+  profileTemplate: PublicProfileProfileTemplate;
   publicMessages: PublicMessage[];
 }
 
@@ -105,6 +121,14 @@ export interface ReactToMessageResponse {
   /** added or removed */
   toggled: string;
 }
+
+export type UpdateProfileBodyProfileTemplate =
+  (typeof UpdateProfileBodyProfileTemplate)[keyof typeof UpdateProfileBodyProfileTemplate];
+
+export const UpdateProfileBodyProfileTemplate = {
+  classic: "classic",
+  minimal: "minimal",
+} as const;
 
 export interface UpdateProfileBody {
   /**
@@ -127,7 +151,7 @@ export interface UpdateProfileBody {
   socialFacebook?: string | null;
   socialGithub?: string | null;
   socialLinkedin?: string | null;
-  profileTemplate?: string;
+  profileTemplate?: UpdateProfileBodyProfileTemplate;
 }
 
 export interface Message {

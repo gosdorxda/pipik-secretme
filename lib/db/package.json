@@ -10,7 +10,8 @@
   "scripts": {
     "push": "drizzle-kit push --config ./drizzle.config.ts",
     "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
-    "backfill:has-set-username": "tsx src/migrations/backfill-has-set-username.ts"
+    "backfill:has-set-username": "tsx src/migrations/backfill-has-set-username.ts",
+    "migrate:profile-template": "tsx src/migrations/add-profile-template.ts"
   },
   "dependencies": {
     "drizzle-orm": "catalog:",
