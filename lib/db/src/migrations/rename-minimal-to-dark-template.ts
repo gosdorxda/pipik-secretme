@@ -15,7 +15,9 @@ async function run() {
     SET profile_template = 'dark'
     WHERE profile_template = 'minimal'
   `);
-  console.log("Migration complete: profile_template 'minimal' renamed to 'dark'.");
+  console.log(
+    "Migration complete: profile_template 'minimal' renamed to 'dark'.",
+  );
   process.exit(0);
 }
 
