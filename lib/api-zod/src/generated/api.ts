@@ -37,6 +37,7 @@ export const GetMyProfileResponse = zod.object({
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
   hasSetUsername: zod.boolean(),
+  profileTemplate: zod.string(),
   createdAt: zod.coerce.date(),
 });
 
@@ -70,6 +71,7 @@ export const UpdateMyProfileBody = zod.object({
   socialFacebook: zod.string().nullish(),
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
+  profileTemplate: zod.string().optional(),
 });
 
 export const UpdateMyProfileResponse = zod.object({
@@ -91,6 +93,7 @@ export const UpdateMyProfileResponse = zod.object({
   socialGithub: zod.string().nullish(),
   socialLinkedin: zod.string().nullish(),
   hasSetUsername: zod.boolean(),
+  profileTemplate: zod.string(),
   createdAt: zod.coerce.date(),
 });
 
@@ -125,6 +128,7 @@ export const GetPublicProfileResponse = zod.object({
   socialLinkedin: zod.string().nullish(),
   isPremium: zod.boolean(),
   allowReplyNotif: zod.boolean(),
+  profileTemplate: zod.string(),
   publicMessages: zod.array(
     zod.object({
       id: zod.string(),

@@ -59,6 +59,197 @@ import { ShareMessageCard } from "@/components/share-message-card";
 
 const REACTION_EMOJIS = ["❤️", "😂", "🔥", "😮", "👏"] as const;
 
+function MinimalMessageCard({
+  msg,
+  idx,
+  initials,
+  displayName,
+  onShare,
+}: {
+  msg: PublicMessage;
+  idx: number;
+  initials: string;
+  displayName: string;
+  onShare: () => void;
+}) {
+  void idx;
+  const reactMutation = useReactToMessage();
+
+  const [reactions, setReactions] = useState<Record<string, number>>(
+    () => (msg.reactions as Record<string, number>) ?? {},
+  );
+  const [reacted, setReacted] = useState<string | null>(() => {
+    const stored = loadLocalReacted();
+    return stored[msg.id] ?? null;
+  });
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setReactions((msg.reactions as Record<string, number>) ?? {});
+  }, [msg.reactions]);
+
+  useEffect(() => {
+    if (!pickerOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setPickerOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [pickerOpen]);
+
+  const handleReact = (emoji: string) => {
+    if (reactMutation.isPending) return;
+    const prevReacted = reacted;
+    const newReactions = { ...reactions };
+    if (prevReacted === emoji) {
+      newReactions[emoji] = Math.max(0, (newReactions[emoji] ?? 1) - 1);
+      if (newReactions[emoji] === 0) delete newReactions[emoji];
+      setReacted(null);
+      const stored = loadLocalReacted();
+      delete stored[msg.id];
+      saveLocalReacted(stored);
+    } else {
+      if (prevReacted) {
+        newReactions[prevReacted] = Math.max(
+          0,
+          (newReactions[prevReacted] ?? 1) - 1,
+        );
+        if (newReactions[prevReacted] === 0) delete newReactions[prevReacted];
+      }
+      newReactions[emoji] = (newReactions[emoji] ?? 0) + 1;
+      setReacted(emoji);
+      const stored = loadLocalReacted();
+      stored[msg.id] = emoji;
+      saveLocalReacted(stored);
+    }
+    setReactions(newReactions);
+    reactMutation.mutate(
+      { id: msg.id, data: { emoji } },
+      {
+        onSuccess: (data) => {
+          setReactions(data.reactions as Record<string, number>);
+        },
+        onError: () => {
+          setReacted(prevReacted);
+          setReactions(reactions);
+          const stored = loadLocalReacted();
+          if (prevReacted) stored[msg.id] = prevReacted;
+          else delete stored[msg.id];
+          saveLocalReacted(stored);
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="rounded-xl border border-border bg-white overflow-hidden">
+      <div className="px-5 pt-4 pb-3">
+        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">
+          {msg.content}
+        </p>
+      </div>
+
+      {msg.ownerReply && (
+        <div className="mx-5 mb-3 border-l-2 border-foreground/20 pl-3">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-semibold text-foreground/70">
+              {displayName}
+            </span>
+            {msg.ownerRepliedAt && (
+              <span className="text-[10px] text-muted-foreground ml-auto">
+                {formatDistanceToNow(new Date(msg.ownerRepliedAt), {
+                  addSuffix: true,
+                  locale: idLocale,
+                })}
+              </span>
+            )}
+          </div>
+          <p className="text-sm leading-relaxed text-foreground/70 whitespace-pre-wrap">
+            {msg.ownerReply}
+          </p>
+        </div>
+      )}
+
+      <div className="px-4 pb-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2">
+        <div className="flex items-center gap-1 min-w-0">
+          {REACTION_EMOJIS.filter((e) => (reactions[e] ?? 0) > 0).map(
+            (emoji) => (
+              <button
+                key={emoji}
+                onClick={() => handleReact(emoji)}
+                className={[
+                  "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-sm transition-all duration-150 select-none",
+                  reacted === emoji
+                    ? "bg-foreground/10 opacity-100"
+                    : "bg-black/5 opacity-60 hover:opacity-90",
+                ].join(" ")}
+              >
+                <span className="leading-none">{emoji}</span>
+                <span className="text-[10px] font-medium text-foreground/60">
+                  {reactions[emoji]}
+                </span>
+              </button>
+            ),
+          )}
+          <div className="relative" ref={pickerRef}>
+            <button
+              onClick={() => setPickerOpen((p) => !p)}
+              title="Tambah reaksi"
+              className={[
+                "text-base leading-none px-1 py-0.5 rounded-full transition-all duration-150 select-none",
+                pickerOpen
+                  ? "opacity-100 bg-black/8"
+                  : "opacity-25 hover:opacity-60",
+              ].join(" ")}
+            >
+              {reacted ?? "☺"}
+            </button>
+            {pickerOpen && (
+              <div className="absolute bottom-full left-0 mb-2 bg-white border border-border/50 rounded-2xl shadow-xl px-1.5 py-1 flex items-center gap-0.5 z-20 whitespace-nowrap">
+                <span className="absolute -bottom-1.5 left-3 w-3 h-3 bg-white border-b border-r border-border/50 rotate-45" />
+                {REACTION_EMOJIS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    onClick={() => {
+                      handleReact(emoji);
+                      setPickerOpen(false);
+                    }}
+                    className={[
+                      "text-xl px-2 py-1 rounded-xl transition-all duration-100 hover:scale-125 hover:bg-black/5 select-none",
+                      reacted === emoji ? "bg-foreground/10 scale-110" : "",
+                    ].join(" ")}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <span>
+            {formatDistanceToNow(new Date(msg.createdAt), {
+              addSuffix: true,
+              locale: idLocale,
+            })}
+          </span>
+          <span>·</span>
+          <button
+            onClick={onShare}
+            className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <Share2 className="w-3 h-3" />
+            Bagikan
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const LS_KEY = "wb_reactions";
 
 function loadLocalReacted(): Record<string, string> {
@@ -686,6 +877,301 @@ export default function PublicProfilePage() {
       toast({ title: "Gagal menyalin link", variant: "destructive" });
     }
   };
+
+  const template = profile.profileTemplate ?? "classic";
+
+  if (template === "minimal") {
+    return (
+      <div className="min-h-[100dvh] bg-white text-foreground flex flex-col">
+        {/* Nav */}
+        <header className="border-b border-border/60 bg-white sticky top-0 z-50">
+          <div className="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+            <Link
+              href="/"
+              className="flex items-center gap-2 font-bold text-sm text-foreground"
+            >
+              <SiteLogoImg alt="kepoin" className="w-7 h-7" />
+              <BrandName name={appName} className="tracking-tight" />
+            </Link>
+            <Link href="/">
+              <Button size="sm" className="text-xs">
+                Mulai Gratis
+              </Button>
+            </Link>
+          </div>
+        </header>
+
+        <div className="flex-1 max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full space-y-8">
+          {/* Profile Hero — minimal centered */}
+          <div className="flex flex-col items-center gap-3 text-center">
+            {avatarUrl ? (
+              <LazyAvatar
+                src={avatarUrl}
+                alt={displayName}
+                className="w-20 h-20 border border-border/50 shadow-sm"
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-foreground/8 border border-border/50 flex items-center justify-center text-2xl font-semibold text-foreground/60">
+                {initials}
+              </div>
+            )}
+            <div>
+              <h1 className="text-xl font-semibold text-foreground">
+                {displayName}
+              </h1>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                @{profile.username}
+              </p>
+            </div>
+            {profile.bio && (
+              <p className="text-sm text-foreground/60 leading-relaxed max-w-xs mx-auto">
+                {profile.bio}
+              </p>
+            )}
+            <SocialLinkBar links={profile} />
+            <button
+              onClick={handleShareProfile}
+              className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5 rounded-md border border-border/50 hover:border-border bg-white"
+            >
+              {shareCopied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-green-600" />
+                  <span className="text-green-600">Link tersalin!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5" />
+                  Bagikan
+                </>
+              )}
+            </button>
+          </div>
+
+          <div className="h-px bg-border/40" />
+
+          {/* Campaign banner */}
+          {activeCampaign != null && (
+            <button
+              type="button"
+              onClick={() => {
+                const el = document.getElementById("send-form-minimal");
+                el?.scrollIntoView({ behavior: "smooth" });
+                (el?.querySelector("textarea") as HTMLElement | null)?.focus();
+              }}
+              className="group w-full rounded-xl overflow-hidden text-left transition-transform hover:scale-[1.005] active:scale-[0.995]"
+              style={{
+                background:
+                  CAMPAIGN_COLORS.find(
+                    (c) => c.id === (activeCampaign.color ?? "teal"),
+                  )?.gradient ?? CAMPAIGN_COLORS[0].gradient,
+              }}
+            >
+              <div className="px-4 py-3 flex items-center gap-3">
+                <div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                  {(() => {
+                    const CI =
+                      CAMPAIGN_ICONS[activeCampaign.icon ?? "megaphone"] ??
+                      Megaphone;
+                    return <CI className="w-3.5 h-3.5 text-white" />;
+                  })()}
+                </div>
+                <p className="text-sm font-semibold text-white leading-tight truncate flex-1">
+                  {activeCampaign.question}
+                </p>
+              </div>
+            </button>
+          )}
+
+          {/* Send Message Card */}
+          <div
+            id="send-form-minimal"
+            className="border border-border/60 rounded-xl overflow-hidden"
+          >
+            <div className="px-5 py-5">
+              <h2 className="text-sm font-semibold text-foreground mb-4">
+                Kirim pesan ke {profile.displayName || `@${profile.username}`}
+              </h2>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-3"
+                >
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tulis pesan anonimmu di sini..."
+                            className="resize-none min-h-[120px] text-sm border-border/60"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {profile.allowReplyNotif && (
+                    <div>
+                      {!emailSectionOpen ? (
+                        <button
+                          type="button"
+                          onClick={() => setEmailSectionOpen(true)}
+                          className="w-full flex items-center gap-2 text-xs border border-border/50 rounded-md px-3 py-2.5 bg-secondary/30 hover:bg-secondary/60 transition-all group"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-muted-foreground" />
+                          <span className="flex-1 text-left text-muted-foreground">
+                            Mau dapat notifikasi jika{" "}
+                            <span className="font-semibold text-foreground">
+                              {profile.displayName || `@${profile.username}`}
+                            </span>{" "}
+                            membalas pesanmu?
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                        </button>
+                      ) : (
+                        <div className="space-y-2 rounded-md border border-border/50 bg-secondary/20 p-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <p className="text-xs font-medium text-foreground flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5 text-muted-foreground" />
+                              Masukkan email untuk notifikasi balasan
+                            </p>
+                            <button
+                              type="button"
+                              onClick={closeEmailSection}
+                              className="text-muted-foreground hover:text-foreground"
+                              aria-label="Tutup"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <FormField
+                            control={form.control}
+                            name="senderEmail"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <input
+                                    type="email"
+                                    placeholder="emailkamu@contoh.com"
+                                    autoFocus
+                                    className="w-full px-3 py-2 text-sm border border-border/50 rounded-md bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage className="text-[11px]" />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <Button
+                    type="submit"
+                    className="w-full gap-2"
+                    disabled={
+                      sendMessage.isPending || !form.watch("content").trim()
+                    }
+                  >
+                    {sendMessage.isPending ? (
+                      "Mengirim..."
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" /> Kirim Pesan
+                      </>
+                    )}
+                  </Button>
+                  <p className="text-center text-[11px] text-muted-foreground/50">
+                    Identitasmu tidak akan pernah diketahui penerima
+                  </p>
+                </form>
+              </Form>
+            </div>
+          </div>
+
+          {/* Public Messages */}
+          {publicMessages.length > 0 && (
+            <div className="space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                Pesan Publik · {publicMessages.length}
+              </p>
+              {publicMessages.slice(0, visibleCount).map((msg, idx) => (
+                <Fragment key={msg.id}>
+                  <MinimalMessageCard
+                    msg={msg}
+                    idx={idx}
+                    initials={initials}
+                    displayName={displayName}
+                    onShare={() => setSharingMessage({ msg, idx })}
+                  />
+                  {(idx + 1) % 3 === 0 && <BannerAd className="my-1" />}
+                </Fragment>
+              ))}
+              {publicMessages.length > visibleCount && (
+                <button
+                  type="button"
+                  onClick={() => setVisibleCount((v) => v + 5)}
+                  className="w-full py-2.5 text-sm text-muted-foreground hover:text-foreground border border-dashed border-border/50 hover:border-border rounded-xl transition-colors"
+                >
+                  Muat lebih · {publicMessages.length - visibleCount} pesan
+                  tersisa
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+
+        <Footer maxWidth="max-w-2xl" />
+
+        {sharingMessage && profile && (
+          <ShareMessageCard
+            content={sharingMessage.msg.content}
+            createdAt={sharingMessage.msg.createdAt}
+            ownerReply={sharingMessage.msg.ownerReply}
+            paletteIdx={sharingMessage.idx}
+            displayName={profile.displayName || profile.username || ""}
+            username={profile.username}
+            avatarUrl={profile.avatarUrl}
+            onClose={() => setSharingMessage(null)}
+          />
+        )}
+
+        {!isSignedIn && !bubbleDismissed && (
+          <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm pointer-events-none">
+            <div className="cta-shake pointer-events-auto flex items-center gap-3 bg-white border border-border rounded-full shadow-xl px-4 py-2.5 animate-in slide-in-from-bottom-4 duration-300">
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                <SiteLogoImg className="w-8 h-8" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-foreground leading-tight truncate">
+                  Dapatkan link kamu sekarang
+                </p>
+                <p className="text-[11px] text-muted-foreground leading-none mt-0.5">
+                  Gratis · Tanpa kartu kredit
+                </p>
+              </div>
+              <Link href="/" className="shrink-0">
+                <Button
+                  size="sm"
+                  className="rounded-full text-xs h-8 px-4 gap-1.5"
+                >
+                  Mulai →
+                </Button>
+              </Link>
+              <button
+                onClick={() => setBubbleDismissed(true)}
+                className="shrink-0 w-6 h-6 rounded-full bg-secondary hover:bg-secondary/80 flex items-center justify-center transition-colors"
+              >
+                <X className="w-3 h-3 text-muted-foreground" />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground flex flex-col">

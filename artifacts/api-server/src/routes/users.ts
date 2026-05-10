@@ -130,6 +130,9 @@ router.put("/me", requireAuth, async (req, res) => {
         ...(parsed.data.emailNotifications !== undefined && {
           emailNotifications: parsed.data.emailNotifications,
         }),
+        ...(parsed.data.profileTemplate !== undefined && {
+          profileTemplate: parsed.data.profileTemplate,
+        }),
         updatedAt: new Date(),
       })
       .where(eq(usersTable.clerkId, clerkUserId))
@@ -225,6 +228,7 @@ router.get("/:username", async (req, res) => {
       avatarUrl: user.avatarUrl,
       isPremium: user.isPremium,
       allowReplyNotif: user.allowReplyNotif,
+      profileTemplate: user.profileTemplate,
       socialInstagram: user.socialInstagram,
       socialTiktok: user.socialTiktok,
       socialX: user.socialX,

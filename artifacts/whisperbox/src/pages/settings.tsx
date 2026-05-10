@@ -34,6 +34,8 @@ import {
   Lock,
   Crown,
   Mail,
+  Palette,
+  Check,
 } from "lucide-react";
 import { useUpload } from "@workspace/object-storage-web";
 import { resolveAvatarUrl } from "@/lib/avatar";
@@ -270,6 +272,8 @@ export default function SettingsPage() {
   const [savingNotif, setSavingNotif] = useState(false);
   const [allowReplyNotif, setAllowReplyNotif] = useState(true);
   const [savingReplyNotif, setSavingReplyNotif] = useState(false);
+  const [profileTemplate, setProfileTemplate] = useState<string>("classic");
+  const [savingTemplate, setSavingTemplate] = useState(false);
 
   useEffect(() => {
     if (profile && !initRef.current) {
@@ -287,9 +291,41 @@ export default function SettingsPage() {
       });
       setEmailNotifications(profile.emailNotifications ?? false);
       setAllowReplyNotif(profile.allowReplyNotif ?? true);
+      setProfileTemplate(profile.profileTemplate ?? "classic");
       initRef.current = true;
     }
   }, [profile, form]);
+
+  const handleSelectTemplate = (tpl: string) => {
+    if (tpl === profileTemplate || savingTemplate) return;
+    setProfileTemplate(tpl);
+    setSavingTemplate(true);
+    updateProfile.mutate(
+      { data: { profileTemplate: tpl } },
+      {
+        onSuccess: (updated) => {
+          queryClient.setQueryData(getGetMyProfileQueryKey(), updated);
+          setSavingTemplate(false);
+          toast({
+            title: "Template diperbarui",
+            description:
+              tpl === "minimal"
+                ? "Profil kamu kini tampil dengan gaya Minimal."
+                : "Profil kamu kini tampil dengan gaya Classic.",
+          });
+        },
+        onError: () => {
+          setProfileTemplate(profileTemplate);
+          setSavingTemplate(false);
+          toast({
+            title: "Gagal",
+            description: "Gagal mengubah template profil.",
+            variant: "destructive",
+          });
+        },
+      },
+    );
+  };
 
   const handleToggleAllowReplyNotif = () => {
     const newValue = !allowReplyNotif;
@@ -818,6 +854,150 @@ export default function SettingsPage() {
             </Card>
           </form>
         </Form>
+
+        {/* Template Picker Card */}
+        {profile?.username && (
+          <Card className="overflow-hidden gap-0 py-0">
+            <div
+              className="px-4 sm:px-6 py-4 flex items-center gap-3"
+              style={{
+                background: "rgba(240,253,244,0.6)",
+                borderBottom: "1px solid rgba(134,239,172,0.35)",
+              }}
+            >
+              <div
+                className="w-8 h-8 rounded-md flex items-center justify-center shrink-0"
+                style={{ background: "rgba(34,197,94,0.12)" }}
+              >
+                <Palette className="w-4 h-4" style={{ color: "#16a34a" }} />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h2 className="text-sm font-semibold text-foreground">
+                  Template Profil
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Pilih tampilan halaman profilmu.
+                </p>
+              </div>
+              {savingTemplate && (
+                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground shrink-0" />
+              )}
+            </div>
+            <CardContent className="py-5">
+              <div className="grid grid-cols-2 gap-3">
+                {/* Classic */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectTemplate("classic")}
+                  disabled={savingTemplate}
+                  className={[
+                    "relative rounded-xl border-2 overflow-hidden text-left transition-all duration-150 disabled:opacity-60",
+                    profileTemplate === "classic"
+                      ? "border-primary shadow-sm"
+                      : "border-border hover:border-border/60 hover:shadow-sm",
+                  ].join(" ")}
+                >
+                  {/* Mini preview */}
+                  <div className="bg-background p-2 space-y-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-6 h-6 rounded-full bg-primary/20 shrink-0" />
+                      <div className="space-y-0.5 flex-1">
+                        <div className="h-1.5 bg-foreground/20 rounded w-16" />
+                        <div className="h-1 bg-foreground/10 rounded w-10" />
+                      </div>
+                    </div>
+                    <div className="rounded overflow-hidden border border-border/40">
+                      <div
+                        className="h-1"
+                        style={{
+                          background:
+                            "linear-gradient(to right, #86ead4, #818cf8)",
+                        }}
+                      />
+                      <div className="p-1.5 space-y-0.5">
+                        <div className="h-1.5 bg-foreground/15 rounded w-full" />
+                        <div className="h-1.5 bg-foreground/10 rounded w-4/5" />
+                      </div>
+                    </div>
+                    <div className="rounded overflow-hidden border border-border/40">
+                      <div
+                        className="h-1"
+                        style={{
+                          background:
+                            "linear-gradient(to right, #93c5fd, #6ee7b7)",
+                        }}
+                      />
+                      <div className="p-1.5 space-y-0.5">
+                        <div className="h-1.5 bg-foreground/15 rounded w-full" />
+                        <div className="h-1.5 bg-foreground/10 rounded w-3/5" />
+                      </div>
+                    </div>
+                  </div>
+                  {/* Label */}
+                  <div className="px-3 py-2 border-t border-border/50 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground">
+                      Classic
+                    </span>
+                    {profileTemplate === "classic" && (
+                      <Check className="w-3.5 h-3.5 text-primary" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Minimal */}
+                <button
+                  type="button"
+                  onClick={() => handleSelectTemplate("minimal")}
+                  disabled={savingTemplate}
+                  className={[
+                    "relative rounded-xl border-2 overflow-hidden text-left transition-all duration-150 disabled:opacity-60",
+                    profileTemplate === "minimal"
+                      ? "border-primary shadow-sm"
+                      : "border-border hover:border-border/60 hover:shadow-sm",
+                  ].join(" ")}
+                >
+                  {/* Mini preview */}
+                  <div className="bg-white p-2 space-y-1.5">
+                    <div className="flex flex-col items-center gap-1 py-1">
+                      <div className="w-6 h-6 rounded-full bg-foreground/10 border border-border/40 shrink-0" />
+                      <div className="space-y-0.5 flex items-center flex-col">
+                        <div className="h-1.5 bg-foreground/20 rounded w-12" />
+                        <div className="h-1 bg-foreground/10 rounded w-8" />
+                      </div>
+                    </div>
+                    <div className="rounded-lg border border-border/40 bg-white">
+                      <div className="p-1.5 space-y-0.5">
+                        <div className="h-1.5 bg-foreground/15 rounded w-full" />
+                        <div className="h-1.5 bg-foreground/10 rounded w-4/5" />
+                      </div>
+                      <div className="border-t border-border/30 px-1.5 py-1">
+                        <div className="h-1 bg-foreground/8 rounded w-10" />
+                      </div>
+                    </div>
+                    <div className="rounded-lg border border-border/40 bg-white">
+                      <div className="p-1.5 space-y-0.5">
+                        <div className="h-1.5 bg-foreground/15 rounded w-full" />
+                        <div className="h-1.5 bg-foreground/10 rounded w-3/5" />
+                      </div>
+                      <div className="border-t border-border/30 px-1.5 py-1">
+                        <div className="h-1 bg-foreground/8 rounded w-8" />
+                      </div>
+                    </div>
+                  </div>
+                  {/* Label */}
+                  <div className="px-3 py-2 border-t border-border/50 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-foreground">
+                      Minimal
+                    </span>
+                    {profileTemplate === "minimal" && (
+                      <Check className="w-3.5 h-3.5 text-primary" />
+                    )}
+                  </div>
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Allow Reply Notif Card — Premium only */}
         {profile?.username && (

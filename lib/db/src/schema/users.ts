@@ -34,6 +34,9 @@ export const usersTable = pgTable("users", {
   referralCode: varchar("referral_code", { length: 16 }).unique(),
   points: integer("points").notNull().default(0),
   redeemedPoints: integer("redeemed_points").notNull().default(0),
+  profileTemplate: varchar("profile_template", { length: 32 })
+    .notNull()
+    .default("classic"),
   isAdmin: boolean("is_admin").notNull().default(false),
   hasSetUsername: boolean("has_set_username").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })

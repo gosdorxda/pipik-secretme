@@ -62,6 +62,7 @@ export interface UserProfile {
   socialGithub?: string | null;
   socialLinkedin?: string | null;
   hasSetUsername: boolean;
+  profileTemplate: string;
   createdAt: string;
 }
 
@@ -89,6 +90,7 @@ export interface PublicProfile {
   socialLinkedin?: string | null;
   isPremium: boolean;
   allowReplyNotif: boolean;
+  profileTemplate: string;
   publicMessages: PublicMessage[];
 }
 
@@ -125,6 +127,7 @@ export interface UpdateProfileBody {
   socialFacebook?: string | null;
   socialGithub?: string | null;
   socialLinkedin?: string | null;
+  profileTemplate?: string;
 }
 
 export interface Message {
