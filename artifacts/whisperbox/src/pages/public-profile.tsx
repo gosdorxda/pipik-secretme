@@ -173,15 +173,15 @@ function MinimalMessageCard({
         </div>
       )}
 
-      <div className="px-4 pb-3 flex items-center justify-between gap-2 border-t border-border/50 pt-2">
-        <div className="flex items-center gap-1 min-w-0">
+      <div className="px-4 py-1.5 flex items-center justify-between gap-2 border-t border-border/50">
+        <div className="flex items-center gap-0.5 min-w-0">
           {REACTION_EMOJIS.filter((e) => (reactions[e] ?? 0) > 0).map(
             (emoji) => (
               <button
                 key={emoji}
                 onClick={() => handleReact(emoji)}
                 className={[
-                  "inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-sm transition-all duration-150 select-none",
+                  "inline-flex items-center gap-0.5 px-1 py-0.5 rounded-full text-xs transition-all duration-150 select-none",
                   reacted === emoji
                     ? "bg-foreground/10 opacity-100"
                     : "bg-black/5 opacity-60 hover:opacity-90",
@@ -199,7 +199,7 @@ function MinimalMessageCard({
               onClick={() => setPickerOpen((p) => !p)}
               title="Tambah reaksi"
               className={[
-                "text-base leading-none px-1 py-0.5 rounded-full transition-all duration-150 select-none",
+                "text-sm leading-none px-1 py-0.5 rounded-full transition-all duration-150 select-none",
                 pickerOpen
                   ? "opacity-100 bg-black/8"
                   : "opacity-25 hover:opacity-60",
@@ -229,7 +229,7 @@ function MinimalMessageCard({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+        <div className="flex items-center gap-1 text-[10px] text-muted-foreground/70">
           <span>
             {formatDistanceToNow(new Date(msg.createdAt), {
               addSuffix: true,
@@ -239,9 +239,9 @@ function MinimalMessageCard({
           <span>·</span>
           <button
             onClick={onShare}
-            className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="inline-flex items-center gap-0.5 text-[10px] text-muted-foreground/70 hover:text-foreground transition-colors"
           >
-            <Share2 className="w-3 h-3" />
+            <Share2 className="w-2.5 h-2.5" />
             Bagikan
           </button>
         </div>
@@ -885,7 +885,7 @@ export default function PublicProfilePage() {
       <div className="min-h-[100dvh] bg-white text-foreground flex flex-col">
         {/* Nav */}
         <header className="border-b border-border/60 bg-white sticky top-0 z-50">
-          <div className="max-w-2xl mx-auto px-5 h-14 flex items-center justify-between">
+          <div className="max-w-4xl mx-auto px-5 h-14 flex items-center justify-between">
             <Link
               href="/"
               className="flex items-center gap-2 font-bold text-sm text-foreground"
@@ -901,7 +901,7 @@ export default function PublicProfilePage() {
           </div>
         </header>
 
-        <div className="flex-1 max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full space-y-8">
+        <div className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14 w-full space-y-8">
           {/* Profile Hero — minimal centered */}
           <div className="flex flex-col items-center gap-3 text-center">
             {avatarUrl ? (
@@ -1123,7 +1123,7 @@ export default function PublicProfilePage() {
           )}
         </div>
 
-        <Footer maxWidth="max-w-2xl" />
+        <Footer maxWidth="max-w-4xl" />
 
         {sharingMessage && profile && (
           <ShareMessageCard
